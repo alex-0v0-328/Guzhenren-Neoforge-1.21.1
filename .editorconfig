@@ -1,0 +1,15 @@
+root = true
+
+[*.java]
+max_line_length = 120
+
+# 方法之间不再自动插空行 —— 手动删掉的空行 Ctrl+Alt+L 不会加回来
+ij_java_blank_lines_around_method = 0
+ij_java_blank_lines_around_method_in_interface = 0
+
+# 已有的空行最多保留 1 行
+ij_java_keep_blank_lines_in_code = 1
+
+# 单行方法体保持一行
+ij_java_keep_simple_methods_in_one_line = true
+ij_java_keep_simple_blocks_in_one_line = true
