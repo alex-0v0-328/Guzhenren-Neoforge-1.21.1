@@ -9,8 +9,8 @@ import com.unknown.guzhenren.custom.enums.core.GuRank;
 import com.unknown.guzhenren.custom.enums.core.GuSoulTier;
 import com.unknown.guzhenren.custom.enums.core.GuStage;
 import com.unknown.guzhenren.custom.enums.core.GuTalent;
-import com.unknown.guzhenren.custom.enums.path.Path;
-import com.unknown.guzhenren.custom.enums.path.PathAttainment;
+import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.path.GuPathAttainment;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -22,7 +22,35 @@ public class EnUsLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         addEnumKeys();
+        addCommandKeys();
+        addDeathMessages();
     }
+
+    //region COMMAND
+    private void addCommandKeys() {
+        add("guzhenren.command.updated", "Updated %s player(s)");
+        add("guzhenren.command.unknown_value", "Unknown value: %s");
+
+        add("guzhenren.command.info.header", "==== %s ====");
+        add("guzhenren.command.info.realm", "Realm: %s %s (%s)");
+        add("guzhenren.command.info.talent", "Aptitude: %s (base %s)");
+        add("guzhenren.command.info.physique", "Physique: %s");
+        add("guzhenren.command.info.essence", "Essence: %s / %s");
+        add("guzhenren.command.info.lifespan", "Lifespan: age %s, %s remaining");
+        add("guzhenren.command.info.soul", "Soul: %s  %s / %s");
+        add("guzhenren.command.info.paths", "Paths:");
+        add("guzhenren.command.info.no_path", "Paths: none");
+        add("guzhenren.command.info.path_entry", "  %s  %s  Marks %s");
+    }
+    //endregion
+
+    //region DEATH
+    //  键名由 DamageType 的 msgId 决定: msgId "guzhenren.xxx" -> "death.attack.guzhenren.xxx"
+    private void addDeathMessages() {
+        add("death.attack.guzhenren.lifespan_exhausted", "%1$s ran out of lifespan");
+        add("death.attack.guzhenren.soul_collapse", "%1$s suffered soul collapse");
+    }
+    //endregion
 
     //region ENUM
     private void addEnumKeys() {
@@ -125,49 +153,49 @@ public class EnUsLanguageProvider extends LanguageProvider {
     }
 
     private void addPath() {
-        add(Path.HEAVEN.getTranslationKey(), "Heaven Path");
-        add(Path.RULE.getTranslationKey(), "Rule Path");
-        add(Path.SPACE.getTranslationKey(), "Space Path");
-        add(Path.TIME.getTranslationKey(), "Time Path");
-        add(Path.HUMAN.getTranslationKey(), "Human Path");
-        add(Path.METAL.getTranslationKey(), "Metal Path");
-        add(Path.WOOD.getTranslationKey(), "Wood Path");
-        add(Path.WATER.getTranslationKey(), "Water Path");
-        add(Path.FIRE.getTranslationKey(), "Fire Path");
-        add(Path.EARTH.getTranslationKey(), "Earth Path");
-        add(Path.ICE_SNOW.getTranslationKey(), "Ice-Snow Path");
-        add(Path.LIGHTNING.getTranslationKey(), "Lightning Path");
-        add(Path.QI.getTranslationKey(), "Qi Path");
-        add(Path.SOUND.getTranslationKey(), "Sound Path");
-        add(Path.LIGHT.getTranslationKey(), "Light Path");
-        add(Path.DARK.getTranslationKey(), "Dark Path");
-        add(Path.STRENGTH.getTranslationKey(), "Strength Path");
-        add(Path.DREAM.getTranslationKey(), "Dream Path");
-        add(Path.REFINEMENT.getTranslationKey(), "Refinement Path");
-        add(Path.WISDOM.getTranslationKey(), "Wisdom Path");
-        add(Path.THEFT.getTranslationKey(), "Theft Path");
-        add(Path.LUCK.getTranslationKey(), "Luck Path");
-        add(Path.KILLING.getTranslationKey(), "Killing Path");
-        add(Path.BLOOD.getTranslationKey(), "Blood Path");
-        add(Path.SOUL.getTranslationKey(), "Soul Path");
-        add(Path.ENSLAVEMENT.getTranslationKey(), "Enslavement Path");
-        add(Path.FOOD.getTranslationKey(), "Food Path");
-        add(Path.FORMATION.getTranslationKey(), "Formation Path");
-        add(Path.PAINTING.getTranslationKey(), "Painting Path");
-        add(Path.TRANSFORMATION.getTranslationKey(), "Transformation Path");
+        add(GuPath.HEAVEN.getTranslationKey(), "Heaven Path");
+        add(GuPath.RULE.getTranslationKey(), "Rule Path");
+        add(GuPath.SPACE.getTranslationKey(), "Space Path");
+        add(GuPath.TIME.getTranslationKey(), "Time Path");
+        add(GuPath.HUMAN.getTranslationKey(), "Human Path");
+        add(GuPath.METAL.getTranslationKey(), "Metal Path");
+        add(GuPath.WOOD.getTranslationKey(), "Wood Path");
+        add(GuPath.WATER.getTranslationKey(), "Water Path");
+        add(GuPath.FIRE.getTranslationKey(), "Fire Path");
+        add(GuPath.EARTH.getTranslationKey(), "Earth Path");
+        add(GuPath.ICE_SNOW.getTranslationKey(), "Ice-Snow Path");
+        add(GuPath.LIGHTNING.getTranslationKey(), "Lightning Path");
+        add(GuPath.QI.getTranslationKey(), "Qi Path");
+        add(GuPath.SOUND.getTranslationKey(), "Sound Path");
+        add(GuPath.LIGHT.getTranslationKey(), "Light Path");
+        add(GuPath.DARK.getTranslationKey(), "Dark Path");
+        add(GuPath.STRENGTH.getTranslationKey(), "Strength Path");
+        add(GuPath.DREAM.getTranslationKey(), "Dream Path");
+        add(GuPath.REFINEMENT.getTranslationKey(), "Refinement Path");
+        add(GuPath.WISDOM.getTranslationKey(), "Wisdom Path");
+        add(GuPath.THEFT.getTranslationKey(), "Theft Path");
+        add(GuPath.LUCK.getTranslationKey(), "Luck Path");
+        add(GuPath.KILLING.getTranslationKey(), "Killing Path");
+        add(GuPath.BLOOD.getTranslationKey(), "Blood Path");
+        add(GuPath.SOUL.getTranslationKey(), "Soul Path");
+        add(GuPath.ENSLAVEMENT.getTranslationKey(), "Enslavement Path");
+        add(GuPath.FOOD.getTranslationKey(), "Food Path");
+        add(GuPath.FORMATION.getTranslationKey(), "Formation Path");
+        add(GuPath.PAINTING.getTranslationKey(), "Painting Path");
+        add(GuPath.TRANSFORMATION.getTranslationKey(), "Transformation Path");
     }
 
     private void addAttainment() {
-        add(PathAttainment.NONE.getTranslationKey(), "None");
-        add(PathAttainment.ORDINARY.getTranslationKey(), "Ordinary");
-        add(PathAttainment.QUASI_MASTER.getTranslationKey(), "Quasi-Master");
-        add(PathAttainment.MASTER.getTranslationKey(), "Master");
-        add(PathAttainment.QUASI_GRANDMASTER.getTranslationKey(), "Quasi-Grandmaster");
-        add(PathAttainment.GRANDMASTER.getTranslationKey(), "Grandmaster");
-        add(PathAttainment.QUASI_GREAT_GRANDMASTER.getTranslationKey(), "Quasi-Great Grandmaster");
-        add(PathAttainment.GREAT_GRANDMASTER.getTranslationKey(), "Great Grandmaster");
-        add(PathAttainment.QUASI_SUPREME_GRANDMASTER.getTranslationKey(), "Quasi-Supreme Grandmaster");
-        add(PathAttainment.SUPREME_GRANDMASTER.getTranslationKey(), "Supreme Grandmaster");
+        add(GuPathAttainment.NONE.getTranslationKey(), "None");
+        add(GuPathAttainment.ORDINARY.getTranslationKey(), "Ordinary");
+        add(GuPathAttainment.QUASI_MASTER.getTranslationKey(), "Quasi-Master");
+        add(GuPathAttainment.MASTER.getTranslationKey(), "Master");
+        add(GuPathAttainment.QUASI_GRANDMASTER.getTranslationKey(), "Quasi-Grandmaster");
+        add(GuPathAttainment.GRANDMASTER.getTranslationKey(), "Grandmaster");
+        add(GuPathAttainment.QUASI_GREAT_GRANDMASTER.getTranslationKey(), "Quasi-Great Grandmaster");
+        add(GuPathAttainment.GREAT_GRANDMASTER.getTranslationKey(), "Great Grandmaster");
+        add(GuPathAttainment.QUASI_SUPREME_GRANDMASTER.getTranslationKey(), "Quasi-Supreme Grandmaster");
+        add(GuPathAttainment.SUPREME_GRANDMASTER.getTranslationKey(), "Supreme Grandmaster");
     }
     //endregion
 }

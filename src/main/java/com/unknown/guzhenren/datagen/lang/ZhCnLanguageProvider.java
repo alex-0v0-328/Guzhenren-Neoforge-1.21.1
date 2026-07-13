@@ -9,8 +9,8 @@ import com.unknown.guzhenren.custom.enums.core.GuRank;
 import com.unknown.guzhenren.custom.enums.core.GuSoulTier;
 import com.unknown.guzhenren.custom.enums.core.GuStage;
 import com.unknown.guzhenren.custom.enums.core.GuTalent;
-import com.unknown.guzhenren.custom.enums.path.Path;
-import com.unknown.guzhenren.custom.enums.path.PathAttainment;
+import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.path.GuPathAttainment;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -22,7 +22,35 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         addEnumKeys();
+        addCommandKeys();
+        addDeathMessages();
     }
+
+    //region COMMAND
+    private void addCommandKeys() {
+        add("guzhenren.command.updated", "已更新 %s 名玩家");
+        add("guzhenren.command.unknown_value", "未知的取值: %s");
+
+        add("guzhenren.command.info.header", "==== %s ====");
+        add("guzhenren.command.info.realm", "境界: %s%s (%s)");
+        add("guzhenren.command.info.talent", "资质: %s (基数 %s)");
+        add("guzhenren.command.info.physique", "体质: %s");
+        add("guzhenren.command.info.essence", "真元: %s / %s");
+        add("guzhenren.command.info.lifespan", "寿元: 年龄 %s, 剩余 %s");
+        add("guzhenren.command.info.soul", "魂魄: %s  %s / %s");
+        add("guzhenren.command.info.paths", "流派:");
+        add("guzhenren.command.info.no_path", "流派: 无");
+        add("guzhenren.command.info.path_entry", "  %s  %s  道痕 %s");
+    }
+    //endregion
+
+    //region DEATH
+    //  键名由 DamageType 的 msgId 决定: msgId "guzhenren.xxx" -> "death.attack.guzhenren.xxx"
+    private void addDeathMessages() {
+        add("death.attack.guzhenren.lifespan_exhausted", "%1$s 寿元耗尽而亡");
+        add("death.attack.guzhenren.soul_collapse", "%1$s 魂魄衰竭而亡");
+    }
+    //endregion
 
     //region ENUM
     private void addEnumKeys() {
@@ -124,49 +152,49 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     }
 
     private void addPath() {
-        add(Path.HEAVEN.getTranslationKey(), "天道");
-        add(Path.RULE.getTranslationKey(), "律道");
-        add(Path.SPACE.getTranslationKey(), "宇道");
-        add(Path.TIME.getTranslationKey(), "宙道");
-        add(Path.HUMAN.getTranslationKey(), "人道");
-        add(Path.METAL.getTranslationKey(), "金道");
-        add(Path.WOOD.getTranslationKey(), "木道");
-        add(Path.WATER.getTranslationKey(), "水道");
-        add(Path.FIRE.getTranslationKey(), "火道");
-        add(Path.EARTH.getTranslationKey(), "土道");
-        add(Path.ICE_SNOW.getTranslationKey(), "冰雪道");
-        add(Path.LIGHTNING.getTranslationKey(), "雷道");
-        add(Path.QI.getTranslationKey(), "气道");
-        add(Path.SOUND.getTranslationKey(), "音道");
-        add(Path.LIGHT.getTranslationKey(), "光道");
-        add(Path.DARK.getTranslationKey(), "暗道");
-        add(Path.STRENGTH.getTranslationKey(), "力道");
-        add(Path.DREAM.getTranslationKey(), "梦道");
-        add(Path.REFINEMENT.getTranslationKey(), "炼道");
-        add(Path.WISDOM.getTranslationKey(), "智道");
-        add(Path.THEFT.getTranslationKey(), "偷道");
-        add(Path.LUCK.getTranslationKey(), "运道");
-        add(Path.KILLING.getTranslationKey(), "杀道");
-        add(Path.BLOOD.getTranslationKey(), "血道");
-        add(Path.SOUL.getTranslationKey(), "魂道");
-        add(Path.ENSLAVEMENT.getTranslationKey(), "奴道");
-        add(Path.FOOD.getTranslationKey(), "食道");
-        add(Path.FORMATION.getTranslationKey(), "阵道");
-        add(Path.PAINTING.getTranslationKey(), "画道");
-        add(Path.TRANSFORMATION.getTranslationKey(), "变化道");
+        add(GuPath.HEAVEN.getTranslationKey(), "天道");
+        add(GuPath.RULE.getTranslationKey(), "律道");
+        add(GuPath.SPACE.getTranslationKey(), "宇道");
+        add(GuPath.TIME.getTranslationKey(), "宙道");
+        add(GuPath.HUMAN.getTranslationKey(), "人道");
+        add(GuPath.METAL.getTranslationKey(), "金道");
+        add(GuPath.WOOD.getTranslationKey(), "木道");
+        add(GuPath.WATER.getTranslationKey(), "水道");
+        add(GuPath.FIRE.getTranslationKey(), "火道");
+        add(GuPath.EARTH.getTranslationKey(), "土道");
+        add(GuPath.ICE_SNOW.getTranslationKey(), "冰雪道");
+        add(GuPath.LIGHTNING.getTranslationKey(), "雷道");
+        add(GuPath.QI.getTranslationKey(), "气道");
+        add(GuPath.SOUND.getTranslationKey(), "音道");
+        add(GuPath.LIGHT.getTranslationKey(), "光道");
+        add(GuPath.DARK.getTranslationKey(), "暗道");
+        add(GuPath.STRENGTH.getTranslationKey(), "力道");
+        add(GuPath.DREAM.getTranslationKey(), "梦道");
+        add(GuPath.REFINEMENT.getTranslationKey(), "炼道");
+        add(GuPath.WISDOM.getTranslationKey(), "智道");
+        add(GuPath.THEFT.getTranslationKey(), "偷道");
+        add(GuPath.LUCK.getTranslationKey(), "运道");
+        add(GuPath.KILLING.getTranslationKey(), "杀道");
+        add(GuPath.BLOOD.getTranslationKey(), "血道");
+        add(GuPath.SOUL.getTranslationKey(), "魂道");
+        add(GuPath.ENSLAVEMENT.getTranslationKey(), "奴道");
+        add(GuPath.FOOD.getTranslationKey(), "食道");
+        add(GuPath.FORMATION.getTranslationKey(), "阵道");
+        add(GuPath.PAINTING.getTranslationKey(), "画道");
+        add(GuPath.TRANSFORMATION.getTranslationKey(), "变化道");
     }
 
     private void addAttainment() {
-        add(PathAttainment.NONE.getTranslationKey(), "无");
-        add(PathAttainment.ORDINARY.getTranslationKey(), "普通");
-        add(PathAttainment.QUASI_MASTER.getTranslationKey(), "准大师");
-        add(PathAttainment.MASTER.getTranslationKey(), "大师");
-        add(PathAttainment.QUASI_GRANDMASTER.getTranslationKey(), "准宗师");
-        add(PathAttainment.GRANDMASTER.getTranslationKey(), "宗师");
-        add(PathAttainment.QUASI_GREAT_GRANDMASTER.getTranslationKey(), "准大宗师");
-        add(PathAttainment.GREAT_GRANDMASTER.getTranslationKey(), "大宗师");
-        add(PathAttainment.QUASI_SUPREME_GRANDMASTER.getTranslationKey(), "准无上大宗师");
-        add(PathAttainment.SUPREME_GRANDMASTER.getTranslationKey(), "无上大宗师");
+        add(GuPathAttainment.NONE.getTranslationKey(), "无");
+        add(GuPathAttainment.ORDINARY.getTranslationKey(), "普通");
+        add(GuPathAttainment.QUASI_MASTER.getTranslationKey(), "准大师");
+        add(GuPathAttainment.MASTER.getTranslationKey(), "大师");
+        add(GuPathAttainment.QUASI_GRANDMASTER.getTranslationKey(), "准宗师");
+        add(GuPathAttainment.GRANDMASTER.getTranslationKey(), "宗师");
+        add(GuPathAttainment.QUASI_GREAT_GRANDMASTER.getTranslationKey(), "准大宗师");
+        add(GuPathAttainment.GREAT_GRANDMASTER.getTranslationKey(), "大宗师");
+        add(GuPathAttainment.QUASI_SUPREME_GRANDMASTER.getTranslationKey(), "准无上大宗师");
+        add(GuPathAttainment.SUPREME_GRANDMASTER.getTranslationKey(), "无上大宗师");
     }
     //endregion
 }

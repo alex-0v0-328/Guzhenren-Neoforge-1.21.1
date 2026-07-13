@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public enum Path implements StringRepresentable {
+public enum GuPath implements StringRepresentable {
 
     HEAVEN, RULE, SPACE, TIME, HUMAN,
 
@@ -15,7 +15,7 @@ public enum Path implements StringRepresentable {
     LUCK, KILLING, BLOOD, SOUL, ENSLAVEMENT,
     FOOD, FORMATION, PAINTING, TRANSFORMATION;
 
-    public static final Codec<Path> CODEC = StringRepresentable.fromEnum(Path::values);
+    public static final Codec<GuPath> CODEC = StringRepresentable.fromEnum(GuPath::values);
     private static final String KEY_PREFIX = "guzhenren.enum.path.path.";
 
     @Override

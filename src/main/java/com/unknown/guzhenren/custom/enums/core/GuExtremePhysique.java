@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.path.Path;
+import com.unknown.guzhenren.custom.enums.path.GuPath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -11,28 +11,28 @@ import org.jetbrains.annotations.NotNull;
 public enum GuExtremePhysique implements StringRepresentable {
 
     NONE,
-    VERDANT_GREAT_SUN(Path.SPACE),
-    DESOLATE_ANCIENT_MOON(Path.TIME),
-    NORTHERN_DARK_ICE_SOUL(Path.WATER, Path.ICE_SNOW),
-    BOUNDLESS_FOREST_SAMSARA(Path.WOOD),
-    BLAZING_GLORY_LIGHTNING_BRILLIANCE(Path.FIRE, Path.LIGHTNING),
-    MYRIAD_GOLD_WONDROUS_ESSENCE(Path.METAL),
-    GREAT_STRENGTH_TRUE_MARTIAL(Path.STRENGTH),
-    CAREFREE_WISDOM_HEART(Path.WISDOM),
-    PROFOUND_EARTH_ORIGIN(Path.EARTH),
-    UNIVERSE_GREAT_DERIVATION(Path.RULE),
-    PURE_DREAM_REALITY_SEEKER(Path.DREAM);
+    VERDANT_GREAT_SUN(GuPath.SPACE),
+    DESOLATE_ANCIENT_MOON(GuPath.TIME),
+    NORTHERN_DARK_ICE_SOUL(GuPath.WATER, GuPath.ICE_SNOW),
+    BOUNDLESS_FOREST_SAMSARA(GuPath.WOOD),
+    BLAZING_GLORY_LIGHTNING_BRILLIANCE(GuPath.FIRE, GuPath.LIGHTNING),
+    MYRIAD_GOLD_WONDROUS_ESSENCE(GuPath.METAL),
+    GREAT_STRENGTH_TRUE_MARTIAL(GuPath.STRENGTH),
+    CAREFREE_WISDOM_HEART(GuPath.WISDOM),
+    PROFOUND_EARTH_ORIGIN(GuPath.EARTH),
+    UNIVERSE_GREAT_DERIVATION(GuPath.RULE),
+    PURE_DREAM_REALITY_SEEKER(GuPath.DREAM);
 
     public static final Codec<GuExtremePhysique> CODEC = StringRepresentable.fromEnum(GuExtremePhysique::values);
     private static final String KEY_PREFIX = "guzhenren.enum.core.ten_extreme.";
 
-    private final List<Path> talentPaths;
+    private final List<GuPath> talentPaths;
 
-    GuExtremePhysique(Path... talentPaths) {
+    GuExtremePhysique(GuPath... talentPaths) {
         this.talentPaths = List.of(talentPaths);
     }
 
-    public List<Path> getTalentPaths() {return talentPaths;}
+    public List<GuPath> getTalentPaths() {return talentPaths;}
 
     //  随机一个十绝体质: 排除 NONE 与 PURE_DREAM_REALITY_SEEKER, 其余十个等概率
     public static GuExtremePhysique randomTenExtreme() {

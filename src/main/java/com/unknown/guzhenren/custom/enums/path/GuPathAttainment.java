@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public enum PathAttainment implements StringRepresentable {
+public enum GuPathAttainment implements StringRepresentable {
 
     //  NONE 是默认境界 (尚未入门), 排在普通之下
     NONE(0),
@@ -18,12 +18,12 @@ public enum PathAttainment implements StringRepresentable {
     QUASI_SUPREME_GRANDMASTER(8),
     SUPREME_GRANDMASTER(9);
 
-    public static final Codec<PathAttainment> CODEC = StringRepresentable.fromEnum(PathAttainment::values);
+    public static final Codec<GuPathAttainment> CODEC = StringRepresentable.fromEnum(GuPathAttainment::values);
     private static final String KEY_PREFIX = "guzhenren.enum.path.attainment.";
 
     private final int level;
 
-    PathAttainment(int level) {
+    GuPathAttainment(int level) {
         this.level = level;
     }
 
