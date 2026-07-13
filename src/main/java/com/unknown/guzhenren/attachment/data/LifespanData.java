@@ -6,22 +6,25 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The "lifespan" (寿元) system. One in-game day ages the player by a year and burns a year of
-//  remaining lifespan.
+//  The "lifespan" (寿元) system. One in-game day: age +1, lifespan -1. See CLAUDE.md "Time, sleep,
+//  death".
 //
-//  `lastDayIndex` is the overworld day index we last billed the player for. It makes aging
-//  idempotent: a player who relogs, changes dimension, or is ticked twice in a day is not aged
-//  twice, and a player who was offline for ten days is aged exactly ten years on login.
-//  UNTRACKED means "never billed" -- the first tick adopts the current day without aging.
+//  `lastDayIndex` is the overworld day we last billed the player for, and it is what makes aging
+//  idempotent -- a relog, a dimension change or a double tick cannot charge twice, and ten days
+//  offline are billed as exactly ten years. UNTRACKED means "never billed": the first tick adopts the
+//  current day without aging.
 public record LifespanData(long age, long lifespan, long lastDayIndex) {
 
     public static final long UNTRACKED = -1L;
-    public static final long DEFAULT_LIFESPAN = 100L;
 
-    public static final LifespanData DEFAULT = new LifespanData(0L, DEFAULT_LIFESPAN, UNTRACKED);
+    //  A new player is 14 with 86 years left: an ordinary mortal burns out at 100.
+    public static final long DEFAULT_AGE      = 14L;
+    public static final long DEFAULT_LIFESPAN = 86L;
+
+    public static final LifespanData DEFAULT = new LifespanData(DEFAULT_AGE, DEFAULT_LIFESPAN, UNTRACKED);
 
     public static final Codec<LifespanData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.LONG.optionalFieldOf("age", 0L).forGetter(LifespanData::age),
+            Codec.LONG.optionalFieldOf("age", DEFAULT_AGE).forGetter(LifespanData::age),
             Codec.LONG.optionalFieldOf("lifespan", DEFAULT_LIFESPAN).forGetter(LifespanData::lifespan),
             Codec.LONG.optionalFieldOf("last_day_index", UNTRACKED).forGetter(LifespanData::lastDayIndex)
     ).apply(instance, LifespanData::new));

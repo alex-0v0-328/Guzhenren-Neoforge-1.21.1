@@ -50,13 +50,15 @@ public record CoreData(
             ModStreamCodecs.ofEnum(GuLifeState.class), CoreData::lifeState,
             CoreData::new);
 
+    //  1..19 is not a value, it is a hole: GuTalent.fromPercent finds no tier there and returns NONE,
+    //  which would leave an "unawakened" body carrying a non-zero essence cap. Snap out of it.
     public CoreData {
-        baseEssence = Math.clamp(baseEssence, UNAWAKENED_BASE, MAX_BASE);
+        baseEssence = baseEssence <= UNAWAKENED_BASE
+                ? UNAWAKENED_BASE
+                : Math.clamp(baseEssence, MIN_BASE, MAX_BASE);
     }
 
-    //  ---- derived, never stored ----
-    //  Aptitude tier is a pure function of the aptitude base, the same way GuSoulTier is a pure
-    //  function of the soul value. Storing it would just be a second thing to keep in sync.
+    //  ---- derived, never stored -- see CLAUDE.md "Derived, never stored" ----
     public GuTalent talent() {return GuTalent.fromPercent(baseEssence);}
     public GuLifeForm lifeForm() {return rank.getLifeForm();}
     public boolean isAwakened() {return baseEssence >= MIN_BASE;}

@@ -28,6 +28,12 @@ public final class PathService {
     public static void addMark(ServerPlayer p, GuPath path, long delta) {setMark(p, path, mark(p, path) + delta);}
     private static void store(ServerPlayer p, PathData data) {p.setData(ModAttachments.PATH, data);}
 
+    //  Promote or demote by whole tiers, clamped at 无 and 无上大宗师. Marks do not move -- the two are
+    //  independent by design, and a promotion that gifted marks would quietly couple them.
+    public static void shiftAttainment(ServerPlayer p, GuPath path, int delta) {
+        setAttainment(p, path, attainment(p, path).shift(delta));
+    }
+
     public static void setMark(ServerPlayer p, GuPath path, long v) {
         store(p, get(p).with(path, entry(p, path).withMark(v)));
     }

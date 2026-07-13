@@ -1,6 +1,8 @@
 package com.unknown.guzhenren.datagen;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.datagen.damage.ModDamageTypeProvider;
+import com.unknown.guzhenren.datagen.damage.ModDamageTypeTagsProvider;
 import com.unknown.guzhenren.datagen.lang.EnUsLanguageProvider;
 import com.unknown.guzhenren.datagen.lang.ZhCnLanguageProvider;
 import java.util.concurrent.CompletableFuture;
@@ -26,12 +28,12 @@ public final class DataGenerators {
         generator.addProvider(event.includeClient(), new EnUsLanguageProvider(packOutput));
         generator.addProvider(event.includeClient(), new ZhCnLanguageProvider(packOutput));
 
-        ModDatapackProvider datapackProvider = generator.addProvider(event.includeServer(),
-                new ModDatapackProvider(packOutput, lookupProvider));
+        ModDamageTypeProvider damageTypeProvider = generator.addProvider(event.includeServer(),
+                new ModDamageTypeProvider(packOutput, lookupProvider));
 
         //  The tag provider has to see the damage types this same run is generating, so it hangs off
-        //  the datapack provider's registry future rather than the bare vanilla lookup.
+        //  that provider's registry future rather than the bare vanilla lookup.
         generator.addProvider(event.includeServer(), new ModDamageTypeTagsProvider(
-                packOutput, datapackProvider.getRegistryProvider(), existingFileHelper));
+                packOutput, damageTypeProvider.getRegistryProvider(), existingFileHelper));
     }
 }

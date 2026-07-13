@@ -6,22 +6,19 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 
-//  What is *not* here is the point: no login, respawn or dimension-change resync handler.
-//  The attachments declare .sync(), and vanilla is patched to call syncInitialPlayerAttachments at
-//  exactly those three moments (PlayerList#placeNewPlayer, PlayerList#respawn,
-//  ServerPlayer#changeDimension). Adding our own would only send the same data twice.
+//  The player-data lifecycle: the moments that are not a tick.
 //
-//  What remains is the two things NeoForge cannot know about: carrying data across a clone, and
-//  making sure a player who died of a data condition is not still in that condition on respawn.
+//  There is deliberately no login / respawn / dimension-change resync handler here -- NeoForge already
+//  re-sends the full set at all three. See CLAUDE.md "Networking".
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerDataEvents {
 
     private PlayerDataEvents() {}
 
-    //  Fires for death respawns and non-death clones (End portal return) alike. The attachments are
-    //  declared copyOnDeath too, but copying here explicitly covers the non-death case as well and
-    //  keeps the behavior independent of NeoForge's clone internals.
+    //  Death respawns and non-death clones (End portal return) alike. copyOnDeath would cover the
+    //  first; copying here explicitly covers the second and does not depend on NeoForge's internals.
     @SubscribeEvent
     public static void onClone(PlayerEvent.Clone event) {
         PlayerDataService.copy(event.getOriginal(), event.getEntity());
@@ -33,5 +30,24 @@ public final class PlayerDataEvents {
         if (event.getEntity() instanceof ServerPlayer player) {
             PlayerDataService.onRespawn(player);
         }
+    }
+
+    //  Only a natural wake pays out. Sleep ends in four ways and the two booleans separate them:
+    //
+    //    the night passed, the level wakes everyone   stopSleepInBed(false, false)   <-- pay out
+    //    the player pressed "Leave Bed"               stopSleepInBed(false, true)
+    //    the player logged out while asleep           stopSleepInBed(true,  false)
+    //    the player was teleported out of the bed     stopSleepInBed(true,  true)
+    //
+    //  isSleepingLongEnough() is still true here (the event fires before the counter resets) and
+    //  closes the last hole: with playersSleepingPercentage below 100 one deep sleeper skips the night
+    //  for everybody, and someone who just climbed into bed must not be paid for it.
+    @SubscribeEvent
+    public static void onWakeUp(PlayerWakeUpEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (event.wakeImmediately() || event.updateLevel()) return;
+        if (!player.isSleepingLongEnough()) return;
+
+        PlayerDataService.onSleepComplete(player);
     }
 }

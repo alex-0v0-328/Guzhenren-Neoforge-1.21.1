@@ -38,3 +38,8 @@ run/
 **/src/generated/**/.cache/
 repo/
 !**/src/**/repo/
+
+### Claude ###
+# Private working notes + the context cache Alex pastes in. Never committed.
+CLAUDE.md
+GZR-CONTEXT-*.md

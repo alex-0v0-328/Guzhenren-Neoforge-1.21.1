@@ -18,9 +18,11 @@ public record SoulData(long maxSoul, long currentSoul) {
 
     public static final SoulData DEFAULT = new SoulData(DEFAULT_MAX_SOUL, DEFAULT_MAX_SOUL);
 
+    //  NBT keys spell the system out -- "max"/"current" alone would be ambiguous the moment another
+    //  pool grows a serialized cap.
     public static final Codec<SoulData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.LONG.optionalFieldOf("max", DEFAULT_MAX_SOUL).forGetter(SoulData::maxSoul),
-            Codec.LONG.optionalFieldOf("current", DEFAULT_MAX_SOUL).forGetter(SoulData::currentSoul)
+            Codec.LONG.optionalFieldOf("max_soul", DEFAULT_MAX_SOUL).forGetter(SoulData::maxSoul),
+            Codec.LONG.optionalFieldOf("current_soul", DEFAULT_MAX_SOUL).forGetter(SoulData::currentSoul)
     ).apply(instance, SoulData::new));
 
     public static final StreamCodec<ByteBuf, SoulData> STREAM_CODEC = StreamCodec.composite(

@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.datagen;
+package com.unknown.guzhenren.datagen.damage;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.registry.ModDamageTypes;
@@ -13,7 +13,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  Running out of lifespan or soul is not something armour, a potion, or a shield can argue with,
+//  Running out of lifespan or soul is not something armor, a potion, or a shield can argue with,
 //  so both damage types opt out of every mitigation vanilla offers.
 //
 //  Deliberately NOT in BYPASSES_INVULNERABILITY: creative players should stay unkillable, and

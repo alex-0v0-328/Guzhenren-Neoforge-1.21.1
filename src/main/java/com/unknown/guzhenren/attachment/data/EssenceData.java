@@ -7,25 +7,22 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 //  The "essence" (真元) system. Only the current pool is stored -- the cap is a pure function of
-//  CoreData, see EssenceService.maxEssence.
-//
-//  The sub-integer carry of natural regeneration deliberately does NOT live here; it is a separate,
-//  unsynced attachment (ModAttachments.ESSENCE_CARRY) so that a regen step which does not move the
-//  pool does not push a packet.
-public record EssenceData(long current) {
+//  CoreData (EssenceService.maxEssence), and the sub-integer regen carry is a separate unsynced
+//  attachment (ModAttachments.ESSENCE_CARRY). Neither belongs here; see CLAUDE.md "Networking".
+public record EssenceData(long currentEssence) {
 
     public static final EssenceData DEFAULT = new EssenceData(0L);
 
     public static final Codec<EssenceData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.LONG.optionalFieldOf("current", 0L).forGetter(EssenceData::current)
+            Codec.LONG.optionalFieldOf("current_essence", 0L).forGetter(EssenceData::currentEssence)
     ).apply(instance, EssenceData::new));
 
     public static final StreamCodec<ByteBuf, EssenceData> STREAM_CODEC =
-            ByteBufCodecs.VAR_LONG.map(EssenceData::new, EssenceData::current);
+            ByteBufCodecs.VAR_LONG.map(EssenceData::new, EssenceData::currentEssence);
 
     public EssenceData {
-        current = Math.max(0L, current);
+        currentEssence = Math.max(0L, currentEssence);
     }
 
-    public EssenceData withCurrent(long v) {return new EssenceData(v);}
+    public EssenceData withCurrentEssence(long v) {return new EssenceData(v);}
 }

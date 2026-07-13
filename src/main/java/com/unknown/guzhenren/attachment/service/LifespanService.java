@@ -29,7 +29,7 @@ public final class LifespanService {
     //
     //  Driven off a stored day index rather than a countdown, which buys three things for free:
     //  ticking twice in one day cannot double-charge, a player who was offline for ten days is aged
-    //  exactly ten years on login, and the whole thing survives a relog mid-day.
+    //  exactly ten years on login, and the whole thing survives a relog midday.
     public static void tickAging(ServerPlayer player) {
         MinecraftServer server = player.getServer();
         if (server == null) return;

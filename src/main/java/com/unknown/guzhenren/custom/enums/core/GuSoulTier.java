@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
+import com.unknown.guzhenren.util.GuTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,17 +9,17 @@ import org.jetbrains.annotations.NotNull;
 //  括号里是进入该境界的门槛(含), 规律为 人数 × 100 —— 一人魂的起点压到 1
 //   一人魂 1~999 / 十人魂 1000~9999 / 百人魂 10000~99999 / ...
 //  亿人魂是顶档但不是封顶: 魂魄值再高也仍是亿人魂
-public enum GuSoulTier implements StringRepresentable {
+public enum GuSoulTier implements StringRepresentable, GuTranslatable {
 
-    ONE(1L),
-    TEN(1_000L),
-    HUNDRED(10_000L),
-    THOUSAND(100_000L),
-    TEN_THOUSAND(1_000_000L),
-    HUNDRED_THOUSAND(10_000_000L),
-    MILLION(100_000_000L),
-    TEN_MILLION(1_000_000_000L),
-    HUNDRED_MILLION(10_000_000_000L);
+    ONE             (             1L),
+    TEN             (         1_000L),
+    HUNDRED         (        10_000L),
+    THOUSAND        (       100_000L),
+    TEN_THOUSAND    (     1_000_000L),
+    HUNDRED_THOUSAND(    10_000_000L),
+    MILLION         (   100_000_000L),
+    TEN_MILLION     ( 1_000_000_000L),
+    HUNDRED_MILLION (10_000_000_000L);
 
     public static final Codec<GuSoulTier> CODEC = StringRepresentable.fromEnum(GuSoulTier::values);
     private static final String KEY_PREFIX = "guzhenren.enum.soul.tier.";

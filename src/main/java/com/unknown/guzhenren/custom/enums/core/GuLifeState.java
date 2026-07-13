@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
+import com.unknown.guzhenren.util.GuTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 //   空窍生死 (ApertureStatusData.lifeState) —— 只有 生 / 死, 空窍没有僵尸态
 //  所以化僵的人空窍是「死」的, 吸不到天地元气 —— 这正是僵尸不自然回复真元的原因
 //  ZOMBIE 是生与死之间的第三态: 人已经死了, 但尸身还在动 —— 档位见 GuZombieTier
-public enum GuLifeState implements StringRepresentable {
+public enum GuLifeState implements StringRepresentable, GuTranslatable {
 
     ALIVE,
     ZOMBIE,

@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
+import com.unknown.guzhenren.util.GuTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,23 +11,23 @@ import org.jetbrains.annotations.NotNull;
 //  ⚠ 目前没有使用处: HUD 的真元条已改用固定的天蓝色 —— 十种颜色轮着上一条 bar,
 //  既挤占了别的 bar 的可选色, 玩家也容易把"变色"误读成别的意思
 //  这套配色本身保留, 以后会在别处(粒子/物品/界面)用上, 别当死代码删了
-public enum GuEssenceColor implements StringRepresentable {
+public enum GuEssenceColor implements StringRepresentable, GuTranslatable {
 
     //  凡人 / 未开窍: 灰
-    NONE(0xFF808080, false),
+    NONE          (0xFF808080, false),
 
     //  一转 ~ 五转 (凡人境): 随小境界变深浅; 括号里是中阶色, 初阶提亮 / 巅峰压暗
     //  青铜色走 鲜艳铜绿 -> 墨绿
-    GREEN_COPPER(0xFF3EC98A),
-    RED_STEEL(0xFFD9503F),
-    WHITE_SILVER(0xFFCCCCCC),
-    YELLOW_GOLDEN(0xFFE8BE43),
+    GREEN_COPPER  (0xFF3EC98A),
+    RED_STEEL     (0xFFD9503F),
+    WHITE_SILVER  (0xFFCCCCCC),
+    YELLOW_GOLDEN (0xFFE8BE43),
     PURPLE_CRYSTAL(0xFFA855D4),
 
     //  六转 ~ 九转 (仙人境): 固定色
-    GREEN_GRAPE(0xFF9ACD32, false),
-    RED_DATE(0xFF8B2500, false),
-    WHITE_LITCHI(0xFFF5F0E1, false),
+    GREEN_GRAPE   (0xFF9ACD32, false),
+    RED_DATE      (0xFF8B2500, false),
+    WHITE_LITCHI  (0xFFF5F0E1, false),
     YELLOW_APRICOT(0xFFFBCEB1, false);
 
     public static final Codec<GuEssenceColor> CODEC = StringRepresentable.fromEnum(GuEssenceColor::values);
