@@ -1,8 +1,8 @@
 package com.unknown.guzhenren.display;
 
-import com.unknown.guzhenren.attachment.data.CoreData;
-import com.unknown.guzhenren.attachment.data.LifespanData;
-import com.unknown.guzhenren.custom.enums.core.GuExtremePhysique;
+import com.unknown.guzhenren.attachment.data.aperture.Aperture;
+import com.unknown.guzhenren.attachment.data.body.BodyData;
+import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -15,30 +15,28 @@ public final class ModDisplayText {
     private static final String GAP = "  ";
 
     //  一转巅峰 / Rank I Peak. The separator lives in the lang key -- zh joins, en needs a space.
-    public static MutableComponent realm(CoreData core) {
+    public static MutableComponent realm(Aperture aperture) {
         return Component.translatable("guzhenren.display.realm",
-                Component.translatable(core.rank().getTranslationKey()),
-                Component.translatable(core.stage().getTranslationKey()));
+                Component.translatable(aperture.rank().getTranslationKey()),
+                Component.translatable(aperture.stage().getTranslationKey()));
     }
 
     //  甲等资质 [ 太日阳莽体 ] -- the bracket only shows up for a 十绝 physique holder.
-    public static MutableComponent talent(CoreData core) {
-        MutableComponent line = Component.translatable(core.talent().getTranslationKey());
-        if (core.extremePhysique() == GuExtremePhysique.NONE) return line;
+    public static MutableComponent talent(Aperture aperture) {
+        MutableComponent line = Component.translatable(aperture.talent().getTranslationKey());
+        if (aperture.extremePhysique() == ExtremePhysique.NONE) return line;
 
         return line.append(" ").append(Component.translatable("guzhenren.display.physique",
-                Component.translatable(core.extremePhysique().getTranslationKey())));
+                Component.translatable(aperture.extremePhysique().getTranslationKey())));
     }
 
     //  86 [ 14岁 ]
-    public static MutableComponent lifespan(LifespanData data) {
-        return Component.translatable("guzhenren.display.lifespan", data.lifespan(), data.age());
+    public static MutableComponent lifespan(BodyData body) {
+        return Component.translatable("guzhenren.display.lifespan", body.lifespan(), body.age());
     }
 
     //  一转巅峰  甲等资质 [ 太日阳莽体 ] -- the HUD's first line.
-    public static MutableComponent realmAndTalent(CoreData core) {
-        return realm(core).append(GAP).append(talent(core));
-    }
+    public static MutableComponent realmAndTalent(Aperture a) {return realm(a).append(GAP).append(talent(a));}
 
     //  800/800. A raw String, not a Component -- drawn straight into the HUD bar.
     public static String pool(long current, long max) {return current + "/" + max;}

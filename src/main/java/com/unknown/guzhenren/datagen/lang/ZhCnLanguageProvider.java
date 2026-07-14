@@ -1,19 +1,21 @@
 package com.unknown.guzhenren.datagen.lang;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.custom.enums.core.GuEssenceColor;
-import com.unknown.guzhenren.custom.enums.core.GuExtremePhysique;
-import com.unknown.guzhenren.custom.enums.core.GuLifeForm;
-import com.unknown.guzhenren.custom.enums.core.GuLifeState;
-import com.unknown.guzhenren.custom.enums.core.GuRank;
-import com.unknown.guzhenren.custom.enums.core.GuSoulTier;
-import com.unknown.guzhenren.custom.enums.core.GuStage;
-import com.unknown.guzhenren.custom.enums.core.GuTalent;
-import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.path.GuPathAttainment;
-import com.unknown.guzhenren.custom.enums.wisdom.GuBrilliance;
-import com.unknown.guzhenren.custom.enums.wisdom.GuWisdomType;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
+import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
+import com.unknown.guzhenren.custom.enums.aperture.EssenceColor;
+import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.aperture.Rank;
+import com.unknown.guzhenren.custom.enums.aperture.Stage;
+import com.unknown.guzhenren.custom.enums.aperture.Talent;
+import com.unknown.guzhenren.custom.enums.body.LifeForm;
+import com.unknown.guzhenren.custom.enums.body.LifeState;
+import com.unknown.guzhenren.custom.enums.path.GuAttainment;
+import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.qi.QiType;
+import com.unknown.guzhenren.custom.enums.soul.SoulTier;
+import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
+import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -55,13 +57,20 @@ public class ZhCnLanguageProvider extends LanguageProvider {
 
         add("guzhenren.command.failed.awakened",           "%s 已开窍 —— 要重掷请先 /guzhenren reset");
         add("guzhenren.command.failed.unawakened",         "%s 尚未开窍 —— 修为相关的值只能由 /guzhenren awaken 建立");
+        add("guzhenren.command.failed.qi_mark",            "气道的道痕是诸气之和，不能直接改 —— 请用 /guzhenren body qi <种类>");
 
+        add("guzhenren.command.info.aperture_index",       "第 %s 窍");
+        add("guzhenren.command.info.aperture_state",       "空窍状态：%s");
         add("guzhenren.command.info.realm",                "玩家修为：%s");
         add("guzhenren.command.info.talent",               "玩家天赋：%s");
         add("guzhenren.command.info.essence",              "玩家真元：%s / %s");
         add("guzhenren.command.info.soul",                 "玩家魂魄：%s / %s");
         add("guzhenren.command.info.lifespan",             "玩家寿元：%s");
-        add("guzhenren.command.info.life_state",           "玩家状态：%s");
+        add("guzhenren.command.info.life_state",           "肉身状态：%s");
+        add("guzhenren.command.info.life_form",            "玩家形态：%s");
+        add("guzhenren.command.info.qi",                   "玩家诸气：");
+        add("guzhenren.command.info.qi_entry",             "  %s  %s");
+        add("guzhenren.command.info.qi_empty",             "  无");
         add("guzhenren.command.info.paths",                "玩家流派：");
         add("guzhenren.command.info.path_entry",           "  %s  %s  道痕 %s");
         add("guzhenren.command.info.path_empty",           "  无");
@@ -89,87 +98,103 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addRank();
         addStage();
         addTalent();
-        addLifeForm();
-        addLifeState();
+        addApertureState();
         addEssenceColor();
         addTenExtreme();
+        addLifeForm();
+        addLifeState();
+        addSoulTier();
+        addQiType();
         addPath();
         addAttainment();
-        addSoulTier();
         addWisdomType();
         addBrilliance();
     }
 
+    //  空窍只有生死两态; 肉身的 LifeState 才有第三态「僵」
+    private void addApertureState() {
+        add(ApertureState.ALIVE, "生");
+        add(ApertureState.DEAD,  "死");
+    }
+
     private void addRank() {
-        add(GuRank.NONE,  "凡人");
-        add(GuRank.ONE,   "一转");
-        add(GuRank.TWO,   "二转");
-        add(GuRank.THREE, "三转");
-        add(GuRank.FOUR,  "四转");
-        add(GuRank.FIVE,  "五转");
-        add(GuRank.SIX,   "六转");
-        add(GuRank.SEVEN, "七转");
-        add(GuRank.EIGHT, "八转");
-        add(GuRank.NINE,  "九转");
+        add(Rank.NONE,  "凡人");
+        add(Rank.ONE,   "一转");
+        add(Rank.TWO,   "二转");
+        add(Rank.THREE, "三转");
+        add(Rank.FOUR,  "四转");
+        add(Rank.FIVE,  "五转");
+        add(Rank.SIX,   "六转");
+        add(Rank.SEVEN, "七转");
+        add(Rank.EIGHT, "八转");
+        add(Rank.NINE,  "九转");
     }
 
     private void addStage() {
         //  故意留空: 未开窍时不显示
-        add(GuStage.NONE,   "");
-        add(GuStage.INIT,   "初阶");
-        add(GuStage.MIDDLE, "中阶");
-        add(GuStage.UPPER,  "高阶");
-        add(GuStage.PEAK,   "巅峰");
+        add(Stage.NONE,   "");
+        add(Stage.INIT,   "初阶");
+        add(Stage.MIDDLE, "中阶");
+        add(Stage.UPPER,  "高阶");
+        add(Stage.PEAK,   "巅峰");
     }
 
     private void addTalent() {
-        add(GuTalent.EXTREME, "十绝天资");
-        add(GuTalent.FIRST,   "甲等资质");
-        add(GuTalent.SECOND,  "乙等资质");
-        add(GuTalent.THIRD,   "丙等资质");
-        add(GuTalent.FOURTH,  "丁等资质");
-        add(GuTalent.NONE,    "未觉醒");
+        add(Talent.EXTREME, "十绝天资");
+        add(Talent.FIRST,   "甲等资质");
+        add(Talent.SECOND,  "乙等资质");
+        add(Talent.THIRD,   "丙等资质");
+        add(Talent.FOURTH,  "丁等资质");
+        add(Talent.NONE,    "未觉醒");
     }
 
     private void addLifeForm() {
-        add(GuLifeForm.MORTAL,   "凡");
-        add(GuLifeForm.IMMORTAL, "仙");
+        add(LifeForm.MORTAL,   "凡");
+        add(LifeForm.IMMORTAL, "仙");
     }
 
     private void addLifeState() {
-        add(GuLifeState.ALIVE,  "生");
-        add(GuLifeState.ZOMBIE, "僵");
-        add(GuLifeState.DEAD,   "死");
+        add(LifeState.ALIVE,  "生");
+        add(LifeState.ZOMBIE, "僵");
+        add(LifeState.DEAD,   "死");
     }
 
-    //  真元色, 每转一色; 同转内的深浅由 GuEssenceColor.shade 按小境界算, 不另出文案
+    //  真元色, 每转一色; 同转内的深浅由 EssenceColor.shade 按小境界算, 不另出文案
     private void addEssenceColor() {
-        add(GuEssenceColor.NONE,           "无");
-        add(GuEssenceColor.GREEN_COPPER,   "青铜色");
-        add(GuEssenceColor.RED_STEEL,      "赤铁色");
-        add(GuEssenceColor.WHITE_SILVER,   "白银色");
-        add(GuEssenceColor.YELLOW_GOLDEN,  "黄金色");
-        add(GuEssenceColor.PURPLE_CRYSTAL, "紫晶色");
-        add(GuEssenceColor.GREEN_GRAPE,    "青提");
-        add(GuEssenceColor.RED_DATE,       "红枣");
-        add(GuEssenceColor.WHITE_LITCHI,   "白荔");
-        add(GuEssenceColor.YELLOW_APRICOT, "黄杏");
+        add(EssenceColor.NONE,           "无");
+        add(EssenceColor.GREEN_COPPER,   "青铜色");
+        add(EssenceColor.RED_STEEL,      "赤铁色");
+        add(EssenceColor.WHITE_SILVER,   "白银色");
+        add(EssenceColor.YELLOW_GOLDEN,  "黄金色");
+        add(EssenceColor.PURPLE_CRYSTAL, "紫晶色");
+        add(EssenceColor.GREEN_GRAPE,    "青提");
+        add(EssenceColor.RED_DATE,       "红枣");
+        add(EssenceColor.WHITE_LITCHI,   "白荔");
+        add(EssenceColor.YELLOW_APRICOT, "黄杏");
     }
 
     private void addTenExtreme() {
         //  故意留空: 非十绝体玩家不显示
-        add(GuExtremePhysique.NONE,                               "");
-        add(GuExtremePhysique.VERDANT_GREAT_SUN,                  "太日阳莽体");
-        add(GuExtremePhysique.DESOLATE_ANCIENT_MOON,              "古月阴荒体");
-        add(GuExtremePhysique.NORTHERN_DARK_ICE_SOUL,             "北冥冰魄体");
-        add(GuExtremePhysique.BOUNDLESS_FOREST_SAMSARA,           "森海轮回体");
-        add(GuExtremePhysique.BLAZING_GLORY_LIGHTNING_BRILLIANCE, "炎煌雷泽体");
-        add(GuExtremePhysique.MYRIAD_GOLD_WONDROUS_ESSENCE,       "万金妙华体");
-        add(GuExtremePhysique.GREAT_STRENGTH_TRUE_MARTIAL,        "大力真武体");
-        add(GuExtremePhysique.CAREFREE_WISDOM_HEART,              "逍遥智心体");
-        add(GuExtremePhysique.PROFOUND_EARTH_ORIGIN,              "厚土元央体");
-        add(GuExtremePhysique.UNIVERSE_GREAT_DERIVATION,          "宇宙大衍体");
-        add(GuExtremePhysique.PURE_DREAM_REALITY_SEEKER,          "纯梦求真体");
+        add(ExtremePhysique.NONE,                               "");
+        add(ExtremePhysique.VERDANT_GREAT_SUN,                  "太日阳莽体");
+        add(ExtremePhysique.DESOLATE_ANCIENT_MOON,              "古月阴荒体");
+        add(ExtremePhysique.NORTHERN_DARK_ICE_SOUL,             "北冥冰魄体");
+        add(ExtremePhysique.BOUNDLESS_FOREST_SAMSARA,           "森海轮回体");
+        add(ExtremePhysique.BLAZING_GLORY_LIGHTNING_BRILLIANCE, "炎煌雷泽体");
+        add(ExtremePhysique.MYRIAD_GOLD_WONDROUS_ESSENCE,       "万金妙华体");
+        add(ExtremePhysique.GREAT_STRENGTH_TRUE_MARTIAL,        "大力真武体");
+        add(ExtremePhysique.CAREFREE_WISDOM_HEART,              "逍遥智心体");
+        add(ExtremePhysique.PROFOUND_EARTH_ORIGIN,              "厚土元央体");
+        add(ExtremePhysique.UNIVERSE_GREAT_DERIVATION,          "宇宙大衍体");
+        add(ExtremePhysique.PURE_DREAM_REALITY_SEEKER,          "纯梦求真体");
+    }
+
+    //  天地人三气是升仙的门槛; 自然气无效用. 诸气之和即气道的道痕 (不另存, 见 QiData)
+    private void addQiType() {
+        add(QiType.HEAVEN,  "天气");
+        add(QiType.EARTH,   "地气");
+        add(QiType.HUMAN,   "人气");
+        add(QiType.NATURAL, "自然气");
     }
 
     private void addPath() {
@@ -206,45 +231,45 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     }
 
     private void addAttainment() {
-        add(GuPathAttainment.NONE,                      "无");
-        add(GuPathAttainment.ORDINARY,                  "普通");
-        add(GuPathAttainment.QUASI_MASTER,              "准大师");
-        add(GuPathAttainment.MASTER,                    "大师");
-        add(GuPathAttainment.QUASI_GRANDMASTER,         "准宗师");
-        add(GuPathAttainment.GRANDMASTER,               "宗师");
-        add(GuPathAttainment.QUASI_GREAT_GRANDMASTER,   "准大宗师");
-        add(GuPathAttainment.GREAT_GRANDMASTER,         "大宗师");
-        add(GuPathAttainment.QUASI_SUPREME_GRANDMASTER, "准无上大宗师");
-        add(GuPathAttainment.SUPREME_GRANDMASTER,       "无上大宗师");
+        add(GuAttainment.NONE,                      "无");
+        add(GuAttainment.ORDINARY,                  "普通");
+        add(GuAttainment.QUASI_MASTER,              "准大师");
+        add(GuAttainment.MASTER,                    "大师");
+        add(GuAttainment.QUASI_GRANDMASTER,         "准宗师");
+        add(GuAttainment.GRANDMASTER,               "宗师");
+        add(GuAttainment.QUASI_GREAT_GRANDMASTER,   "准大宗师");
+        add(GuAttainment.GREAT_GRANDMASTER,         "大宗师");
+        add(GuAttainment.QUASI_SUPREME_GRANDMASTER, "准无上大宗师");
+        add(GuAttainment.SUPREME_GRANDMASTER,       "无上大宗师");
     }
 
     //  魂魄境界: 由魂魄值反查 (魂魄值 = 人数 × 100), 不单独存
     private void addSoulTier() {
-        add(GuSoulTier.ONE,              "一人魂");
-        add(GuSoulTier.TEN,              "十人魂");
-        add(GuSoulTier.HUNDRED,          "百人魂");
-        add(GuSoulTier.THOUSAND,         "千人魂");
-        add(GuSoulTier.TEN_THOUSAND,     "万人魂");
-        add(GuSoulTier.HUNDRED_THOUSAND, "十万人魂");
-        add(GuSoulTier.MILLION,          "百万人魂");
-        add(GuSoulTier.TEN_MILLION,      "千万人魂");
-        add(GuSoulTier.HUNDRED_MILLION,  "亿人魂");
+        add(SoulTier.ONE,              "一人魂");
+        add(SoulTier.TEN,              "十人魂");
+        add(SoulTier.HUNDRED,          "百人魂");
+        add(SoulTier.THOUSAND,         "千人魂");
+        add(SoulTier.TEN_THOUSAND,     "万人魂");
+        add(SoulTier.HUNDRED_THOUSAND, "十万人魂");
+        add(SoulTier.MILLION,          "百万人魂");
+        add(SoulTier.TEN_MILLION,      "千万人魂");
+        add(SoulTier.HUNDRED_MILLION,  "亿人魂");
     }
 
     //  智道三态; 脑海初始容量 念30000 / 意5 / 情2, 装不下即脑海炸裂
     private void addWisdomType() {
-        add(GuWisdomType.THOUGHTS, "念");
-        add(GuWisdomType.WILLS,    "意");
-        add(GuWisdomType.EMOTIONS, "情");
+        add(WisdomType.THOUGHTS, "念");
+        add(WisdomType.WILLS,    "意");
+        add(WisdomType.EMOTIONS, "情");
     }
 
     //  才情: 念的自然恢复速度 (每秒 1 / 4 / 16 / 64 / 256), 开窍时抽取
     private void addBrilliance() {
-        add(GuBrilliance.ORDINARY,    "才情普通");
-        add(GuBrilliance.DECENT,      "才情尚可");
-        add(GuBrilliance.DISTINCTIVE, "才情不俗");
-        add(GuBrilliance.OUTSTANDING, "才情卓越");
-        add(GuBrilliance.UNRIVALED,   "才情旷世");
+        add(Brilliance.ORDINARY,    "才情普通");
+        add(Brilliance.DECENT,      "才情尚可");
+        add(Brilliance.DISTINCTIVE, "才情不俗");
+        add(Brilliance.OUTSTANDING, "才情卓越");
+        add(Brilliance.UNRIVALED,   "才情旷世");
     }
     //endregion
 }

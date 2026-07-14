@@ -1,10 +1,10 @@
 package com.unknown.guzhenren.event;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.attachment.service.EssenceService;
-import com.unknown.guzhenren.attachment.service.LifespanService;
-import com.unknown.guzhenren.attachment.service.MindService;
-import com.unknown.guzhenren.attachment.service.SoulService;
+import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
+import com.unknown.guzhenren.attachment.service.body.BodyService;
+import com.unknown.guzhenren.attachment.service.body.SoulService;
+import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.registry.ModDamageTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -26,7 +26,7 @@ public final class PlayerTickEvents {
         //  Per-second, not per-tick: aging only needs a day boundary, regen carries its own remainder.
         if (player.tickCount % EssenceService.REGEN_INTERVAL_TICKS != 0) return;
 
-        LifespanService.tickAging(player);
+        BodyService.tickAging(player);
         EssenceService.regenStep(player);
         MindService.regenStep(player);
         checkLethalState(player);
@@ -36,7 +36,7 @@ public final class PlayerTickEvents {
     private static void checkLethalState(ServerPlayer player) {
         if (player.isCreative() || player.isSpectator()) return;
 
-        if (LifespanService.get(player).isExhausted()) {
+        if (BodyService.get(player).isExhausted()) {
             player.hurt(ModDamageTypes.source(player, ModDamageTypes.LIFESPAN_EXHAUSTED), Float.MAX_VALUE);
             return;
         }

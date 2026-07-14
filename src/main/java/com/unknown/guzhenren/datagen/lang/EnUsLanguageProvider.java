@@ -1,19 +1,21 @@
 package com.unknown.guzhenren.datagen.lang;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.custom.enums.core.GuEssenceColor;
-import com.unknown.guzhenren.custom.enums.core.GuExtremePhysique;
-import com.unknown.guzhenren.custom.enums.core.GuLifeForm;
-import com.unknown.guzhenren.custom.enums.core.GuLifeState;
-import com.unknown.guzhenren.custom.enums.core.GuRank;
-import com.unknown.guzhenren.custom.enums.core.GuSoulTier;
-import com.unknown.guzhenren.custom.enums.core.GuStage;
-import com.unknown.guzhenren.custom.enums.core.GuTalent;
-import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.path.GuPathAttainment;
-import com.unknown.guzhenren.custom.enums.wisdom.GuBrilliance;
-import com.unknown.guzhenren.custom.enums.wisdom.GuWisdomType;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
+import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
+import com.unknown.guzhenren.custom.enums.aperture.EssenceColor;
+import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.aperture.Rank;
+import com.unknown.guzhenren.custom.enums.aperture.Stage;
+import com.unknown.guzhenren.custom.enums.aperture.Talent;
+import com.unknown.guzhenren.custom.enums.body.LifeForm;
+import com.unknown.guzhenren.custom.enums.body.LifeState;
+import com.unknown.guzhenren.custom.enums.path.GuAttainment;
+import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.qi.QiType;
+import com.unknown.guzhenren.custom.enums.soul.SoulTier;
+import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
+import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -56,13 +58,20 @@ public class EnUsLanguageProvider extends LanguageProvider {
 
         add("guzhenren.command.failed.awakened",           "%s has already awakened -- run /guzhenren reset first to re-roll");
         add("guzhenren.command.failed.unawakened",         "%s has not awakened -- cultivation values are established by /guzhenren awaken");
+        add("guzhenren.command.failed.qi_mark",            "The Qi Path's marks are the sum of every qi -- set them with /guzhenren body qi <type>");
 
+        add("guzhenren.command.info.aperture_index",       "Aperture %s");
+        add("guzhenren.command.info.aperture_state",       "Aperture:    %s");
         add("guzhenren.command.info.realm",                "Cultivation: %s");
         add("guzhenren.command.info.talent",               "Aptitude:    %s");
         add("guzhenren.command.info.essence",              "Essence:     %s / %s");
         add("guzhenren.command.info.soul",                 "Soul:        %s / %s");
         add("guzhenren.command.info.lifespan",             "Lifespan:    %s");
-        add("guzhenren.command.info.life_state",           "State:       %s");
+        add("guzhenren.command.info.life_state",           "Body:        %s");
+        add("guzhenren.command.info.life_form",            "Life form:   %s");
+        add("guzhenren.command.info.qi",                   "Qi:");
+        add("guzhenren.command.info.qi_entry",             "  %s  %s");
+        add("guzhenren.command.info.qi_empty",             "  None");
         add("guzhenren.command.info.paths",                "Paths:");
         add("guzhenren.command.info.path_entry",           "  %s  %s  Marks %s");
         add("guzhenren.command.info.path_empty",           "  None");
@@ -90,88 +99,104 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addRank();
         addStage();
         addTalent();
-        addLifeForm();
-        addLifeState();
+        addApertureState();
         addEssenceColor();
         addTenExtreme();
+        addLifeForm();
+        addLifeState();
+        addSoulTier();
+        addQiType();
         addPath();
         addAttainment();
-        addSoulTier();
         addWisdomType();
         addBrilliance();
     }
 
+    //  空窍只有生死两态; 肉身的 LifeState 才有第三态「僵」
+    private void addApertureState() {
+        add(ApertureState.ALIVE, "Alive");
+        add(ApertureState.DEAD,  "Dead");
+    }
+
     private void addRank() {
-        add(GuRank.NONE,  "Mortal");
-        add(GuRank.ONE,   "Rank I");
-        add(GuRank.TWO,   "Rank II");
-        add(GuRank.THREE, "Rank III");
-        add(GuRank.FOUR,  "Rank IV");
-        add(GuRank.FIVE,  "Rank V");
-        add(GuRank.SIX,   "Rank VI");
-        add(GuRank.SEVEN, "Rank VII");
-        add(GuRank.EIGHT, "Rank VIII");
-        add(GuRank.NINE,  "Rank IX");
+        add(Rank.NONE,  "Mortal");
+        add(Rank.ONE,   "Rank I");
+        add(Rank.TWO,   "Rank II");
+        add(Rank.THREE, "Rank III");
+        add(Rank.FOUR,  "Rank IV");
+        add(Rank.FIVE,  "Rank V");
+        add(Rank.SIX,   "Rank VI");
+        add(Rank.SEVEN, "Rank VII");
+        add(Rank.EIGHT, "Rank VIII");
+        add(Rank.NINE,  "Rank IX");
     }
 
     private void addStage() {
         //  故意留空: 未开窍时不显示
-        add(GuStage.NONE,   "");
-        add(GuStage.INIT,   "Initial");
-        add(GuStage.MIDDLE, "Middle");
-        add(GuStage.UPPER,  "Upper");
-        add(GuStage.PEAK,   "Peak");
+        add(Stage.NONE,   "");
+        add(Stage.INIT,   "Initial");
+        add(Stage.MIDDLE, "Middle");
+        add(Stage.UPPER,  "Upper");
+        add(Stage.PEAK,   "Peak");
     }
 
     //  甲乙丙丁 are the classic Chinese ordinals, so they land on A/B/C/D rather than on I..IV.
     private void addTalent() {
-        add(GuTalent.EXTREME, "Ten-Extremes Aptitude");
-        add(GuTalent.FIRST,   "Grade-A Aptitude");
-        add(GuTalent.SECOND,  "Grade-B Aptitude");
-        add(GuTalent.THIRD,   "Grade-C Aptitude");
-        add(GuTalent.FOURTH,  "Grade-D Aptitude");
-        add(GuTalent.NONE,    "Unawakened");
+        add(Talent.EXTREME, "Ten-Extremes Aptitude");
+        add(Talent.FIRST,   "Grade-A Aptitude");
+        add(Talent.SECOND,  "Grade-B Aptitude");
+        add(Talent.THIRD,   "Grade-C Aptitude");
+        add(Talent.FOURTH,  "Grade-D Aptitude");
+        add(Talent.NONE,    "Unawakened");
     }
 
     private void addLifeForm() {
-        add(GuLifeForm.MORTAL,   "Mortal");
-        add(GuLifeForm.IMMORTAL, "Immortal");
+        add(LifeForm.MORTAL,   "Mortal");
+        add(LifeForm.IMMORTAL, "Immortal");
     }
 
     private void addLifeState() {
-        add(GuLifeState.ALIVE,  "Alive");
-        add(GuLifeState.ZOMBIE, "Zombified");
-        add(GuLifeState.DEAD,   "Dead");
+        add(LifeState.ALIVE,  "Alive");
+        add(LifeState.ZOMBIE, "Zombified");
+        add(LifeState.DEAD,   "Dead");
     }
 
-    //  真元色, 每转一色; 同转内的深浅由 GuEssenceColor.shade 按小境界算, 不另出文案
+    //  真元色, 每转一色; 同转内的深浅由 EssenceColor.shade 按小境界算, 不另出文案
     private void addEssenceColor() {
-        add(GuEssenceColor.NONE,           "None");
-        add(GuEssenceColor.GREEN_COPPER,   "Green Copper");
-        add(GuEssenceColor.RED_STEEL,      "Red Steel");
-        add(GuEssenceColor.WHITE_SILVER,   "White Silver");
-        add(GuEssenceColor.YELLOW_GOLDEN,  "Yellow Golden");
-        add(GuEssenceColor.PURPLE_CRYSTAL, "Purple Crystal");
-        add(GuEssenceColor.GREEN_GRAPE,    "Green Grape");
-        add(GuEssenceColor.RED_DATE,       "Red Date");
-        add(GuEssenceColor.WHITE_LITCHI,   "White Litchi");
-        add(GuEssenceColor.YELLOW_APRICOT, "Yellow Apricot");
+        add(EssenceColor.NONE,           "None");
+        add(EssenceColor.GREEN_COPPER,   "Green Copper");
+        add(EssenceColor.RED_STEEL,      "Red Steel");
+        add(EssenceColor.WHITE_SILVER,   "White Silver");
+        add(EssenceColor.YELLOW_GOLDEN,  "Yellow Golden");
+        add(EssenceColor.PURPLE_CRYSTAL, "Purple Crystal");
+        add(EssenceColor.GREEN_GRAPE,    "Green Grape");
+        add(EssenceColor.RED_DATE,       "Red Date");
+        add(EssenceColor.WHITE_LITCHI,   "White Litchi");
+        add(EssenceColor.YELLOW_APRICOT, "Yellow Apricot");
     }
 
     private void addTenExtreme() {
         //  故意留空: 非十绝体玩家不显示
-        add(GuExtremePhysique.NONE,                               "");
-        add(GuExtremePhysique.VERDANT_GREAT_SUN,                  "Verdant Great Sun");
-        add(GuExtremePhysique.DESOLATE_ANCIENT_MOON,              "Desolate Ancient Moon");
-        add(GuExtremePhysique.NORTHERN_DARK_ICE_SOUL,             "Northern Dark Ice Soul");
-        add(GuExtremePhysique.BOUNDLESS_FOREST_SAMSARA,           "Boundless Forest Samsara");
-        add(GuExtremePhysique.BLAZING_GLORY_LIGHTNING_BRILLIANCE, "Blazing Glory Lightning Brilliance");
-        add(GuExtremePhysique.MYRIAD_GOLD_WONDROUS_ESSENCE,       "Myriad Gold Wondrous Essence");
-        add(GuExtremePhysique.GREAT_STRENGTH_TRUE_MARTIAL,        "Great Strength True Martial");
-        add(GuExtremePhysique.CAREFREE_WISDOM_HEART,              "Carefree Wisdom Heart");
-        add(GuExtremePhysique.PROFOUND_EARTH_ORIGIN,              "Profound Earth Origin");
-        add(GuExtremePhysique.UNIVERSE_GREAT_DERIVATION,          "Universe Great Derivation");
-        add(GuExtremePhysique.PURE_DREAM_REALITY_SEEKER,          "Pure Dream Reality Seeker");
+        add(ExtremePhysique.NONE,                               "");
+        add(ExtremePhysique.VERDANT_GREAT_SUN,                  "Verdant Great Sun");
+        add(ExtremePhysique.DESOLATE_ANCIENT_MOON,              "Desolate Ancient Moon");
+        add(ExtremePhysique.NORTHERN_DARK_ICE_SOUL,             "Northern Dark Ice Soul");
+        add(ExtremePhysique.BOUNDLESS_FOREST_SAMSARA,           "Boundless Forest Samsara");
+        add(ExtremePhysique.BLAZING_GLORY_LIGHTNING_BRILLIANCE, "Blazing Glory Lightning Brilliance");
+        add(ExtremePhysique.MYRIAD_GOLD_WONDROUS_ESSENCE,       "Myriad Gold Wondrous Essence");
+        add(ExtremePhysique.GREAT_STRENGTH_TRUE_MARTIAL,        "Great Strength True Martial");
+        add(ExtremePhysique.CAREFREE_WISDOM_HEART,              "Carefree Wisdom Heart");
+        add(ExtremePhysique.PROFOUND_EARTH_ORIGIN,              "Profound Earth Origin");
+        add(ExtremePhysique.UNIVERSE_GREAT_DERIVATION,          "Universe Great Derivation");
+        add(ExtremePhysique.PURE_DREAM_REALITY_SEEKER,          "Pure Dream Reality Seeker");
+    }
+
+    //  天地人三气是升仙的门槛; 自然气无效用. 诸气之和即气道的道痕 (不另存, 见 QiData)
+    private void addQiType() {
+        add(QiType.HEAVEN,  "Heaven Qi");
+        add(QiType.EARTH,   "Earth Qi");
+        add(QiType.HUMAN,   "Human Qi");
+        add(QiType.NATURAL, "Natural Qi");
     }
 
     private void addPath() {
@@ -208,45 +233,45 @@ public class EnUsLanguageProvider extends LanguageProvider {
     }
 
     private void addAttainment() {
-        add(GuPathAttainment.NONE,                      "None");
-        add(GuPathAttainment.ORDINARY,                  "Ordinary");
-        add(GuPathAttainment.QUASI_MASTER,              "Quasi-Master");
-        add(GuPathAttainment.MASTER,                    "Master");
-        add(GuPathAttainment.QUASI_GRANDMASTER,         "Quasi-Grandmaster");
-        add(GuPathAttainment.GRANDMASTER,               "Grandmaster");
-        add(GuPathAttainment.QUASI_GREAT_GRANDMASTER,   "Quasi-Great Grandmaster");
-        add(GuPathAttainment.GREAT_GRANDMASTER,         "Great Grandmaster");
-        add(GuPathAttainment.QUASI_SUPREME_GRANDMASTER, "Quasi-Supreme Grandmaster");
-        add(GuPathAttainment.SUPREME_GRANDMASTER,       "Supreme Grandmaster");
+        add(GuAttainment.NONE,                      "None");
+        add(GuAttainment.ORDINARY,                  "Ordinary");
+        add(GuAttainment.QUASI_MASTER,              "Quasi-Master");
+        add(GuAttainment.MASTER,                    "Master");
+        add(GuAttainment.QUASI_GRANDMASTER,         "Quasi-Grandmaster");
+        add(GuAttainment.GRANDMASTER,               "Grandmaster");
+        add(GuAttainment.QUASI_GREAT_GRANDMASTER,   "Quasi-Great Grandmaster");
+        add(GuAttainment.GREAT_GRANDMASTER,         "Great Grandmaster");
+        add(GuAttainment.QUASI_SUPREME_GRANDMASTER, "Quasi-Supreme Grandmaster");
+        add(GuAttainment.SUPREME_GRANDMASTER,       "Supreme Grandmaster");
     }
 
     //  魂魄境界: 由魂魄值反查 (魂魄值 = 人数 × 100), 不单独存
     private void addSoulTier() {
-        add(GuSoulTier.ONE,              "One-Person Soul");
-        add(GuSoulTier.TEN,              "Ten-Person Soul");
-        add(GuSoulTier.HUNDRED,          "Hundred-Person Soul");
-        add(GuSoulTier.THOUSAND,         "Thousand-Person Soul");
-        add(GuSoulTier.TEN_THOUSAND,     "Ten-Thousand-Person Soul");
-        add(GuSoulTier.HUNDRED_THOUSAND, "Hundred-Thousand-Person Soul");
-        add(GuSoulTier.MILLION,          "Million-Person Soul");
-        add(GuSoulTier.TEN_MILLION,      "Ten-Million-Person Soul");
-        add(GuSoulTier.HUNDRED_MILLION,  "Hundred-Million-Person Soul");
+        add(SoulTier.ONE,              "One-Person Soul");
+        add(SoulTier.TEN,              "Ten-Person Soul");
+        add(SoulTier.HUNDRED,          "Hundred-Person Soul");
+        add(SoulTier.THOUSAND,         "Thousand-Person Soul");
+        add(SoulTier.TEN_THOUSAND,     "Ten-Thousand-Person Soul");
+        add(SoulTier.HUNDRED_THOUSAND, "Hundred-Thousand-Person Soul");
+        add(SoulTier.MILLION,          "Million-Person Soul");
+        add(SoulTier.TEN_MILLION,      "Ten-Million-Person Soul");
+        add(SoulTier.HUNDRED_MILLION,  "Hundred-Million-Person Soul");
     }
 
     //  智道三态; 脑海初始容量 念30000 / 意5 / 情2, 装不下即脑海炸裂
     private void addWisdomType() {
-        add(GuWisdomType.THOUGHTS, "Thoughts");
-        add(GuWisdomType.WILLS,    "Wills");
-        add(GuWisdomType.EMOTIONS, "Emotions");
+        add(WisdomType.THOUGHTS, "Thoughts");
+        add(WisdomType.WILLS,    "Wills");
+        add(WisdomType.EMOTIONS, "Emotions");
     }
 
     //  才情: 念的自然恢复速度 (每秒 1 / 4 / 16 / 64 / 256), 开窍时抽取
     private void addBrilliance() {
-        add(GuBrilliance.ORDINARY,    "Ordinary Brilliance");
-        add(GuBrilliance.DECENT,      "Decent Brilliance");
-        add(GuBrilliance.DISTINCTIVE, "Distinctive Brilliance");
-        add(GuBrilliance.OUTSTANDING, "Outstanding Brilliance");
-        add(GuBrilliance.UNRIVALED,   "Unrivaled Brilliance");
+        add(Brilliance.ORDINARY,    "Ordinary Brilliance");
+        add(Brilliance.DECENT,      "Decent Brilliance");
+        add(Brilliance.DISTINCTIVE, "Distinctive Brilliance");
+        add(Brilliance.OUTSTANDING, "Outstanding Brilliance");
+        add(Brilliance.UNRIVALED,   "Unrivaled Brilliance");
     }
     //endregion
 }

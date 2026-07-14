@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.unknown.guzhenren.attachment.service.CoreService;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,6 +15,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 
@@ -29,13 +30,21 @@ public final class ModCommandSupport {
 
     public static final String FAILED_AWAKENED = "guzhenren.command.failed.awakened";
     public static final String FAILED_UNAWAKENED = "guzhenren.command.failed.unawakened";
+    public static final String FAILED_QI_MARK = "guzhenren.command.failed.qi_mark";
 
     public static final Predicate<ServerPlayer> ANYONE = player -> true;
-    public static final Predicate<ServerPlayer> AWAKENED = player -> CoreService.get(player).isAwakened();
+    public static final Predicate<ServerPlayer> AWAKENED = ApertureService::isAwakened;
 
     //  Presentation only -- requires() resolves before [targets] is parsed, so it sees only the caller.
     public static boolean sourceAwakened(CommandSourceStack source) {
-        return !(source.getEntity() instanceof ServerPlayer player) || CoreService.get(player).isAwakened();
+        return !(source.getEntity() instanceof ServerPlayer player) || ApertureService.isAwakened(player);
+    }
+
+    //  awaken / reset flip a requires() gate, so that player's tree must be resent or the branches
+    //  lag a relog. Any leaf that changes what a requires() predicate returns has to call this.
+    public static void refreshCommands(ServerPlayer player) {
+        MinecraftServer server = player.getServer();
+        if (server != null) server.getCommands().sendCommands(player);
     }
 
     //region node builders

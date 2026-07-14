@@ -3,23 +3,20 @@ package com.unknown.guzhenren.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.command.sub.CmdAwaken;
-import com.unknown.guzhenren.command.sub.CmdCore;
-import com.unknown.guzhenren.command.sub.CmdEssence;
 import com.unknown.guzhenren.command.sub.CmdInfo;
-import com.unknown.guzhenren.command.sub.CmdLifeState;
-import com.unknown.guzhenren.command.sub.CmdLifespan;
-import com.unknown.guzhenren.command.sub.CmdPath;
-import com.unknown.guzhenren.command.sub.CmdPhysique;
-import com.unknown.guzhenren.command.sub.CmdSoul;
-import com.unknown.guzhenren.command.sub.CmdWisdom;
+import com.unknown.guzhenren.command.sub.CmdReset;
+import com.unknown.guzhenren.command.sub.aperture.CmdAperture;
+import com.unknown.guzhenren.command.sub.aperture.CmdAwaken;
+import com.unknown.guzhenren.command.sub.body.CmdBody;
+import com.unknown.guzhenren.command.sub.mind.CmdMind;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
-//  /guzhenren (alias /gzr) root: one .then() per system, each in command/sub. See CLAUDE.md "Commands".
+//  /guzhenren (alias /gzr) root: one .then() per domain -- 空窍 / 肉身 / 脑海, plus info and reset.
+//  A sibling mod adds its own root, never a branch here. See CLAUDE.md "Commands".
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModCommand {
 
@@ -37,16 +34,11 @@ public final class ModCommand {
                 Commands.literal("guzhenren")
                         .requires(source -> source.hasPermission(PERMISSION_LEVEL))
                         .then(CmdInfo.node())
-                        .then(CmdAwaken.resetNode())
-                        .then(CmdAwaken.awakenNode())
-                        .then(CmdLifeState.node())
-                        .then(CmdCore.node())
-                        .then(CmdPhysique.node())
-                        .then(CmdEssence.node())
-                        .then(CmdSoul.node())
-                        .then(CmdLifespan.node())
-                        .then(CmdPath.node())
-                        .then(CmdWisdom.node()));
+                        .then(CmdAwaken.node())
+                        .then(CmdReset.node())
+                        .then(CmdAperture.node())
+                        .then(CmdBody.node())
+                        .then(CmdMind.node()));
 
         dispatcher.register(Commands.literal("gzr")
                 .requires(source -> source.hasPermission(PERMISSION_LEVEL))

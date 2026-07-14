@@ -1,11 +1,11 @@
 package com.unknown.guzhenren.client.hud;
 
-import com.unknown.guzhenren.attachment.data.CoreData;
-import com.unknown.guzhenren.attachment.data.SoulData;
-import com.unknown.guzhenren.attachment.service.CoreService;
-import com.unknown.guzhenren.attachment.service.EssenceService;
-import com.unknown.guzhenren.attachment.service.LifespanService;
-import com.unknown.guzhenren.attachment.service.SoulService;
+import com.unknown.guzhenren.attachment.data.aperture.Aperture;
+import com.unknown.guzhenren.attachment.data.body.BodyData;
+import com.unknown.guzhenren.attachment.data.body.SoulData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
+import com.unknown.guzhenren.attachment.service.body.BodyService;
+import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.display.ModDisplayText;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 //  The player-stats HUD, top-left corner. Layout and rationale: CLAUDE.md "HUD".
-//  Reads the same attachments the server holds; Mind Ocean deliberately absent.
+//  Reads the same attachments the server holds; the primary aperture only, Mind Ocean deliberately absent.
 public final class PlayerStatsHud implements LayeredDraw.Layer {
 
     public static final PlayerStatsHud INSTANCE = new PlayerStatsHud();
@@ -35,7 +35,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
     private static final int ROW_GAP = 2;
     private static final int GROUP_GAP = 7;
 
-    //  Fixed hues, NOT GuEssenceColor's per-rank palette -- see CLAUDE.md "HUD".
+    //  Fixed hues, NOT EssenceColor's per-rank palette -- see CLAUDE.md "HUD".
     private static final int ESSENCE_FILL = 0xFF4FC3F7;
     private static final int SOUL_FILL = 0xFFB388FF;
     private static final int BAR_TRACK = 0xB0202020;
@@ -52,25 +52,24 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         if (player.isSpectator() || minecraft.getDebugOverlay().showDebugScreen()) return;
 
         Font font = minecraft.font;
-        CoreData core = CoreService.get(player);
+        Aperture aperture = ApertureService.aperture(player);
         SoulData soul = SoulService.get(player);
+        BodyData body = BodyService.get(player);
 
         int y = TOP;
-        line(graphics, font, y, ModDisplayText.realmAndTalent(core));
+        line(graphics, font, y, ModDisplayText.realmAndTalent(aperture));
         y += TEXT_HEIGHT + ROW_GAP;
 
         //  Hidden until the aperture opens -- its appearing is the feedback that 开窍 worked.
-        if (core.isAwakened()) {
-            bar(graphics, font, y, EssenceService.currentEssence(player), EssenceService.maxEssence(core),
-                    ESSENCE_FILL);
+        if (ApertureService.isAwakened(player)) {
+            bar(graphics, font, y, aperture.currentEssence(), aperture.maxEssence(), ESSENCE_FILL);
             y += BAR_HEIGHT + ROW_GAP;
         }
 
         bar(graphics, font, y, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);
         y += BAR_HEIGHT + GROUP_GAP;
 
-        line(graphics, font, y, Component.translatable("guzhenren.hud.lifespan",
-                ModDisplayText.lifespan(LifespanService.get(player))));
+        line(graphics, font, y, Component.translatable("guzhenren.hud.lifespan", ModDisplayText.lifespan(body)));
     }
 
     private static void line(GuiGraphics graphics, Font font, int y, Component text) {

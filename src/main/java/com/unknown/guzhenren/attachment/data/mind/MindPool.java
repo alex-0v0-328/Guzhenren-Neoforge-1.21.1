@@ -2,7 +2,7 @@ package com.unknown.guzhenren.attachment.data.mind;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.unknown.guzhenren.custom.enums.wisdom.GuWisdomType;
+import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -30,7 +30,7 @@ public record MindPool(long current, long max, boolean bufferUsed) {
         bufferUsed = bufferUsed || current > max;
     }
 
-    public static MindPool of(GuWisdomType type) {return new MindPool(0L, type.getDefaultCapacity(), false);}
+    public static MindPool of(WisdomType type) {return new MindPool(0L, type.getDefaultCapacity(), false);}
 
     //  脑海炸裂 past the buffer, i.e. current > 2×max. Written current-max>max to dodge a 2×max overflow.
     public boolean isOverflowing() {return current - max > max;}
