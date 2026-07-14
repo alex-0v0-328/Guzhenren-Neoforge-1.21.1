@@ -8,16 +8,15 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  Running out of lifespan or soul is not something armor, a potion, or a shield can argue with,
-//  so both damage types opt out of every mitigation vanilla offers.
+//  Lifespan, soul and Mind Ocean are not something armor, a potion or a shield can argue with.
 //
-//  Deliberately NOT in BYPASSES_INVULNERABILITY: creative players should stay unkillable, and
-//  PlayerTickHandler already skips them anyway.
+//  Deliberately NOT BYPASSES_INVULNERABILITY: creative stays unkillable, and PlayerTickEvents skips it.
 public class ModDamageTypeTagsProvider extends TagsProvider<DamageType> {
 
     public ModDamageTypeTagsProvider(PackOutput output,
@@ -28,17 +27,17 @@ public class ModDamageTypeTagsProvider extends TagsProvider<DamageType> {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
-        tag(DamageTypeTags.BYPASSES_ARMOR)
-                .add(ModDamageTypes.LIFESPAN_EXHAUSTED, ModDamageTypes.SOUL_COLLAPSE);
-        tag(DamageTypeTags.BYPASSES_EFFECTS)
-                .add(ModDamageTypes.LIFESPAN_EXHAUSTED, ModDamageTypes.SOUL_COLLAPSE);
-        tag(DamageTypeTags.BYPASSES_ENCHANTMENTS)
-                .add(ModDamageTypes.LIFESPAN_EXHAUSTED, ModDamageTypes.SOUL_COLLAPSE);
-        tag(DamageTypeTags.BYPASSES_RESISTANCE)
-                .add(ModDamageTypes.LIFESPAN_EXHAUSTED, ModDamageTypes.SOUL_COLLAPSE);
-        tag(DamageTypeTags.BYPASSES_SHIELD)
-                .add(ModDamageTypes.LIFESPAN_EXHAUSTED, ModDamageTypes.SOUL_COLLAPSE);
-        tag(DamageTypeTags.NO_KNOCKBACK)
-                .add(ModDamageTypes.LIFESPAN_EXHAUSTED, ModDamageTypes.SOUL_COLLAPSE);
+        unstoppable(DamageTypeTags.BYPASSES_ARMOR);
+        unstoppable(DamageTypeTags.BYPASSES_EFFECTS);
+        unstoppable(DamageTypeTags.BYPASSES_ENCHANTMENTS);
+        unstoppable(DamageTypeTags.BYPASSES_RESISTANCE);
+        unstoppable(DamageTypeTags.BYPASSES_SHIELD);
+        unstoppable(DamageTypeTags.NO_KNOCKBACK);
+    }
+
+    private void unstoppable(TagKey<DamageType> tag) {
+        tag(tag).add(ModDamageTypes.LIFESPAN_EXHAUSTED,
+                ModDamageTypes.SOUL_COLLAPSE,
+                ModDamageTypes.MIND_OCEAN_SHATTERED);
     }
 }

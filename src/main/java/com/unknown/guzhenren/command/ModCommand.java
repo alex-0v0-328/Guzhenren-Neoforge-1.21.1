@@ -12,16 +12,15 @@ import com.unknown.guzhenren.command.sub.CmdLifespan;
 import com.unknown.guzhenren.command.sub.CmdPath;
 import com.unknown.guzhenren.command.sub.CmdPhysique;
 import com.unknown.guzhenren.command.sub.CmdSoul;
+import com.unknown.guzhenren.command.sub.CmdWisdom;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
-//  /guzhenren, alias /gzr. The root and nothing else: one branch per system, each in command/sub.
-//
-//  Full grammar and the awakening gate: CLAUDE.md "Commands". The machinery every branch shares
-//  (optional [targets], the gate, per-target apply): ModCommandSupport.
+//  /guzhenren, alias /gzr. The root and nothing else: one .then() per system, each in command/sub.
+//  Grammar and the awakening gate: CLAUDE.md "Commands". Shared machinery: ModCommandSupport.
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModCommand {
 
@@ -47,7 +46,8 @@ public final class ModCommand {
                         .then(CmdEssence.node())
                         .then(CmdSoul.node())
                         .then(CmdLifespan.node())
-                        .then(CmdPath.node()));
+                        .then(CmdPath.node())
+                        .then(CmdWisdom.node()));
 
         dispatcher.register(Commands.literal("gzr")
                 .requires(source -> source.hasPermission(PERMISSION_LEVEL))

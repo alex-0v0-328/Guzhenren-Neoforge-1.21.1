@@ -30,8 +30,8 @@ public enum GuPathAttainment implements StringRepresentable, GuTranslatable {
 
     public int getLevel() {return level;}
 
-    //  升降 d 档, 到边界即停. 这个枚举是从低到高排的 (无 -> 无上大宗师), 所以 +1 就是升一档.
-    //  下界是 NONE 而不是 ORDINARY: 「尚未入门」是一个合法的造诣, 降回去是有意义的.
+    //  升降 d 档, 到边界即停. 本枚举从低到高排, +1 就是升一档
+    //  下界是 NONE 而非 ORDINARY: 「尚未入门」是一个合法的造诣, 降回去有意义
     public GuPathAttainment shift(int d) {return values()[Math.clamp(ordinal() + d, 0, values().length - 1)];}
 
     @Override

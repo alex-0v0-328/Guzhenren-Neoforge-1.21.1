@@ -12,11 +12,10 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
-//  Enum command arguments as a plain word plus suggestions.
+//  Enum arguments as a plain word plus suggestions.
 //
-//  NeoForge ships an EnumArgument, but it is a registered argument type, which means an entry in
-//  the argument-type registry and a client that has to know how to parse it. A word with
-//  suggestions costs nothing, needs no registration, and reads identically to the player.
+//  Not NeoForge's EnumArgument: that is a *registered* argument type -- an entry in the argument-type
+//  registry, and a client that has to know how to parse it. A word costs nothing and reads the same.
 public final class ModEnumArgument {
 
     private ModEnumArgument() {}

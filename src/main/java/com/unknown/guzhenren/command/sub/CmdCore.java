@@ -15,8 +15,8 @@ import net.minecraft.util.StringRepresentable;
 
 //  /gzr core rank|stage|talent  set <v> | up | down
 //
-//  The three graded dials. Positive delta is always "better" -- each enum owns which way that is and
-//  where it stops (see CLAUDE.md "Bounds"; GuTalent's direction is the backwards one).
+//  The three graded dials. Positive delta = better; each enum owns which way that is and where it
+//  stops. See CLAUDE.md "Bounds".
 public final class CmdCore {
 
     private CmdCore() {}

@@ -6,18 +6,14 @@ import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 //  真元的颜色, 每一转一色 (映射见 GuRank.getEssenceColor)
-//  凡人境(一~五转)同转内按小境界由浅变深: 基色只存一个, 深浅由 shade(stage) 用亮度系数算
-//  仙人境(六~九转)是固定色, 不随小境界变化
-//  ⚠ 目前没有使用处: HUD 的真元条已改用固定的天蓝色 —— 十种颜色轮着上一条 bar,
-//  既挤占了别的 bar 的可选色, 玩家也容易把"变色"误读成别的意思
-//  这套配色本身保留, 以后会在别处(粒子/物品/界面)用上, 别当死代码删了
+//  凡人境同转内按小境界由浅变深, 基色只存一个, 深浅由 shade(stage) 算; 仙人境是固定色
+//  ⚠ 目前无使用处: HUD 的真元条用固定天蓝色, 见 CLAUDE.md "HUD". 留给粒子/物品/界面, 别当死代码删了
 public enum GuEssenceColor implements StringRepresentable, GuTranslatable {
 
     //  凡人 / 未开窍: 灰
     NONE          (0xFF808080, false),
 
-    //  一转 ~ 五转 (凡人境): 随小境界变深浅; 括号里是中阶色, 初阶提亮 / 巅峰压暗
-    //  青铜色走 鲜艳铜绿 -> 墨绿
+    //  一转 ~ 五转 (凡人境): 括号里是中阶色, 初阶提亮 / 巅峰压暗
     GREEN_COPPER  (0xFF3EC98A),
     RED_STEEL     (0xFFD9503F),
     WHITE_SILVER  (0xFFCCCCCC),
@@ -33,8 +29,7 @@ public enum GuEssenceColor implements StringRepresentable, GuTranslatable {
     public static final Codec<GuEssenceColor> CODEC = StringRepresentable.fromEnum(GuEssenceColor::values);
     private static final String KEY_PREFIX = "guzhenren.enum.core.essence_color.";
 
-    //  小境界的亮度系数, 下标与 GuStage.ordinal() 对齐: 无 初 中 高 巅
-    //  中阶 = 基色本身, 初阶提亮, 高阶/巅峰压暗; 想整体调深浅改这一行即可
+    //  亮度系数, 下标与 GuStage.ordinal() 对齐: 无 初 中 高 巅. 想整体调深浅改这一行
     private static final float[] STAGE_BRIGHTNESS = {1.00F, 1.20F, 1.00F, 0.72F, 0.45F};
 
     private final int baseColor;
@@ -50,9 +45,7 @@ public enum GuEssenceColor implements StringRepresentable, GuTranslatable {
     }
 
     //  基色 (ARGB); 会变深浅的转这是中阶色, 不变的转这就是最终色
-    public int getBaseColor() {
-        return baseColor;
-    }
+    public int getBaseColor() {return baseColor;}
 
     //  该小境界下的实际颜色 (ARGB); alpha 不动, 只缩放 RGB
     public int shade(@NotNull GuStage stage) {

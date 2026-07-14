@@ -5,11 +5,8 @@ import com.unknown.guzhenren.util.GuTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  生死状态; 通用枚举, 但每个使用处的合法子集不同 (区别于 GuLifeForm 的 凡/仙):
-//   玩家生死 (ZombieData.playerLifeState) —— 生 / 死 / 活死人(僵尸), 三态全用
-//   空窍生死 (ApertureStatusData.lifeState) —— 只有 生 / 死, 空窍没有僵尸态
-//  所以化僵的人空窍是「死」的, 吸不到天地元气 —— 这正是僵尸不自然回复真元的原因
-//  ZOMBIE 是生与死之间的第三态: 人已经死了, 但尸身还在动 —— 档位见 GuZombieTier
+//  生死状态 (区别于 GuLifeForm 的 凡/仙). ZOMBIE 是第三态: 人已死, 尸身还在动
+//  化僵者的空窍是死的, 吸不到天地元气 —— 这就是僵尸不回复真元的原因, 见 EssenceService.regenPerDay
 public enum GuLifeState implements StringRepresentable, GuTranslatable {
 
     ALIVE,

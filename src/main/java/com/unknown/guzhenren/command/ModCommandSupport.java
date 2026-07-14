@@ -18,10 +18,8 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 
-//  The machinery every command/sub/Cmd* shares: optional [targets], the awakening gate, and the
-//  per-target apply that reports what happened.
-//
-//  See CLAUDE.md "Commands" and "The awakening gate" for why the gate takes two layers.
+//  What every command/sub/Cmd* shares: optional [targets], the awakening gate, the per-target apply.
+//  Why the gate takes two layers: CLAUDE.md "The awakening gate".
 public final class ModCommandSupport {
 
     private ModCommandSupport() {}
@@ -35,23 +33,23 @@ public final class ModCommandSupport {
     public static final Predicate<ServerPlayer> ANYONE = player -> true;
     public static final Predicate<ServerPlayer> AWAKENED = player -> CoreService.get(player).isAwakened();
 
-    //  Presentation only: requires() is resolved before [targets] is parsed, so it can never see
-    //  anyone but the caller. The console has nobody, so it sees the whole tree.
+    //  Presentation only -- requires() resolves before [targets] is parsed, so it only ever sees the
+    //  caller. The console has no body, so it sees the whole tree.
     public static boolean sourceAwakened(CommandSourceStack source) {
         return !(source.getEntity() instanceof ServerPlayer player) || CoreService.get(player).isAwakened();
     }
 
     //region node builders
 
-    //  Hangs the executor off both the bare node and the node-plus-targets, which is what makes
-    //  [targets] optional. Brigadier has no other spelling for that.
+    //  The executor on both the bare node and the node-plus-targets: Brigadier has no other spelling
+    //  for an optional argument.
     public static ArgumentBuilder<CommandSourceStack, ?> withTargets(
             ArgumentBuilder<CommandSourceStack, ?> node, Command<CommandSourceStack> executor) {
         return node.executes(executor)
                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players()).executes(executor));
     }
 
-    //  `<literal> <long> [targets]`, ungated -- soul and lifespan, which every mortal has.
+    //  `<literal> <long> [targets]`, ungated -- soul, lifespan, wisdom: every mortal has those.
     public static ArgumentBuilder<CommandSourceStack, ?> longNode(String literal, LongOperation operation) {
         return longNode(literal, operation, ANYONE, null);
     }
@@ -90,9 +88,8 @@ public final class ModCommandSupport {
         return applyIf(context, AWAKENED, FAILED_UNAWAKENED, operation);
     }
 
-    //  Runs the operation on every target `allowed` accepts and names the rest in one red line.
-    //  A refused target is not an error: three updated and one refused is a green line and a red line,
-    //  and the command still reports the three.
+    //  Runs on every target `allowed` accepts, names the rest in one red line. A refusal is not an
+    //  error: three updated and one refused is a green line *and* a red line.
     public static int applyIf(CommandContext<CommandSourceStack> context, Predicate<ServerPlayer> allowed,
             String refusedKey, PlayerOperation operation) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
@@ -117,7 +114,7 @@ public final class ModCommandSupport {
         return updated;
     }
 
-    //  No targets given means "me". getPlayerOrException is what refuses the console politely.
+    //  No targets means "me". getPlayerOrException is what refuses the console politely.
     public static Collection<ServerPlayer> targets(CommandContext<CommandSourceStack> context)
             throws CommandSyntaxException {
         boolean explicit = context.getNodes().stream()

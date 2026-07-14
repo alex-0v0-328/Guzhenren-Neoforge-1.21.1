@@ -18,9 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 //  The player-stats HUD, top-left corner. Layout and rationale: CLAUDE.md "HUD".
 //
-//  Reads the very same attachments the server holds -- NeoForge syncs them, so there is nothing to
-//  request and no client mirror to invalidate. The essence cap and the aptitude tier are derived right
-//  here, by the same functions the server calls, from the same records.
+//  Reads the very same attachments the server holds -- nothing to request, no mirror to invalidate.
+//  The Mind Ocean is deliberately absent: 念/意/情 are not a status the player watches.
 public final class PlayerStatsHud implements LayeredDraw.Layer {
 
     public static final PlayerStatsHud INSTANCE = new PlayerStatsHud();
@@ -51,7 +50,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         LocalPlayer player = minecraft.player;
         if (player == null || minecraft.options.hideGui) return;
 
-        //  A spectator has no cultivation to speak of, and the F3 overlay owns this same corner.
+        //  A spectator has no cultivation, and F3 owns this same corner.
         if (player.isSpectator() || minecraft.getDebugOverlay().showDebugScreen()) return;
 
         Font font = minecraft.font;
@@ -63,7 +62,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         y += TEXT_HEIGHT + ROW_GAP;
 
         //  Hidden until the aperture opens: an unawakened cap is 0, and a bar that can never move only
-        //  asks the player to keep checking it. Its appearing is the feedback that 开窍 worked.
+        //  asks to be checked. Its *appearing* is the feedback that 开窍 worked.
         if (core.isAwakened()) {
             bar(graphics, font, y, EssenceService.currentEssence(player), EssenceService.maxEssence(core),
                     ESSENCE_FILL);
@@ -81,9 +80,8 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         graphics.drawString(font, text, LEFT, y, TEXT_COLOR, true);
     }
 
-    //  A bordered track with the raw value centered over the fill -- a number rather than a percentage,
-    //  because what a cultivator needs to know is whether they can afford the next technique.
-    //  A max of 0 is legal and simply reads 0/0.
+    //  Raw value over the fill, not a percentage: what a cultivator needs to know is whether they can
+    //  afford the next technique. A max of 0 is legal and reads 0/0.
     private static void bar(GuiGraphics graphics, Font font, int y, long current, long max, int fill) {
         int right = LEFT + BAR_WIDTH;
         graphics.fill(LEFT, y, right, y + BAR_HEIGHT, BAR_BORDER);

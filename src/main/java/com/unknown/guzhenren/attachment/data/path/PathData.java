@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.attachment.data;
+package com.unknown.guzhenren.attachment.data.path;
 
 import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
@@ -11,11 +11,8 @@ import java.util.Map;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The "path" (流派) system: what the player has achieved across the 30 paths.
-//
-//  Sparse on purpose. A cultivator dabbles in two or three paths, so serializing 30 empty entries
-//  per player would be pure waste. Default entries are pruned on construction, which means an
-//  absent key and a default entry are the same thing and get() can never return null.
+//  The path (流派) system. Sparse: a cultivator dabbles in two or three of the 30, so default entries
+//  are pruned and an absent key reads back as the default -- get() never returns null.
 public record PathData(Map<GuPath, PathEntry> entries) {
 
     public static final PathData DEFAULT = new PathData(Map.of());
@@ -29,7 +26,7 @@ public record PathData(Map<GuPath, PathEntry> entries) {
             .map(PathData::new, PathData::entries);
 
     public PathData {
-        //  EnumMap so both NBT and the wire see a stable, ordinal-ordered iteration.
+        //  EnumMap: stable ordinal order in NBT and on the wire.
         Map<GuPath, PathEntry> pruned = new EnumMap<>(GuPath.class);
         entries.forEach((path, entry) -> {
             if (!entry.isDefault()) pruned.put(path, entry);

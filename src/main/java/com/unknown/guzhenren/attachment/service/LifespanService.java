@@ -12,8 +12,8 @@ public final class LifespanService {
     private LifespanService() {}
 
     //  ---- read ----
-    //  Read the day index from the overworld, never from the player's own level: the Nether and the
-    //  End have their own fixed day-time, so a player who moved there would otherwise stop aging.
+    //  Overworld, never the player's own level: the Nether and the End have a fixed day-time, so a
+    //  player who moved there would stop aging.
     public static long dayIndex(MinecraftServer server) {
         return server.overworld().getDayTime() / EssenceService.TICKS_PER_DAY;
     }
@@ -25,11 +25,8 @@ public final class LifespanService {
     public static void setLifespan(ServerPlayer p, long v) {store(p, get(p).withLifespan(v));}
     public static void addLifespan(ServerPlayer p, long delta) {setLifespan(p, get(p).lifespan() + delta);}
 
-    //  Bill the player for every whole in-game day that has passed since we last billed them.
-    //
-    //  Driven off a stored day index rather than a countdown, which buys three things for free:
-    //  ticking twice in one day cannot double-charge, a player who was offline for ten days is aged
-    //  exactly ten years on login, and the whole thing survives a relog midday.
+    //  Bill every whole in-game day since the last billing. A stored day index, not a countdown: a
+    //  double tick cannot double-charge, and ten days offline are billed as exactly ten years.
     public static void tickAging(ServerPlayer player) {
         MinecraftServer server = player.getServer();
         if (server == null) return;
@@ -37,7 +34,7 @@ public final class LifespanService {
         long today = dayIndex(server);
         LifespanData data = get(player);
 
-        //  First tick ever: adopt today as the baseline without charging for it.
+        //  First tick ever: adopt today, charge nothing.
         if (data.lastDayIndex() == LifespanData.UNTRACKED) {
             store(player, data.withLastDayIndex(today));
             return;
@@ -45,8 +42,7 @@ public final class LifespanService {
 
         long elapsed = today - data.lastDayIndex();
 
-        //  Time ran backwards (/time set, or a world where the day counter was rolled back).
-        //  Re-anchor rather than hand back lifespan.
+        //  Time ran backwards (/time set). Re-anchor rather than hand back lifespan.
         if (elapsed < 0L) {
             store(player, data.withLastDayIndex(today));
             return;

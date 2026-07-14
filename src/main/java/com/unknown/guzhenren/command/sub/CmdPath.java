@@ -1,6 +1,5 @@
 package com.unknown.guzhenren.command.sub;
 
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -14,14 +13,14 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr path <path> mark       set|add|sub <long> | up | down
-//  /gzr path <path> attainment set <v> | add|sub <tiers> | up | down
+//  /gzr path <path> mark       set|add|sub <long>
+//  /gzr path <path> attainment set <v> | up | down
 //
-//  道痕 is a raw count, so add/sub and up/down (+-1) all deal in points. 造诣 is graded, so add/sub
-//  count *tiers* and up/down is one tier. The two never move each other -- see PathService.
+//  道痕 is a raw count (set/add/sub in points). 造诣 is graded (set, or up/down one tier). The two
+//  never move each other -- see PathService.
 //
-//  Every leaf has to re-read the path off the node above it, which is why none of them can use the
-//  plain builders in ModCommandSupport.
+//  Every leaf re-reads the path off the node above it, so none of them fit ModCommandSupport's
+//  plain builders.
 public final class CmdPath {
 
     private CmdPath() {}
@@ -39,9 +38,7 @@ public final class CmdPath {
         return Commands.literal("mark")
                 .then(markNode("set", PathService::setMark))
                 .then(markNode("add", PathService::addMark))
-                .then(markNode("sub", (player, path, value) -> PathService.addMark(player, path, -value)))
-                .then(markShift("up", 1L))
-                .then(markShift("down", -1L));
+                .then(markNode("sub", (player, path, value) -> PathService.addMark(player, path, -value)));
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> attainment() {
@@ -56,8 +53,6 @@ public final class CmdPath {
                                     return ModCommandSupport.apply(context,
                                             player -> PathService.setAttainment(player, path, value));
                                 })))
-                .then(attainmentNode("add", 1))
-                .then(attainmentNode("sub", -1))
                 .then(attainmentShift("up", 1))
                 .then(attainmentShift("down", -1));
     }
@@ -71,26 +66,6 @@ public final class CmdPath {
                     GuPath path = pathOf(context);
                     long value = LongArgumentType.getLong(context, ModCommandSupport.ARG_VALUE);
                     return ModCommandSupport.apply(context, player -> operation.apply(player, path, value));
-                }));
-    }
-
-    private static ArgumentBuilder<CommandSourceStack, ?> markShift(String literal, long delta) {
-        return ModCommandSupport.withTargets(Commands.literal(literal), context -> {
-            GuPath path = pathOf(context);
-            return ModCommandSupport.apply(context, player -> PathService.addMark(player, path, delta));
-        });
-    }
-
-    //  The sign says which way, the argument says how far.
-    private static ArgumentBuilder<CommandSourceStack, ?> attainmentNode(String literal, int sign) {
-        return Commands.literal(literal).then(ModCommandSupport.withTargets(
-                Commands.argument(ModCommandSupport.ARG_VALUE,
-                        IntegerArgumentType.integer(0, GuPathAttainment.values().length - 1)),
-                context -> {
-                    GuPath path = pathOf(context);
-                    int tiers = IntegerArgumentType.getInteger(context, ModCommandSupport.ARG_VALUE);
-                    return ModCommandSupport.apply(context,
-                            player -> PathService.shiftAttainment(player, path, sign * tiers));
                 }));
     }
 

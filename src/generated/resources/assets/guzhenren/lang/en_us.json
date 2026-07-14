@@ -1,5 +1,6 @@
 {
   "death.attack.guzhenren.lifespan_exhausted": "%1$s ran out of lifespan",
+  "death.attack.guzhenren.mind_ocean_shattered": "%1$s shattered their Mind Ocean",
   "death.attack.guzhenren.soul_collapse": "%1$s suffered soul collapse",
   "guzhenren.command.failed.awakened": "%s has already awakened -- run /guzhenren reset first to re-roll",
   "guzhenren.command.failed.unawakened": "%s has not awakened -- cultivation values are established by /guzhenren awaken",
@@ -8,6 +9,9 @@
   "guzhenren.command.info.essence": "Essence:     %s / %s",
   "guzhenren.command.info.life_state": "State:       %s",
   "guzhenren.command.info.lifespan": "Lifespan:    %s",
+  "guzhenren.command.info.mind": "Mind Ocean:",
+  "guzhenren.command.info.mind_entry": "  %s  %s / %s",
+  "guzhenren.command.info.path_empty": "  None",
   "guzhenren.command.info.path_entry": "  %s  %s  Marks %s",
   "guzhenren.command.info.paths": "Paths:",
   "guzhenren.command.info.realm": "Cultivation: %s",
@@ -116,5 +120,8 @@
   "guzhenren.enum.soul.tier.ten_million": "Ten-Million-Person Soul",
   "guzhenren.enum.soul.tier.ten_thousand": "Ten-Thousand-Person Soul",
   "guzhenren.enum.soul.tier.thousand": "Thousand-Person Soul",
+  "guzhenren.enum.wisdom.type.emotions": "Emotions",
+  "guzhenren.enum.wisdom.type.thoughts": "Thoughts",
+  "guzhenren.enum.wisdom.type.wills": "Wills",
   "guzhenren.hud.lifespan": "Lifespan %s"
 }

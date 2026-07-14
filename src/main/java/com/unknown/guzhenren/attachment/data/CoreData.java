@@ -13,8 +13,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The "core" system: everything that describes what a cultivator *is*.
-//  Talent tier and life form are deliberately absent -- see the derived accessors below.
+//  The core system: what a cultivator *is*. Talent and life form derived, never stored.
 public record CoreData(
         GuRank rank,
         GuStage stage,
@@ -23,8 +22,7 @@ public record CoreData(
         GuLifeState lifeState
 ) {
 
-    //  baseEssence (资质基数) is 0 while unawakened, and 20..100 once the aperture opens.
-    //  GuTalent's percent ranges are laid out to cover exactly 20..100, so the tier falls out.
+    //  资质基数: 0 unawakened, 20..100 after. GuTalent's bands cover exactly 20..100.
     public static final int UNAWAKENED_BASE = 0;
     public static final int MIN_BASE = 20;
     public static final int MAX_BASE = 100;
@@ -32,7 +30,7 @@ public record CoreData(
     public static final CoreData DEFAULT =
             new CoreData(GuRank.NONE, GuStage.NONE, UNAWAKENED_BASE, GuExtremePhysique.NONE, GuLifeState.ALIVE);
 
-    //  Every field is optional so that adding one later cannot invalidate existing saves.
+    //  All optional: a field added later must not invalidate old saves.
     public static final Codec<CoreData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             GuRank.CODEC.optionalFieldOf("rank", GuRank.NONE).forGetter(CoreData::rank),
             GuStage.CODEC.optionalFieldOf("stage", GuStage.NONE).forGetter(CoreData::stage),
@@ -50,15 +48,14 @@ public record CoreData(
             ModStreamCodecs.ofEnum(GuLifeState.class), CoreData::lifeState,
             CoreData::new);
 
-    //  1..19 is not a value, it is a hole: GuTalent.fromPercent finds no tier there and returns NONE,
-    //  which would leave an "unawakened" body carrying a non-zero essence cap. Snap out of it.
+    //  ⚠ 1..19 is a hole, not a value: no talent tier there, but a live essence cap. Snap out of it.
     public CoreData {
         baseEssence = baseEssence <= UNAWAKENED_BASE
                 ? UNAWAKENED_BASE
                 : Math.clamp(baseEssence, MIN_BASE, MAX_BASE);
     }
 
-    //  ---- derived, never stored -- see CLAUDE.md "Derived, never stored" ----
+    //  ---- derived, never stored; see CLAUDE.md ----
     public GuTalent talent() {return GuTalent.fromPercent(baseEssence);}
     public GuLifeForm lifeForm() {return rank.getLifeForm();}
     public boolean isAwakened() {return baseEssence >= MIN_BASE;}

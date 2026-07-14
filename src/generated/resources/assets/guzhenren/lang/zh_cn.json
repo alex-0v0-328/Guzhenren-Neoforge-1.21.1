@@ -1,5 +1,6 @@
 {
   "death.attack.guzhenren.lifespan_exhausted": "%1$s 寿元耗尽而亡",
+  "death.attack.guzhenren.mind_ocean_shattered": "%1$s 脑海炸裂而亡",
   "death.attack.guzhenren.soul_collapse": "%1$s 魂魄衰竭而亡",
   "guzhenren.command.failed.awakened": "%s 已开窍 —— 要重掷请先 /guzhenren reset",
   "guzhenren.command.failed.unawakened": "%s 尚未开窍 —— 修为相关的值只能由 /guzhenren awaken 建立",
@@ -8,6 +9,9 @@
   "guzhenren.command.info.essence": "玩家真元：%s / %s",
   "guzhenren.command.info.life_state": "玩家状态：%s",
   "guzhenren.command.info.lifespan": "玩家寿元：%s",
+  "guzhenren.command.info.mind": "玩家脑海：",
+  "guzhenren.command.info.mind_entry": "  %s  %s / %s",
+  "guzhenren.command.info.path_empty": "  无",
   "guzhenren.command.info.path_entry": "  %s  %s  道痕 %s",
   "guzhenren.command.info.paths": "玩家流派：",
   "guzhenren.command.info.realm": "玩家修为：%s",
@@ -116,5 +120,8 @@
   "guzhenren.enum.soul.tier.ten_million": "千万人魂",
   "guzhenren.enum.soul.tier.ten_thousand": "万人魂",
   "guzhenren.enum.soul.tier.thousand": "千人魂",
+  "guzhenren.enum.wisdom.type.emotions": "情",
+  "guzhenren.enum.wisdom.type.thoughts": "念",
+  "guzhenren.enum.wisdom.type.wills": "意",
   "guzhenren.hud.lifespan": "寿元 %s"
 }

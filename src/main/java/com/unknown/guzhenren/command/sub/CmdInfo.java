@@ -5,45 +5,53 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.unknown.guzhenren.attachment.data.CoreData;
-import com.unknown.guzhenren.attachment.data.PathEntry;
+import com.unknown.guzhenren.attachment.data.mind.MindData;
+import com.unknown.guzhenren.attachment.data.mind.MindPool;
+import com.unknown.guzhenren.attachment.data.path.PathEntry;
 import com.unknown.guzhenren.attachment.data.SoulData;
 import com.unknown.guzhenren.attachment.service.CoreService;
 import com.unknown.guzhenren.attachment.service.EssenceService;
 import com.unknown.guzhenren.attachment.service.LifespanService;
+import com.unknown.guzhenren.attachment.service.MindService;
 import com.unknown.guzhenren.attachment.service.PathService;
 import com.unknown.guzhenren.attachment.service.SoulService;
 import com.unknown.guzhenren.command.ModCommandFeedback;
 import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.custom.enums.core.GuLifeState;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.wisdom.GuWisdomType;
 import com.unknown.guzhenren.util.ModDisplayText;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr info
+//  /gzr info                  -- shorthand for `info core` on yourself
+//  /gzr info core   [targets] -- realm, aptitude, essence, soul, lifespan, life state
+//  /gzr info path   [targets] -- the path table
+//  /gzr info wisdom [targets] -- the Mind Ocean
 //
-//    [GZR]
-//    玩家修为：一转巅峰
-//    玩家天赋：甲等资质 [ 太日阳莽体 ] (85)
-//    玩家真元：800 / 800
-//    玩家魂魄：100 / 100 (一人魂)
-//    玩家寿元：86 [ 14岁 ]
+//  [targets] hangs off the three sections, not off bare `info`: an EntityArgument there would be a
+//  sibling of the three literals and Brigadier would call the tree ambiguous. Asking about someone
+//  else means saying what you want to know about them.
 //
-//  The phrases come from ModDisplayText, so this reads identically to the HUD. Essence, life state and
-//  paths print only when they say something: an unawakened mortal has no essence pool, an ALIVE player
-//  is the default, and an empty path map is not a table.
+//  Phrases come from ModDisplayText, so core reads identically to the HUD. Essence and life state
+//  print only when they say something.
 public final class CmdInfo {
 
     private CmdInfo() {}
 
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
-        return ModCommandSupport.withTargets(Commands.literal("info"), CmdInfo::run);
+        return Commands.literal("info")
+                .executes(CmdInfo::core)
+                .then(ModCommandSupport.withTargets(Commands.literal("core"), CmdInfo::core))
+                .then(ModCommandSupport.withTargets(Commands.literal("path"), CmdInfo::path))
+                .then(ModCommandSupport.withTargets(Commands.literal("wisdom"), CmdInfo::wisdom));
     }
 
-    private static int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int core(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
 
         for (ServerPlayer player : ModCommandSupport.targets(context)) {
@@ -74,11 +82,46 @@ public final class CmdInfo {
                 ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.life_state",
                         Component.translatable(core.lifeState().getTranslationKey())));
             }
+        }
 
-            var entries = PathService.get(player).entries();
-            if (!entries.isEmpty()) {
-                ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.paths"));
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int path(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        CommandSourceStack source = context.getSource();
+
+        for (ServerPlayer player : ModCommandSupport.targets(context)) {
+            Map<GuPath, PathEntry> entries = PathService.get(player).entries();
+
+            ModCommandFeedback.header(source);
+            ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.paths"));
+
+            //  The map is sparse, so an untouched cultivator has no rows at all -- say so rather than
+            //  print a label with nothing under it.
+            if (entries.isEmpty()) {
+                ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.path_empty"));
+            } else {
                 entries.forEach((path, entry) -> ModCommandFeedback.detail(source, pathLine(path, entry)));
+            }
+        }
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    //  All three cells, always -- MindData is dense, and a missing 情 row would read as a bug.
+    private static int wisdom(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        CommandSourceStack source = context.getSource();
+
+        for (ServerPlayer player : ModCommandSupport.targets(context)) {
+            MindData mind = MindService.get(player);
+
+            ModCommandFeedback.header(source);
+            ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.mind"));
+
+            for (GuWisdomType type : GuWisdomType.values()) {
+                MindPool pool = mind.pool(type);
+                ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.mind_entry",
+                        Component.translatable(type.getTranslationKey()), pool.current(), pool.max()));
             }
         }
 
@@ -92,8 +135,8 @@ public final class CmdInfo {
                 entry.mark());
     }
 
-    //  The trailing " (85)" / " (一人魂)": derived detail an operator needs and a player does not.
-    //  Dimmed so it stays out of the way -- the one place gray is not a feedback class.
+    //  " (85)" / " (一人魂)": derived detail an operator needs and a player does not.
+    //  The one place gray is not a feedback class.
     private static Component muted(Object value) {
         return Component.translatable("guzhenren.command.info.detail", value).withStyle(ChatFormatting.DARK_GRAY);
     }

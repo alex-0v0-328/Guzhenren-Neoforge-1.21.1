@@ -10,12 +10,13 @@ import com.unknown.guzhenren.command.ModCommandSupport.IntOperation;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-//  /gzr essence base set|add <int> | current set|add <long> | refill
+//  /gzr essence base set|add|sub <int> | current set|add|sub <long> | refill
 //
-//  Gated: the pool's cap is derived from the core, so on an unawakened target it is 0 and a write
-//  would clamp to nothing -- and then report success. Refuse it out loud instead.
+//  Gated: on an unawakened target the cap is 0, so a write would clamp to nothing and still report
+//  success. Refuse out loud instead.
 //
-//  `base` writes CoreData.baseEssence; it lives under essence because that is the only thing it does.
+//  No `current max` leaf: maxEssence is derived (base × stage × rank), sized by `base` and the core.
+//  `base` writes CoreData.baseEssence -- it lives here because sizing the pool is all it does.
 public final class CmdEssence {
 
     private CmdEssence() {}
@@ -25,10 +26,12 @@ public final class CmdEssence {
                 .requires(ModCommandSupport::sourceAwakened)
                 .then(Commands.literal("base")
                         .then(baseNode("set", CoreService::setBaseEssence))
-                        .then(baseNode("add", CoreService::addBaseEssence)))
+                        .then(baseNode("add", CoreService::addBaseEssence))
+                        .then(baseNode("sub", (p, v) -> CoreService.addBaseEssence(p, -v))))
                 .then(Commands.literal("current")
                         .then(gated("set", EssenceService::set))
-                        .then(gated("add", EssenceService::add)))
+                        .then(gated("add", EssenceService::add))
+                        .then(gated("sub", (p, v) -> EssenceService.add(p, -v))))
                 .then(ModCommandSupport.withTargets(Commands.literal("refill"),
                         context -> ModCommandSupport.applyOnAwakened(context, EssenceService::refill)));
     }

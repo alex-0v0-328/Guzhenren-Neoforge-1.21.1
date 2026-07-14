@@ -11,6 +11,7 @@ import com.unknown.guzhenren.custom.enums.core.GuStage;
 import com.unknown.guzhenren.custom.enums.core.GuTalent;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.GuPathAttainment;
+import com.unknown.guzhenren.custom.enums.wisdom.GuWisdomType;
 import com.unknown.guzhenren.util.GuTranslatable;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -63,6 +64,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.life_state",           "State:       %s");
         add("guzhenren.command.info.paths",                "Paths:");
         add("guzhenren.command.info.path_entry",           "  %s  %s  Marks %s");
+        add("guzhenren.command.info.path_empty",           "  None");
+        add("guzhenren.command.info.mind",                 "Mind Ocean:");
+        add("guzhenren.command.info.mind_entry",           "  %s  %s / %s");
 
         //  Derived detail for the operator, dimmed at the end of a line: aptitude base / soul title.
         add("guzhenren.command.info.detail",               " (%s)");
@@ -74,6 +78,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
     private void addDeathMessages() {
         add("death.attack.guzhenren.lifespan_exhausted",   "%1$s ran out of lifespan");
         add("death.attack.guzhenren.soul_collapse",        "%1$s suffered soul collapse");
+        add("death.attack.guzhenren.mind_ocean_shattered", "%1$s shattered their Mind Ocean");
     }
     //endregion
 
@@ -89,6 +94,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addPath();
         addAttainment();
         addSoulTier();
+        addWisdomType();
     }
 
     private void addRank() {
@@ -221,6 +227,13 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(GuSoulTier.MILLION,          "Million-Person Soul");
         add(GuSoulTier.TEN_MILLION,      "Ten-Million-Person Soul");
         add(GuSoulTier.HUNDRED_MILLION,  "Hundred-Million-Person Soul");
+    }
+
+    //  智道三态; 脑海初始容量 念30000 / 意5 / 情2, 装不下即脑海炸裂
+    private void addWisdomType() {
+        add(GuWisdomType.THOUGHTS, "Thoughts");
+        add(GuWisdomType.WILLS,    "Wills");
+        add(GuWisdomType.EMOTIONS, "Emotions");
     }
     //endregion
 }

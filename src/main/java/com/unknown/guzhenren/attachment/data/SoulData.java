@@ -7,19 +7,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The "soul" (魂魄) system. maxSoul carries the title (一人魂 / 十人魂 / ...), currentSoul is the
-//  pool that abilities actually spend. Sleeping refills current to max.
-//
-//  A soul value of 100 is "one person's worth" -- hence the default. The title is derived from
-//  maxSoul via GuSoulTier.fromSoul and is never stored.
+//  The soul (魂魄) system. 100 = one person's worth, hence the default.
+//  The title (一人魂 / 十人魂 / ...) is derived from maxSoul, never stored.
 public record SoulData(long maxSoul, long currentSoul) {
 
     public static final long DEFAULT_MAX_SOUL = 100L;
 
     public static final SoulData DEFAULT = new SoulData(DEFAULT_MAX_SOUL, DEFAULT_MAX_SOUL);
 
-    //  NBT keys spell the system out -- "max"/"current" alone would be ambiguous the moment another
-    //  pool grows a serialized cap.
+    //  NBT keys spell the system out -- a bare "max" would be a coin flip.
     public static final Codec<SoulData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.LONG.optionalFieldOf("max_soul", DEFAULT_MAX_SOUL).forGetter(SoulData::maxSoul),
             Codec.LONG.optionalFieldOf("current_soul", DEFAULT_MAX_SOUL).forGetter(SoulData::currentSoul)
@@ -30,8 +26,7 @@ public record SoulData(long maxSoul, long currentSoul) {
             ByteBufCodecs.VAR_LONG, SoulData::currentSoul,
             SoulData::new);
 
-    //  current is allowed to hit 0 -- that is soul collapse, and PlayerTickEvents kills for it.
-    //  It is not allowed to exceed max, or to go negative and make "how dead am I" a question.
+    //  current may hit 0 -- soul collapse, PlayerTickEvents kills for it. It may not exceed max.
     public SoulData {
         maxSoul = Math.max(0L, maxSoul);
         currentSoul = Math.clamp(currentSoul, 0L, maxSoul);

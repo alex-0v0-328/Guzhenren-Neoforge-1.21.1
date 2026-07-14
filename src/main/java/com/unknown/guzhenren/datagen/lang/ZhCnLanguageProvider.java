@@ -11,6 +11,7 @@ import com.unknown.guzhenren.custom.enums.core.GuStage;
 import com.unknown.guzhenren.custom.enums.core.GuTalent;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.GuPathAttainment;
+import com.unknown.guzhenren.custom.enums.wisdom.GuWisdomType;
 import com.unknown.guzhenren.util.GuTranslatable;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -62,6 +63,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.life_state",           "玩家状态：%s");
         add("guzhenren.command.info.paths",                "玩家流派：");
         add("guzhenren.command.info.path_entry",           "  %s  %s  道痕 %s");
+        add("guzhenren.command.info.path_empty",           "  无");
+        add("guzhenren.command.info.mind",                 "玩家脑海：");
+        add("guzhenren.command.info.mind_entry",           "  %s  %s / %s");
 
         //  给 operator 看的派生细节, 灰字缀在行尾: 资质基数 / 魂魄境界
         add("guzhenren.command.info.detail",               " (%s)");
@@ -73,6 +77,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     private void addDeathMessages() {
         add("death.attack.guzhenren.lifespan_exhausted",   "%1$s 寿元耗尽而亡");
         add("death.attack.guzhenren.soul_collapse",        "%1$s 魂魄衰竭而亡");
+        add("death.attack.guzhenren.mind_ocean_shattered", "%1$s 脑海炸裂而亡");
     }
     //endregion
 
@@ -88,6 +93,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addPath();
         addAttainment();
         addSoulTier();
+        addWisdomType();
     }
 
     private void addRank() {
@@ -219,6 +225,13 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(GuSoulTier.MILLION,          "百万人魂");
         add(GuSoulTier.TEN_MILLION,      "千万人魂");
         add(GuSoulTier.HUNDRED_MILLION,  "亿人魂");
+    }
+
+    //  智道三态; 脑海初始容量 念30000 / 意5 / 情2, 装不下即脑海炸裂
+    private void addWisdomType() {
+        add(GuWisdomType.THOUGHTS, "念");
+        add(GuWisdomType.WILLS,    "意");
+        add(GuWisdomType.EMOTIONS, "情");
     }
     //endregion
 }

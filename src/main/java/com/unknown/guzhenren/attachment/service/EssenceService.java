@@ -7,28 +7,24 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The essence (真元) system. Formulas and their worked examples: CLAUDE.md "Formulas".
-//
-//  The cap and the regen rate are pure functions of CoreData, so the client calls them too -- the HUD
-//  derives the cap from the synced CoreData rather than being told it.
+//  The essence (真元) system. Formulas and worked examples: CLAUDE.md "Formulas".
+//  Cap and regen rate are pure functions of CoreData, so the HUD calls them on the client too.
 public final class EssenceService {
 
     private EssenceService() {}
 
     public static final int TICKS_PER_DAY = 24000;
 
-    //  A *notional* aptitude base: regen is measured against 100, never against the player's own base.
+    //  A *notional* aptitude base -- regen is measured against 100, never the player's own base.
     //  That is what makes aptitude buy a bigger pool rather than a slower one.
     public static final long BASE_REGEN_PER_DAY = 100L;
 
-    //  Stepped once a second, not once a tick: identical result thanks to ESSENCE_CARRY, twenty times
-    //  fewer writes.
+    //  Once a second, not once a tick: same result thanks to ESSENCE_CARRY, twenty times fewer writes.
     public static final int REGEN_INTERVAL_TICKS = 20;
 
     //  ---- derived, pure ----
 
-    //  GuRank.SIX..NINE have rankBase == 0, so an immortal caps at 0. DELIBERATE, not a hole -- do not
-    //  "fix" it. See CLAUDE.md "Pending".
+    //  ⚠ GuRank.SIX..NINE have rankBase == 0, so an immortal caps at 0. Deliberate -- do not "fix" it.
     public static long maxEssence(CoreData core) {
         long max = (long) core.baseEssence() * core.stage().getEssenceMultiplier() * core.rank().getRankBase();
         return Math.max(0L, max);
@@ -37,7 +33,7 @@ public final class EssenceService {
     public static long maxEssence(Player p) {return maxEssence(CoreService.get(p));}
     public static double regenPerTick(CoreData core) {return regenPerDay(core) / (double) TICKS_PER_DAY;}
 
-    //  A zombified cultivator's aperture is dead and cannot draw in ambient qi -- see GuLifeState.
+    //  A zombified aperture is dead and cannot draw in ambient qi -- see GuLifeState.
     public static long regenPerDay(CoreData core) {
         if (core.lifeState() != GuLifeState.ALIVE) return 0L;
         return BASE_REGEN_PER_DAY
@@ -54,8 +50,7 @@ public final class EssenceService {
     public static void add(ServerPlayer p, long delta) {set(p, currentEssence(p) + delta);}
     public static void refill(ServerPlayer p) {set(p, maxEssence(p));}
 
-    //  Called by CoreService whenever core changes: dropping a rank lowers the cap, and a player
-    //  must not be left holding more essence than they can now contain.
+    //  Called by CoreService on every core change: dropping a rank lowers the cap.
     public static void clampToMax(ServerPlayer p) {set(p, currentEssence(p));}
 
     //  setData is what syncs; see ModAttachments.
@@ -65,7 +60,7 @@ public final class EssenceService {
         player.setData(ModAttachments.ESSENCE, new EssenceData(clamped));
     }
 
-    //  Spend essence, all or nothing. Returns false and changes nothing if the pool is short.
+    //  Spend, all or nothing.
     public static boolean consume(ServerPlayer player, long amount) {
         if (amount <= 0L) return true;
         long current = currentEssence(player);
@@ -74,15 +69,14 @@ public final class EssenceService {
         return true;
     }
 
-    //  One regen step. Called from PlayerTickEvents every REGEN_INTERVAL_TICKS.
+    //  One regen step, every REGEN_INTERVAL_TICKS.
     public static void regenStep(ServerPlayer player) {
         CoreData core = CoreService.get(player);
         long max = maxEssence(core);
         long current = currentEssence(player);
 
         if (current >= max) {
-            //  Sitting at the cap: drop the carry so it cannot quietly bank up and then dump into
-            //  the pool the instant a breakthrough raises the cap.
+            //  At the cap: drop the carry, or it banks up and dumps in the instant the cap rises.
             if (player.getData(ModAttachments.ESSENCE_CARRY) != 0.0F) {
                 player.setData(ModAttachments.ESSENCE_CARRY, 0.0F);
             }

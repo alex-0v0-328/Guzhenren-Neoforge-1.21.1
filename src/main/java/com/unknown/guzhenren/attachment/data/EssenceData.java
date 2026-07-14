@@ -6,9 +6,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The "essence" (真元) system. Only the current pool is stored -- the cap is a pure function of
-//  CoreData (EssenceService.maxEssence), and the sub-integer regen carry is a separate unsynced
-//  attachment (ModAttachments.ESSENCE_CARRY). Neither belongs here; see CLAUDE.md "Networking".
+//  The essence (真元) system. Cap derived from CoreData; the regen carry is a separate unsynced
+//  attachment. Neither belongs here -- see CLAUDE.md "Networking".
 public record EssenceData(long currentEssence) {
 
     public static final EssenceData DEFAULT = new EssenceData(0L);
