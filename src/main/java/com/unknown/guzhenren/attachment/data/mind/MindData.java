@@ -2,19 +2,15 @@ package com.unknown.guzhenren.attachment.data.mind;
 
 import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.custom.enums.wisdom.GuWisdomType;
-import com.unknown.guzhenren.util.ModStreamCodecs;
+import com.unknown.guzhenren.serialization.ModStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The "mind" (智道) system: the 脑海 and the three things it holds. See CLAUDE.md "Wisdom".
-//
-//  Dense, unlike PathData -- every player has all three cells. A key missing from NBT is filled from
-//  the enum's own default capacity, so a save written before a cell existed still loads.
+//  The "mind" (智道) system: the 脑海 and its three cells. See CLAUDE.md "Wisdom".
+//  Dense, unlike PathData -- a missing key is filled from the enum's default capacity.
 public record MindData(Map<GuWisdomType, MindPool> pools) {
 
     public static final MindData DEFAULT = new MindData(Map.of());
@@ -22,10 +18,8 @@ public record MindData(Map<GuWisdomType, MindPool> pools) {
     public static final Codec<MindData> CODEC = Codec.unboundedMap(GuWisdomType.CODEC, MindPool.CODEC)
             .xmap(MindData::new, MindData::pools);
 
-    public static final StreamCodec<ByteBuf, MindData> STREAM_CODEC = ByteBufCodecs
-            .<ByteBuf, GuWisdomType, MindPool, Map<GuWisdomType, MindPool>>map(
-                    HashMap::new, ModStreamCodecs.ofEnum(GuWisdomType.class), MindPool.STREAM_CODEC)
-            .map(MindData::new, MindData::pools);
+    public static final StreamCodec<ByteBuf, MindData> STREAM_CODEC =
+            ModStreamCodecs.enumMap(GuWisdomType.class, MindPool.STREAM_CODEC).map(MindData::new, MindData::pools);
 
     public MindData {
         //  EnumMap: stable ordinal order on the wire and in NBT.

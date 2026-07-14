@@ -7,8 +7,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The mind (智道) system: 念 / 意 / 情 in the 脑海. No regen; current is never clamped down, so past
-//  the buffer it is lethal (PlayerTickEvents kills for it). Only 念 recovers on sleep. See CLAUDE.md.
+//  The mind (智道) system: 念 / 意 / 情 in the 脑海. No regen, only 念 recovers on sleep. See CLAUDE.md "Wisdom".
 public final class MindService {
 
     private MindService() {}
@@ -34,8 +33,7 @@ public final class MindService {
         set(p, t, new MindPool(cap, cap, false));
     }
 
-    //  A completed night's sleep restores 念 only -- 意/情 do not recover. Half the deficit if the
-    //  buffer was used since the last sleep. See MindPool.slept.
+    //  A completed sleep restores 念 only -- 意/情 do not recover. See MindPool.slept.
     public static void onSleepComplete(ServerPlayer p) {
         set(p, GuWisdomType.THOUGHTS, pool(p, GuWisdomType.THOUGHTS).slept());
     }

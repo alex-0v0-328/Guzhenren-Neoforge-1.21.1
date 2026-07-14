@@ -7,10 +7,7 @@ import com.unknown.guzhenren.custom.enums.core.GuLifeState;
 import net.minecraft.commands.CommandSourceStack;
 
 //  /gzr lifestate set <v>
-//
-//  Ungated, and top level rather than under core: 生 / 僵 / 死 is a fact about a body, and a body needs
-//  no aperture to be turned into a zombie. It only *reads* as cultivation because a zombified aperture
-//  is what stops essence regen -- see GuLifeState.
+//  Ungated, top level not under core: a body needs no aperture to be zombified -- see GuLifeState.
 public final class CmdLifeState {
 
     private CmdLifeState() {}

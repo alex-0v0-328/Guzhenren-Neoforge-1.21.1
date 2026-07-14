@@ -16,7 +16,6 @@ public final class EssenceService {
     public static final int TICKS_PER_DAY = 24000;
 
     //  A *notional* aptitude base -- regen is measured against 100, never the player's own base.
-    //  That is what makes aptitude buy a bigger pool rather than a slower one.
     public static final long BASE_REGEN_PER_DAY = 100L;
 
     //  Once a second, not once a tick: same result thanks to ESSENCE_CARRY, twenty times fewer writes.

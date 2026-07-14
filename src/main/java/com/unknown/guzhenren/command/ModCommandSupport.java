@@ -18,8 +18,8 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 
-//  What every command/sub/Cmd* shares: optional [targets], the awakening gate, the per-target apply.
-//  Why the gate takes two layers: CLAUDE.md "The awakening gate".
+//  Shared by every Cmd*: optional [targets], the awakening gate, the per-target apply.
+//  See CLAUDE.md "The awakening gate".
 public final class ModCommandSupport {
 
     private ModCommandSupport() {}
@@ -33,16 +33,14 @@ public final class ModCommandSupport {
     public static final Predicate<ServerPlayer> ANYONE = player -> true;
     public static final Predicate<ServerPlayer> AWAKENED = player -> CoreService.get(player).isAwakened();
 
-    //  Presentation only -- requires() resolves before [targets] is parsed, so it only ever sees the
-    //  caller. The console has no body, so it sees the whole tree.
+    //  Presentation only -- requires() resolves before [targets] is parsed, so it sees only the caller.
     public static boolean sourceAwakened(CommandSourceStack source) {
         return !(source.getEntity() instanceof ServerPlayer player) || CoreService.get(player).isAwakened();
     }
 
     //region node builders
 
-    //  The executor on both the bare node and the node-plus-targets: Brigadier has no other spelling
-    //  for an optional argument.
+    //  Executor on both the bare node and node-plus-targets -- Brigadier has no optional-arg spelling.
     public static ArgumentBuilder<CommandSourceStack, ?> withTargets(
             ArgumentBuilder<CommandSourceStack, ?> node, Command<CommandSourceStack> executor) {
         return node.executes(executor)
@@ -88,8 +86,7 @@ public final class ModCommandSupport {
         return applyIf(context, AWAKENED, FAILED_UNAWAKENED, operation);
     }
 
-    //  Runs on every target `allowed` accepts, names the rest in one red line. A refusal is not an
-    //  error: three updated and one refused is a green line *and* a red line.
+    //  Runs on every allowed target, names the rest in one red line. A refusal is not an error.
     public static int applyIf(CommandContext<CommandSourceStack> context, Predicate<ServerPlayer> allowed,
             String refusedKey, PlayerOperation operation) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();

@@ -15,12 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 //  /gzr path <path> mark       set|add|sub <long>
 //  /gzr path <path> attainment set <v> | up | down
-//
-//  道痕 is a raw count (set/add/sub in points). 造诣 is graded (set, or up/down one tier). The two
-//  never move each other -- see PathService.
-//
-//  Every leaf re-reads the path off the node above it, so none of them fit ModCommandSupport's
-//  plain builders.
+//  道痕 a raw count, 造诣 graded; every leaf re-reads the path, so none fit the plain builders.
 public final class CmdPath {
 
     private CmdPath() {}

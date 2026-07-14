@@ -12,8 +12,7 @@ public final class LifespanService {
     private LifespanService() {}
 
     //  ---- read ----
-    //  Overworld, never the player's own level: the Nether and the End have a fixed day-time, so a
-    //  player who moved there would stop aging.
+    //  Overworld, never the player's own level -- the Nether and the End have a fixed day-time.
     public static long dayIndex(MinecraftServer server) {
         return server.overworld().getDayTime() / EssenceService.TICKS_PER_DAY;
     }
@@ -25,8 +24,7 @@ public final class LifespanService {
     public static void setLifespan(ServerPlayer p, long v) {store(p, get(p).withLifespan(v));}
     public static void addLifespan(ServerPlayer p, long delta) {setLifespan(p, get(p).lifespan() + delta);}
 
-    //  Bill every whole in-game day since the last billing. A stored day index, not a countdown: a
-    //  double tick cannot double-charge, and ten days offline are billed as exactly ten years.
+    //  Bill every whole day since last billing. A stored day index, not a countdown -- idempotent, relog-safe.
     public static void tickAging(ServerPlayer player) {
         MinecraftServer server = player.getServer();
         if (server == null) return;

@@ -4,8 +4,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 
-//  The three feedback classes -- default / green success / red failure. The [GZR] tag always stays
-//  default-colored; only the message carries the class color. See CLAUDE.md "Color".
+//  Default / green success / red failure. [GZR] tag stays default; only the message is colored.
+//  See CLAUDE.md "Color".
 public final class ModCommandFeedback {
 
     private ModCommandFeedback() {}
@@ -23,8 +23,8 @@ public final class ModCommandFeedback {
         source.sendSuccess(() -> tagged(message, ChatFormatting.GREEN), false);
     }
 
-    //  Not sendFailure: it drops the tag, and it flags the whole command as failed. A partial refusal
-    //  is a result, not a failure -- it has to be able to sit next to a green line.
+    //  Not sendFailure: it drops the tag and flags the whole command failed. A partial refusal is a
+    //  result, not a failure.
     public static void failure(CommandSourceStack source, Component message) {
         source.sendSuccess(() -> tagged(message, ChatFormatting.RED), false);
     }

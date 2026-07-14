@@ -6,7 +6,7 @@ import com.unknown.guzhenren.attachment.service.CoreService;
 import com.unknown.guzhenren.attachment.service.EssenceService;
 import com.unknown.guzhenren.attachment.service.LifespanService;
 import com.unknown.guzhenren.attachment.service.SoulService;
-import com.unknown.guzhenren.util.ModDisplayText;
+import com.unknown.guzhenren.display.ModDisplayText;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -17,9 +17,7 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 //  The player-stats HUD, top-left corner. Layout and rationale: CLAUDE.md "HUD".
-//
-//  Reads the very same attachments the server holds -- nothing to request, no mirror to invalidate.
-//  The Mind Ocean is deliberately absent: 念/意/情 are not a status the player watches.
+//  Reads the same attachments the server holds; Mind Ocean deliberately absent.
 public final class PlayerStatsHud implements LayeredDraw.Layer {
 
     public static final PlayerStatsHud INSTANCE = new PlayerStatsHud();
@@ -61,8 +59,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         line(graphics, font, y, ModDisplayText.realmAndTalent(core));
         y += TEXT_HEIGHT + ROW_GAP;
 
-        //  Hidden until the aperture opens: an unawakened cap is 0, and a bar that can never move only
-        //  asks to be checked. Its *appearing* is the feedback that 开窍 worked.
+        //  Hidden until the aperture opens -- its appearing is the feedback that 开窍 worked.
         if (core.isAwakened()) {
             bar(graphics, font, y, EssenceService.currentEssence(player), EssenceService.maxEssence(core),
                     ESSENCE_FILL);
@@ -80,8 +77,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         graphics.drawString(font, text, LEFT, y, TEXT_COLOR, true);
     }
 
-    //  Raw value over the fill, not a percentage: what a cultivator needs to know is whether they can
-    //  afford the next technique. A max of 0 is legal and reads 0/0.
+    //  Raw value over the fill, not a percentage. A max of 0 is legal and reads 0/0.
     private static void bar(GuiGraphics graphics, Font font, int y, long current, long max, int fill) {
         int right = LEFT + BAR_WIDTH;
         graphics.fill(LEFT, y, right, y + BAR_HEIGHT, BAR_BORDER);

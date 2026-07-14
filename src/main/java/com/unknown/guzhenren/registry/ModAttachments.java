@@ -16,8 +16,7 @@ import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-//  The six player-data systems, plus ESSENCE_CARRY.
-//  Read anywhere, client included; write only through attachment/service.
+//  The six player-data systems, plus ESSENCE_CARRY. Write only through attachment/service.
 //  .sync() is why this mod has no packets -- see CLAUDE.md "Networking".
 public final class ModAttachments {
 
@@ -26,14 +25,13 @@ public final class ModAttachments {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
             DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, Guzhenren.MOD_ID);
 
-    //  Without this, NeoForge ships the data to everyone who can see the holder.
-    //  To reveal rank to others later (观气术, name tags): loosen CORE's predicate, nothing else moves.
+    //  Without this, NeoForge syncs to everyone who can see the holder. To reveal rank later
+    //  (观气术, name tags): loosen CORE's predicate. See CLAUDE.md "Networking".
     private static final BiPredicate<IAttachmentHolder, ServerPlayer> OWNER_ONLY =
             (holder, viewer) -> holder == viewer;
 
-    //  No copyOnDeath: PlayerDataEvents.onClone is the single source of truth for what a clone
-    //  inherits -- it copies, or resets to a mortal when a death meets keepInventory=false. A death
-    //  copy and a reset cannot both be the last word, so only one place may write.
+    //  No copyOnDeath: onClone is the single source of truth for what a clone inherits --
+    //  a death copy and a reset can't both be the last word, so only one place may write.
     public static final Supplier<AttachmentType<CoreData>> CORE = ATTACHMENT_TYPES.register(
             "core", () -> AttachmentType.builder(() -> CoreData.DEFAULT)
                     .serialize(CoreData.CODEC)
@@ -64,16 +62,14 @@ public final class ModAttachments {
                     .sync(OWNER_ONLY, PathData.STREAM_CODEC)
                     .build());
 
-    //  Synced although no HUD reads it yet: it is player data like the other five, and a 脑海 screen
-    //  later should not have to remember to come back here.
+    //  Synced though no HUD reads it yet -- player data like the other five, ready for a 脑海 screen.
     public static final Supplier<AttachmentType<MindData>> MIND = ATTACHMENT_TYPES.register(
             "mind", () -> AttachmentType.builder(() -> MindData.DEFAULT)
                     .serialize(MindData.CODEC)
                     .sync(OWNER_ONLY, MindData.STREAM_CODEC)
                     .build());
 
-    //  Sub-integer remainder of essence regen. Neither serialized nor synced, on purpose -- see
-    //  CLAUDE.md "Networking". Losing it on relog costs under one point.
+    //  Sub-integer remainder of essence regen. Not serialized or synced -- see CLAUDE.md "Networking".
     public static final Supplier<AttachmentType<Float>> ESSENCE_CARRY = ATTACHMENT_TYPES.register(
             "essence_carry", () -> AttachmentType.builder(() -> 0.0F).build());
 

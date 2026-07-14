@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.util;
+package com.unknown.guzhenren.display;
 
 import com.unknown.guzhenren.attachment.data.CoreData;
 import com.unknown.guzhenren.attachment.data.LifespanData;
@@ -6,11 +6,8 @@ import com.unknown.guzhenren.custom.enums.core.GuExtremePhysique;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-//  Every phrase that describes a cultivator, in one place. The HUD builds these on the client,
-//  /gzr info the same ones on the server -- sharing the builders is what stops the two drifting.
-//
-//  Values only ("86 [ 14岁 ]"), never labels: the HUD says 寿元 and the command says 玩家寿元, so each
-//  caller wraps the value in its own key. No color anywhere -- see CLAUDE.md "Color".
+//  Every phrase that describes a cultivator, shared by the HUD and /gzr info so they can't drift.
+//  Values only, never labels; each caller wraps in its own key. See CLAUDE.md "Color".
 public final class ModDisplayText {
 
     private ModDisplayText() {}

@@ -13,9 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
 //  Enum arguments as a plain word plus suggestions.
-//
-//  Not NeoForge's EnumArgument: that is a *registered* argument type -- an entry in the argument-type
-//  registry, and a client that has to know how to parse it. A word costs nothing and reads the same.
+//  Not NeoForge's EnumArgument -- that is a registered argument type; a word needs no registration.
 public final class ModEnumArgument {
 
     private ModEnumArgument() {}

@@ -8,9 +8,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 //  /gzr physique extreme set <v>
-//
-//  `physique extreme set`, not `physique set`: 十绝体质 is one *kind* of physique and there will be
-//  others, so the kind gets a node rather than being crammed into one flat enum.
+//  `extreme` is one kind of physique among future others, so the kind gets its own node.
 public final class CmdPhysique {
 
     private CmdPhysique() {}

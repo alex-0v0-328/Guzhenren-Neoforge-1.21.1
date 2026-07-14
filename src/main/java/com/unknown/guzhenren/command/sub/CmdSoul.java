@@ -7,7 +7,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 //  /gzr soul max|current set|add|sub <long> | refill
-//
 //  Ungated: an ordinary mortal has 100/100 soul, aperture or no aperture.
 public final class CmdSoul {
 

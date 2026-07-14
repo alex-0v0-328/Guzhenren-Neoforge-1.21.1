@@ -12,7 +12,7 @@ import com.unknown.guzhenren.custom.enums.core.GuTalent;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.GuPathAttainment;
 import com.unknown.guzhenren.custom.enums.wisdom.GuWisdomType;
-import com.unknown.guzhenren.util.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.GuTranslatable;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 

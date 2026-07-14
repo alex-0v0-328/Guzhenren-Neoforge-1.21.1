@@ -7,8 +7,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The soul (魂魄) system. 100 = one person's worth, hence the default.
-//  The title (一人魂 / 十人魂 / ...) is derived from maxSoul, never stored.
+//  The soul (魂魄) system. Tier (一人魂 / 十人魂 / ...) derived from maxSoul, never stored.
 public record SoulData(long maxSoul, long currentSoul) {
 
     public static final long DEFAULT_MAX_SOUL = 100L;

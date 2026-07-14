@@ -8,8 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 //  One cell of the Mind Ocean: 念 / 意 / 情. The map key in MindData says which.
-//  current runs 0..2×max: 0..max is normal, max..2×max is the buffer (survivable), > 2×max bursts.
-//  bufferUsed latches true once current passes max and clears only when a sleep brings 念 back down.
+//  current 0..max normal, max..2×max buffer, >2×max bursts; bufferUsed latches once past max.
 public record MindPool(long current, long max, boolean bufferUsed) {
 
     public static final Codec<MindPool> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -24,8 +23,7 @@ public record MindPool(long current, long max, boolean bufferUsed) {
             ByteBufCodecs.BOOL, MindPool::bufferUsed,
             MindPool::new);
 
-    //  ⚠ current is never clamped to max: the buffer (max..2×max) has to be representable, and so does
-    //  the burst past it. current > max forces bufferUsed on, so the flag can never lie.
+    //  ⚠ current never clamped to max -- buffer/burst must be representable; current > max forces bufferUsed on.
     public MindPool {
         current = Math.max(0L, current);
         max = Math.max(0L, max);
@@ -40,8 +38,7 @@ public record MindPool(long current, long max, boolean bufferUsed) {
     public MindPool withCurrent(long v) {return new MindPool(v, max, bufferUsed);}
     public MindPool withMax(long v) {return new MindPool(current, v, bufferUsed);}
 
-    //  A night's sleep restores 念 toward the cap -- half the deficit if the buffer was used since the
-    //  last sleep, the whole deficit otherwise. Never reduces current; the flag re-derives from the result.
+    //  Sleep restores 念 toward cap -- half the deficit if buffer was used, else whole. Never reduces current.
     public MindPool slept() {
         long restored = bufferUsed && current < max ? current + (max - current) / 2 : Math.max(current, max);
         return new MindPool(restored, max, false);

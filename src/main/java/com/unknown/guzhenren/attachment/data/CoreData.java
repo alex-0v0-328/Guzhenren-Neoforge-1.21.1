@@ -8,7 +8,7 @@ import com.unknown.guzhenren.custom.enums.core.GuLifeState;
 import com.unknown.guzhenren.custom.enums.core.GuRank;
 import com.unknown.guzhenren.custom.enums.core.GuStage;
 import com.unknown.guzhenren.custom.enums.core.GuTalent;
-import com.unknown.guzhenren.util.ModStreamCodecs;
+import com.unknown.guzhenren.serialization.ModStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

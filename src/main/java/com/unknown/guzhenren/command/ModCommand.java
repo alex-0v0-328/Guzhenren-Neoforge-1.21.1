@@ -19,8 +19,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
-//  /guzhenren, alias /gzr. The root and nothing else: one .then() per system, each in command/sub.
-//  Grammar and the awakening gate: CLAUDE.md "Commands". Shared machinery: ModCommandSupport.
+//  /guzhenren (alias /gzr) root: one .then() per system, each in command/sub. See CLAUDE.md "Commands".
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModCommand {
 

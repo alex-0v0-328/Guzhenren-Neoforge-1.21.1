@@ -19,17 +19,14 @@ public final class PlayerDataService {
 
     private PlayerDataService() {}
 
-    //  A completed night's sleep: soul and essence to full, and 念 restored (意/情 do not recover).
-    //  The 念 refill is halved if its buffer was used that day -- see MindPool.slept.
+    //  Completed night's sleep: soul + essence to full, 念 restored -- see MindPool.slept.
     public static void onSleepComplete(ServerPlayer player) {
         SoulService.refill(player);
         EssenceService.refill(player);
         MindService.onSleepComplete(player);
     }
 
-    //  What a fresh clone inherits, and the only place that decides it. A dimension return (not a
-    //  death) always keeps the data; a death keeps it only when keepInventory does -- otherwise
-    //  cultivation dies with the inventory, back to a mortal.
+    //  What a fresh clone inherits. Death without keepInventory resets to mortal; else copy.
     public static void onClone(Player from, Player to, boolean wasDeath, boolean keepInventory) {
         if (wasDeath && !keepInventory) {
             resetAll(to);
@@ -38,10 +35,7 @@ public final class PlayerDataService {
         }
     }
 
-    //  Every condition that can *cause* death must be false when the player comes back, or they die in
-    //  a loop. Dying of old age hands back a full default lifespan -- the thing that ran out is the
-    //  thing that resets. Only reached when the clone kept its data (keepInventory); a reset already
-    //  left every pool at a safe default.
+    //  Clear every lethal condition, or the player dies in a respawn loop. See CLAUDE.md "Time, sleep, death".
     public static void onRespawn(ServerPlayer player) {
         if (LifespanService.get(player).isExhausted()) {
             LifespanService.setLifespan(player, LifespanData.DEFAULT_LIFESPAN);

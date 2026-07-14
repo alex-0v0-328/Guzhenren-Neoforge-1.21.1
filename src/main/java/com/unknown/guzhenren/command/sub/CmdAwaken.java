@@ -9,11 +9,9 @@ import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr awaken  -- 开窍, the only leaf that refuses on the *presence* of an aperture.
+//  /gzr awaken  -- 开窍, refuses if the aperture is already open.
 //  /gzr reset   -- back to a brand-new mortal.
-//
-//  Guarded, not hidden: hiding awaken would take `/gzr awaken Bob` away from an operator who happens
-//  to be awakened themselves. Re-rolling is reset + awaken. See CLAUDE.md "The awakening gate".
+//  Guarded, not hidden; re-rolling is reset + awaken. See CLAUDE.md "The awakening gate".
 public final class CmdAwaken {
 
     private CmdAwaken() {}
@@ -39,9 +37,7 @@ public final class CmdAwaken {
         refreshCommands(player);
     }
 
-    //  The awakening gate is a requires() on the tree, resolved when the tree is sent to the client.
-    //  awaken/reset flip that answer, so without a resend the cultivation branches never appear (or
-    //  never disappear) until the next relog. sendCommands rebuilds the tree for this one player.
+    //  awaken/reset flip the requires() gate, so the tree must be resent or the branches lag a relog.
     private static void refreshCommands(ServerPlayer player) {
         MinecraftServer server = player.getServer();
         if (server != null) server.getCommands().sendCommands(player);

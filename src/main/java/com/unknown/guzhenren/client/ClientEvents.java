@@ -10,9 +10,7 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 //  Everything the client registers: GUI layers today, keybinds and renderers later.
-//
-//  NeoForge routes each event to the right bus itself, so startup and game events can sit side by
-//  side here. Split when there is a reason, not before.
+//  NeoForge routes each event to the right bus, so all can sit here. Split when there's a reason.
 @EventBusSubscriber(modid = Guzhenren.MOD_ID, value = Dist.CLIENT)
 public final class ClientEvents {
 
@@ -21,8 +19,7 @@ public final class ClientEvents {
     private static final ResourceLocation PLAYER_STATS =
             ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "player_stats");
 
-    //  Above the hotbar, not above everything: chat, F3 and any open screen still draw on top.
-    //  Standing information must never cover what the player is actually reading.
+    //  Above the hotbar, not above everything: chat, F3 and open screens still draw on top.
     @SubscribeEvent
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, PLAYER_STATS, PlayerStatsHud.INSTANCE);

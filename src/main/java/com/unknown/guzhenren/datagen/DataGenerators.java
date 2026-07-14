@@ -31,8 +31,7 @@ public final class DataGenerators {
         ModDamageTypeProvider damageTypeProvider = generator.addProvider(event.includeServer(),
                 new ModDamageTypeProvider(packOutput, lookupProvider));
 
-        //  The tag provider has to see the damage types this same run is generating, so it hangs off
-        //  that provider's registry future rather than the bare vanilla lookup.
+        //  Tag provider must see the types this run generates -- hangs off that provider's registry future.
         generator.addProvider(event.includeServer(), new ModDamageTypeTagsProvider(
                 packOutput, damageTypeProvider.getRegistryProvider(), existingFileHelper));
     }

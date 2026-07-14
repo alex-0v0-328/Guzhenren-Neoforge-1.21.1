@@ -11,9 +11,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
 //  /gzr wisdom <type> current|max set|add|sub <long> | refill
-//
-//  Ungated -- a mortal has a 脑海 too; 念 is thought, not cultivation. refill fills to exactly the cap
-//  (never over, so never lethal); the game itself has no refill -- see MindService.
+//  Ungated: a mortal has a 脑海 too. refill fills to the cap (never over) -- see MindService.
 public final class CmdWisdom {
 
     private CmdWisdom() {}
@@ -34,8 +32,7 @@ public final class CmdWisdom {
                         .then(refill()));
     }
 
-    //  Every leaf re-reads the type off the node above it, so none of them fit ModCommandSupport's
-    //  plain builders -- same shape as CmdPath.
+    //  Every leaf re-reads the type off the node above, so none fit the plain builders -- like CmdPath.
     private static ArgumentBuilder<CommandSourceStack, ?> poolNode(String literal, PoolOperation operation) {
         return Commands.literal(literal).then(ModCommandSupport.withTargets(
                 Commands.argument(ModCommandSupport.ARG_VALUE, LongArgumentType.longArg()),

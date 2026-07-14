@@ -10,8 +10,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The core system. Every write goes through set(): it enforces the physique invariant, then re-clamps
-//  essence -- the cap is derived from core, so changing core moves it.
+//  The core system. Every write goes through set(): enforces the physique invariant, then re-clamps essence.
 public final class CoreService {
 
     private CoreService() {}
@@ -27,8 +26,7 @@ public final class CoreService {
     public static void addBaseEssence(ServerPlayer p, int delta) {setBaseEssence(p, get(p).baseEssence() + delta);}
     public static void setLifeState(ServerPlayer p, GuLifeState state) {set(p, get(p).withLifeState(state));}
 
-    //  No tier field to assign, so "set the tier" = roll a base inside its band. EXTREME lands on 100,
-    //  and set() then grants the physique.
+    //  No tier field: "set the tier" rolls a base inside its band. EXTREME hits 100; set() grants the physique.
     public static void setTalent(ServerPlayer p, GuTalent talent) {setBaseEssence(p, GuTalent.randomPercent(talent));}
 
     //  Positive delta = better. Each enum owns its direction and its edge; GuTalent's runs backwards.
@@ -61,8 +59,7 @@ public final class CoreService {
         set(player, core);
     }
 
-    //  开窍. Rolls tier, base, and a physique if it came up 十绝. Opening the aperture *is* becoming a
-    //  rank-one Gu Master, so rank and stage are set here too -- that is the non-zero cap to fill.
+    //  开窍. Rolls tier/base/physique and sets rank ONE + stage INIT -- opening the aperture *is* rank one.
     public static void awaken(ServerPlayer player) {
         GuTalent talent = GuTalent.randomTalent();
         GuExtremePhysique physique = talent == GuTalent.EXTREME

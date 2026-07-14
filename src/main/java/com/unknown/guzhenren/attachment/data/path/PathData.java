@@ -2,17 +2,14 @@ package com.unknown.guzhenren.attachment.data.path;
 
 import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.util.ModStreamCodecs;
+import com.unknown.guzhenren.serialization.ModStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The path (流派) system. Sparse: a cultivator dabbles in two or three of the 30, so default entries
-//  are pruned and an absent key reads back as the default -- get() never returns null.
+//  The path (流派) system. Sparse -- defaults pruned, absent key reads as default (get() never null).
 public record PathData(Map<GuPath, PathEntry> entries) {
 
     public static final PathData DEFAULT = new PathData(Map.of());
@@ -20,10 +17,8 @@ public record PathData(Map<GuPath, PathEntry> entries) {
     public static final Codec<PathData> CODEC = Codec.unboundedMap(GuPath.CODEC, PathEntry.CODEC)
             .xmap(PathData::new, PathData::entries);
 
-    public static final StreamCodec<ByteBuf, PathData> STREAM_CODEC = ByteBufCodecs
-            .<ByteBuf, GuPath, PathEntry, Map<GuPath, PathEntry>>map(
-                    HashMap::new, ModStreamCodecs.ofEnum(GuPath.class), PathEntry.STREAM_CODEC)
-            .map(PathData::new, PathData::entries);
+    public static final StreamCodec<ByteBuf, PathData> STREAM_CODEC =
+            ModStreamCodecs.enumMap(GuPath.class, PathEntry.STREAM_CODEC).map(PathData::new, PathData::entries);
 
     public PathData {
         //  EnumMap: stable ordinal order in NBT and on the wire.

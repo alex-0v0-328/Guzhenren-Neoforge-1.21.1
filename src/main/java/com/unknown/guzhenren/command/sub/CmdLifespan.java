@@ -7,7 +7,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 //  /gzr lifespan lifespan|age set|add|sub <long>
-//
 //  Ungated: an unawakened mortal still ages, and still dies of it.
 public final class CmdLifespan {
 

@@ -11,12 +11,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 //  /gzr essence base set|add|sub <int> | current set|add|sub <long> | refill
-//
-//  Gated: on an unawakened target the cap is 0, so a write would clamp to nothing and still report
-//  success. Refuse out loud instead.
-//
-//  No `current max` leaf: maxEssence is derived (base × stage × rank), sized by `base` and the core.
-//  `base` writes CoreData.baseEssence -- it lives here because sizing the pool is all it does.
+//  Gated: an unawakened cap is 0. No `max` leaf -- maxEssence is derived, sized by `base`.
 public final class CmdEssence {
 
     private CmdEssence() {}

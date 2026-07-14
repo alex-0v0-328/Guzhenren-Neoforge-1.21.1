@@ -7,12 +7,11 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 //  The lifespan (寿元) system. One in-game day: age +1, lifespan -1. See CLAUDE.md "Time, sleep, death".
-//  lastDayIndex = last overworld day billed (UNTRACKED = never). What makes aging idempotent.
+//  lastDayIndex = last overworld day billed; makes aging idempotent.
 public record LifespanData(long age, long lifespan, long lastDayIndex) {
 
     public static final long UNTRACKED = -1L;
 
-    //  A new player is 14 with 86 years left: an ordinary mortal burns out at 100.
     public static final long DEFAULT_AGE      = 14L;
     public static final long DEFAULT_LIFESPAN = 86L;
 

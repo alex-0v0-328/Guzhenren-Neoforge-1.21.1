@@ -20,7 +20,7 @@ import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.custom.enums.core.GuLifeState;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.wisdom.GuWisdomType;
-import com.unknown.guzhenren.util.ModDisplayText;
+import com.unknown.guzhenren.display.ModDisplayText;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -32,13 +32,7 @@ import net.minecraft.server.level.ServerPlayer;
 //  /gzr info core   [targets] -- realm, aptitude, essence, soul, lifespan, life state
 //  /gzr info path   [targets] -- the path table
 //  /gzr info wisdom [targets] -- the Mind Ocean
-//
-//  [targets] hangs off the three sections, not off bare `info`: an EntityArgument there would be a
-//  sibling of the three literals and Brigadier would call the tree ambiguous. Asking about someone
-//  else means saying what you want to know about them.
-//
-//  Phrases come from ModDisplayText, so core reads identically to the HUD. Essence and life state
-//  print only when they say something.
+//  [targets] hangs off the sections, not bare `info` (else ambiguous). Phrases from ModDisplayText.
 public final class CmdInfo {
 
     private CmdInfo() {}
@@ -96,8 +90,7 @@ public final class CmdInfo {
             ModCommandFeedback.header(source);
             ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.paths"));
 
-            //  The map is sparse, so an untouched cultivator has no rows at all -- say so rather than
-            //  print a label with nothing under it.
+            //  Sparse map -- an untouched cultivator has no rows, so say so rather than print an empty label.
             if (entries.isEmpty()) {
                 ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.path_empty"));
             } else {
@@ -135,8 +128,7 @@ public final class CmdInfo {
                 entry.mark());
     }
 
-    //  " (85)" / " (一人魂)": derived detail an operator needs and a player does not.
-    //  The one place gray is not a feedback class.
+    //  " (85)" / " (一人魂)": derived detail for operators. The one place gray is not a feedback class.
     private static Component muted(Object value) {
         return Component.translatable("guzhenren.command.info.detail", value).withStyle(ChatFormatting.DARK_GRAY);
     }

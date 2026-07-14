@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.util.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.GuTranslatable;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import java.util.ArrayList;
 import java.util.List;

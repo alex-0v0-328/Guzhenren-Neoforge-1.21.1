@@ -24,8 +24,7 @@ public final class PathService {
     public static void addMark(ServerPlayer p, GuPath path, long delta) {setMark(p, path, mark(p, path) + delta);}
     private static void store(ServerPlayer p, PathData data) {p.setData(ModAttachments.PATH, data);}
 
-    //  Whole tiers, clamped at 无 and 无上大宗师. Marks do not move: a promotion that gifted marks
-    //  would quietly couple the two.
+    //  Whole tiers, clamped at 无 and 无上大宗师. Marks do not move -- a promotion gifting marks would couple them.
     public static void shiftAttainment(ServerPlayer p, GuPath path, int delta) {
         setAttainment(p, path, attainment(p, path).shift(delta));
     }

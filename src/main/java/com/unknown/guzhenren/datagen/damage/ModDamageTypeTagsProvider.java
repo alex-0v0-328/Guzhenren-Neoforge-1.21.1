@@ -14,9 +14,8 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  Lifespan, soul and Mind Ocean are not something armor, a potion or a shield can argue with.
-//
-//  Deliberately NOT BYPASSES_INVULNERABILITY: creative stays unkillable, and PlayerTickEvents skips it.
+//  Lifespan, soul and Mind Ocean bypass armor, potions, shields -- nothing can argue with them.
+//  NOT BYPASSES_INVULNERABILITY: creative stays unkillable, PlayerTickEvents skips it.
 public class ModDamageTypeTagsProvider extends TagsProvider<DamageType> {
 
     public ModDamageTypeTagsProvider(PackOutput output,
