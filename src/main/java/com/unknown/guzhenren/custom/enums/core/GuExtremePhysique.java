@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public enum GuExtremePhysique implements StringRepresentable, GuTranslatable {
+public enum GuExtremePhysique implements StringRepresentable, EnumTranslatable {
 
     //  talentPaths: 该体质的天赋流派 (十绝体质自带的道)
     NONE                              (),

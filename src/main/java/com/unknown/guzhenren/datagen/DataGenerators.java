@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.datagen;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.datagen.curios.ModCuriosProvider;
 import com.unknown.guzhenren.datagen.damage.ModDamageTypeProvider;
 import com.unknown.guzhenren.datagen.damage.ModDamageTypeTagsProvider;
 import com.unknown.guzhenren.datagen.lang.EnUsLanguageProvider;
@@ -34,5 +35,8 @@ public final class DataGenerators {
         //  Tag provider must see the types this run generates -- hangs off that provider's registry future.
         generator.addProvider(event.includeServer(), new ModDamageTypeTagsProvider(
                 packOutput, damageTypeProvider.getRegistryProvider(), existingFileHelper));
+
+        generator.addProvider(event.includeServer(),
+                new ModCuriosProvider(packOutput, existingFileHelper, lookupProvider));
     }
 }

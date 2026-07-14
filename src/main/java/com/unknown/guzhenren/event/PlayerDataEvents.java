@@ -11,11 +11,19 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 
 //  The player-data lifecycle: the moments that are not a tick.
-//  No login/dimension resync handler -- NeoForge re-sends the full set. See CLAUDE.md "Networking".
+//  Login carries no *resync* -- NeoForge re-sends the full set itself. See CLAUDE.md "Networking".
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerDataEvents {
 
     private PlayerDataEvents() {}
+
+    //  Fires on every login; onJoin is what makes it the *first* one. See CLAUDE.md "Birth".
+    @SubscribeEvent
+    public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            PlayerDataService.onJoin(player);
+        }
+    }
 
     //  Death respawns and non-death clones alike. keepInventory off the server, not level() --
     //  Level-AutoCloseable gotcha (see CLAUDE.md).

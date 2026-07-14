@@ -22,6 +22,7 @@ public final class SoulService {
     public static void setCurrent(ServerPlayer p, long v) {store(p, get(p).withCurrentSoul(v));}
     public static void addCurrent(ServerPlayer p, long delta) {setCurrent(p, get(p).currentSoul() + delta);}
     public static void refill(ServerPlayer p) {store(p, get(p).refilled());}
+    public static void revive(ServerPlayer p) {store(p, get(p).revived());}
     private static void store(ServerPlayer p, SoulData data) {p.setData(ModAttachments.SOUL, data);}
 
     //  Spend, all or nothing.

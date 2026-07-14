@@ -11,8 +11,9 @@ import com.unknown.guzhenren.custom.enums.core.GuStage;
 import com.unknown.guzhenren.custom.enums.core.GuTalent;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.GuPathAttainment;
+import com.unknown.guzhenren.custom.enums.wisdom.GuBrilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.GuWisdomType;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -31,7 +32,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
     }
 
     //  每个 Gu* 枚举都是 GuTranslatable, 所以常量本身就是键 —— 短到能对齐, 这就是那个接口的用处.
-    private void add(GuTranslatable key, String value) {add(key.getTranslationKey(), value);}
+    private void add(EnumTranslatable key, String value) {add(key.getTranslationKey(), value);}
 
     //region DISPLAY
     //  值的部分, HUD 与 /guzhenren info 共用 (见 ModDisplayText); 标签由各自的键补
@@ -65,6 +66,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.paths",                "Paths:");
         add("guzhenren.command.info.path_entry",           "  %s  %s  Marks %s");
         add("guzhenren.command.info.path_empty",           "  None");
+        add("guzhenren.command.info.brilliance",           "Brilliance:  %s");
+        add("guzhenren.command.info.brilliance_rate",      "%s thoughts/s");
         add("guzhenren.command.info.mind",                 "Mind Ocean:");
         add("guzhenren.command.info.mind_entry",           "  %s  %s / %s");
 
@@ -95,6 +98,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addAttainment();
         addSoulTier();
         addWisdomType();
+        addBrilliance();
     }
 
     private void addRank() {
@@ -234,6 +238,15 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(GuWisdomType.THOUGHTS, "Thoughts");
         add(GuWisdomType.WILLS,    "Wills");
         add(GuWisdomType.EMOTIONS, "Emotions");
+    }
+
+    //  才情: 念的自然恢复速度 (每秒 1 / 4 / 16 / 64 / 256), 开窍时抽取
+    private void addBrilliance() {
+        add(GuBrilliance.ORDINARY,    "Ordinary Brilliance");
+        add(GuBrilliance.DECENT,      "Decent Brilliance");
+        add(GuBrilliance.DISTINCTIVE, "Distinctive Brilliance");
+        add(GuBrilliance.OUTSTANDING, "Outstanding Brilliance");
+        add(GuBrilliance.UNRIVALED,   "Unrivaled Brilliance");
     }
     //endregion
 }

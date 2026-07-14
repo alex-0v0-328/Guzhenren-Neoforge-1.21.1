@@ -44,6 +44,6 @@ public record MindPool(long current, long max, boolean bufferUsed) {
         return new MindPool(restored, max, false);
     }
 
-    //  Respawn brings a burst pool back to a safe, rested cap.
-    public MindPool clamped() {return isOverflowing() ? new MindPool(max, max, false) : this;}
+    //  A burst 脑海 comes back empty, not full -- the cap survives, the contents do not. Used on respawn.
+    public MindPool emptied() {return new MindPool(0L, max, false);}
 }

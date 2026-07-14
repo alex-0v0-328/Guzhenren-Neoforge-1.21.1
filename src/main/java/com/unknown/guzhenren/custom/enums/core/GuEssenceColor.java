@@ -1,13 +1,13 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 //  真元的颜色, 每转一色 (映射见 GuRank); 深浅由 shade(stage) 按小境界算, 仙人境固定色
 //  ⚠ 暂无使用处: HUD 用固定天蓝, 见 CLAUDE.md "HUD". 留给粒子/物品/界面, 别当死代码删
-public enum GuEssenceColor implements StringRepresentable, GuTranslatable {
+public enum GuEssenceColor implements StringRepresentable, EnumTranslatable {
 
     //  凡人 / 未开窍: 灰
     NONE          (0xFF808080, false),

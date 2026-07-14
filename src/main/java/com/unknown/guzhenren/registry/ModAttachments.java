@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.registry;
 
+import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.data.CoreData;
 import com.unknown.guzhenren.attachment.data.EssenceData;
@@ -72,6 +73,13 @@ public final class ModAttachments {
     //  Sub-integer remainder of essence regen. Not serialized or synced -- see CLAUDE.md "Networking".
     public static final Supplier<AttachmentType<Float>> ESSENCE_CARRY = ATTACHMENT_TYPES.register(
             "essence_carry", () -> AttachmentType.builder(() -> 0.0F).build());
+
+    //  ⚠ Has this player ever been born? Serialized, never synced -- vanilla has no "first join" signal,
+    //  and 才情 is rolled exactly once, at birth. See CLAUDE.md "Birth".
+    public static final Supplier<AttachmentType<Boolean>> BORN = ATTACHMENT_TYPES.register(
+            "born", () -> AttachmentType.builder(() -> Boolean.FALSE)
+                    .serialize(Codec.BOOL)
+                    .build());
 
     public static void register(IEventBus modEventBus) {
         ATTACHMENT_TYPES.register(modEventBus);

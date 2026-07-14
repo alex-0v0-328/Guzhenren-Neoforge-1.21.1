@@ -1,12 +1,12 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import java.util.Arrays;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public enum GuStage implements StringRepresentable, GuTranslatable {
+public enum GuStage implements StringRepresentable, EnumTranslatable {
 
     //  essenceMultiplier: maxEssence = baseEssence * stage.essenceMultiplier * rank.rankBase
     NONE  (0),

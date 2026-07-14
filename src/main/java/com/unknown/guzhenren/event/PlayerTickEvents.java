@@ -11,7 +11,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-//  The heartbeat: aging, essence regen, lethal checks.
+//  The heartbeat: aging, essence + 念 regen, lethal checks.
 //  Sleep recovery is an edge, not a level -- see PlayerDataEvents.onWakeUp.
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerTickEvents {
@@ -28,6 +28,7 @@ public final class PlayerTickEvents {
 
         LifespanService.tickAging(player);
         EssenceService.regenStep(player);
+        MindService.regenStep(player);
         checkLethalState(player);
     }
 

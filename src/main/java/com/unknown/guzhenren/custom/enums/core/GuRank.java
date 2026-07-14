@@ -1,12 +1,12 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import java.util.Arrays;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public enum GuRank implements StringRepresentable, GuTranslatable {
+public enum GuRank implements StringRepresentable, EnumTranslatable {
 
     //  rankBase: maxEssence = baseEssence * stage.multiplier * rank.rankBase
     //  lifeForm: 该境界的仙凡归属; essenceColor: 该转真元的颜色 (深浅再按小境界算)

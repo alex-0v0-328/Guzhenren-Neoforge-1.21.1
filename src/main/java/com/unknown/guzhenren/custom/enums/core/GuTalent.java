@@ -1,13 +1,13 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public enum GuTalent implements StringRepresentable, GuTranslatable {
+public enum GuTalent implements StringRepresentable, EnumTranslatable {
 
     //  minPercent, maxPercent, weight(抽取权重), regenRate(真元回复倍率)
     //  regenRate 的基准恒定按 100 算, 与玩家自己的资质基数无关 —— 见 EssenceService.regenPerDay

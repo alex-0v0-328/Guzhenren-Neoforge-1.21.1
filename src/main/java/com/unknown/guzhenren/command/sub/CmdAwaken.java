@@ -27,6 +27,7 @@ public final class CmdAwaken {
                 context -> ModCommandSupport.apply(context, CmdAwaken::reset));
     }
 
+    //  开窍 only -- 才情 is dealt at birth and awaken must not touch it. See CLAUDE.md "Birth".
     private static void awaken(ServerPlayer player) {
         CoreService.awaken(player);
         refreshCommands(player);

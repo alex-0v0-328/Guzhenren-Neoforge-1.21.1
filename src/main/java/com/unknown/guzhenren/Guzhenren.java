@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 
 @Mod(Guzhenren.MOD_ID)
 public class Guzhenren {
+
     public static final String MOD_ID = "guzhenren";
     public static final Logger LOGGER = LogUtils.getLogger();
 

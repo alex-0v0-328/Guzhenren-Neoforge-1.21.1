@@ -1,11 +1,11 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public enum GuLifeForm implements StringRepresentable, GuTranslatable {
+public enum GuLifeForm implements StringRepresentable, EnumTranslatable {
 
     MORTAL,
     IMMORTAL;

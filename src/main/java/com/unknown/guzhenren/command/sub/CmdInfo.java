@@ -109,6 +109,12 @@ public final class CmdInfo {
             MindData mind = MindService.get(player);
 
             ModCommandFeedback.header(source);
+
+            ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.brilliance",
+                    Component.translatable(mind.brilliance().getTranslationKey()))
+                    .append(muted(Component.translatable("guzhenren.command.info.brilliance_rate",
+                            mind.brilliance().getThoughtsPerSecond()))));
+
             ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.mind"));
 
             for (GuWisdomType type : GuWisdomType.values()) {

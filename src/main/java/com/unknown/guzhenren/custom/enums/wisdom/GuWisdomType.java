@@ -1,13 +1,13 @@
 package com.unknown.guzhenren.custom.enums.wisdom;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 //  智道三态: 念 -> 意 -> 情, 逐级凝练 (转化尚未实现, 见 CLAUDE.md "Pending")
 //  括号里是脑海的初始容量; 装不下就是脑海炸裂而亡, 见 MindPool
-public enum GuWisdomType implements StringRepresentable, GuTranslatable {
+public enum GuWisdomType implements StringRepresentable, EnumTranslatable {
 
     THOUGHTS(30_000L),
     WILLS   (     5L),

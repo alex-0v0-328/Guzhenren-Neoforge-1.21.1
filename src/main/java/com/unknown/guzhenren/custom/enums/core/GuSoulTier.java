@@ -1,13 +1,13 @@
 package com.unknown.guzhenren.custom.enums.core;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 //  魂魄境界: 由魂魄值反查, 不单独存. 括号里是入档门槛(含), 规律为 人数 × 100, 一人魂的起点压到 1
 //  亿人魂是顶档但不封顶: 再高也仍是亿人魂
-public enum GuSoulTier implements StringRepresentable, GuTranslatable {
+public enum GuSoulTier implements StringRepresentable, EnumTranslatable {
 
     ONE             (             1L),
     TEN             (         1_000L),

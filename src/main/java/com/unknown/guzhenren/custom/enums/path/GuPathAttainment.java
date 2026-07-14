@@ -1,11 +1,11 @@
 package com.unknown.guzhenren.custom.enums.path;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public enum GuPathAttainment implements StringRepresentable, GuTranslatable {
+public enum GuPathAttainment implements StringRepresentable, EnumTranslatable {
 
     //  NONE 是默认境界 (尚未入门), 排在普通之下
     NONE                     (0),

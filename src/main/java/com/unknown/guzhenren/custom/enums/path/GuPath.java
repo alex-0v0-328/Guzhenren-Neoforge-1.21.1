@@ -1,11 +1,11 @@
 package com.unknown.guzhenren.custom.enums.path;
 
 import com.mojang.serialization.Codec;
-import com.unknown.guzhenren.custom.enums.GuTranslatable;
+import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-public enum GuPath implements StringRepresentable, GuTranslatable {
+public enum GuPath implements StringRepresentable, EnumTranslatable {
 
     HEAVEN, RULE, SPACE, TIME, HUMAN,
 
