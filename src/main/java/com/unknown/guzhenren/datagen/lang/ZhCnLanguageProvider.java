@@ -30,6 +30,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addEnumKeys();
         addDisplayKeys();
         addCommandKeys();
+        addScreenKeys();
         addDeathMessages();
     }
 
@@ -40,8 +41,29 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     //  值的部分, HUD 与 /guzhenren info 共用 (见 ModDisplayText); 标签由各自的键补
     private void addDisplayKeys() {
         add("guzhenren.display.realm",                     "%s%s");
-        add("guzhenren.display.physique",                  "[ %s ]");
-        add("guzhenren.display.lifespan",                  "%s [ %s岁 ]");
+        add("guzhenren.display.physique",                  "[%s]");
+        add("guzhenren.display.lifespan",                  "%s [%s岁]");
+        add("guzhenren.display.base_fraction",             "%s成%s");
+        add("guzhenren.display.base_round",                "%s成");
+        add("guzhenren.display.base_full",                 "十成");
+        add("guzhenren.display.base_tens.2",               "二");
+        add("guzhenren.display.base_tens.3",               "三");
+        add("guzhenren.display.base_tens.4",               "四");
+        add("guzhenren.display.base_tens.5",               "五");
+        add("guzhenren.display.base_tens.6",               "六");
+        add("guzhenren.display.base_tens.7",               "七");
+        add("guzhenren.display.base_tens.8",               "八");
+        add("guzhenren.display.base_tens.9",               "九");
+        add("guzhenren.display.base_units.1",              "一");
+        add("guzhenren.display.base_units.2",              "二");
+        add("guzhenren.display.base_units.3",              "三");
+        add("guzhenren.display.base_units.4",              "四");
+        add("guzhenren.display.base_units.5",              "五");
+        add("guzhenren.display.base_units.6",              "六");
+        add("guzhenren.display.base_units.7",              "七");
+        add("guzhenren.display.base_units.8",              "八");
+        add("guzhenren.display.base_units.9",              "九");
+        add("guzhenren.display.none",                      "[无]");
 
         add("guzhenren.hud.lifespan",                      "寿元 %s");
     }
@@ -60,27 +82,49 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.failed.qi_mark",            "气道的道痕是诸气之和，不能直接改 —— 请用 /guzhenren body qi <种类>");
 
         add("guzhenren.command.info.aperture_index",       "第 %s 窍");
-        add("guzhenren.command.info.aperture_state",       "空窍状态：%s");
-        add("guzhenren.command.info.realm",                "玩家修为：%s");
-        add("guzhenren.command.info.talent",               "玩家天赋：%s");
-        add("guzhenren.command.info.essence",              "玩家真元：%s / %s");
-        add("guzhenren.command.info.soul",                 "玩家魂魄：%s / %s");
-        add("guzhenren.command.info.lifespan",             "玩家寿元：%s");
-        add("guzhenren.command.info.life_state",           "肉身状态：%s");
-        add("guzhenren.command.info.life_form",            "玩家形态：%s");
-        add("guzhenren.command.info.qi",                   "玩家诸气：");
+        add("guzhenren.command.info.aperture_state",       "空窍状态  %s");
+        add("guzhenren.command.info.realm",                "玩家修为  %s");
+        add("guzhenren.command.info.talent",               "玩家天赋  %s");
+        add("guzhenren.command.info.essence",              "玩家真元  %s / %s");
+        add("guzhenren.command.info.soul",                 "玩家魂魄  %s / %s");
+        add("guzhenren.command.info.lifespan",             "玩家寿元  %s");
+        add("guzhenren.command.info.life_state",           "肉身状态  %s");
+        add("guzhenren.command.info.life_form",            "玩家形态  %s");
+        add("guzhenren.command.info.qi",                   "玩家气道  %s");
         add("guzhenren.command.info.qi_entry",             "  %s  %s");
-        add("guzhenren.command.info.qi_empty",             "  无");
-        add("guzhenren.command.info.paths",                "玩家流派：");
+        add("guzhenren.command.info.paths",                "流派造诣");
         add("guzhenren.command.info.path_entry",           "  %s  %s  道痕 %s");
-        add("guzhenren.command.info.path_empty",           "  无");
-        add("guzhenren.command.info.brilliance",           "玩家才情：%s");
-        add("guzhenren.command.info.brilliance_rate",      "%s 念/秒");
-        add("guzhenren.command.info.mind",                 "玩家脑海：");
+        add("guzhenren.command.info.brilliance",           "才情  %s");
+        add("guzhenren.command.info.brilliance_rate",      "%s个念头每秒");
+        add("guzhenren.command.info.mind",                 "脑海");
         add("guzhenren.command.info.mind_entry",           "  %s  %s / %s");
 
         //  给 operator 看的派生细节, 灰字缀在行尾: 资质基数 / 魂魄境界
-        add("guzhenren.command.info.detail",               " (%s)");
+        add("guzhenren.command.info.detail",               " [%s]");
+    }
+    //endregion
+
+    //region SCREEN
+    //  G 键信息面板 (见 client/screen/PlayerInfoScreen) 与它的键位. 标签紧凑, 值取枚举自己的键
+    private void addScreenKeys() {
+        add("key.categories.guzhenren",                    "蛊真人");
+        add("key.guzhenren.open_info",                     "打开信息面板");
+
+        add("guzhenren.screen.info.title",                 "信息");
+        add("guzhenren.screen.tab.aperture",               "空窍");
+        add("guzhenren.screen.tab.body",                   "肉身");
+        add("guzhenren.screen.tab.mind",                   "脑海");
+        add("guzhenren.screen.label.realm",                "修为");
+        add("guzhenren.screen.label.talent",               "天赋");
+        add("guzhenren.screen.label.essence",              "真元");
+        add("guzhenren.screen.label.state",                "状态");
+        add("guzhenren.screen.label.life_form",            "形态");
+        add("guzhenren.screen.label.soul",                 "魂魄");
+        add("guzhenren.screen.label.lifespan",             "寿元");
+        add("guzhenren.screen.label.qi",                   "气道造诣");
+        add("guzhenren.screen.label.paths",                "流派造诣");
+        add("guzhenren.screen.label.brilliance",           "才情");
+        add("guzhenren.screen.path_value",                 "%s 道痕 %s");
     }
     //endregion
 

@@ -30,6 +30,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addEnumKeys();
         addDisplayKeys();
         addCommandKeys();
+        addScreenKeys();
         addDeathMessages();
     }
 
@@ -41,8 +42,29 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //  realm 在中文里是直接拼接的 ("一转巅峰"), 英文需要一个空格 —— 分隔符只存在于键里
     private void addDisplayKeys() {
         add("guzhenren.display.realm",                     "%s %s");
-        add("guzhenren.display.physique",                  "[ %s ]");
-        add("guzhenren.display.lifespan",                  "%s [ age %s ]");
+        add("guzhenren.display.physique",                  "[%s]");
+        add("guzhenren.display.lifespan",                  "%s [age %s]");
+        add("guzhenren.display.base_fraction",             "%s %s");
+        add("guzhenren.display.base_round",                "%s");
+        add("guzhenren.display.base_full",                 "One Hundred");
+        add("guzhenren.display.base_tens.2",               "Twenty");
+        add("guzhenren.display.base_tens.3",               "Thirty");
+        add("guzhenren.display.base_tens.4",               "Forty");
+        add("guzhenren.display.base_tens.5",               "Fifty");
+        add("guzhenren.display.base_tens.6",               "Sixty");
+        add("guzhenren.display.base_tens.7",               "Seventy");
+        add("guzhenren.display.base_tens.8",               "Eighty");
+        add("guzhenren.display.base_tens.9",               "Ninety");
+        add("guzhenren.display.base_units.1",              "One");
+        add("guzhenren.display.base_units.2",              "Two");
+        add("guzhenren.display.base_units.3",              "Three");
+        add("guzhenren.display.base_units.4",              "Four");
+        add("guzhenren.display.base_units.5",              "Five");
+        add("guzhenren.display.base_units.6",              "Six");
+        add("guzhenren.display.base_units.7",              "Seven");
+        add("guzhenren.display.base_units.8",              "Eight");
+        add("guzhenren.display.base_units.9",              "Nine");
+        add("guzhenren.display.none",                      "[NONE]");
 
         add("guzhenren.hud.lifespan",                      "Lifespan %s");
     }
@@ -69,19 +91,41 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.lifespan",             "Lifespan:    %s");
         add("guzhenren.command.info.life_state",           "Body:        %s");
         add("guzhenren.command.info.life_form",            "Life form:   %s");
-        add("guzhenren.command.info.qi",                   "Qi:");
+        add("guzhenren.command.info.qi",                   "Qi Path: %s");
         add("guzhenren.command.info.qi_entry",             "  %s  %s");
-        add("guzhenren.command.info.qi_empty",             "  None");
         add("guzhenren.command.info.paths",                "Paths:");
         add("guzhenren.command.info.path_entry",           "  %s  %s  Marks %s");
-        add("guzhenren.command.info.path_empty",           "  None");
         add("guzhenren.command.info.brilliance",           "Brilliance:  %s");
         add("guzhenren.command.info.brilliance_rate",      "%s thoughts/s");
         add("guzhenren.command.info.mind",                 "Mind Ocean:");
         add("guzhenren.command.info.mind_entry",           "  %s  %s / %s");
 
         //  Derived detail for the operator, dimmed at the end of a line: aptitude base / soul title.
-        add("guzhenren.command.info.detail",               " (%s)");
+        add("guzhenren.command.info.detail",               " [%s]");
+    }
+    //endregion
+
+    //region SCREEN
+    //  The G-key info panel (see client/screen/PlayerInfoScreen) plus its keybind
+    private void addScreenKeys() {
+        add("key.categories.guzhenren",                    "Guzhenren");
+        add("key.guzhenren.open_info",                     "Open Info Panel");
+
+        add("guzhenren.screen.info.title",                 "Info");
+        add("guzhenren.screen.tab.aperture",               "Aperture");
+        add("guzhenren.screen.tab.body",                   "Body");
+        add("guzhenren.screen.tab.mind",                   "Mind");
+        add("guzhenren.screen.label.realm",                "Realm");
+        add("guzhenren.screen.label.talent",               "Aptitude");
+        add("guzhenren.screen.label.essence",              "Essence");
+        add("guzhenren.screen.label.state",                "State");
+        add("guzhenren.screen.label.life_form",            "Form");
+        add("guzhenren.screen.label.soul",                 "Soul");
+        add("guzhenren.screen.label.lifespan",             "Lifespan");
+        add("guzhenren.screen.label.qi",                   "Qi Path");
+        add("guzhenren.screen.label.paths",                "Paths");
+        add("guzhenren.screen.label.brilliance",           "Brilliance");
+        add("guzhenren.screen.path_value",                 "%s Marks %s");
     }
     //endregion
 
