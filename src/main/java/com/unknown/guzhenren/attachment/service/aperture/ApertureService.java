@@ -11,9 +11,8 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The aperture (空窍) system. Every write goes through set(): it enforces the physique invariant, and
-//  Aperture's own ctor re-clamps the essence pool against the cap the new rank/stage/base implies.
-//  Index defaults to PRIMARY everywhere; 第二空窍 has no mechanic yet, only a place to live.
+//  The aperture (空窍) system. Index defaults to PRIMARY -- 第二空窍 has a place to live, no mechanic yet.
+//  ⚠ Every write goes through set(): it enforces the physique invariant, and Aperture's ctor re-clamps.
 public final class ApertureService {
 
     private ApertureService() {}

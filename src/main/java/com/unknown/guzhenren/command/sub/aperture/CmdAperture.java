@@ -19,13 +19,8 @@ import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 
-//  /gzr aperture lifestate set <v>
-//  /gzr aperture rank|stage|talent  set <v> | up | down
-//  /gzr aperture physique extreme   set <v>
-//  /gzr aperture essence base|current set|add|sub <n> | essence refill
-//  The whole branch is gated -- a rank on a body with no aperture is the bad data the gate exists to
-//  stop. `awaken` lives at the root, which is what lets that be ONE requires() here.
-//  No `max` leaf: the cap is derived. See CLAUDE.md "The awakening gate".
+//  /gzr aperture -- lifestate, rank/stage/talent, physique, essence. No `max` leaf: the cap is derived.
+//  ⚠ Gated as ONE branch, which only works because `awaken` is at the root. See CLAUDE.md.
 public final class CmdAperture {
 
     private CmdAperture() {}

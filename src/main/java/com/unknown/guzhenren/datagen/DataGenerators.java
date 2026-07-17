@@ -4,6 +4,7 @@ import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.datagen.curios.ModCuriosProvider;
 import com.unknown.guzhenren.datagen.damage.ModDamageTypeProvider;
 import com.unknown.guzhenren.datagen.damage.ModDamageTypeTagsProvider;
+import com.unknown.guzhenren.datagen.item.ModItemModelProvider;
 import com.unknown.guzhenren.datagen.lang.EnUsLanguageProvider;
 import com.unknown.guzhenren.datagen.lang.ZhCnLanguageProvider;
 import java.util.concurrent.CompletableFuture;
@@ -28,6 +29,8 @@ public final class DataGenerators {
 
         generator.addProvider(event.includeClient(), new EnUsLanguageProvider(packOutput));
         generator.addProvider(event.includeClient(), new ZhCnLanguageProvider(packOutput));
+
+        generator.addProvider(event.includeClient(), new ModItemModelProvider(packOutput, existingFileHelper));
 
         ModDamageTypeProvider damageTypeProvider = generator.addProvider(event.includeServer(),
                 new ModDamageTypeProvider(packOutput, lookupProvider));

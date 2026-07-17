@@ -8,28 +8,33 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  One path: 气道 大宗师 道痕1000. Attainment and marks never move each other.
-public record PathEntry(GuAttainment attainment, long mark) {
+//  One path: 气道 大宗师 道痕1000 碎屑200. mark and speck are two independent counts, never
+//  converted into each other (the ratio is a future thing). Attainment moves neither. See CLAUDE.md "Qi".
+public record PathEntry(GuAttainment attainment, long mark, long speck) {
 
-    public static final PathEntry DEFAULT = new PathEntry(GuAttainment.NONE, 0L);
+    public static final PathEntry DEFAULT = new PathEntry(GuAttainment.NONE, 0L, 0L);
 
     public static final Codec<PathEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             GuAttainment.CODEC.optionalFieldOf("attainment", GuAttainment.NONE)
                     .forGetter(PathEntry::attainment),
-            Codec.LONG.optionalFieldOf("mark", 0L).forGetter(PathEntry::mark)
+            Codec.LONG.optionalFieldOf("mark", 0L).forGetter(PathEntry::mark),
+            Codec.LONG.optionalFieldOf("speck", 0L).forGetter(PathEntry::speck)
     ).apply(instance, PathEntry::new));
 
     public static final StreamCodec<ByteBuf, PathEntry> STREAM_CODEC = StreamCodec.composite(
             ModStreamCodecs.ofEnum(GuAttainment.class), PathEntry::attainment,
             ByteBufCodecs.VAR_LONG, PathEntry::mark,
+            ByteBufCodecs.VAR_LONG, PathEntry::speck,
             PathEntry::new);
 
     public PathEntry {
         mark = Math.max(0L, mark);
+        speck = Math.max(0L, speck);
     }
 
     //  Indistinguishable from "absent" -- that is what lets PathData stay sparse.
-    public boolean isDefault() {return attainment == GuAttainment.NONE && mark == 0L;}
-    public PathEntry withAttainment(GuAttainment v) {return new PathEntry(v, mark);}
-    public PathEntry withMark(long v) {return new PathEntry(attainment, v);}
+    public boolean isDefault() {return attainment == GuAttainment.NONE && mark == 0L && speck == 0L;}
+    public PathEntry withAttainment(GuAttainment v) {return new PathEntry(v, mark, speck);}
+    public PathEntry withMark(long v) {return new PathEntry(attainment, v, speck);}
+    public PathEntry withSpeck(long v) {return new PathEntry(attainment, mark, v);}
 }

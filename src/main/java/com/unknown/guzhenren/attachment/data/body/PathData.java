@@ -10,8 +10,7 @@ import java.util.Map;
 import net.minecraft.network.codec.StreamCodec;
 
 //  The path (流派) system. Sparse -- defaults pruned, absent key reads as default (get() never null).
-//  ⚠ 气道's mark is NOT here: it is the sum of QiData, so this record refuses to hold a second copy.
-//  Read it with PathService.mark(player, path), never PathData.get(QI).mark(). See CLAUDE.md "Qi".
+//  ⚠ A featured path's mark/speck are NOT here (its sub-system's total). Read via PathService, not get().
 public record PathData(Map<GuPath, PathEntry> entries) {
 
     public static final PathData DEFAULT = new PathData(Map.of());
@@ -23,11 +22,11 @@ public record PathData(Map<GuPath, PathEntry> entries) {
             ModStreamCodecs.enumMap(GuPath.class, PathEntry.STREAM_CODEC).map(PathData::new, PathData::entries);
 
     public PathData {
-        //  EnumMap: stable ordinal order in NBT and on the wire. 气道's mark is zeroed on the way in --
-        //  a stored copy could only ever disagree with QiData, so it is not storable at all.
+        //  EnumMap: stable ordinal order in NBT and on the wire. A featured path's mark AND speck are
+        //  zeroed on the way in -- a stored copy could only ever disagree with the sub-system's total.
         Map<GuPath, PathEntry> pruned = new EnumMap<>(GuPath.class);
         entries.forEach((path, entry) -> {
-            PathEntry kept = path == GuPath.QI ? entry.withMark(0L) : entry;
+            PathEntry kept = path.isFeatured() ? entry.withMark(0L).withSpeck(0L) : entry;
             if (!kept.isDefault()) pruned.put(path, kept);
         });
         entries = Collections.unmodifiableMap(pruned);

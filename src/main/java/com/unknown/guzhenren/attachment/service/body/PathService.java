@@ -10,9 +10,8 @@ import java.util.Map;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The path (流派) system. Attainment and marks are independent: two setters, no shared logic.
-//  ⚠ 气道 is the exception: its marks ARE QiData's total -- derived here, and not writable. Its
-//  attainment is an ordinary stored field like every other path's. See CLAUDE.md "Qi".
+//  The path (流派) system. Attainment, marks and specks are independent -- no mark<->speck conversion.
+//  ⚠ A featured path's mark/speck ARE its sub-system's total (气道 = QiData): derived here, not writable.
 public final class PathService {
 
     private PathService() {}
@@ -23,10 +22,14 @@ public final class PathService {
     public static PathEntry entry(Player p, GuPath path) {return get(p).get(path);}
     public static GuAttainment attainment(Player p, GuPath path) {return entry(p, path).attainment();}
 
-    //  ⚠ The one derived path value. Reading PathData directly gives 0 for 气道 -- come through here.
+    //  ⚠ Derived for a featured path. Reading PathData directly gives 0 for 气道 -- come through here.
     public static long mark(Player p, GuPath path) {
         return path == GuPath.QI ? QiService.total(p) : entry(p, path).mark();
     }
+
+    //  气道 has no speck source yet, so it reads 0 (PathData zeroes it). A featured path that DOES
+    //  earn specks adds a dispatch here, mirroring mark(). See CLAUDE.md "Featured body paths".
+    public static long speck(Player p, GuPath path) {return entry(p, path).speck();}
 
     //  The display view: every path with something to show, 气道's marks filled in from QiData.
     public static Map<GuPath, PathEntry> visibleEntries(Player player) {
@@ -42,6 +45,7 @@ public final class PathService {
 
     //  ---- write ----
     public static void addMark(ServerPlayer p, GuPath path, long delta) {setMark(p, path, mark(p, path) + delta);}
+    public static void addSpeck(ServerPlayer p, GuPath path, long d) {setSpeck(p, path, speck(p, path) + d);}
     private static void store(ServerPlayer p, PathData data) {p.setData(ModAttachments.PATH, data);}
 
     //  Whole tiers, clamped at 无 and 无上大宗师. Marks do not move -- a promotion gifting marks would couple them.
@@ -49,11 +53,16 @@ public final class PathService {
         setAttainment(p, path, attainment(p, path).shift(delta));
     }
 
-    //  ⚠ 气道 refuses: its marks come from QiService. CmdPath says so out loud; this guard is what
-    //  stops an item from silently trying.
+    //  ⚠ A featured path refuses: its mark/speck come from its sub-system. CmdPath says so out loud;
+    //  these guards are what stop an item from silently trying.
     public static void setMark(ServerPlayer p, GuPath path, long v) {
-        if (path == GuPath.QI) return;
+        if (path.isFeatured()) return;
         store(p, get(p).with(path, entry(p, path).withMark(v)));
+    }
+
+    public static void setSpeck(ServerPlayer p, GuPath path, long v) {
+        if (path.isFeatured()) return;
+        store(p, get(p).with(path, entry(p, path).withSpeck(v)));
     }
 
     public static void setAttainment(ServerPlayer p, GuPath path, GuAttainment attainment) {

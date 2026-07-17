@@ -34,11 +34,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr info                    -- shorthand for `info aperture` on yourself
-//  /gzr info aperture [targets] -- realm, aptitude, essence, and the aperture's own 生死
-//  /gzr info body     [targets] -- 生死僵, 凡/仙, soul, lifespan, the 气 table, the path table
-//  /gzr info mind     [targets] -- 才情 and the Mind Ocean
-//  [targets] hangs off the sections, not bare `info` (else ambiguous). Phrases from ModDisplayText.
+//  /gzr info [aperture|body|mind] -- bare `info` is `info aperture` on yourself. Phrases: ModDisplayText.
+//  ⚠ [targets] hangs off the sections, not bare `info` -- a bare word arg there would be ambiguous.
 public final class CmdInfo {
 
     private CmdInfo() {}
@@ -142,13 +139,16 @@ public final class CmdInfo {
         }
     }
 
-    //  气道: its 造诣 on the header ([无] while still 无), then only the 气 he actually has -- QiData is
-    //  sparse. Same shape as the panel's 气道造诣.
+    //  气道: 造诣 + the total 道痕 on the header ([无] while still 无, total omitted while 0), then only
+    //  the 气 he actually has -- QiData is sparse. Same shape as the panel's 气道造诣.
     private static void qi(CommandSourceStack source, ServerPlayer player) {
         GuAttainment attainment = PathService.attainment(player, GuPath.QI);
         Component value = attainment == GuAttainment.NONE ? none()
                 : Component.translatable(attainment.getTranslationKey());
-        ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.qi", value));
+        MutableComponent header = Component.translatable("guzhenren.command.info.qi", value);
+        long total = PathService.mark(player, GuPath.QI);
+        if (total > 0L) header.append(Component.translatable("guzhenren.command.info.qi_total", total));
+        ModCommandFeedback.detail(source, header);
 
         for (QiType type : QiType.values()) {
             long mark = QiService.mark(player, type);
@@ -184,11 +184,16 @@ public final class CmdInfo {
         return Command.SINGLE_SUCCESS;
     }
 
+    //  道痕 always; 碎屑 only when he has some -- most mortals sit at one denomination, not both.
     private static Component pathLine(GuPath path, PathEntry entry) {
-        return Component.translatable("guzhenren.command.info.path_entry",
+        MutableComponent line = Component.translatable("guzhenren.command.info.path_entry",
                 Component.translatable(path.getTranslationKey()),
                 Component.translatable(entry.attainment().getTranslationKey()),
                 entry.mark());
+        if (entry.speck() > 0L) {
+            line.append(Component.translatable("guzhenren.command.info.path_speck", entry.speck()));
+        }
+        return line;
     }
 
     private static Component none() {return Component.translatable("guzhenren.display.none");}

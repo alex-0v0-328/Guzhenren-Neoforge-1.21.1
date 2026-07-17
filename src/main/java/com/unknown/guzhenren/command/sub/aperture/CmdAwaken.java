@@ -8,8 +8,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
 //  /gzr awaken -- 开窍, the one-way transition into having an aperture at all.
-//  At the root, not under `aperture`: it is the only leaf there that an unawakened player may run, and
-//  hoisting it lets the whole /gzr aperture branch carry a single requires(). See CLAUDE.md.
+//  ⚠ At the root, not under `aperture`: hoisting it is what lets that branch carry a single requires().
 public final class CmdAwaken {
 
     private CmdAwaken() {}

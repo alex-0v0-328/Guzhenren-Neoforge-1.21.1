@@ -3,6 +3,8 @@ package com.unknown.guzhenren.display;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.aperture.Rank;
+import com.unknown.guzhenren.custom.enums.path.GuPath;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -28,6 +30,14 @@ public final class ModDisplayText {
 
         return line.append(" ").append(Component.translatable("guzhenren.display.physique",
                 Component.translatable(aperture.extremePhysique().getTranslationKey())));
+    }
+
+    //  一转人道蛊虫 / Rank I Human Path Gu. Separator lives in the lang key -- zh joins, en spaces.
+    public static MutableComponent guLine(Rank rank, GuPath path, String kindKey) {
+        return Component.translatable("guzhenren.display.gu_line",
+                Component.translatable(rank.getTranslationKey()),
+                Component.translatable(path.getTranslationKey()),
+                Component.translatable(kindKey));
     }
 
     //  86 [ 14岁 ]

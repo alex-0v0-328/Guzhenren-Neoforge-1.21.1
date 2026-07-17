@@ -199,17 +199,22 @@ public final class PlayerInfoScreen extends Screen {
             rows.add(new Row(0, label("paths"), null));
             for (Map.Entry<GuPath, PathEntry> e : paths) {
                 PathEntry entry = e.getValue();
-                rows.add(new Row(INDENT, Component.translatable(e.getKey().getTranslationKey()),
-                        Component.translatable("guzhenren.screen.path_value",
-                                Component.translatable(entry.attainment().getTranslationKey()), entry.mark())));
+                MutableComponent value = Component.translatable("guzhenren.screen.path_value",
+                        Component.translatable(entry.attainment().getTranslationKey()), entry.mark());
+                if (entry.speck() > 0L) {
+                    value.append(Component.translatable("guzhenren.command.info.path_speck", entry.speck()));
+                }
+                rows.add(new Row(INDENT, Component.translatable(e.getKey().getTranslationKey()), value));
             }
         }
 
-        //  气道造诣: attainment on the header, or [无] while it is still 无 -- never a bare 无, so an empty
-        //  qi path reads 气道造诣  [无] on the one line. The 天/地/人/自然 breakdown (marks) sits below.
+        //  气道造诣: 造诣 + total 道痕 on the header, or [无] while it is still 无 -- never a bare 无, so an
+        //  empty qi path reads 气道造诣  [无]. The 天/地/人/自然 breakdown (marks) sits below.
         GuAttainment qiAttainment = PathService.attainment(player, GuPath.QI);
-        Component qiValue = qiAttainment == GuAttainment.NONE ? none()
+        MutableComponent qiValue = qiAttainment == GuAttainment.NONE ? none()
                 : Component.translatable(qiAttainment.getTranslationKey());
+        long qiTotal = PathService.mark(player, GuPath.QI);
+        if (qiTotal > 0L) qiValue.append(Component.translatable("guzhenren.command.info.qi_total", qiTotal));
         rows.add(new Row(0, label("qi"), qiValue));
         for (QiType type : QiType.values()) {
             long mark = QiService.mark(player, type);
@@ -236,7 +241,7 @@ public final class PlayerInfoScreen extends Screen {
     }
 
     private static Component label(String name) {return Component.translatable("guzhenren.screen.label." + name);}
-    private static Component none() {return Component.translatable("guzhenren.display.none");}
+    private static MutableComponent none() {return Component.translatable("guzhenren.display.none");}
 
     //  Muted detail in [ ], gray -- the same key the command uses, so cmd / chat / screen read alike.
     private static Component detail(Component v) {

@@ -15,10 +15,8 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr body path <path> mark       set|add|sub <long>
-//  /gzr body path <path> attainment set <v> | up | down
-//  道痕 a raw count, 造诣 graded; every leaf re-reads the path, so none fit the plain builders.
-//  ⚠ 气道's marks are read-only here -- they are QiData's total. Its attainment is settable as usual.
+//  /gzr body path <p> -- 道痕/碎屑 raw counts, 造诣 graded; every leaf re-reads the path.
+//  ⚠ A featured path's mark/speck are read-only here (its sub-system's total); attainment is not.
 public final class CmdPath {
 
     private CmdPath() {}
@@ -29,14 +27,24 @@ public final class CmdPath {
         return Commands.literal("path")
                 .then(ModEnumArgument.arg(ARG_PATH, GuPath.values())
                         .then(mark())
+                        .then(speck())
                         .then(attainment()));
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> mark() {
         return Commands.literal("mark")
-                .then(markNode("set", PathService::setMark))
-                .then(markNode("add", PathService::addMark))
-                .then(markNode("sub", (player, path, value) -> PathService.addMark(player, path, -value)));
+                .then(countNode("set", PathService::setMark, ModCommandSupport.FAILED_QI_MARK))
+                .then(countNode("add", PathService::addMark, ModCommandSupport.FAILED_QI_MARK))
+                .then(countNode("sub", (p, path, v) -> PathService.addMark(p, path, -v),
+                        ModCommandSupport.FAILED_QI_MARK));
+    }
+
+    private static ArgumentBuilder<CommandSourceStack, ?> speck() {
+        return Commands.literal("speck")
+                .then(countNode("set", PathService::setSpeck, ModCommandSupport.FAILED_QI_SPECK))
+                .then(countNode("add", PathService::addSpeck, ModCommandSupport.FAILED_QI_SPECK))
+                .then(countNode("sub", (p, path, v) -> PathService.addSpeck(p, path, -v),
+                        ModCommandSupport.FAILED_QI_SPECK));
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> attainment() {
@@ -57,12 +65,13 @@ public final class CmdPath {
 
     //region builders
 
-    private static ArgumentBuilder<CommandSourceStack, ?> markNode(String literal, MarkOperation operation) {
+    private static ArgumentBuilder<CommandSourceStack, ?> countNode(
+            String literal, CountOperation operation, String featuredRefusalKey) {
         return Commands.literal(literal).then(ModCommandSupport.withTargets(
                 Commands.argument(ModCommandSupport.ARG_VALUE, LongArgumentType.longArg()),
                 context -> {
                     GuPath path = pathOf(context);
-                    if (path == GuPath.QI) return refuseQi(context);
+                    if (path.isFeatured()) return refuse(context, featuredRefusalKey);
 
                     long value = LongArgumentType.getLong(context, ModCommandSupport.ARG_VALUE);
                     return ModCommandSupport.apply(context, player -> operation.apply(player, path, value));
@@ -70,9 +79,8 @@ public final class CmdPath {
     }
 
     //  Not a per-target refusal: the argument itself is what is wrong, whoever the targets are.
-    private static int refuseQi(CommandContext<CommandSourceStack> context) {
-        ModCommandFeedback.failure(context.getSource(),
-                Component.translatable(ModCommandSupport.FAILED_QI_MARK));
+    private static int refuse(CommandContext<CommandSourceStack> context, String key) {
+        ModCommandFeedback.failure(context.getSource(), Component.translatable(key));
         return 0;
     }
 
@@ -90,7 +98,7 @@ public final class CmdPath {
     //endregion
 
     @FunctionalInterface
-    private interface MarkOperation {
+    private interface CountOperation {
         void apply(ServerPlayer player, GuPath path, long value);
     }
 }

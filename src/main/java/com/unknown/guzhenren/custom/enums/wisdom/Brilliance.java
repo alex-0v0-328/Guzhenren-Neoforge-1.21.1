@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  才情: 念的自然恢复速度, 开窍时按权重抽取, 之后定终身. 见 CLAUDE.md "Wisdom"
+//  才情: 念的自然恢复速度, 出生时按权重抽取 (不是开窍), 之后定终身. 见 CLAUDE.md "Birth"
 //  ⚠ 与 Talent 相反, 本枚举从低到高排 —— shift(+1) 就是 ordinal + 1
 public enum Brilliance implements StringRepresentable, EnumTranslatable {
 

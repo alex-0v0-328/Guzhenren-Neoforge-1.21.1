@@ -17,9 +17,8 @@ import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-//  空窍 / 肉身 / 脑海 -- three domains, six attachments: soul, path and qi carry a pool and two maps, so they
-//  sync on their own clock instead of riding along with the body. Write only through attachment/service.
-//  .sync() is why this mod has no packets -- see CLAUDE.md "Networking".
+//  空窍 / 肉身 / 脑海 -- three domains, six attachments; write only through attachment/service.
+//  ⚠ .sync() is why this mod has no packets -- see CLAUDE.md "Networking".
 public final class ModAttachments {
 
     private ModAttachments() {}

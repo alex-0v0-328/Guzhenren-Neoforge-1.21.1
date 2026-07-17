@@ -7,8 +7,7 @@ import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-//  /gzr mind brilliance set <v> | up | down
-//  /gzr mind wisdom ...   (CmdWisdom)
+//  /gzr mind brilliance set <v> | up | down, plus wisdom (CmdWisdom).
 //  Ungated: 念 is thought, not cultivation -- a mortal has a 脑海 too.
 public final class CmdMind {
 

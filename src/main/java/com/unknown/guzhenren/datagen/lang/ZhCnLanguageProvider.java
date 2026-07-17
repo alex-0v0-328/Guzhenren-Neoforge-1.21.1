@@ -31,6 +31,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addDisplayKeys();
         addCommandKeys();
         addScreenKeys();
+        addItemKeys();
         addDeathMessages();
     }
 
@@ -41,6 +42,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     //  值的部分, HUD 与 /guzhenren info 共用 (见 ModDisplayText); 标签由各自的键补
     private void addDisplayKeys() {
         add("guzhenren.display.realm",                     "%s%s");
+        add("guzhenren.display.gu_line",                   "%s%s%s");
+        add("guzhenren.display.gu",                        "蛊虫");
+        add("guzhenren.display.gu_material",               "蛊材");
         add("guzhenren.display.physique",                  "[%s]");
         add("guzhenren.display.lifespan",                  "%s [%s岁]");
         add("guzhenren.display.base_fraction",             "%s成%s");
@@ -80,6 +84,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.failed.awakened",           "%s 已开窍 —— 要重掷请先 /guzhenren reset");
         add("guzhenren.command.failed.unawakened",         "%s 尚未开窍 —— 修为相关的值只能由 /guzhenren awaken 建立");
         add("guzhenren.command.failed.qi_mark",            "气道的道痕是诸气之和，不能直接改 —— 请用 /guzhenren body qi <种类>");
+        add("guzhenren.command.failed.qi_speck",           "气道没有道痕碎屑 —— 气道道痕是诸气之和，请用 /guzhenren body qi <种类>");
 
         add("guzhenren.command.info.aperture_index",       "第 %s 窍");
         add("guzhenren.command.info.aperture_state",       "空窍状态  %s");
@@ -91,9 +96,11 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.life_state",           "肉身状态  %s");
         add("guzhenren.command.info.life_form",            "玩家形态  %s");
         add("guzhenren.command.info.qi",                   "玩家气道  %s");
+        add("guzhenren.command.info.qi_total",             " 道痕 %s");
         add("guzhenren.command.info.qi_entry",             "  %s  %s");
         add("guzhenren.command.info.paths",                "流派造诣");
         add("guzhenren.command.info.path_entry",           "  %s  %s  道痕 %s");
+        add("guzhenren.command.info.path_speck",           " 碎屑 %s");
         add("guzhenren.command.info.brilliance",           "才情  %s");
         add("guzhenren.command.info.brilliance_rate",      "%s个念头每秒");
         add("guzhenren.command.info.mind",                 "脑海");
@@ -125,6 +132,19 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.paths",                "流派造诣");
         add("guzhenren.screen.label.brilliance",           "才情");
         add("guzhenren.screen.path_value",                 "%s 道痕 %s");
+    }
+    //endregion
+
+    //region ITEM
+    //  失败键说的是「你」, 所以不能复用命令那套 —— 那边带目标名. 成功不发话: 真元条自己会说
+    private void addItemKeys() {
+        add("item.guzhenren.hope_gu",                      "希望蛊");
+        add("item.guzhenren.primeval_stone",               "元石");
+        add("itemGroup.guzhenren.main",                    "蛊真人");
+
+        add("guzhenren.item.failed.awakened",              "你已开窍 —— 希望蛊对你再无用处");
+        add("guzhenren.item.failed.unawakened",            "你尚未开窍 —— 无处容纳真元");
+        add("guzhenren.item.failed.essence_full",          "真元已满");
     }
     //endregion
 
@@ -307,7 +327,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(WisdomType.EMOTIONS, "情");
     }
 
-    //  才情: 念的自然恢复速度 (每秒 1 / 4 / 16 / 64 / 256), 开窍时抽取
+    //  才情: 念的自然恢复速度 (每秒 1 / 4 / 16 / 64 / 256), 出生时抽取
     private void addBrilliance() {
         add(Brilliance.ORDINARY,    "才情普通");
         add(Brilliance.DECENT,      "才情尚可");

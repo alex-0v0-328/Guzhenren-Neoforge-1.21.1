@@ -9,13 +9,8 @@ import com.unknown.guzhenren.custom.enums.body.LifeState;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-//  /gzr body lifestate set <生|僵|死> | lifeform set <凡|仙>
-//  /gzr body soul max|current set|add|sub <long> | soul refill
-//  /gzr body lifespan|age set|add|sub <long>
-//  /gzr body qi <type> set|add|sub <long>   (CmdQi)
-//  /gzr body path <p> ...                   (CmdPath)
-//  Ungated throughout: an ordinary mortal has 100/100 soul, ages, dies, and can be zombified -- none
-//  of that needs an aperture.
+//  /gzr body -- lifestate, lifeform, soul, lifespan/age, plus qi (CmdQi) and path (CmdPath).
+//  Ungated throughout: a mortal has soul, ages, dies and can be zombified without an aperture.
 public final class CmdBody {
 
     private CmdBody() {}

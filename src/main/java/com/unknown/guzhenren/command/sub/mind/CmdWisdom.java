@@ -8,10 +8,8 @@ import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-//  /gzr mind wisdom thoughts|wills|emotions current|max set|add|sub <long> | refill
-//  ⚠ One literal per cell, not an enum arg: a word arg parses any word, so Brigadier would call it
-//  ambiguous with any literal sibling. Do NOT tidy this back into a single <type> argument.
-//  refill fills to the cap, never over -- an operator tool, not a game mechanic. See MindService.
+//  /gzr mind wisdom thoughts|wills|emotions current|max set|add|sub <long> | refill (to the cap, never over).
+//  ⚠ One literal per cell, never an enum arg -- a word arg is ambiguous with any literal sibling.
 public final class CmdWisdom {
 
     private CmdWisdom() {}

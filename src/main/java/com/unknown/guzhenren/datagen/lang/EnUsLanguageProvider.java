@@ -31,6 +31,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addDisplayKeys();
         addCommandKeys();
         addScreenKeys();
+        addItemKeys();
         addDeathMessages();
     }
 
@@ -42,6 +43,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //  realm 在中文里是直接拼接的 ("一转巅峰"), 英文需要一个空格 —— 分隔符只存在于键里
     private void addDisplayKeys() {
         add("guzhenren.display.realm",                     "%s %s");
+        add("guzhenren.display.gu_line",                   "%s %s %s");
+        add("guzhenren.display.gu",                        "Gu");
+        add("guzhenren.display.gu_material",               "Gu Material");
         add("guzhenren.display.physique",                  "[%s]");
         add("guzhenren.display.lifespan",                  "%s [age %s]");
         add("guzhenren.display.base_fraction",             "%s %s");
@@ -81,6 +85,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.failed.awakened",           "%s has already awakened -- run /guzhenren reset first to re-roll");
         add("guzhenren.command.failed.unawakened",         "%s has not awakened -- cultivation values are established by /guzhenren awaken");
         add("guzhenren.command.failed.qi_mark",            "The Qi Path's marks are the sum of every qi -- set them with /guzhenren body qi <type>");
+        add("guzhenren.command.failed.qi_speck",           "The Qi Path has no specks -- marks are the sum of qi");
 
         add("guzhenren.command.info.aperture_index",       "Aperture %s");
         add("guzhenren.command.info.aperture_state",       "Aperture:    %s");
@@ -92,9 +97,11 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.life_state",           "Body:        %s");
         add("guzhenren.command.info.life_form",            "Life form:   %s");
         add("guzhenren.command.info.qi",                   "Qi Path: %s");
+        add("guzhenren.command.info.qi_total",             " Marks %s");
         add("guzhenren.command.info.qi_entry",             "  %s  %s");
         add("guzhenren.command.info.paths",                "Paths:");
         add("guzhenren.command.info.path_entry",           "  %s  %s  Marks %s");
+        add("guzhenren.command.info.path_speck",           " Specks %s");
         add("guzhenren.command.info.brilliance",           "Brilliance:  %s");
         add("guzhenren.command.info.brilliance_rate",      "%s thoughts/s");
         add("guzhenren.command.info.mind",                 "Mind Ocean:");
@@ -126,6 +133,20 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.paths",                "Paths");
         add("guzhenren.screen.label.brilliance",           "Brilliance");
         add("guzhenren.screen.path_value",                 "%s Marks %s");
+    }
+    //endregion
+
+    //region ITEM
+    //  A refusal here addresses "you", so the command's keys don't fit -- those name a target.
+    //  Nothing is said on success: the essence bar is the one that speaks.
+    private void addItemKeys() {
+        add("item.guzhenren.hope_gu",                      "Hope Gu");
+        add("item.guzhenren.primeval_stone",               "Primeval Stone");
+        add("itemGroup.guzhenren.main",                    "Guzhenren");
+
+        add("guzhenren.item.failed.awakened",              "You have already awakened -- the Hope Gu is wasted on you");
+        add("guzhenren.item.failed.unawakened",            "You have not awakened -- no aperture to hold essence");
+        add("guzhenren.item.failed.essence_full",          "Your essence is already full");
     }
     //endregion
 
@@ -309,7 +330,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(WisdomType.EMOTIONS, "Emotions");
     }
 
-    //  才情: 念的自然恢复速度 (每秒 1 / 4 / 16 / 64 / 256), 开窍时抽取
+    //  才情: 念的自然恢复速度 (每秒 1 / 4 / 16 / 64 / 256), 出生时抽取
     private void addBrilliance() {
         add(Brilliance.ORDINARY,    "Ordinary Brilliance");
         add(Brilliance.DECENT,      "Decent Brilliance");

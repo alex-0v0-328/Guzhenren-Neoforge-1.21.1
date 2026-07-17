@@ -10,9 +10,8 @@ import java.util.Map;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The qi (气) system: marks per 气, and **no cap** -- a body carries as much qi as it carries.
-//  ⚠ total() IS the 气道's path marks. They are not stored in PathData; see CLAUDE.md "Qi".
-//  Sparse, like PathData: a 气 nobody has earned is absent, and reads back as 0.
+//  The qi (气) system: marks per 气, **no cap**, sparse -- an unearned 气 is absent and reads back as 0.
+//  ⚠ total() IS the 气道's path marks; they are not stored in PathData. See CLAUDE.md "Qi".
 public record QiData(Map<QiType, Long> marks) {
 
     public static final QiData DEFAULT = new QiData(Map.of());

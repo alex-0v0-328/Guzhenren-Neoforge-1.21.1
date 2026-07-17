@@ -9,8 +9,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The body (肉身): 生死僵, 凡/仙, and 寿元. Soul and path are the body's too, but they carry a pool
-//  and a map, so they keep their own attachments -- see CLAUDE.md "Architecture: player data".
+//  The body (肉身): 生死僵, 凡/仙, 寿元. Soul/path/qi are the body's too but keep their own attachments.
 //  lastDayIndex = last overworld day billed; makes aging idempotent and relog-safe.
 public record BodyData(
         LifeState lifeState,
