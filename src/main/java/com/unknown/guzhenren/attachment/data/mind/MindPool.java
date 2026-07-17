@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  One cell of the Mind Ocean: 念 / 意 / 情. The map key in MindData says which.
+//  One cell of the Mind Ocean: thoughts / wills / emotions (念/意/情). The map key in MindData says which.
 //  current 0..max normal, max..2×max buffer, >2×max bursts; bufferUsed latches once past max.
 public record MindPool(long current, long max, boolean bufferUsed) {
 
@@ -32,18 +32,18 @@ public record MindPool(long current, long max, boolean bufferUsed) {
 
     public static MindPool of(WisdomType type) {return new MindPool(0L, type.getDefaultCapacity(), false);}
 
-    //  脑海炸裂 past the buffer, i.e. current > 2×max. Written current-max>max to dodge a 2×max overflow.
+    //  Shattered past the buffer, i.e. current > 2×max. Written current-max>max to dodge a 2×max overflow.
     public boolean isOverflowing() {return current - max > max;}
 
     public MindPool withCurrent(long v) {return new MindPool(v, max, bufferUsed);}
     public MindPool withMax(long v) {return new MindPool(current, v, bufferUsed);}
 
-    //  Sleep restores 念 toward cap -- half the deficit if buffer was used, else whole. Never reduces current.
+    //  Sleep restores toward the cap -- half the deficit if the buffer was used, else whole. Never reduces.
     public MindPool slept() {
         long restored = bufferUsed && current < max ? current + (max - current) / 2 : Math.max(current, max);
         return new MindPool(restored, max, false);
     }
 
-    //  A burst 脑海 comes back empty, not full -- the cap survives, the contents do not. Used on respawn.
+    //  A burst cell comes back empty, not full -- the cap survives, the contents do not. Used on respawn.
     public MindPool emptied() {return new MindPool(0L, max, false);}
 }

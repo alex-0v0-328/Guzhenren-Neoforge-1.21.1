@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull;
 public enum Stage implements StringRepresentable, EnumTranslatable {
 
     //  essenceMultiplier: maxEssence = baseEssence * stage.essenceMultiplier * rank.rankBase
-    NONE  (0),
-    INIT  (1),
+    NONE(0),
+    INIT(1),
     MIDDLE(2),
-    UPPER (4),
-    PEAK  (8);
+    UPPER(4),
+    PEAK(8);
 
     public static final Codec<Stage> CODEC = StringRepresentable.fromEnum(Stage::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.stage.";

@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
 public enum WisdomType implements StringRepresentable, EnumTranslatable {
 
     THOUGHTS(30_000L),
-    WILLS   (     5L),
-    EMOTIONS(     2L);
+    WILLS(5L),
+    EMOTIONS(2L);
 
     public static final Codec<WisdomType> CODEC = StringRepresentable.fromEnum(WisdomType::values);
     private static final String KEY_PREFIX = "guzhenren.enum.wisdom.type.";

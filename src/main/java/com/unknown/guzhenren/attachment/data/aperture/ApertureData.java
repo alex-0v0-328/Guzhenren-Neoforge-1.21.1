@@ -7,8 +7,8 @@ import java.util.List;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The aperture (空窍) system: 0..2 of them. 未开窍 IS the empty list -- that is the whole point of
-//  storing a list rather than flat fields. ⚠ 第二空窍 caps at two, by the world's own rule.
+//  The aperture (空窍) system: 0..2 of them. Unawakened IS the empty list -- the whole point of
+//  storing a list rather than flat fields. ⚠ Two is the world's own cap, not an arbitrary one.
 public record ApertureData(List<Aperture> apertures) {
 
     public static final int MAX_APERTURES = 2;
@@ -29,14 +29,14 @@ public record ApertureData(List<Aperture> apertures) {
                 : List.copyOf(apertures.subList(0, MAX_APERTURES));
     }
 
-    //  Reads never fail: an index nobody opened reads back as NONE (凡人 / 未觉醒 / 真元 0).
+    //  Reads never fail: an index nobody opened reads back as NONE (mortal, unawakened, essence 0).
     public Aperture get(int i) {return i >= 0 && i < apertures.size() ? apertures.get(i) : Aperture.NONE;}
     public Aperture primary() {return get(PRIMARY);}
     public int count() {return apertures.size();}
     public boolean isAwakened() {return !apertures.isEmpty();}
     public boolean isFull() {return apertures.size() >= MAX_APERTURES;}
 
-    //  开窍: appends. A full holder keeps what he has -- the caller is what refuses, with a reason.
+    //  Awakening: appends. A full holder keeps what he has -- the caller is what refuses, with a reason.
     public ApertureData opened(Aperture aperture) {
         if (isFull()) return this;
 

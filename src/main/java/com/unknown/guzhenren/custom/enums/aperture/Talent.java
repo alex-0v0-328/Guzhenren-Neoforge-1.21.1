@@ -12,13 +12,13 @@ public enum Talent implements StringRepresentable, EnumTranslatable {
     //  minPercent, maxPercent, weight(抽取权重), regenRate(真元回复倍率)
     //  regenRate 的基准恒定按 100 算, 与玩家自己的资质基数无关 —— 见 EssenceService.regenPerDay
     EXTREME(100, 100, 10, 20),
-    FIRST  ( 80,  99, 20,  8),
-    SECOND ( 60,  79, 30,  4),
-    THIRD  ( 40,  59, 30,  2),
-    FOURTH ( 20,  39, 10,  1),
+    FIRST(80, 99, 20, 8),
+    SECOND(60, 79, 30, 4),
+    THIRD(40, 59, 30, 2),
+    FOURTH(20, 39, 10, 1),
 
     //  未觉醒: 「尚未开窍」的占位, 不参与抽取. 资质基数合法区间是 20~100, 正常玩家落不到这一档
-    NONE   (  0,   0,  0,  0);
+    NONE(0, 0, 0, 0);
 
     public static final Codec<Talent> CODEC = StringRepresentable.fromEnum(Talent::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.talent.";

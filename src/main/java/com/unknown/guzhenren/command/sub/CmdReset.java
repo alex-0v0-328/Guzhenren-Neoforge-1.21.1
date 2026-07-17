@@ -7,7 +7,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr reset -- back to a brand-new mortal. A reset is a rebirth: it re-rolls 才情 (see onBirth).
+//  /gzr reset -- back to a brand-new mortal. A reset is a rebirth: it re-rolls Brilliance (see onBirth).
 public final class CmdReset {
 
     private CmdReset() {}

@@ -8,12 +8,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The body (肉身) system: 生死僵, 凡/仙, 寿元. One in-game day: age +1, lifespan -1.
+//  The body (肉身) system: life state, life form, lifespan. One in-game day: age +1, lifespan -1.
 public final class BodyService {
 
     private BodyService() {}
 
-    //  The world clock lives here: a day is what 寿元 is counted in. EssenceService borrows it to turn
+    //  The world clock lives here: a day is what lifespan is counted in. EssenceService borrows it to turn
     //  a per-day regen rate into a per-tick one.
     public static final int TICKS_PER_DAY = 24000;
 

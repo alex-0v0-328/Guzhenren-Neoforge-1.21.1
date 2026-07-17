@@ -13,13 +13,13 @@ public final class ModDamageTypes {
 
     private ModDamageTypes() {}
 
-    //  寿元耗尽而亡
+    //  Died of a spent lifespan (寿元耗尽而亡)
     public static final ResourceKey<DamageType> LIFESPAN_EXHAUSTED = key("lifespan_exhausted");
 
-    //  魂魄衰竭而亡
+    //  Died of a collapsed soul (魂魄衰竭而亡)
     public static final ResourceKey<DamageType> SOUL_COLLAPSE = key("soul_collapse");
 
-    //  脑海炸裂而亡 -- 念/意/情 over capacity, see CLAUDE.md "Wisdom".
+    //  Died of a shattered Mind Ocean (脑海炸裂而亡) -- a cell over capacity, see CLAUDE.md "Wisdom".
     public static final ResourceKey<DamageType> MIND_OCEAN_SHATTERED = key("mind_ocean_shattered");
 
     //  Registry off the entity, not entity.level() -- Level-AutoCloseable gotcha. See CLAUDE.md "Gotcha".

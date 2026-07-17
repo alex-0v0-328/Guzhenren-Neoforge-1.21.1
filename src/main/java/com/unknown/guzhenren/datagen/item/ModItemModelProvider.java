@@ -16,7 +16,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        basicItem(ModItems.HOPE_GU.get());
-        basicItem(ModItems.PRIMEVAL_STONE.get());
+        //  Every registered item gets the flat generated model -- one loop, no per-item line.
+        //  TODO(refactor): exclude custom-model items here when they land (none today).
+        for (var entry : ModItems.ITEMS.getEntries()) {
+            basicItem(entry.get());
+        }
     }
 }

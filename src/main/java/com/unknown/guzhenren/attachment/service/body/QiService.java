@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 //  The qi (气) system. No cap, no lethal state: a body carries what it carries.
-//  ⚠ total() is the 气道's path marks -- PathService reads it, PathData never stores it.
+//  ⚠ total() is the Qi Path's marks -- PathService reads it, PathData never stores it.
 public final class QiService {
 
     private QiService() {}
@@ -22,8 +22,8 @@ public final class QiService {
     public static void addMark(ServerPlayer p, QiType t, long d) {setMark(p, t, mark(p, t) + d);}
     private static void store(ServerPlayer p, QiData data) {p.setData(ModAttachments.QI, data);}
 
-    //  Spend, all or nothing. 气 leaves the body to become a 蛊材, so the 气道道痕 drop with it.
-    //  addMark is the return trip (a 蛊材 spent back into the body). Ratio unbuilt -- CLAUDE.md "Qi".
+    //  Spend, all or nothing. Qi leaves the body to become a material, so the Qi Path's marks drop with it.
+    //  addMark is the return trip (a material spent back in). Ratio unbuilt -- CLAUDE.md "Qi".
     public static boolean consume(ServerPlayer player, QiType type, long amount) {
         if (amount <= 0L) return true;
         long current = mark(player, type);

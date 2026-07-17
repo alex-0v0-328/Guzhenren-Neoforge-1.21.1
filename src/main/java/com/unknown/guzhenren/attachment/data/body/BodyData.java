@@ -9,7 +9,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The body (肉身): 生死僵, 凡/仙, 寿元. Soul/path/qi are the body's too but keep their own attachments.
+//  The body (肉身): life state, life form, lifespan and age.
+//  Soul, path and qi are the body's too, but keep their own attachments.
 //  lastDayIndex = last overworld day billed; makes aging idempotent and relog-safe.
 public record BodyData(
         LifeState lifeState,
@@ -21,7 +22,7 @@ public record BodyData(
 
     public static final long UNTRACKED = -1L;
 
-    public static final long DEFAULT_AGE      = 14L;
+    public static final long DEFAULT_AGE = 14L;
     public static final long DEFAULT_LIFESPAN = 86L;
 
     public static final BodyData DEFAULT = new BodyData(

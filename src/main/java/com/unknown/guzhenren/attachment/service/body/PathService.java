@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 //  The path (流派) system. Attainment, marks and specks are independent -- no mark<->speck conversion.
-//  ⚠ A featured path's mark/speck ARE its sub-system's total (气道 = QiData): derived here, not writable.
+//  ⚠ A featured path's mark/speck ARE its sub-system's total (Qi Path = QiData): derived here, not writable.
 public final class PathService {
 
     private PathService() {}
@@ -22,16 +22,16 @@ public final class PathService {
     public static PathEntry entry(Player p, GuPath path) {return get(p).get(path);}
     public static GuAttainment attainment(Player p, GuPath path) {return entry(p, path).attainment();}
 
-    //  ⚠ Derived for a featured path. Reading PathData directly gives 0 for 气道 -- come through here.
+    //  ⚠ Derived for a featured path. Reading PathData directly gives 0 for the Qi Path -- come through here.
     public static long mark(Player p, GuPath path) {
         return path == GuPath.QI ? QiService.total(p) : entry(p, path).mark();
     }
 
-    //  气道 has no speck source yet, so it reads 0 (PathData zeroes it). A featured path that DOES
+    //  The Qi Path has no speck source yet, so it reads 0 (PathData zeroes it). A featured path that DOES
     //  earn specks adds a dispatch here, mirroring mark(). See CLAUDE.md "Featured body paths".
     public static long speck(Player p, GuPath path) {return entry(p, path).speck();}
 
-    //  The display view: every path with something to show, 气道's marks filled in from QiData.
+    //  The display view: every path with something to show, the Qi Path's marks filled in from QiData.
     public static Map<GuPath, PathEntry> visibleEntries(Player player) {
         Map<GuPath, PathEntry> view = new EnumMap<>(GuPath.class);
         view.putAll(get(player).entries());
@@ -48,7 +48,7 @@ public final class PathService {
     public static void addSpeck(ServerPlayer p, GuPath path, long d) {setSpeck(p, path, speck(p, path) + d);}
     private static void store(ServerPlayer p, PathData data) {p.setData(ModAttachments.PATH, data);}
 
-    //  Whole tiers, clamped at 无 and 无上大宗师. Marks do not move -- a promotion gifting marks would couple them.
+    //  Whole tiers, clamped at both ends. Marks do not move -- a promotion gifting marks would couple them.
     public static void shiftAttainment(ServerPlayer p, GuPath path, int delta) {
         setAttainment(p, path, attainment(p, path).shift(delta));
     }

@@ -5,9 +5,9 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
+import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.command.ModCommandSupport.EnumOperation;
 import com.unknown.guzhenren.command.ModCommandSupport.IntOperation;
-import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.command.ModEnumArgument;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
@@ -16,7 +16,6 @@ import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 
 //  /gzr aperture -- lifestate, rank/stage/talent, physique, essence. No `max` leaf: the cap is derived.

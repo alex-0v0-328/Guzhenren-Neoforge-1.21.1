@@ -60,7 +60,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         line(graphics, font, y, ModDisplayText.realmAndTalent(aperture));
         y += TEXT_HEIGHT + ROW_GAP;
 
-        //  Hidden until the aperture opens -- its appearing is the feedback that 开窍 worked.
+        //  Hidden until the aperture opens -- its appearing is the feedback that awakening worked.
         if (ApertureService.isAwakened(player)) {
             bar(graphics, font, y, aperture.currentEssence(), aperture.maxEssence(), ESSENCE_FILL);
             y += BAR_HEIGHT + ROW_GAP;

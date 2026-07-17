@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 public enum Brilliance implements StringRepresentable, EnumTranslatable {
 
     //  thoughtsPerSecond(每秒回念, 即每 20 tick), weight(抽取权重)
-    ORDINARY   (  1, 15),
-    DECENT     (  4, 25),
-    DISTINCTIVE( 16, 25),
-    OUTSTANDING( 64, 25),
-    UNRIVALED  (256, 10);
+    ORDINARY(1, 15),
+    DECENT(4, 25),
+    DISTINCTIVE(16, 25),
+    OUTSTANDING(64, 25),
+    UNRIVALED(256, 10);
 
     public static final Codec<Brilliance> CODEC = StringRepresentable.fromEnum(Brilliance::values);
     private static final String KEY_PREFIX = "guzhenren.enum.wisdom.brilliance.";

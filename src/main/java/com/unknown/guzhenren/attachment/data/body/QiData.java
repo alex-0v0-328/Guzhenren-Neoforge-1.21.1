@@ -10,8 +10,8 @@ import java.util.Map;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The qi (气) system: marks per 气, **no cap**, sparse -- an unearned 气 is absent and reads back as 0.
-//  ⚠ total() IS the 气道's path marks; they are not stored in PathData. See CLAUDE.md "Qi".
+//  The qi (气) system: marks per type, **no cap**, sparse -- an unearned type is absent and reads back as 0.
+//  ⚠ total() IS the Qi Path's marks; they are not stored in PathData. See CLAUDE.md "Qi".
 public record QiData(Map<QiType, Long> marks) {
 
     public static final QiData DEFAULT = new QiData(Map.of());
@@ -33,7 +33,7 @@ public record QiData(Map<QiType, Long> marks) {
 
     public long mark(QiType type) {return marks.getOrDefault(type, 0L);}
 
-    //  The 气道's 道痕: 天气100 + 地气50 + 人气500 = 650. One fact, two views.
+    //  The Qi Path's marks: heaven 100 + earth 50 + human 500 = 650. One fact, two views.
     public long total() {
         long sum = 0L;
         for (long mark : marks.values()) sum += mark;

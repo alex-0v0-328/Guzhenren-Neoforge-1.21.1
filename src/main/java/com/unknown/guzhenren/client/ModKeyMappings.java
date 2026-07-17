@@ -1,6 +1,5 @@
 package com.unknown.guzhenren.client;
 
-import com.unknown.guzhenren.Guzhenren;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 

@@ -12,18 +12,18 @@ import org.jetbrains.annotations.NotNull;
 public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
 
     //  talentPaths: 该体质的天赋流派 (十绝体质自带的道)
-    NONE                              (),
-    VERDANT_GREAT_SUN                 (GuPath.SPACE),
-    DESOLATE_ANCIENT_MOON             (GuPath.TIME),
-    NORTHERN_DARK_ICE_SOUL            (GuPath.WATER, GuPath.ICE_SNOW),
-    BOUNDLESS_FOREST_SAMSARA          (GuPath.WOOD),
+    NONE(),
+    VERDANT_GREAT_SUN(GuPath.SPACE),
+    DESOLATE_ANCIENT_MOON(GuPath.TIME),
+    NORTHERN_DARK_ICE_SOUL(GuPath.WATER, GuPath.ICE_SNOW),
+    BOUNDLESS_FOREST_SAMSARA(GuPath.WOOD),
     BLAZING_GLORY_LIGHTNING_BRILLIANCE(GuPath.FIRE, GuPath.LIGHTNING),
-    MYRIAD_GOLD_WONDROUS_ESSENCE      (GuPath.METAL),
-    GREAT_STRENGTH_TRUE_MARTIAL       (GuPath.STRENGTH),
-    CAREFREE_WISDOM_HEART             (GuPath.WISDOM),
-    PROFOUND_EARTH_ORIGIN             (GuPath.EARTH),
-    UNIVERSE_GREAT_DERIVATION         (GuPath.RULE),
-    PURE_DREAM_REALITY_SEEKER         (GuPath.DREAM);
+    MYRIAD_GOLD_WONDROUS_ESSENCE(GuPath.METAL),
+    GREAT_STRENGTH_TRUE_MARTIAL(GuPath.STRENGTH),
+    CAREFREE_WISDOM_HEART(GuPath.WISDOM),
+    PROFOUND_EARTH_ORIGIN(GuPath.EARTH),
+    UNIVERSE_GREAT_DERIVATION(GuPath.RULE),
+    PURE_DREAM_REALITY_SEEKER(GuPath.DREAM);
 
     public static final Codec<ExtremePhysique> CODEC = StringRepresentable.fromEnum(ExtremePhysique::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.extreme_physique.";

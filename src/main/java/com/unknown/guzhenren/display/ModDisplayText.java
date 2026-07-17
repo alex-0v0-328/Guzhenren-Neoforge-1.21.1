@@ -23,7 +23,7 @@ public final class ModDisplayText {
                 Component.translatable(aperture.stage().getTranslationKey()));
     }
 
-    //  甲等资质 [ 太日阳莽体 ] -- the bracket only shows up for a 十绝 physique holder.
+    //  甲等资质 [ 太日阳莽体 ] -- the bracket only shows up for a Ten Extreme physique holder.
     public static MutableComponent talent(Aperture aperture) {
         MutableComponent line = Component.translatable(aperture.talent().getTranslationKey());
         if (aperture.extremePhysique() == ExtremePhysique.NONE) return line;
@@ -51,8 +51,8 @@ public final class ModDisplayText {
     //  800/800. A raw String, not a Component -- drawn straight into the HUD bar.
     public static String pool(long current, long max) {return current + "/" + max;}
 
-    //  真元基数读成「成」: 89 -> 八成九, 80 -> 八成, 100 -> 十成. En has no 成 reading, so it spells the
-    //  number out (89 -> Eighty Nine) -- tens and units are separate words there, hence the two key sets.
+    //  The aptitude base read in tenths: 89 -> 八成九, 80 -> 八成, 100 -> 十成. English has no such reading,
+    //  so it spells the number out (89 -> Eighty Nine) -- tens and units are separate words, hence two key sets.
     public static Component baseFraction(int base) {
         if (base >= 100) return Component.translatable("guzhenren.display.base_full");
         Component tens = Component.translatable("guzhenren.display.base_tens." + (base / 10));
@@ -60,6 +60,6 @@ public final class ModDisplayText {
         return units == 0
                 ? Component.translatable("guzhenren.display.base_round", tens)
                 : Component.translatable("guzhenren.display.base_fraction", tens,
-                        Component.translatable("guzhenren.display.base_units." + units));
+                Component.translatable("guzhenren.display.base_units." + units));
     }
 }

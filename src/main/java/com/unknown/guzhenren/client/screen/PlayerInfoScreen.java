@@ -35,8 +35,9 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  The G-key info panel: 空窍 / 肉身 / 脑海 across three tabs, one domain each. Reads the synced
+//  The G-key info panel: aperture / body / mind across three tabs, one domain each. Reads the synced
 //  attachments client-side, exactly like the HUD -- no server round-trip. Layout notes: CLAUDE.md "Info panel".
+//  TODO(refactor): this row logic mirrors CmdInfo -- extract a shared InfoModel when the view next grows.
 public final class PlayerInfoScreen extends Screen {
 
     private static final ResourceLocation TEXTURE =
@@ -139,14 +140,17 @@ public final class PlayerInfoScreen extends Screen {
     //  The open key toggles the panel shut too, not only Escape.
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (ModKeyMappings.OPEN_INFO.matches(keyCode, scanCode)) {onClose(); return true;}
+        if (ModKeyMappings.OPEN_INFO.matches(keyCode, scanCode)) {
+            onClose();
+            return true;
+        }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
     public boolean isPauseScreen() {return false;}
 
-    //  空窍: realm, aptitude, essence (only once awakened), and the aperture's 生死 when not alive.
+    //  Aperture: realm, aptitude, essence (only once awakened), and its life state when not alive.
     private List<Row> apertureRows(LocalPlayer player) {
         ApertureData data = ApertureService.get(player);
         List<Row> rows = new ArrayList<>();
@@ -175,7 +179,7 @@ public final class PlayerInfoScreen extends Screen {
         }
     }
 
-    //  肉身: 生死僵 (only when not 生), 凡/仙, soul, lifespan, then paths, then the qi path on its own.
+    //  Body: life state (only when not alive), life form, soul, lifespan, paths, then the Qi Path alone.
     private List<Row> bodyRows(LocalPlayer player) {
         BodyData body = BodyService.get(player);
         SoulData soul = SoulService.get(player);
@@ -189,8 +193,8 @@ public final class PlayerInfoScreen extends Screen {
                 .append(detail(Component.translatable(soul.tier().getTranslationKey())))));
         rows.add(new Row(0, label("lifespan"), ModDisplayText.lifespan(body)));
 
-        //  流派造诣: every visible path except 气道 -- the qi path is its own section below. Empty reads
-        //  inline on the header (流派造诣  [无]), not a separate line.
+        //  Path attainment: every visible path except the Qi Path -- that one is its own section below.
+        //  Empty reads inline on the header, not as a separate line.
         List<Map.Entry<GuPath, PathEntry>> paths = PathService.visibleEntries(player).entrySet().stream()
                 .filter(e -> e.getKey() != GuPath.QI).toList();
         if (paths.isEmpty()) {
@@ -208,8 +212,8 @@ public final class PlayerInfoScreen extends Screen {
             }
         }
 
-        //  气道造诣: 造诣 + total 道痕 on the header, or [无] while it is still 无 -- never a bare 无, so an
-        //  empty qi path reads 气道造诣  [无]. The 天/地/人/自然 breakdown (marks) sits below.
+        //  Qi Path: attainment + total marks on the header, or [NONE] while it is still none -- never a
+        //  bare none. The per-type breakdown sits below.
         GuAttainment qiAttainment = PathService.attainment(player, GuPath.QI);
         MutableComponent qiValue = qiAttainment == GuAttainment.NONE ? none()
                 : Component.translatable(qiAttainment.getTranslationKey());
@@ -225,7 +229,7 @@ public final class PlayerInfoScreen extends Screen {
         return rows;
     }
 
-    //  脑海: 才情 with its regen rate, then 念 / 意 / 情 -- the tab already says 脑海, so no header.
+    //  Mind: Brilliance with its regen rate, then the three cells -- the tab is the header already.
     private List<Row> mindRows(LocalPlayer player) {
         MindData mind = MindService.get(player);
         List<Row> rows = new ArrayList<>();
@@ -249,5 +253,6 @@ public final class PlayerInfoScreen extends Screen {
     }
 
     //  One display line: label at the left, value in a fixed column so numbers line up across rows.
-    private record Row(int indent, Component label, @Nullable Component value) {}
+    private record Row(int indent, Component label, @Nullable Component value) {
+    }
 }

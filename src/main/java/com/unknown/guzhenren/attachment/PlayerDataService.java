@@ -24,14 +24,14 @@ public final class PlayerDataService {
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
     }
 
-    //  ⚠ Everything a player is dealt once, at birth. 才情 is rolled HERE, not at 开窍 -- awaken must
+    //  ⚠ Everything a player is dealt once, at birth. Brilliance is rolled HERE, not at awakening -- awaken must
     //  never touch it. A full reset is a rebirth, so resetAll calls this too. See CLAUDE.md "Birth".
     public static void onBirth(Player player) {
         player.setData(ModAttachments.MIND, MindData.newborn());
         player.setData(ModAttachments.BORN, true);
     }
 
-    //  Completed night's sleep: soul + every aperture to full, 念 restored -- see MindPool.slept.
+    //  Completed night's sleep: soul + every aperture to full, thoughts restored -- see MindPool.slept.
     public static void onSleepComplete(ServerPlayer player) {
         SoulService.refill(player);
         EssenceService.refill(player);
@@ -62,7 +62,7 @@ public final class PlayerDataService {
     }
 
     //  Death clones and non-death clones (End portal return, /debug respawn) alike.
-    //  BORN travels with them, or the next login would roll a second 才情 over the one he already has.
+    //  BORN travels with them, or the next login would roll a second Brilliance over the one he has.
     public static void copy(Player from, Player to) {
         to.setData(ModAttachments.APERTURE, from.getData(ModAttachments.APERTURE));
         to.setData(ModAttachments.BODY, from.getData(ModAttachments.BODY));
@@ -74,7 +74,7 @@ public final class PlayerDataService {
     }
 
     //  Player, not ServerPlayer, so onClone can reset the fresh clone entity as well as a live one.
-    //  A reset is a rebirth: onBirth is what writes MIND here, and it rolls a fresh 才情.
+    //  A reset is a rebirth: onBirth is what writes MIND here, and it rolls a fresh Brilliance.
     public static void resetAll(Player player) {
         player.setData(ModAttachments.APERTURE, ApertureData.DEFAULT);
         player.setData(ModAttachments.SOUL, SoulData.DEFAULT);

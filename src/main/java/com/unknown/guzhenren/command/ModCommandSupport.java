@@ -98,7 +98,7 @@ public final class ModCommandSupport {
 
     //  Runs on every allowed target, names the rest in one red line. A refusal is not an error.
     public static int applyIf(CommandContext<CommandSourceStack> context, Predicate<ServerPlayer> allowed,
-            String refusedKey, PlayerOperation operation) throws CommandSyntaxException {
+                              String refusedKey, PlayerOperation operation) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
         List<ServerPlayer> refused = new ArrayList<>();
         int updated = 0;

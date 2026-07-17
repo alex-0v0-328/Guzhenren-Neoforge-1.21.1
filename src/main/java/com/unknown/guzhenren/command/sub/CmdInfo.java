@@ -36,6 +36,8 @@ import net.minecraft.server.level.ServerPlayer;
 
 //  /gzr info [aperture|body|mind] -- bare `info` is `info aperture` on yourself. Phrases: ModDisplayText.
 //  ⚠ [targets] hangs off the sections, not bare `info` -- a bare word arg there would be ambiguous.
+//  TODO(refactor): this row logic mirrors PlayerInfoScreen -- extract a shared InfoModel when the view
+//  next grows. See CLAUDE.md "Info panel".
 public final class CmdInfo {
 
     private CmdInfo() {}
@@ -48,7 +50,7 @@ public final class CmdInfo {
                 .then(ModCommandSupport.withTargets(Commands.literal("mind"), CmdInfo::mind));
     }
 
-    //  An unawakened player still gets the two lines -- they read 凡人 / 未觉醒, which is the answer.
+    //  An unawakened player still gets the two lines -- they read mortal / unawakened, which is the answer.
     private static int aperture(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
 
@@ -61,7 +63,7 @@ public final class CmdInfo {
                 continue;
             }
 
-            //  第二空窍: number them, or the two blocks read as one contradictory cultivator.
+            //  Two apertures: number them, or the blocks read as one contradictory cultivator.
             for (int i = 0; i < data.count(); i++) {
                 ModCommandFeedback.detail(source, Component.translatable(
                         "guzhenren.command.info.aperture_index", i + 1));
@@ -100,7 +102,7 @@ public final class CmdInfo {
 
             ModCommandFeedback.header(source);
 
-            //  生 is the norm and says nothing; 僵 / 死 is the line worth a row.
+            //  Alive is the norm and says nothing; zombie or dead is the line worth a row.
             if (body.lifeState() != LifeState.ALIVE) {
                 ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.life_state",
                         Component.translatable(body.lifeState().getTranslationKey())));
@@ -110,7 +112,7 @@ public final class CmdInfo {
                     Component.translatable(body.lifeForm().getTranslationKey())));
 
             ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.soul",
-                    soul.currentSoul(), soul.maxSoul())
+                            soul.currentSoul(), soul.maxSoul())
                     .append(muted(Component.translatable(soul.tier().getTranslationKey()))));
 
             ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.lifespan",
@@ -123,7 +125,7 @@ public final class CmdInfo {
         return Command.SINGLE_SUCCESS;
     }
 
-    //  流派造诣: every visible path except 气道 -- the qi path is its own section. Same shape as the panel:
+    //  Path attainment: every visible path except the Qi Path -- that one is its own section, as in the panel:
     //  empty reads inline on the header, not a separate line.
     private static void paths(CommandSourceStack source, ServerPlayer player) {
         List<Map.Entry<GuPath, PathEntry>> paths = PathService.visibleEntries(player).entrySet().stream()
@@ -139,8 +141,8 @@ public final class CmdInfo {
         }
     }
 
-    //  气道: 造诣 + the total 道痕 on the header ([无] while still 无, total omitted while 0), then only
-    //  the 气 he actually has -- QiData is sparse. Same shape as the panel's 气道造诣.
+    //  Qi Path: attainment + total marks on the header (empty reads [NONE], total omitted while 0), then
+    //  only the types he actually has -- QiData is sparse. Same shape as the panel's Qi Path section.
     private static void qi(CommandSourceStack source, ServerPlayer player) {
         GuAttainment attainment = PathService.attainment(player, GuPath.QI);
         Component value = attainment == GuAttainment.NONE ? none()
@@ -158,7 +160,7 @@ public final class CmdInfo {
         }
     }
 
-    //  All three cells, always -- MindData is dense, and a missing 情 row would read as a bug.
+    //  All three cells, always -- MindData is dense, and a missing row would read as a bug.
     private static int mind(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
 
@@ -168,7 +170,7 @@ public final class CmdInfo {
             ModCommandFeedback.header(source);
 
             ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.brilliance",
-                    Component.translatable(mind.brilliance().getTranslationKey()))
+                            Component.translatable(mind.brilliance().getTranslationKey()))
                     .append(muted(Component.translatable("guzhenren.command.info.brilliance_rate",
                             mind.brilliance().getThoughtsPerSecond()))));
 
@@ -184,7 +186,7 @@ public final class CmdInfo {
         return Command.SINGLE_SUCCESS;
     }
 
-    //  道痕 always; 碎屑 only when he has some -- most mortals sit at one denomination, not both.
+    //  Marks always; specks only when he has some -- most mortals sit at one denomination, not both.
     private static Component pathLine(GuPath path, PathEntry entry) {
         MutableComponent line = Component.translatable("guzhenren.command.info.path_entry",
                 Component.translatable(path.getTranslationKey()),
@@ -199,6 +201,7 @@ public final class CmdInfo {
     private static Component none() {return Component.translatable("guzhenren.display.none");}
 
     //  " [八成九]" / " [一人魂]": derived detail for operators. The one place gray is not a feedback class.
+    //  ⚠ Same [...] shape as the panel and chat -- do not reinvent it per surface.
     private static Component muted(Object value) {
         return Component.translatable("guzhenren.command.info.detail", value).withStyle(ChatFormatting.DARK_GRAY);
     }

@@ -11,18 +11,18 @@ public enum Rank implements StringRepresentable, EnumTranslatable {
 
     //  rankBase: maxEssence = baseEssence * stage.multiplier * rank.rankBase
     //  lifeForm: 该境界的仙凡归属; essenceColor: 该转真元的颜色 (深浅再按小境界算)
-    NONE  (     0L, LifeForm.MORTAL,   EssenceColor.NONE),
-    ONE   (     1L, LifeForm.MORTAL,   EssenceColor.GREEN_COPPER),
-    TWO   (    10L, LifeForm.MORTAL,   EssenceColor.RED_STEEL),
-    THREE (   100L, LifeForm.MORTAL,   EssenceColor.WHITE_SILVER),
-    FOUR  ( 1_000L, LifeForm.MORTAL,   EssenceColor.YELLOW_GOLDEN),
-    FIVE  (10_000L, LifeForm.MORTAL,   EssenceColor.PURPLE_CRYSTAL),
+    NONE(0L, LifeForm.MORTAL, EssenceColor.NONE),
+    ONE(1L, LifeForm.MORTAL, EssenceColor.GREEN_COPPER),
+    TWO(10L, LifeForm.MORTAL, EssenceColor.RED_STEEL),
+    THREE(100L, LifeForm.MORTAL, EssenceColor.WHITE_SILVER),
+    FOUR(1_000L, LifeForm.MORTAL, EssenceColor.YELLOW_GOLDEN),
+    FIVE(10_000L, LifeForm.MORTAL, EssenceColor.PURPLE_CRYSTAL),
 
     //  仙人境的 rankBase 是「故意留空」而非未定: 蛊仙根本不走真元这套系统, 以后另起一套
-    SIX   (     0L, LifeForm.IMMORTAL, EssenceColor.GREEN_GRAPE),
-    SEVEN (     0L, LifeForm.IMMORTAL, EssenceColor.RED_DATE),
-    EIGHT (     0L, LifeForm.IMMORTAL, EssenceColor.WHITE_LITCHI),
-    NINE  (     0L, LifeForm.IMMORTAL, EssenceColor.YELLOW_APRICOT);
+    SIX(0L, LifeForm.IMMORTAL, EssenceColor.GREEN_GRAPE),
+    SEVEN(0L, LifeForm.IMMORTAL, EssenceColor.RED_DATE),
+    EIGHT(0L, LifeForm.IMMORTAL, EssenceColor.WHITE_LITCHI),
+    NINE(0L, LifeForm.IMMORTAL, EssenceColor.YELLOW_APRICOT);
 
     public static final Codec<Rank> CODEC = StringRepresentable.fromEnum(Rank::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.rank.";

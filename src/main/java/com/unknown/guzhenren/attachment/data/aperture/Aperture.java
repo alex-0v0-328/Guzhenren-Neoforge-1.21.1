@@ -12,7 +12,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  One 凡窍: what a cultivator *is*, plus the essence pool that hangs off it. A player holds 0..2.
+//  One mortal aperture (凡窍): what a cultivator *is*, plus the essence pool that hangs off it.
+//  A player holds 0..2 of them.
 //  ⚠ The cap is derived here, so currentEssence is clamped structurally -- no writer can exceed it.
 public record Aperture(
         Rank rank,
@@ -23,11 +24,11 @@ public record Aperture(
         ApertureState state
 ) {
 
-    //  资质基数: 20..100. 只有 NONE 是 0 —— 一个真实存在的空窍不可能是 0, 见 ApertureService
+    //  Aptitude base: 20..100. Only NONE is 0 -- a real aperture never is. See ApertureService.
     public static final int MIN_BASE = 20;
     public static final int MAX_BASE = 100;
 
-    //  The read fallback for "no aperture there". Never stored: 未开窍 is an empty list, not this.
+    //  The read fallback for "no aperture there". Never stored: unawakened is an empty list, not this.
     public static final Aperture NONE = new Aperture(
             Rank.NONE, Stage.NONE, 0, ExtremePhysique.NONE, 0L, ApertureState.ALIVE);
 
@@ -57,7 +58,7 @@ public record Aperture(
         currentEssence = Math.clamp(currentEssence, 0L, maxEssence(rank, stage, baseEssence));
     }
 
-    //  开窍: 一转初阶 + a rolled tier + its physique, and a full pool.
+    //  Awakening (开窍): Rank I Initial + a rolled tier + its physique, and a full pool.
     public static Aperture opened() {
         Talent talent = Talent.randomTalent();
         ExtremePhysique physique = talent == Talent.EXTREME

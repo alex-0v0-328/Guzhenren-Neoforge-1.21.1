@@ -15,7 +15,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr body path <p> -- 道痕/碎屑 raw counts, 造诣 graded; every leaf re-reads the path.
+//  /gzr body path <p> -- marks and specks are raw counts, attainment is graded; every leaf re-reads the path.
 //  ⚠ A featured path's mark/speck are read-only here (its sub-system's total); attainment is not.
 public final class CmdPath {
 

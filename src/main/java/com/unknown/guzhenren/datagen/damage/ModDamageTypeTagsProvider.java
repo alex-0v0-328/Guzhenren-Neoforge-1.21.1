@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 public class ModDamageTypeTagsProvider extends TagsProvider<DamageType> {
 
     public ModDamageTypeTagsProvider(PackOutput output,
-                                    CompletableFuture<HolderLookup.Provider> lookupProvider,
-                                    @Nullable ExistingFileHelper existingFileHelper) {
+                                     CompletableFuture<HolderLookup.Provider> lookupProvider,
+                                     @Nullable ExistingFileHelper existingFileHelper) {
         super(output, Registries.DAMAGE_TYPE, lookupProvider, Guzhenren.MOD_ID, existingFileHelper);
     }
 

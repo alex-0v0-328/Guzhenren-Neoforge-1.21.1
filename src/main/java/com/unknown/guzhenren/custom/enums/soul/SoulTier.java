@@ -9,15 +9,15 @@ import org.jetbrains.annotations.NotNull;
 //  亿人魂是顶档但不封顶: 再高也仍是亿人魂
 public enum SoulTier implements StringRepresentable, EnumTranslatable {
 
-    ONE             (             1L),
-    TEN             (         1_000L),
-    HUNDRED         (        10_000L),
-    THOUSAND        (       100_000L),
-    TEN_THOUSAND    (     1_000_000L),
-    HUNDRED_THOUSAND(    10_000_000L),
-    MILLION         (   100_000_000L),
-    TEN_MILLION     ( 1_000_000_000L),
-    HUNDRED_MILLION (10_000_000_000L);
+    ONE(1L),
+    TEN(1_000L),
+    HUNDRED(10_000L),
+    THOUSAND(100_000L),
+    TEN_THOUSAND(1_000_000L),
+    HUNDRED_THOUSAND(10_000_000L),
+    MILLION(100_000_000L),
+    TEN_MILLION(1_000_000_000L),
+    HUNDRED_MILLION(10_000_000_000L);
 
     public static final Codec<SoulTier> CODEC = StringRepresentable.fromEnum(SoulTier::values);
     private static final String KEY_PREFIX = "guzhenren.enum.soul.tier.";

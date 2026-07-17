@@ -10,19 +10,19 @@ import org.jetbrains.annotations.NotNull;
 public enum EssenceColor implements StringRepresentable, EnumTranslatable {
 
     //  凡人 / 未开窍: 灰
-    NONE          (0xFF808080, false),
+    NONE(0xFF808080, false),
 
     //  一转 ~ 五转 (凡人境): 括号里是中阶色, 初阶提亮 / 巅峰压暗
-    GREEN_COPPER  (0xFF3EC98A),
-    RED_STEEL     (0xFFD9503F),
-    WHITE_SILVER  (0xFFCCCCCC),
-    YELLOW_GOLDEN (0xFFE8BE43),
+    GREEN_COPPER(0xFF3EC98A),
+    RED_STEEL(0xFFD9503F),
+    WHITE_SILVER(0xFFCCCCCC),
+    YELLOW_GOLDEN(0xFFE8BE43),
     PURPLE_CRYSTAL(0xFFA855D4),
 
     //  六转 ~ 九转 (仙人境): 固定色
-    GREEN_GRAPE   (0xFF9ACD32, false),
-    RED_DATE      (0xFF8B2500, false),
-    WHITE_LITCHI  (0xFFF5F0E1, false),
+    GREEN_GRAPE(0xFF9ACD32, false),
+    RED_DATE(0xFF8B2500, false),
+    WHITE_LITCHI(0xFFF5F0E1, false),
     YELLOW_APRICOT(0xFFFBCEB1, false);
 
     public static final Codec<EssenceColor> CODEC = StringRepresentable.fromEnum(EssenceColor::values);

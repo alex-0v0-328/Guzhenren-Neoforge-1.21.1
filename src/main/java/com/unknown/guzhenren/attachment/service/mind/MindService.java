@@ -8,7 +8,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The mind (智道) system. 念 regens by 才情 and tops up on sleep; 意/情 never recover.
+//  The mind (脑海) system. Thoughts regen by Brilliance and top up on sleep; wills and emotions never do.
 //  See CLAUDE.md "Wisdom".
 public final class MindService {
 
@@ -30,7 +30,8 @@ public final class MindService {
     private static void set(ServerPlayer p, WisdomType t, MindPool v) {store(p, get(p).with(t, v));}
     private static void store(ServerPlayer p, MindData d) {p.setData(ModAttachments.MIND, d);}
 
-    //  ---- 才情 ----  rolled at birth (PlayerDataService.onBirth), never here; these are the command's.
+    //  ---- Brilliance (才情) ----  rolled at birth (PlayerDataService.onBirth), never here; these are
+    //  the command's.
     public static void setBrilliance(ServerPlayer p, Brilliance v) {store(p, get(p).withBrilliance(v));}
     public static void shiftBrilliance(ServerPlayer p, int d) {setBrilliance(p, brilliance(p).shift(d));}
 
@@ -40,7 +41,7 @@ public final class MindService {
         set(p, t, new MindPool(cap, cap, false));
     }
 
-    //  One regen step, once a second. 念 only, and it stops at the cap -- regen may never fill the buffer.
+    //  One regen step, once a second. Thoughts only, and it stops at the cap -- regen never fills the buffer.
     public static void regenStep(ServerPlayer player) {
         MindPool thoughts = pool(player, WisdomType.THOUGHTS);
         if (thoughts.current() >= thoughts.max()) return;
@@ -49,7 +50,7 @@ public final class MindService {
         setCurrent(player, WisdomType.THOUGHTS, Math.min(grown, thoughts.max()));
     }
 
-    //  A completed sleep restores 念 only -- 意/情 do not recover. See MindPool.slept.
+    //  A completed sleep restores thoughts only -- wills and emotions do not recover. See MindPool.slept.
     public static void onSleepComplete(ServerPlayer p) {
         set(p, WisdomType.THOUGHTS, pool(p, WisdomType.THOUGHTS).slept());
     }

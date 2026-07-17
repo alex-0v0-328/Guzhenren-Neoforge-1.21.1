@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The soul (魂魄) system. Tier (一人魂 / 十人魂 / ...) derived from maxSoul, never stored.
+//  The soul (魂魄) system. Tier (One-Man Soul, Ten-Man Soul, ...) derived from maxSoul, never stored.
 public record SoulData(long maxSoul, long currentSoul) {
 
     public static final long DEFAULT_MAX_SOUL = 100L;

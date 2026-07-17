@@ -15,7 +15,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
-//  /guzhenren (alias /gzr) root: one .then() per domain -- 空窍 / 肉身 / 脑海, plus info and reset.
+//  /guzhenren (alias /gzr) root: one .then() per domain -- aperture / body / mind, plus info and reset.
 //  A sibling mod adds its own root, never a branch here. See CLAUDE.md "Commands".
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModCommand {
