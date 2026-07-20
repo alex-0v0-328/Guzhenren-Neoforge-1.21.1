@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.attachment;
 
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
 import com.unknown.guzhenren.attachment.data.body.QiData;
@@ -51,6 +52,9 @@ public final class PlayerDataService {
         }
         //  A clone is a fresh entity with bare attributes, whatever its data says the rank is.
         if (to instanceof ServerPlayer server) HealthService.refresh(server);
+
+        //  ⚠ resetAll flips sourceAwakened, which normally demands refreshCommands -- but vanilla's
+        //  PlayerList.respawn already calls sendCommands on every respawn. Do not "fix" this.
     }
 
     //  Un-fire every lethal condition, or the player dies in a respawn loop. What ran out comes back
@@ -71,6 +75,7 @@ public final class PlayerDataService {
     //  BORN travels with them, or the next login would roll a second Brilliance over the one he has.
     public static void copy(Player from, Player to) {
         to.setData(ModAttachments.APERTURE, from.getData(ModAttachments.APERTURE));
+        to.setData(ModAttachments.APERTURE_STORAGE, from.getData(ModAttachments.APERTURE_STORAGE));
         to.setData(ModAttachments.BODY, from.getData(ModAttachments.BODY));
         to.setData(ModAttachments.SOUL, from.getData(ModAttachments.SOUL));
         to.setData(ModAttachments.PATH, from.getData(ModAttachments.PATH));
@@ -84,6 +89,9 @@ public final class PlayerDataService {
     //  A reset is a rebirth: onBirth is what writes MIND here, and it rolls a fresh Brilliance.
     public static void resetAll(Player player) {
         player.setData(ModAttachments.APERTURE, ApertureData.DEFAULT);
+        //  ⚠ The apertures are gone, so what they held goes with them -- the Gu inside are destroyed,
+        //  exactly as the inventory is. Unawakened has nowhere to store anything.
+        player.setData(ModAttachments.APERTURE_STORAGE, ApertureStorage.DEFAULT);
         player.setData(ModAttachments.SOUL, SoulData.DEFAULT);
         player.setData(ModAttachments.PATH, PathData.DEFAULT);
         player.setData(ModAttachments.QI, QiData.DEFAULT);

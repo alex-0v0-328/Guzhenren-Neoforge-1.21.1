@@ -141,6 +141,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.tab.aperture", "空窍");
         add("guzhenren.screen.tab.body", "肉身");
         add("guzhenren.screen.tab.mind", "脑海");
+        add("guzhenren.screen.tab.storage", "空窍存储");
+        add("guzhenren.menu.aperture_storage", "空窍存储");
         add("guzhenren.screen.label.realm", "修为");
         add("guzhenren.screen.label.talent", "天赋");
         add("guzhenren.screen.label.essence", "真元");
@@ -190,7 +192,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.hungry", "%s饿了");
         add("guzhenren.item.gu.starved", "%s饿死了");
 
-        add("effect.guzhenren.vitality", "生机叶");
+        add("effect.guzhenren.vitality_leaf", "生机叶");
     }
     //endregion
 

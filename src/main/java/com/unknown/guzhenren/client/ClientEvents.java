@@ -2,7 +2,9 @@ package com.unknown.guzhenren.client;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.client.hud.PlayerStatsHud;
+import com.unknown.guzhenren.client.screen.ApertureStorageScreen;
 import com.unknown.guzhenren.client.screen.PlayerInfoScreen;
+import com.unknown.guzhenren.registry.ModMenus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -11,6 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 //  Everything the client registers: GUI layers and keybinds today, renderers later.
@@ -32,6 +35,11 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(ModKeyMappings.OPEN_INFO);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterScreens(RegisterMenuScreensEvent event) {
+        event.register(ModMenus.APERTURE_STORAGE_MENU.get(), ApertureStorageScreen::new);
     }
 
     //  Open on the keybind, only when no other screen owns the input; the panel closes on the same key.

@@ -2,7 +2,7 @@ package com.unknown.guzhenren.item.mortal;
 
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.effect.VitalityEffect;
+import com.unknown.guzhenren.effect.VitalityLeafEffect;
 import com.unknown.guzhenren.item.MortalGuItem;
 import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,12 +33,12 @@ public class VitalityLeafGuItem extends MortalGuItem {
     //  ⚠ A second leaf would restart the first and waste what is left of it -- refuse while it runs.
     @Override
     protected @Nullable Refusal gate(Player player, ItemStack stack) {
-        return player.hasEffect(ModEffects.VITALITY) ? new Refusal(FAILED_VITALITY_ACTIVE) : null;
+        return player.hasEffect(ModEffects.VITALITY_LEAF) ? new Refusal(FAILED_VITALITY_ACTIVE) : null;
     }
 
     @Override
     protected int apply(ServerPlayer player, ItemStack stack) {
-        player.addEffect(new MobEffectInstance(ModEffects.VITALITY, VitalityEffect.DURATION_TICKS));
+        player.addEffect(new MobEffectInstance(ModEffects.VITALITY_LEAF, VitalityLeafEffect.DURATION_TICKS));
         return 1;
     }
 }

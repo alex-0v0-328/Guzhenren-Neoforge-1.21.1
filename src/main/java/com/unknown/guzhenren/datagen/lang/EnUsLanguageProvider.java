@@ -141,6 +141,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.tab.aperture", "Aperture");
         add("guzhenren.screen.tab.body", "Body");
         add("guzhenren.screen.tab.mind", "Mind");
+        add("guzhenren.screen.tab.storage", "Storage");
+        add("guzhenren.menu.aperture_storage", "Aperture Storage");
         add("guzhenren.screen.label.realm", "Realm");
         add("guzhenren.screen.label.talent", "Aptitude");
         add("guzhenren.screen.label.essence", "Essence");
@@ -190,7 +192,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.hungry", "Your %s is hungry");
         add("guzhenren.item.gu.starved", "Your %s starved to death");
 
-        add("effect.guzhenren.vitality", "Vitality Leaf");
+        add("effect.guzhenren.vitality_leaf", "Vitality Leaf");
     }
     //endregion
 

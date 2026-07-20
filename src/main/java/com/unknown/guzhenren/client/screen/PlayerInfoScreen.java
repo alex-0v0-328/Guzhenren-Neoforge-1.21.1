@@ -24,6 +24,7 @@ import com.unknown.guzhenren.custom.enums.strength.JunStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.display.ModDisplayText;
+import com.unknown.guzhenren.network.OpenApertureStoragePayload;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,40 +35,50 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  The G-key info panel: aperture / body / mind across three tabs, one domain each. Reads the synced
-//  attachments client-side, exactly like the HUD -- no server round-trip. Layout notes: CLAUDE.md "Info panel".
+//  The G-key info panel: aperture / body / mind, plus a storage tab that opens a container instead.
+//  Reads the synced attachments client-side, like the HUD. Layout notes: CLAUDE.md "Client".
 //  TODO(refactor): this row logic mirrors CmdInfo -- extract a shared InfoModel when the view next grows.
 public final class PlayerInfoScreen extends Screen {
 
     //  ⚠ No texture: the panel is drawn from fills, so it scales to any window. See CLAUDE.md "Client".
     private static final float SCREEN_FRACTION = 0.80F;
     private static final int PAD = 12;
-    private static final int CONTENT_TOP = 14;
-    private static final int LINE_H = 11;
-    private static final int VALUE_X = 84;
+    private static final int HEADER_H = 22;
+    private static final int CONTENT_TOP = HEADER_H + 8;
+    private static final int LINE_H = 12;
     private static final int INDENT = 10;
 
     //  The tab rail down the right edge.
-    private static final int TAB_W = 72;
+    private static final int TAB_W = 76;
     private static final int TAB_H = 20;
     private static final int TAB_GAP = 4;
 
-    //  75% black panel, white text -- the whole look is these two.
     private static final int PANEL_FILL = 0xBF000000;
+    private static final int BORDER = 0x66FFFFFF;
+    private static final int DIVIDER = 0x33FFFFFF;
+    private static final int ROW_HOVER = 0x14FFFFFF;
     private static final int TEXT = 0xFFFFFFFF;
-    private static final int TAB_FILL_ACTIVE = 0x99FFFFFF;
-    private static final int TAB_FILL_IDLE = 0x33FFFFFF;
-    private static final int TAB_TEXT_ACTIVE = 0xFF101010;
-    private static final int TAB_TEXT_IDLE = 0xFFDDDDDD;
+    private static final int TAB_IDLE = 0x26FFFFFF;
+    private static final int TAB_TEXT_IDLE = 0xFFBBBBBB;
+    private static final int TAB_TEXT_DEAD = 0xFF6A6A6A;
+
+    //  ⚠ One accent per DOMAIN, never per value -- colour says "which of the three you are looking at",
+    //  it never says a number is good or bad. See CLAUDE.md "Color".
+    private static final int[] ACCENT = {0xFF4FC3F7, 0xFFB388FF, 0xFFFFD54F, 0xFF81C784};
 
     private static final String[] TAB_KEYS = {
             "guzhenren.screen.tab.aperture",
             "guzhenren.screen.tab.body",
             "guzhenren.screen.tab.mind",
+            "guzhenren.screen.tab.storage",
     };
+
+    //  The storage tab does not render rows -- it opens a container instead.
+    private static final int TAB_STORAGE = 3;
 
     private int leftPos;
     private int topPos;
@@ -89,54 +100,91 @@ public final class PlayerInfoScreen extends Screen {
     @Override
     public void render(@NotNull GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         renderBackground(g, mouseX, mouseY, partialTick);
-        g.fill(leftPos, topPos, leftPos + panelW, topPos + panelH, PANEL_FILL);
-        renderTabs(g);
+        int right = leftPos + panelW;
+        int accent = ACCENT[activeTab];
+
+        g.fill(leftPos, topPos, right, topPos + panelH, PANEL_FILL);
+        g.renderOutline(leftPos, topPos, panelW, panelH, BORDER);
+
+        //  Header: the tab's own name in its accent, over a rule that separates it from the content.
+        g.drawString(font, Component.translatable(TAB_KEYS[activeTab]),
+                leftPos + PAD, topPos + (HEADER_H - font.lineHeight) / 2, accent, false);
+        g.fill(leftPos + PAD, topPos + HEADER_H, right - PAD, topPos + HEADER_H + 1, DIVIDER);
+
+        renderTabs(g, mouseX, mouseY);
 
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return;
+        if (player == null || activeTab == TAB_STORAGE) return;
 
         List<Row> rows = switch (activeTab) {
             case 1 -> bodyRows(player);
             case 2 -> mindRows(player);
             default -> apertureRows(player);
         };
+
+        //  ⚠ Values are right-aligned against the tab rail, so numbers line up however long a label runs.
+        int valueRight = tabLeft() - PAD;
         int y = topPos + CONTENT_TOP;
         for (Row row : rows) {
-            int labelX = leftPos + PAD + row.indent();
-            g.drawString(font, row.label(), labelX, y, TEXT, false);
+            if (mouseY >= y - 1 && mouseY < y + LINE_H - 1 && mouseX >= leftPos && mouseX < tabLeft()) {
+                g.fill(leftPos + PAD - 2, y - 1, valueRight + 2, y + LINE_H - 1, ROW_HOVER);
+            }
+            //  A row with no value is a section header, so it takes the accent.
+            int labelColor = row.value() == null ? accent : TEXT;
+            g.drawString(font, row.label(), leftPos + PAD + row.indent(), y, labelColor, false);
             if (row.value() != null) {
-                //  Fixed column for aligned numbers; a longer label (English) pushes the value past it.
-                int valueX = Math.max(leftPos + VALUE_X, labelX + font.width(row.label()) + 4);
-                g.drawString(font, row.value(), valueX, y, TEXT, false);
+                g.drawString(font, row.value(), valueRight - font.width(row.value()), y, TEXT, false);
             }
             y += LINE_H;
         }
     }
 
-    //  A rail of buttons down the right edge: filled while active, faint while idle.
-    private void renderTabs(GuiGraphics g) {
+    //  A rail down the right edge. Active takes its domain's accent; storage greys out unawakened.
+    private void renderTabs(GuiGraphics g, int mouseX, int mouseY) {
         for (int i = 0; i < TAB_KEYS.length; i++) {
             boolean active = i == activeTab;
+            boolean live = tabLive(i);
             int x0 = tabLeft();
             int y0 = tabTop(i);
-            g.fill(x0, y0, x0 + TAB_W, y0 + TAB_H, active ? TAB_FILL_ACTIVE : TAB_FILL_IDLE);
+            boolean hover = live && !active && inTab(mouseX, mouseY, i);
+
+            g.fill(x0, y0, x0 + TAB_W, y0 + TAB_H, active ? ACCENT[i] : TAB_IDLE);
+            if (hover) g.fill(x0, y0, x0 + TAB_W, y0 + TAB_H, ROW_HOVER);
+            //  A thin bar on the inner edge marks the active tab even at a glance.
+            if (active) g.fill(x0 - 2, y0, x0, y0 + TAB_H, ACCENT[i]);
+
             Component label = Component.translatable(TAB_KEYS[i]);
-            g.drawString(font, label, x0 + (TAB_W - font.width(label)) / 2, y0 + (TAB_H - font.lineHeight) / 2 + 1,
-                    active ? TAB_TEXT_ACTIVE : TAB_TEXT_IDLE, false);
+            int color = active ? 0xFF101010 : live ? TAB_TEXT_IDLE : TAB_TEXT_DEAD;
+            g.drawString(font, label, x0 + (TAB_W - font.width(label)) / 2,
+                    y0 + (TAB_H - font.lineHeight) / 2 + 1, color, false);
         }
+    }
+
+    //  ⚠ Storage needs an aperture to live in, so an unawakened player cannot open it.
+    private boolean tabLive(int tab) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        return tab != TAB_STORAGE || (player != null && ApertureService.isAwakened(player));
     }
 
     private int tabLeft() {return leftPos + panelW - TAB_W - PAD;}
     private int tabTop(int i) {return topPos + PAD + i * (TAB_H + TAB_GAP);}
 
+    private boolean inTab(double mx, double my, int i) {
+        return mx >= tabLeft() && mx < tabLeft() + TAB_W && my >= tabTop(i) && my < tabTop(i) + TAB_H;
+    }
+
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
-        if (button == 0 && mx >= tabLeft() && mx < tabLeft() + TAB_W) {
+        if (button == 0) {
             for (int i = 0; i < TAB_KEYS.length; i++) {
-                if (my >= tabTop(i) && my < tabTop(i) + TAB_H) {
+                if (!inTab(mx, my, i) || !tabLive(i)) continue;
+                //  ⚠ Storage is a container, not a tab of rows -- ask the server to open it instead.
+                if (i == TAB_STORAGE) {
+                    PacketDistributor.sendToServer(new OpenApertureStoragePayload(ApertureData.PRIMARY));
+                } else {
                     activeTab = i;
-                    return true;
                 }
+                return true;
             }
         }
         return super.mouseClicked(mx, my, button);

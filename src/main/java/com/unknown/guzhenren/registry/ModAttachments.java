@@ -3,6 +3,7 @@ package com.unknown.guzhenren.registry;
 import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
 import com.unknown.guzhenren.attachment.data.body.QiData;
@@ -18,7 +19,7 @@ import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-//  Aperture (空窍) / Body (肉身) / Mind (脑海) -- three domains, seven attachments;
+//  Aperture (空窍) / Body (肉身) / Mind (脑海) -- three domains, eight record attachments;
 //  write only through attachment/service.
 //  ⚠ .sync() is why this mod has no packets -- see CLAUDE.md "Networking".
 //  ⚠ An id mirrors its record class (strength_data <-> StrengthData), never the bare domain word:
@@ -49,6 +50,13 @@ public final class ModAttachments {
     public static final Supplier<AttachmentType<float[]>> ESSENCE_CARRY = ATTACHMENT_TYPES.register(
             "essence_carry", () -> AttachmentType.builder(
                     () -> new float[ApertureData.MAX_APERTURES]).build());
+
+    //  The Gu each aperture holds. ⚠ Serialized but NOT synced -- the container menu carries these to
+    //  the client on vanilla's own channel, so syncing would re-push every stack per slot click.
+    public static final Supplier<AttachmentType<ApertureStorage>> APERTURE_STORAGE = ATTACHMENT_TYPES.register(
+            "aperture_storage", () -> AttachmentType.builder(() -> ApertureStorage.DEFAULT)
+                    .serialize(ApertureStorage.CODEC)
+                    .build());
     //endregion
 
     //region 肉身 (Body)

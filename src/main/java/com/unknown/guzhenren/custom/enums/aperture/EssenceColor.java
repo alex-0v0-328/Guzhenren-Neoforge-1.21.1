@@ -6,7 +6,8 @@ import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 //  真元的颜色, 每转一色 (映射见 Rank); 深浅由 shade(stage) 按小境界算, 仙人境固定色
-//  ⚠ 暂无使用处: HUD 用固定天蓝, 见 CLAUDE.md "HUD". 留给粒子/物品/界面, 别当死代码删
+//  ⚠ 整个文件至今零调用: HUD 用固定天蓝, 见 CLAUDE.md "Client". 这是留给粒子/物品/界面的钩子,
+//  shade() 与 Rank.getEssenceColor() 就是那个接口本身 —— 别当死代码删, 删了枚举只剩名字
 public enum EssenceColor implements StringRepresentable, EnumTranslatable {
 
     //  凡人 / 未开窍: 灰
