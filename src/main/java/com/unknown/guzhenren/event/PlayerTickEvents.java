@@ -5,6 +5,7 @@ import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.item.mortal.BoarGuItem;
 import com.unknown.guzhenren.registry.ModDamageTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -26,7 +27,10 @@ public final class PlayerTickEvents {
         //  Per-second, not per-tick: aging only needs a day boundary, regen carries its own remainder.
         if (player.tickCount % EssenceService.REGEN_INTERVAL_TICKS != 0) return;
 
-        BodyService.tickAging(player);
+        //  A Gu goes hungry on the same day rollover that ages its owner -- one clock, one reader.
+        long days = BodyService.tickAging(player);
+        if (days > 0L) BoarGuItem.starve(player, days);
+
         EssenceService.regenStep(player);
         MindService.regenStep(player);
         checkLethalState(player);

@@ -2,7 +2,9 @@ package com.unknown.guzhenren.registry;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
+import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
+import com.unknown.guzhenren.item.mortal.BoarGuItem;
 import com.unknown.guzhenren.item.mortal.HopeGuItem;
 import com.unknown.guzhenren.item.mortal.RelicsGuItem;
 import net.minecraft.world.item.Item;
@@ -11,8 +13,8 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 //  Every Gu (蛊虫) and Gu Material (蛊材). An id is also its texture's file name -- see ModItemModelProvider.
-//  ⚠ 64 is Item.Properties' own default; a stacksTo(64) here would only be noise.
-//  TODO(data comp): stateful items (力道 school+magnitude, 蛊材 qi type+amount) need a ModDataComponents registry.
+//  ⚠ 64 is Item.Properties' own default; a stacksTo(64) here would only be noise. A stateful Gu says stacksTo(1).
+//  TODO(data comp): a 蛊材 carrying a qi type + amount still needs its own component.
 public final class ModItems {
 
     private ModItems() {}
@@ -42,6 +44,13 @@ public final class ModItems {
             () -> new RelicsGuItem(new Item.Properties(), Rank.FOUR));
     public static final DeferredItem<Item> CRYSTAL_RELICS_GU = ITEMS.register("crystal_relics_gu",
             () -> new RelicsGuItem(new Item.Properties(), Rank.FIVE));
+
+    //  Boar Gu (豕蛊), one per beast -- one class; the beast is all registration varies.
+    //  ⚠ stacksTo(1): each carries its own refinement and hunger, and a stack would share one component.
+    public static final DeferredItem<Item> WHITE_BOAR_GU = ITEMS.register("white_boar_gu",
+            () -> new BoarGuItem(new Item.Properties().stacksTo(1), BeastStrength.WHITE_BOAR));
+    public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
+            () -> new BoarGuItem(new Item.Properties().stacksTo(1), BeastStrength.BLACK_BOAR));
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

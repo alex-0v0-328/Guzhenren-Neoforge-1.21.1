@@ -9,6 +9,7 @@ import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathEntry;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
+import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.data.mind.MindPool;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
@@ -16,6 +17,7 @@ import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
+import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.command.ModCommandFeedback;
 import com.unknown.guzhenren.command.ModCommandSupport;
@@ -120,6 +122,7 @@ public final class CmdInfo {
 
             paths(source, player);
             qi(source, player);
+            strength(source, player);
         }
 
         return Command.SINGLE_SUCCESS;
@@ -158,6 +161,20 @@ public final class CmdInfo {
             ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.qi_entry",
                     Component.translatable(type.getTranslationKey()), mark));
         }
+    }
+
+    //  The Strength Path's own reading: how many beast strengths, not which. Empty reads [NONE] inline,
+    //  as the path list does. ⚠ 力道 also stays in 流派造诣 above -- that row is its specks, this is its grade.
+    private static void strength(CommandSourceStack source, ServerPlayer player) {
+        StrengthData data = StrengthService.get(player);
+        MutableComponent header = Component.translatable("guzhenren.command.info.strength");
+        if (data.isEmpty()) {
+            ModCommandFeedback.detail(source, header.append("  ").append(none()));
+            return;
+        }
+        ModCommandFeedback.detail(source, header);
+        ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.strength_entry",
+                ModDisplayText.boarStrength(data.boarCount())));
     }
 
     //  All three cells, always -- MindData is dense, and a missing row would read as a bug.

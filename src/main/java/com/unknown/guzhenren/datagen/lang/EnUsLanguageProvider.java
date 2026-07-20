@@ -14,6 +14,7 @@ import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiType;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
+import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.data.PackOutput;
@@ -71,6 +72,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.8", "Eight");
         add("guzhenren.display.base_units.9", "Nine");
         add("guzhenren.display.none", "[NONE]");
+        add("guzhenren.display.wild", "Wild %s");
+        add("guzhenren.display.boar_strength.1", "[Strength of One Boar]");
+        add("guzhenren.display.boar_strength.2", "[Strength of Two Boars]");
 
         add("guzhenren.hud.lifespan", "Lifespan %s");
     }
@@ -105,6 +109,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.paths", "Paths:");
         add("guzhenren.command.info.path_entry", "  %s  %s  Marks %s");
         add("guzhenren.command.info.path_speck", " Specks %s");
+        add("guzhenren.command.info.strength", "Strength Path:");
+        add("guzhenren.command.info.strength_entry", "  %s");
         add("guzhenren.command.info.brilliance", "Brilliance:  %s");
         add("guzhenren.command.info.brilliance_rate", "%s thoughts/s");
         add("guzhenren.command.info.mind", "Mind Ocean:");
@@ -134,6 +140,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.lifespan", "Lifespan");
         add("guzhenren.screen.label.qi", "Qi Path");
         add("guzhenren.screen.label.paths", "Paths");
+        add("guzhenren.screen.label.strength", "Strength Path");
         add("guzhenren.screen.label.brilliance", "Brilliance");
         add("guzhenren.screen.path_value", "%s Marks %s");
     }
@@ -149,6 +156,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("item.guzhenren.silver_relics_gu", "White Silver Relics Gu");
         add("item.guzhenren.gold_relics_gu", "Yellow Gold Relics Gu");
         add("item.guzhenren.crystal_relics_gu", "Purple Crystal Relics Gu");
+        add("item.guzhenren.white_boar_gu", "White Boar Gu");
+        add("item.guzhenren.black_boar_gu", "Black Boar Gu");
         add("item.guzhenren.primeval_stone", "Primeval Stone");
 
         add("itemGroup.guzhenren.mortal_gu", "Mortal Gu");
@@ -159,6 +168,13 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.essence_full", "Your essence is already full");
         add("guzhenren.item.failed.rank_mismatch", "Wrong realm -- this Gu needs %s");
         add("guzhenren.item.failed.stage_peak", "You are at the Peak -- a Relics Gu cannot break through");
+        add("guzhenren.item.failed.beast_strength_held", "You already hold the %s's strength -- this Gu is wasted");
+        add("guzhenren.item.failed.boar_hungry", "The Gu is too hungry -- feed it first");
+        add("guzhenren.item.failed.boar_refine_essence", "Not enough essence to refine");
+
+        add("guzhenren.item.boar.uses", "Used %s/%s");
+        add("guzhenren.item.boar.hungry", "Your %s is hungry");
+        add("guzhenren.item.boar.starved", "Your %s starved to death");
     }
     //endregion
 
@@ -187,6 +203,13 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addAttainment();
         addWisdomType();
         addBrilliance();
+        addBeastStrength();
+    }
+
+    //  Beast strengths: taken by consuming a beast Gu, one kind once ever. Two boars today
+    private void addBeastStrength() {
+        add(BeastStrength.WHITE_BOAR, "White Boar");
+        add(BeastStrength.BLACK_BOAR, "Black Boar");
     }
 
     //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie

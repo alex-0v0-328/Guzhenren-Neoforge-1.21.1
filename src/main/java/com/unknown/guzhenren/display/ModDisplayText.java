@@ -40,6 +40,9 @@ public final class ModDisplayText {
                 Component.translatable(kindKey));
     }
 
+    //  野生·黑豕蛊 / Wild Black Boar Gu -- one key for every Gu that has a wild form.
+    public static MutableComponent wild(Component name) {return Component.translatable("guzhenren.display.wild", name);}
+
     //  86 [ 14岁 ]
     public static MutableComponent lifespan(BodyData body) {
         return Component.translatable("guzhenren.display.lifespan", body.lifespan(), body.age());
@@ -50,6 +53,12 @@ public final class ModDisplayText {
 
     //  800/800. A raw String, not a Component -- drawn straight into the HUD bar.
     public static String pool(long current, long max) {return current + "/" + max;}
+
+    //  一猪之力 / 两猪之力. Keyed by the count: zh wants 一/两, en wants One/Two and a plural.
+    //  ⚠ One key per count -- a third beast strength needs a third key, never a concatenation.
+    public static Component boarStrength(int count) {
+        return Component.translatable("guzhenren.display.boar_strength." + count);
+    }
 
     //  The aptitude base read in tenths: 89 -> 八成九, 80 -> 八成, 100 -> 十成. English has no such reading,
     //  so it spells the number out (89 -> Eighty Nine) -- tens and units are separate words, hence two key sets.

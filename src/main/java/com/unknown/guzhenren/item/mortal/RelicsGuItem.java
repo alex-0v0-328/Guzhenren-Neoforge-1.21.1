@@ -26,7 +26,7 @@ public class RelicsGuItem extends MortalGuItem {
     protected boolean hasUse() {return true;}
 
     @Override
-    protected @Nullable Refusal gate(Player player) {
+    protected @Nullable Refusal gate(Player player, ItemStack stack) {
         //  ⚠ An unawakened player reads Rank.NONE, so this gate catches him too -- no isAwakened needed.
         if (ApertureService.rank(player) != rank()) {
             return new Refusal(FAILED_RANK_MISMATCH, Component.translatable(rank().getTranslationKey()));

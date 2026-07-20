@@ -2,7 +2,9 @@ package com.unknown.guzhenren.serialization;
 
 import io.netty.buffer.ByteBuf;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
@@ -20,5 +22,10 @@ public final class ModStreamCodecs {
     public static <K extends Enum<K>, V> StreamCodec<ByteBuf, Map<K, V>> enumMap(
             Class<K> key, StreamCodec<ByteBuf, V> value) {
         return ByteBufCodecs.map(HashMap::new, ofEnum(key), value);
+    }
+
+    //  An enum set on the wire. Arrives as a plain HashSet; the record's compact ctor re-normalizes it.
+    public static <E extends Enum<E>> StreamCodec<ByteBuf, Set<E>> enumSet(Class<E> type) {
+        return ByteBufCodecs.collection(HashSet::new, ofEnum(type));
     }
 }

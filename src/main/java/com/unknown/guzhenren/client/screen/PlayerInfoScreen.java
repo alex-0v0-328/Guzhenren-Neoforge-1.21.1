@@ -6,6 +6,7 @@ import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathEntry;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
+import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.data.mind.MindPool;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
@@ -13,6 +14,7 @@ import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
+import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.client.ModKeyMappings;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
@@ -179,7 +181,8 @@ public final class PlayerInfoScreen extends Screen {
         }
     }
 
-    //  Body: life state (only when not alive), life form, soul, lifespan, paths, then the Qi Path alone.
+    //  Body: life state (only when not alive), life form, soul, lifespan, paths, the Qi Path, beast strengths.
+    //  ⚠ Same rows in the same order as CmdInfo.body -- the two surfaces must not drift.
     private List<Row> bodyRows(LocalPlayer player) {
         BodyData body = BodyService.get(player);
         SoulData soul = SoulService.get(player);
@@ -226,6 +229,16 @@ public final class PlayerInfoScreen extends Screen {
             rows.add(new Row(INDENT, Component.translatable(type.getTranslationKey()),
                     Component.literal(Long.toString(mark))));
         }
+
+        //  The Strength Path's own reading: how many beast strengths, not which. Empty reads [NONE] inline,
+        //  as the path list does. ⚠ 力道 also stays in 流派造诣 above -- that row is its specks, this is its grade.
+        StrengthData strength = StrengthService.get(player);
+        if (strength.isEmpty()) {
+            rows.add(new Row(0, label("strength"), none()));
+            return rows;
+        }
+        rows.add(new Row(0, label("strength"), null));
+        rows.add(new Row(INDENT, ModDisplayText.boarStrength(strength.boarCount()), null));
         return rows;
     }
 

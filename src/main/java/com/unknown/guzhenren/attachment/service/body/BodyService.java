@@ -37,9 +37,11 @@ public final class BodyService {
     private static void store(ServerPlayer p, BodyData data) {p.setData(ModAttachments.BODY, data);}
 
     //  Bill every whole day since last billing. A stored day index, not a countdown -- idempotent, relog-safe.
-    public static void tickAging(ServerPlayer player) {
+    //  ⚠ Returns the days billed, because it is the only place that knows: anything else on the day
+    //  rollover (a Gu's hunger) would otherwise need a second copy of lastDayIndex.
+    public static long tickAging(ServerPlayer player) {
         MinecraftServer server = player.getServer();
-        if (server == null) return;
+        if (server == null) return 0L;
 
         long today = dayIndex(server);
         BodyData body = get(player);
@@ -47,12 +49,13 @@ public final class BodyService {
         //  First tick ever, or time ran backwards (/time set): re-anchor rather than hand back lifespan.
         if (body.lastDayIndex() == BodyData.UNTRACKED || today < body.lastDayIndex()) {
             store(player, body.withLastDayIndex(today));
-            return;
+            return 0L;
         }
 
         long elapsed = today - body.lastDayIndex();
-        if (elapsed == 0L) return;
+        if (elapsed == 0L) return 0L;
 
         store(player, body.aged(elapsed, today));
+        return elapsed;
     }
 }

@@ -14,6 +14,7 @@ import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiType;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
+import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.data.PackOutput;
@@ -70,6 +71,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.8", "八");
         add("guzhenren.display.base_units.9", "九");
         add("guzhenren.display.none", "[无]");
+        add("guzhenren.display.wild", "野生·%s");
+        add("guzhenren.display.boar_strength.1", "[一猪之力]");
+        add("guzhenren.display.boar_strength.2", "[两猪之力]");
 
         add("guzhenren.hud.lifespan", "寿元 %s");
     }
@@ -104,6 +108,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.paths", "流派造诣");
         add("guzhenren.command.info.path_entry", "  %s  %s  道痕 %s");
         add("guzhenren.command.info.path_speck", " 碎屑 %s");
+        add("guzhenren.command.info.strength", "力道造诣");
+        add("guzhenren.command.info.strength_entry", "  %s");
         add("guzhenren.command.info.brilliance", "才情  %s");
         add("guzhenren.command.info.brilliance_rate", "%s个念头每秒");
         add("guzhenren.command.info.mind", "脑海");
@@ -134,6 +140,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.lifespan", "寿元");
         add("guzhenren.screen.label.qi", "气道造诣");
         add("guzhenren.screen.label.paths", "流派造诣");
+        add("guzhenren.screen.label.strength", "力道造诣");
         add("guzhenren.screen.label.brilliance", "才情");
         add("guzhenren.screen.path_value", "%s 道痕 %s");
     }
@@ -149,6 +156,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("item.guzhenren.silver_relics_gu", "白银舍利蛊");
         add("item.guzhenren.gold_relics_gu", "黄金舍利蛊");
         add("item.guzhenren.crystal_relics_gu", "紫晶舍利蛊");
+        add("item.guzhenren.white_boar_gu", "白豕蛊");
+        add("item.guzhenren.black_boar_gu", "黑豕蛊");
         add("item.guzhenren.primeval_stone", "元石");
 
         add("itemGroup.guzhenren.mortal_gu", "凡蛊");
@@ -159,6 +168,13 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.essence_full", "真元已满");
         add("guzhenren.item.failed.rank_mismatch", "境界不符 —— 此蛊需%s");
         add("guzhenren.item.failed.stage_peak", "你已至巅峰 —— 破境非舍利蛊之力");
+        add("guzhenren.item.failed.beast_strength_held", "你已受过%s之力 —— 此蛊于你无用");
+        add("guzhenren.item.failed.boar_hungry", "此蛊太饿 —— 先喂食");
+        add("guzhenren.item.failed.boar_refine_essence", "真元不足 —— 无法炼化");
+
+        add("guzhenren.item.boar.uses", "已用 %s/%s");
+        add("guzhenren.item.boar.hungry", "%s饿了");
+        add("guzhenren.item.boar.starved", "%s饿死了");
     }
     //endregion
 
@@ -187,6 +203,13 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addAttainment();
         addWisdomType();
         addBrilliance();
+        addBeastStrength();
+    }
+
+    //  Beast strengths: taken by consuming a beast Gu, one kind once ever. Two boars today
+    private void addBeastStrength() {
+        add(BeastStrength.WHITE_BOAR, "白豕");
+        add(BeastStrength.BLACK_BOAR, "黑豕");
     }
 
     //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie

@@ -2,9 +2,11 @@ package com.unknown.guzhenren.item;
 
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 //  Mortal Gu (凡蛊) -- a Gu of ranks 1..5. Concrete: a plain Gu needs no class of its own.
-//  ⚠ Both axes are false everywhere today -- nothing feeds a Gu, and no reusable Gu exists.
+//  ⚠ feedable is what turns the left-click template on; reusable is what makes a use spend nothing.
 public class MortalGuItem extends GuItem {
 
     private static final String KIND_KEY = "guzhenren.display.gu";
@@ -20,6 +22,8 @@ public class MortalGuItem extends GuItem {
 
     @Override
     protected String kindKey() {return KIND_KEY;}
+    @Override
+    protected boolean hasSwing(Player player, ItemStack stack) {return feedable();}
     public boolean reusable() {return reusable;}
     public boolean feedable() {return feedable;}
 }

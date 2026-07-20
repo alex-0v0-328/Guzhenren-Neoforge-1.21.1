@@ -5,6 +5,7 @@ import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
 import com.unknown.guzhenren.attachment.data.body.QiData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
+import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
@@ -69,6 +70,7 @@ public final class PlayerDataService {
         to.setData(ModAttachments.SOUL, from.getData(ModAttachments.SOUL));
         to.setData(ModAttachments.PATH, from.getData(ModAttachments.PATH));
         to.setData(ModAttachments.QI, from.getData(ModAttachments.QI));
+        to.setData(ModAttachments.STRENGTH, from.getData(ModAttachments.STRENGTH));
         to.setData(ModAttachments.MIND, from.getData(ModAttachments.MIND));
         to.setData(ModAttachments.BORN, from.getData(ModAttachments.BORN));
     }
@@ -80,6 +82,7 @@ public final class PlayerDataService {
         player.setData(ModAttachments.SOUL, SoulData.DEFAULT);
         player.setData(ModAttachments.PATH, PathData.DEFAULT);
         player.setData(ModAttachments.QI, QiData.DEFAULT);
+        player.setData(ModAttachments.STRENGTH, StrengthData.DEFAULT);
         player.setData(ModAttachments.ESSENCE_CARRY, new float[ApertureData.MAX_APERTURES]);
         onBirth(player);
 

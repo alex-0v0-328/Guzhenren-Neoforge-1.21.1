@@ -28,7 +28,7 @@ public class PrimevalStoneItem extends GuMaterialItem {
     protected boolean hasUse() {return true;}
 
     @Override
-    protected @Nullable Refusal gate(Player player) {
+    protected @Nullable Refusal gate(Player player, ItemStack stack) {
         if (!ApertureService.isAwakened(player)) return new Refusal(FAILED_UNAWAKENED);
         return EssenceService.currentEssence(player) >= EssenceService.maxEssence(player)
                 ? new Refusal(FAILED_FULL) : null;

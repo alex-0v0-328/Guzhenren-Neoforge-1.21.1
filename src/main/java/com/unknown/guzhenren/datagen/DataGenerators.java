@@ -5,6 +5,7 @@ import com.unknown.guzhenren.datagen.curios.ModCuriosProvider;
 import com.unknown.guzhenren.datagen.damage.ModDamageTypeProvider;
 import com.unknown.guzhenren.datagen.damage.ModDamageTypeTagsProvider;
 import com.unknown.guzhenren.datagen.item.ModItemModelProvider;
+import com.unknown.guzhenren.datagen.item.ModItemTagsProvider;
 import com.unknown.guzhenren.datagen.lang.EnUsLanguageProvider;
 import com.unknown.guzhenren.datagen.lang.ZhCnLanguageProvider;
 import java.util.concurrent.CompletableFuture;
@@ -38,6 +39,9 @@ public final class DataGenerators {
         //  Tag provider must see the types this run generates -- hangs off that provider's registry future.
         generator.addProvider(event.includeServer(), new ModDamageTypeTagsProvider(
                 packOutput, damageTypeProvider.getRegistryProvider(), existingFileHelper));
+
+        generator.addProvider(event.includeServer(),
+                new ModItemTagsProvider(packOutput, lookupProvider, existingFileHelper));
 
         generator.addProvider(event.includeServer(),
                 new ModCuriosProvider(packOutput, existingFileHelper, lookupProvider));

@@ -25,7 +25,7 @@ public class HopeGuItem extends MortalGuItem {
     protected boolean hasUse() {return true;}
 
     @Override
-    protected @Nullable Refusal gate(Player player) {
+    protected @Nullable Refusal gate(Player player, ItemStack stack) {
         return ApertureService.isAwakened(player) ? new Refusal(FAILED_AWAKENED) : null;
     }
 

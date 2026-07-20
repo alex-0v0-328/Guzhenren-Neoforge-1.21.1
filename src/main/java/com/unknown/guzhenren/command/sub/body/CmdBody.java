@@ -25,7 +25,8 @@ public final class CmdBody {
                 .then(counter("lifespan", BodyService::setLifespan, BodyService::addLifespan))
                 .then(counter("age", BodyService::setAge, BodyService::addAge))
                 .then(CmdQi.node())
-                .then(CmdPath.node());
+                .then(CmdPath.node())
+                .then(CmdStrength.node());
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> soul() {
