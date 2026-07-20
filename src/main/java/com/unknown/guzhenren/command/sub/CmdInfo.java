@@ -25,6 +25,8 @@ import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiType;
+import com.unknown.guzhenren.custom.enums.strength.JunStrength;
+import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.display.ModDisplayText;
 import java.util.List;
@@ -163,8 +165,9 @@ public final class CmdInfo {
         }
     }
 
-    //  The Strength Path's own reading: how many beast strengths, not which. Empty reads [NONE] inline,
-    //  as the path list does. ⚠ 力道 also stays in 流派造诣 above -- that row is its specks, this is its grade.
+    //  The Strength Path's two branches, one row each: how many beast strengths, and how many 斤 -- never
+    //  which. Empty reads [NONE] inline, as the path list does.
+    //  ⚠ 力道 also stays in 流派造诣 above -- that row is its specks, these are the grades they bought.
     private static void strength(CommandSourceStack source, ServerPlayer player) {
         StrengthData data = StrengthService.get(player);
         MutableComponent header = Component.translatable("guzhenren.command.info.strength");
@@ -173,8 +176,22 @@ public final class CmdInfo {
             return;
         }
         ModCommandFeedback.detail(source, header);
-        ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.strength_entry",
-                ModDisplayText.boarStrength(data.boarCount())));
+        if (data.hasBranch(StrengthBranch.BEASTS)) {
+            ModCommandFeedback.detail(source, branchLine(StrengthBranch.BEASTS,
+                    ModDisplayText.boarStrength(data.boarCount())));
+        }
+        //  One row per kind that has any. ⚠ A second kind would repeat the branch title -- revisit then.
+        for (JunStrength kind : JunStrength.values()) {
+            int count = data.junCount(kind);
+            if (count <= 0) continue;
+            ModCommandFeedback.detail(source, branchLine(StrengthBranch.HUMAN,
+                    ModDisplayText.junStrength(kind, count)));
+        }
+    }
+
+    private static Component branchLine(StrengthBranch branch, Component reading) {
+        return Component.translatable("guzhenren.command.info.strength_entry",
+                Component.translatable(branch.getTranslationKey()), reading);
     }
 
     //  All three cells, always -- MindData is dense, and a missing row would read as a bug.

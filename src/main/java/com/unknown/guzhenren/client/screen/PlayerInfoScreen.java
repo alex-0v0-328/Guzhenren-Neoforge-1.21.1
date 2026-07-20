@@ -1,6 +1,5 @@
 package com.unknown.guzhenren.client.screen;
 
-import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
@@ -21,6 +20,8 @@ import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiType;
+import com.unknown.guzhenren.custom.enums.strength.JunStrength;
+import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.display.ModDisplayText;
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,27 +42,26 @@ import org.jetbrains.annotations.Nullable;
 //  TODO(refactor): this row logic mirrors CmdInfo -- extract a shared InfoModel when the view next grows.
 public final class PlayerInfoScreen extends Screen {
 
-    private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "textures/gui/player_info.png");
-
-    //  The panel is the vanilla inventory's size, so it centers the same way.
-    private static final int PANEL_W = 176;
-    private static final int PANEL_H = 166;
-    private static final int PAD = 8;
-    private static final int TAB_Y = 4;
-    private static final int TAB_H = 14;
-    private static final int CONTENT_TOP = 24;
+    //  ⚠ No texture: the panel is drawn from fills, so it scales to any window. See CLAUDE.md "Client".
+    private static final float SCREEN_FRACTION = 0.80F;
+    private static final int PAD = 12;
+    private static final int CONTENT_TOP = 14;
     private static final int LINE_H = 11;
-    private static final int VALUE_X = 36;
-    private static final int INDENT = 8;
+    private static final int VALUE_X = 84;
+    private static final int INDENT = 10;
 
-    //  Dark text on the light panel, no shadow -- the vanilla container-label look.
-    private static final int TEXT = 0xFF404040;
-    private static final int TAB_BORDER = 0xFF303030;
-    private static final int TAB_FILL_ACTIVE = 0xFF6A6A6A;
-    private static final int TAB_FILL_IDLE = 0xFFBFBFBF;
-    private static final int TAB_TEXT_ACTIVE = 0xFFFFFFFF;
-    private static final int TAB_TEXT_IDLE = 0xFF404040;
+    //  The tab rail down the right edge.
+    private static final int TAB_W = 72;
+    private static final int TAB_H = 20;
+    private static final int TAB_GAP = 4;
+
+    //  75% black panel, white text -- the whole look is these two.
+    private static final int PANEL_FILL = 0xBF000000;
+    private static final int TEXT = 0xFFFFFFFF;
+    private static final int TAB_FILL_ACTIVE = 0x99FFFFFF;
+    private static final int TAB_FILL_IDLE = 0x33FFFFFF;
+    private static final int TAB_TEXT_ACTIVE = 0xFF101010;
+    private static final int TAB_TEXT_IDLE = 0xFFDDDDDD;
 
     private static final String[] TAB_KEYS = {
             "guzhenren.screen.tab.aperture",
@@ -72,20 +71,25 @@ public final class PlayerInfoScreen extends Screen {
 
     private int leftPos;
     private int topPos;
+    private int panelW;
+    private int panelH;
     private int activeTab = 0;
 
     public PlayerInfoScreen() {super(Component.translatable("guzhenren.screen.info.title"));}
 
+    //  Sized off the window every time it opens, so a resize never leaves it stale.
     @Override
     protected void init() {
-        leftPos = (width - PANEL_W) / 2;
-        topPos = (height - PANEL_H) / 2;
+        panelW = Math.round(width * SCREEN_FRACTION);
+        panelH = Math.round(height * SCREEN_FRACTION);
+        leftPos = (width - panelW) / 2;
+        topPos = (height - panelH) / 2;
     }
 
     @Override
     public void render(@NotNull GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         renderBackground(g, mouseX, mouseY, partialTick);
-        g.blit(TEXTURE, leftPos, topPos, 0, 0, PANEL_W, PANEL_H, PANEL_W, PANEL_H);
+        g.fill(leftPos, topPos, leftPos + panelW, topPos + panelH, PANEL_FILL);
         renderTabs(g);
 
         LocalPlayer player = Minecraft.getInstance().player;
@@ -109,31 +113,30 @@ public final class PlayerInfoScreen extends Screen {
         }
     }
 
-    //  Button-like tabs so it reads as clickable: raised light box idle, pressed dark box active.
+    //  A rail of buttons down the right edge: filled while active, faint while idle.
     private void renderTabs(GuiGraphics g) {
-        int third = PANEL_W / 3;
         for (int i = 0; i < TAB_KEYS.length; i++) {
             boolean active = i == activeTab;
-            int x0 = leftPos + third * i + 2;
-            int x1 = leftPos + third * (i + 1) - 2;
-            int y0 = topPos + TAB_Y;
-            int y1 = y0 + TAB_H;
-            g.fill(x0, y0, x1, y1, TAB_BORDER);
-            g.fill(x0 + 1, y0 + 1, x1 - 1, y1 - 1, active ? TAB_FILL_ACTIVE : TAB_FILL_IDLE);
+            int x0 = tabLeft();
+            int y0 = tabTop(i);
+            g.fill(x0, y0, x0 + TAB_W, y0 + TAB_H, active ? TAB_FILL_ACTIVE : TAB_FILL_IDLE);
             Component label = Component.translatable(TAB_KEYS[i]);
-            g.drawString(font, label, (x0 + x1 - font.width(label)) / 2, y0 + 3,
+            g.drawString(font, label, x0 + (TAB_W - font.width(label)) / 2, y0 + (TAB_H - font.lineHeight) / 2 + 1,
                     active ? TAB_TEXT_ACTIVE : TAB_TEXT_IDLE, false);
         }
     }
 
+    private int tabLeft() {return leftPos + panelW - TAB_W - PAD;}
+    private int tabTop(int i) {return topPos + PAD + i * (TAB_H + TAB_GAP);}
+
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
-        int y0 = topPos + TAB_Y;
-        if (button == 0 && my >= y0 && my < y0 + TAB_H) {
-            int rel = (int) mx - leftPos;
-            if (rel >= 0 && rel < PANEL_W) {
-                activeTab = Math.min(TAB_KEYS.length - 1, rel / (PANEL_W / 3));
-                return true;
+        if (button == 0 && mx >= tabLeft() && mx < tabLeft() + TAB_W) {
+            for (int i = 0; i < TAB_KEYS.length; i++) {
+                if (my >= tabTop(i) && my < tabTop(i) + TAB_H) {
+                    activeTab = i;
+                    return true;
+                }
             }
         }
         return super.mouseClicked(mx, my, button);
@@ -230,15 +233,26 @@ public final class PlayerInfoScreen extends Screen {
                     Component.literal(Long.toString(mark))));
         }
 
-        //  The Strength Path's own reading: how many beast strengths, not which. Empty reads [NONE] inline,
-        //  as the path list does. ⚠ 力道 also stays in 流派造诣 above -- that row is its specks, this is its grade.
+        //  The Strength Path's two branches, one row each: how many beast strengths, and how many 斤 --
+        //  never which. Empty reads [NONE] inline, as the path list does.
+        //  ⚠ 力道 also stays in 流派造诣 above -- that row is its specks, these are the grades they bought.
         StrengthData strength = StrengthService.get(player);
         if (strength.isEmpty()) {
             rows.add(new Row(0, label("strength"), none()));
             return rows;
         }
         rows.add(new Row(0, label("strength"), null));
-        rows.add(new Row(INDENT, ModDisplayText.boarStrength(strength.boarCount()), null));
+        if (strength.hasBranch(StrengthBranch.BEASTS)) {
+            rows.add(new Row(INDENT, Component.translatable(StrengthBranch.BEASTS.getTranslationKey()),
+                    ModDisplayText.boarStrength(strength.boarCount())));
+        }
+        //  One row per kind that has any. ⚠ A second kind would repeat the branch title -- revisit then.
+        for (JunStrength kind : JunStrength.values()) {
+            int count = strength.junCount(kind);
+            if (count <= 0) continue;
+            rows.add(new Row(INDENT, Component.translatable(StrengthBranch.HUMAN.getTranslationKey()),
+                    ModDisplayText.junStrength(kind, count)));
+        }
         return rows;
     }
 

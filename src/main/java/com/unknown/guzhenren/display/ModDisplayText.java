@@ -5,6 +5,7 @@ import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.strength.JunStrength;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -58,6 +59,11 @@ public final class ModDisplayText {
     //  ⚠ One key per count -- a third beast strength needs a third key, never a concatenation.
     public static Component boarStrength(int count) {
         return Component.translatable("guzhenren.display.boar_strength." + count);
+    }
+
+    //  一斤之力 .. 九斤之力. Keyed by kind AND count -- a later 十斤 gets its own nine keys, not a multiplier.
+    public static Component junStrength(JunStrength kind, int count) {
+        return Component.translatable("guzhenren.display.jun_strength." + kind.getSerializedName() + "." + count);
     }
 
     //  The aptitude base read in tenths: 89 -> 八成九, 80 -> 八成, 100 -> 十成. English has no such reading,

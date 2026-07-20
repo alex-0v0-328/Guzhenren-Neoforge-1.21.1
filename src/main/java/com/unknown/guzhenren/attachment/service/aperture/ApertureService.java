@@ -2,6 +2,7 @@ package com.unknown.guzhenren.attachment.service.aperture;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.service.body.HealthService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
@@ -88,7 +89,12 @@ public final class ApertureService {
         if (index == PRIMARY) reconcileTalentPaths(player, before, aperture(player).extremePhysique());
     }
 
-    private static void store(ServerPlayer p, ApertureData data) {p.setData(ModAttachments.APERTURE, data);}
+    //  ⚠ Every aperture write funnels through here -- which is why the rank-driven max health hangs off it.
+    //  Same cross-domain convention as reconcileTalentPaths: the trigger's service calls the target's.
+    private static void store(ServerPlayer p, ApertureData data) {
+        p.setData(ModAttachments.APERTURE, data);
+        HealthService.refresh(p);
+    }
 
     //  The invariant Aperture cannot enforce alone (the fix rolls a die): a physique is held **iff** Extreme.
     private static Aperture enforce(Aperture aperture) {

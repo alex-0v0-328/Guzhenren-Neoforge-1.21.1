@@ -10,19 +10,20 @@ import org.jetbrains.annotations.NotNull;
 public enum Rank implements StringRepresentable, EnumTranslatable {
 
     //  rankBase: maxEssence = baseEssence * stage.multiplier * rank.rankBase
-    //  lifeForm: 该境界的仙凡归属; essenceColor: 该转真元的颜色 (深浅再按小境界算)
-    NONE(0L, LifeForm.MORTAL, EssenceColor.NONE),
-    ONE(1L, LifeForm.MORTAL, EssenceColor.GREEN_COPPER),
-    TWO(10L, LifeForm.MORTAL, EssenceColor.RED_STEEL),
-    THREE(100L, LifeForm.MORTAL, EssenceColor.WHITE_SILVER),
-    FOUR(1_000L, LifeForm.MORTAL, EssenceColor.YELLOW_GOLDEN),
-    FIVE(10_000L, LifeForm.MORTAL, EssenceColor.PURPLE_CRYSTAL),
+    //  maxHealth: 该转的生命上限, 小境界不参与; lifeForm: 仙凡归属; essenceColor: 真元颜色 (深浅再按小境界算)
+    NONE (      0L,  20, LifeForm.MORTAL,   EssenceColor.NONE),
+    ONE  (      1L,  20, LifeForm.MORTAL,   EssenceColor.GREEN_COPPER),
+    TWO  (     10L,  40, LifeForm.MORTAL,   EssenceColor.RED_STEEL),
+    THREE(    100L,  60, LifeForm.MORTAL,   EssenceColor.WHITE_SILVER),
+    FOUR (  1_000L,  80, LifeForm.MORTAL,   EssenceColor.YELLOW_GOLDEN),
+    FIVE ( 10_000L, 100, LifeForm.MORTAL,   EssenceColor.PURPLE_CRYSTAL),
 
-    //  仙人境的 rankBase 是「故意留空」而非未定: 蛊仙根本不走真元这套系统, 以后另起一套
-    SIX(0L, LifeForm.IMMORTAL, EssenceColor.GREEN_GRAPE),
-    SEVEN(0L, LifeForm.IMMORTAL, EssenceColor.RED_DATE),
-    EIGHT(0L, LifeForm.IMMORTAL, EssenceColor.WHITE_LITCHI),
-    NINE(0L, LifeForm.IMMORTAL, EssenceColor.YELLOW_APRICOT);
+    //  仙人境的 rankBase 与 maxHealth 都是「故意留空」而非未定: 蛊仙不走真元这套, 以后另起一套
+    //  ⚠ maxHealth 的 0 读作「不动血量」, 不是 0 点血 —— 见 HealthService
+    SIX  (      0L,   0, LifeForm.IMMORTAL, EssenceColor.GREEN_GRAPE),
+    SEVEN(      0L,   0, LifeForm.IMMORTAL, EssenceColor.RED_DATE),
+    EIGHT(      0L,   0, LifeForm.IMMORTAL, EssenceColor.WHITE_LITCHI),
+    NINE (      0L,   0, LifeForm.IMMORTAL, EssenceColor.YELLOW_APRICOT);
 
     public static final Codec<Rank> CODEC = StringRepresentable.fromEnum(Rank::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.rank.";
@@ -33,16 +34,19 @@ public enum Rank implements StringRepresentable, EnumTranslatable {
     public static final Rank HIGHEST = FIVE;
 
     private final long rankBase;
+    private final int maxHealth;
     private final LifeForm lifeForm;
     private final EssenceColor essenceColor;
 
-    Rank(long rankBase, LifeForm lifeForm, EssenceColor essenceColor) {
+    Rank(long rankBase, int maxHealth, LifeForm lifeForm, EssenceColor essenceColor) {
         this.rankBase = rankBase;
+        this.maxHealth = maxHealth;
         this.lifeForm = lifeForm;
         this.essenceColor = essenceColor;
     }
 
     public long getRankBase() {return rankBase;}
+    public int getMaxHealth() {return maxHealth;}
     public LifeForm getLifeForm() {return lifeForm;}
     public EssenceColor getEssenceColor() {return essenceColor;}
 

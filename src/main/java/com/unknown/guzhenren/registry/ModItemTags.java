@@ -15,6 +15,11 @@ public final class ModItemTags {
     //  ⚠ One rate for the whole tag -- four of anything in it buy one hunger. There is no per-item value.
     public static final TagKey<Item> BOAR_FEED = key("boar_feed");
 
+    //  What a jin strength Gu (斤力蛊) eats: raw iron, and raw iron blocks at nine times the value.
+    //  ⚠ TWO tags precisely because they carry two rates -- one tag has room for exactly one.
+    public static final TagKey<Item> JIN_FEED = key("jin_feed");
+    public static final TagKey<Item> JIN_FEED_DENSE = key("jin_feed_dense");
+
     private static TagKey<Item> key(String name) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, name));
     }

@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.item.mortal;
+package com.unknown.guzhenren.item.mortal.strength;
 
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
@@ -29,14 +29,14 @@ import org.jetbrains.annotations.Nullable;
 public class BoarGuItem extends MortalGuItem {
 
     private static final String FAILED_UNAWAKENED = "guzhenren.item.failed.unawakened";
-    private static final String FAILED_REFINE_ESSENCE = "guzhenren.item.failed.boar_refine_essence";
+    private static final String FAILED_REFINE_ESSENCE = "guzhenren.item.failed.refine_essence";
     private static final String FAILED_STRENGTH_HELD = "guzhenren.item.failed.beast_strength_held";
-    private static final String FAILED_HUNGRY = "guzhenren.item.failed.boar_hungry";
-    private static final String TOOLTIP_USES = "guzhenren.item.boar.uses";
-    private static final String MSG_HUNGRY = "guzhenren.item.boar.hungry";
-    private static final String MSG_STARVED = "guzhenren.item.boar.starved";
+    private static final String FAILED_HUNGRY = "guzhenren.item.failed.gu_hungry";
+    private static final String TOOLTIP_USES = "guzhenren.item.gu.uses";
+    private static final String MSG_HUNGRY = "guzhenren.item.gu.hungry";
+    private static final String MSG_STARVED = "guzhenren.item.gu.starved";
 
-    private static final int REFINE_PER_USE = 50;
+    private static final int REFINE_PER_USE = 100;
     private static final int REFINE_COOLDOWN_TICKS = 20;
     private static final int PORK_PER_HUNGER = 4;
     private static final int HUNGRY_THRESHOLD = 2;
@@ -80,7 +80,11 @@ public class BoarGuItem extends MortalGuItem {
     @Override
     protected int apply(ServerPlayer player, ItemStack stack) {
         BoarState state = state(stack);
-        if (!state.refined()) return refineStep(player, stack, state);
+        //  Refining never spends the Gu -- that is what the 0 says.
+        if (!state.refined()) {
+            refineStep(player, stack, state);
+            return 0;
+        }
 
         //  Food in the other hand feeds and uses in one click -- feeding first, so hunger 1 is survivable.
         int points = feedPoints(player, state);
@@ -90,12 +94,17 @@ public class BoarGuItem extends MortalGuItem {
         }
         state = state.used();
         PathService.addSpeck(player, GuPath.STRENGTH, SPECK_PER_USE);
-        store(stack, state);
-        if (!state.spent()) return 0;
 
-        //  reusable: a use spends nothing. The 36th is not a use -- it is the Gu being used up.
-        StrengthService.grant(player, beast);
-        return 1;
+        //  The 36th pays out and the count starts over -- useCount is progress toward the next grant.
+        if (state.grantDue()) {
+            StrengthService.grant(player, beast);
+            state = state.afterGrant();
+        }
+        store(stack, state);
+
+        //  ⚠ Never consumed. Nothing about the Gu is spent -- it stays refined, stays fed, and once its
+        //  owner holds this beast's strength it can be handed to another player. Starving is its only end.
+        return 0;
     }
 
     //  Feeds only when it actually can: bound, its food in the other hand, and room to eat.
@@ -128,7 +137,7 @@ public class BoarGuItem extends MortalGuItem {
         super.appendHoverText(stack, context, tooltip, flag);
         BoarState state = state(stack);
         if (!state.refined()) return;
-        tooltip.add(Component.translatable(TOOLTIP_USES, state.useCount(), BoarState.USES_TO_CONSUME)
+        tooltip.add(Component.translatable(TOOLTIP_USES, state.useCount(), BoarState.USES_PER_GRANT)
                 .withStyle(ChatFormatting.GRAY));
     }
 
@@ -169,14 +178,13 @@ public class BoarGuItem extends MortalGuItem {
     }
 
     //  Invest what he can spare, capped per attempt -- a trickle still gets there, it just takes longer.
-    private int refineStep(ServerPlayer player, ItemStack stack, BoarState state) {
+    private void refineStep(ServerPlayer player, ItemStack stack, BoarState state) {
         int remaining = BoarState.REFINE_COST - state.refineProgress();
         int invest = (int) Math.min(Math.min(REFINE_PER_USE, remaining), EssenceService.currentEssence(player));
-        if (invest <= 0) return 0;
+        if (invest <= 0) return;
 
         EssenceService.consume(player, invest);
         store(stack, state.refine(invest));
-        return 0;
     }
 
     //  Whole points only: four pork buy one, and the remainder stays in his hand.

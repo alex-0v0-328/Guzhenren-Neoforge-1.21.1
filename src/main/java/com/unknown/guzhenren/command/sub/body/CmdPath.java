@@ -14,6 +14,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.Nullable;
 
 //  /gzr body path <p> -- marks and specks are raw counts, attainment is graded; every leaf re-reads the path.
 //  ⚠ A featured path's mark/speck are read-only here (its sub-system's total); attainment is not.
@@ -39,12 +40,12 @@ public final class CmdPath {
                         ModCommandSupport.FAILED_QI_MARK));
     }
 
+    //  ⚠ No featured refusal here: specks are ordinary on every path, the Qi Path included.
     private static ArgumentBuilder<CommandSourceStack, ?> speck() {
         return Commands.literal("speck")
-                .then(countNode("set", PathService::setSpeck, ModCommandSupport.FAILED_QI_SPECK))
-                .then(countNode("add", PathService::addSpeck, ModCommandSupport.FAILED_QI_SPECK))
-                .then(countNode("sub", (p, path, v) -> PathService.addSpeck(p, path, -v),
-                        ModCommandSupport.FAILED_QI_SPECK));
+                .then(countNode("set", PathService::setSpeck, null))
+                .then(countNode("add", PathService::addSpeck, null))
+                .then(countNode("sub", (p, path, v) -> PathService.addSpeck(p, path, -v), null));
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> attainment() {
@@ -65,13 +66,16 @@ public final class CmdPath {
 
     //region builders
 
+    //  A null key means this leaf has nothing to refuse -- specks write on every path.
     private static ArgumentBuilder<CommandSourceStack, ?> countNode(
-            String literal, CountOperation operation, String featuredRefusalKey) {
+            String literal, CountOperation operation, @Nullable String featuredRefusalKey) {
         return Commands.literal(literal).then(ModCommandSupport.withTargets(
                 Commands.argument(ModCommandSupport.ARG_VALUE, LongArgumentType.longArg()),
                 context -> {
                     GuPath path = pathOf(context);
-                    if (path.isFeatured()) return refuse(context, featuredRefusalKey);
+                    if (featuredRefusalKey != null && path.isFeatured()) {
+                        return refuse(context, featuredRefusalKey);
+                    }
 
                     long value = LongArgumentType.getLong(context, ModCommandSupport.ARG_VALUE);
                     return ModCommandSupport.apply(context, player -> operation.apply(player, path, value));

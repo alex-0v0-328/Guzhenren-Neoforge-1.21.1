@@ -15,6 +15,8 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiType;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
+import com.unknown.guzhenren.custom.enums.strength.JunStrength;
+import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.data.PackOutput;
@@ -75,6 +77,15 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.wild", "Wild %s");
         add("guzhenren.display.boar_strength.1", "[Strength of One Boar]");
         add("guzhenren.display.boar_strength.2", "[Strength of Two Boars]");
+        add("guzhenren.display.jun_strength.jin.1", "[Strength of One Jin]");
+        add("guzhenren.display.jun_strength.jin.2", "[Strength of Two Jin]");
+        add("guzhenren.display.jun_strength.jin.3", "[Strength of Three Jin]");
+        add("guzhenren.display.jun_strength.jin.4", "[Strength of Four Jin]");
+        add("guzhenren.display.jun_strength.jin.5", "[Strength of Five Jin]");
+        add("guzhenren.display.jun_strength.jin.6", "[Strength of Six Jin]");
+        add("guzhenren.display.jun_strength.jin.7", "[Strength of Seven Jin]");
+        add("guzhenren.display.jun_strength.jin.8", "[Strength of Eight Jin]");
+        add("guzhenren.display.jun_strength.jin.9", "[Strength of Nine Jin]");
 
         add("guzhenren.hud.lifespan", "Lifespan %s");
     }
@@ -92,7 +103,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.failed.awakened", "%s has already awakened -- run /guzhenren reset first to re-roll");
         add("guzhenren.command.failed.unawakened", "%s has not awakened -- cultivation values are established by /guzhenren awaken");
         add("guzhenren.command.failed.qi_mark", "The Qi Path's marks are the sum of every qi -- set them with /guzhenren body qi <type>");
-        add("guzhenren.command.failed.qi_speck", "The Qi Path has no specks -- marks are the sum of qi");
 
         add("guzhenren.command.info.aperture_index", "Aperture %s");
         add("guzhenren.command.info.aperture_state", "Aperture:    %s");
@@ -110,7 +120,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.path_entry", "  %s  %s  Marks %s");
         add("guzhenren.command.info.path_speck", " Specks %s");
         add("guzhenren.command.info.strength", "Strength Path:");
-        add("guzhenren.command.info.strength_entry", "  %s");
+        add("guzhenren.command.info.strength_entry", "  %s  %s");
         add("guzhenren.command.info.brilliance", "Brilliance:  %s");
         add("guzhenren.command.info.brilliance_rate", "%s thoughts/s");
         add("guzhenren.command.info.mind", "Mind Ocean:");
@@ -158,23 +168,29 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("item.guzhenren.crystal_relics_gu", "Purple Crystal Relics Gu");
         add("item.guzhenren.white_boar_gu", "White Boar Gu");
         add("item.guzhenren.black_boar_gu", "Black Boar Gu");
+        add("item.guzhenren.jin_strength_gu", "Jin Strength Gu");
+        add("item.guzhenren.vitality_leaf_gu", "Vitality Leaf Gu");
         add("item.guzhenren.primeval_stone", "Primeval Stone");
 
         add("itemGroup.guzhenren.mortal_gu", "Mortal Gu");
         add("itemGroup.guzhenren.gu_material", "Gu Material");
 
-        add("guzhenren.item.failed.awakened", "You have already awakened -- the Hope Gu is wasted on you");
-        add("guzhenren.item.failed.unawakened", "You have not awakened -- no aperture to hold essence");
-        add("guzhenren.item.failed.essence_full", "Your essence is already full");
-        add("guzhenren.item.failed.rank_mismatch", "Wrong realm -- this Gu needs %s");
-        add("guzhenren.item.failed.stage_peak", "You are at the Peak -- a Relics Gu cannot break through");
-        add("guzhenren.item.failed.beast_strength_held", "You already hold the %s's strength -- this Gu is wasted");
-        add("guzhenren.item.failed.boar_hungry", "The Gu is too hungry -- feed it first");
-        add("guzhenren.item.failed.boar_refine_essence", "Not enough essence to refine");
+        add("guzhenren.item.failed.awakened", "You have already awakened");
+        add("guzhenren.item.failed.unawakened", "You have NOT awakened");
+        add("guzhenren.item.failed.essence_full", "Essence is already FULL");
+        add("guzhenren.item.failed.rank_mismatch", "Wrong realm - this Gu needs %s");
+        add("guzhenren.item.failed.stage_peak", "You are at the Stage Peak");
+        add("guzhenren.item.failed.beast_strength_held", "Already hold the %s's strength");
+        add("guzhenren.item.failed.jun_strength_full", "Already hold Nine Jin of strength");
+        add("guzhenren.item.failed.vitality_active", "Vitality Leaf is still working");
+        add("guzhenren.item.failed.gu_hungry", "Gu is too hungry");
+        add("guzhenren.item.failed.refine_essence", "NOT enough essence to refine");
 
-        add("guzhenren.item.boar.uses", "Used %s/%s");
-        add("guzhenren.item.boar.hungry", "Your %s is hungry");
-        add("guzhenren.item.boar.starved", "Your %s starved to death");
+        add("guzhenren.item.gu.uses", "Used %s/%s");
+        add("guzhenren.item.gu.hungry", "Your %s is hungry");
+        add("guzhenren.item.gu.starved", "Your %s starved to death");
+
+        add("effect.guzhenren.vitality", "Vitality Leaf");
     }
     //endregion
 
@@ -204,12 +220,26 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addWisdomType();
         addBrilliance();
         addBeastStrength();
+        addStrengthBranch();
+        addJunStrength();
     }
 
     //  Beast strengths: taken by consuming a beast Gu, one kind once ever. Two boars today
     private void addBeastStrength() {
         add(BeastStrength.WHITE_BOAR, "White Boar");
         add(BeastStrength.BLACK_BOAR, "Black Boar");
+    }
+
+    //  The Strength Path's three branches. Titles today; their effects come later, and 气象天地流 has no data
+    private void addStrengthBranch() {
+        add(StrengthBranch.HUMAN, "Human Jun Strength Branch");
+        add(StrengthBranch.BEASTS, "Beast Strength Phantom Branch");
+        add(StrengthBranch.ENVIRONMENT, "Atmospheric Heaven and Earth Branch");
+    }
+
+    //  The Human Jun branch's grades. Ten Jin and Hundred Jin become their own later
+    private void addJunStrength() {
+        add(JunStrength.JIN, "Jin");
     }
 
     //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie

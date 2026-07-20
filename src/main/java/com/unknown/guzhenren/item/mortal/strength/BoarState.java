@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.item.mortal;
+package com.unknown.guzhenren.item.mortal.strength;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -12,7 +12,9 @@ public record BoarState(int refineProgress, int useCount, int hunger) {
 
     public static final int REFINE_COST = 1000;
     public static final int MAX_HUNGER = 18;
-    public static final int USES_TO_CONSUME = 36;
+
+    //  ⚠ Uses per grant, NOT a lifetime. The Gu is never consumed -- see grantDue/afterGrant.
+    public static final int USES_PER_GRANT = 36;
 
     public static final BoarState WILD = new BoarState(0, 0, 0);
 
@@ -30,16 +32,18 @@ public record BoarState(int refineProgress, int useCount, int hunger) {
 
     public BoarState {
         refineProgress = Math.clamp(refineProgress, 0, REFINE_COST);
-        useCount = Math.clamp(useCount, 0, USES_TO_CONSUME);
+        useCount = Math.clamp(useCount, 0, USES_PER_GRANT);
         hunger = Math.clamp(hunger, 0, MAX_HUNGER);
     }
 
     //  Bound to an owner. Derived: a stored flag could contradict the progress that earned it.
+    //  ⚠ Starving is the ONLY way a refined Gu ends. Nothing else consumes it.
     public boolean refined() {return refineProgress >= REFINE_COST;}
     public boolean starved() {return refined() && hunger <= 0;}
-    public boolean spent() {return useCount >= USES_TO_CONSUME;}
+    public boolean grantDue() {return useCount >= USES_PER_GRANT;}
     public BoarState fed(int points) {return new BoarState(refineProgress, useCount, hunger + points);}
     public BoarState used() {return new BoarState(refineProgress, useCount + 1, hunger - 1);}
+    public BoarState afterGrant() {return new BoarState(refineProgress, 0, hunger);}
     public BoarState decayed(int days) {return new BoarState(refineProgress, useCount, hunger - days);}
 
     //  Invest essence; completing it hands back a half-fed Gu, so the owner starts on the feeding clock.

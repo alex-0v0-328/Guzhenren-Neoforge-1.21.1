@@ -9,6 +9,7 @@ import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
+import com.unknown.guzhenren.attachment.service.body.HealthService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.registry.ModAttachments;
@@ -21,8 +22,10 @@ public final class PlayerDataService {
     private PlayerDataService() {}
 
     //  First login ever, and nothing else -- vanilla gives no such signal, so BORN is the memory of it.
+    //  ⚠ The max-health modifier is transient and does not survive a logout, so it is re-hung every login.
     public static void onJoin(ServerPlayer player) {
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
+        HealthService.refresh(player);
     }
 
     //  ⚠ Everything a player is dealt once, at birth. Brilliance is rolled HERE, not at awakening -- awaken must
@@ -46,6 +49,8 @@ public final class PlayerDataService {
         } else {
             copy(from, to);
         }
+        //  A clone is a fresh entity with bare attributes, whatever its data says the rank is.
+        if (to instanceof ServerPlayer server) HealthService.refresh(server);
     }
 
     //  Un-fire every lethal condition, or the player dies in a respawn loop. What ran out comes back
@@ -89,5 +94,8 @@ public final class PlayerDataService {
         //  Keep the day anchor: resetting it would just be re-adopted on the next tick.
         player.setData(ModAttachments.BODY,
                 BodyData.DEFAULT.withLastDayIndex(BodyService.get(player).lastDayIndex()));
+
+        //  Back to 凡人, so back to 20 -- the aperture was emptied above, not written through ApertureService.
+        if (player instanceof ServerPlayer server) HealthService.refresh(server);
     }
 }

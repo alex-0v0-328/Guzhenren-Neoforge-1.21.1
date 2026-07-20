@@ -4,9 +4,11 @@ import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
-import com.unknown.guzhenren.item.mortal.BoarGuItem;
+import com.unknown.guzhenren.item.mortal.strength.BoarGuItem;
 import com.unknown.guzhenren.item.mortal.HopeGuItem;
+import com.unknown.guzhenren.item.mortal.strength.JinStrengthGuItem;
 import com.unknown.guzhenren.item.mortal.RelicsGuItem;
+import com.unknown.guzhenren.item.mortal.VitalityLeafGuItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -51,6 +53,15 @@ public final class ModItems {
             () -> new BoarGuItem(new Item.Properties().stacksTo(1), BeastStrength.WHITE_BOAR));
     public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
             () -> new BoarGuItem(new Item.Properties().stacksTo(1), BeastStrength.BLACK_BOAR));
+
+    //  Jin Strength Gu (斤力蛊), the Human Jun branch's first -- refined, fed raw iron, nine uses.
+    //  ⚠ stacksTo(1) for the same reason as the boars: each carries its own refinement and hunger.
+    public static final DeferredItem<Item> JIN_STRENGTH_GU = ITEMS.register("jin_strength_gu",
+            () -> new JinStrengthGuItem(new Item.Properties().stacksTo(1)));
+
+    //  Vitality Leaf Gu (生机叶蛊), Rank I Wood Path -- stacks freely; it carries no per-stack state.
+    public static final DeferredItem<Item> VITALITY_LEAF_GU = ITEMS.register("vitality_leaf_gu",
+            () -> new VitalityLeafGuItem(new Item.Properties()));
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

@@ -11,7 +11,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 //  The path (流派) system. Attainment, marks and specks are independent -- no mark<->speck conversion.
-//  ⚠ A featured path's mark/speck ARE its sub-system's total (Qi Path = QiData): derived here, not writable.
+//  ⚠ Featured means the MARK comes from a sub-system (Qi Path = QiData) and is not writable. Specks are
+//  ordinary on every path, featured or not.
 public final class PathService {
 
     private PathService() {}
@@ -27,8 +28,7 @@ public final class PathService {
         return path == GuPath.QI ? QiService.total(p) : entry(p, path).mark();
     }
 
-    //  The Qi Path has no speck source yet, so it reads 0 (PathData zeroes it). A featured path that DOES
-    //  earn specks adds a dispatch here, mirroring mark(). See CLAUDE.md "Featured body paths".
+    //  Ordinary on every path -- featured says nothing about specks.
     public static long speck(Player p, GuPath path) {return entry(p, path).speck();}
 
     //  The display view: every path with something to show, the Qi Path's marks filled in from QiData.
@@ -53,15 +53,15 @@ public final class PathService {
         setAttainment(p, path, attainment(p, path).shift(delta));
     }
 
-    //  ⚠ A featured path refuses: its mark/speck come from its sub-system. CmdPath says so out loud;
-    //  these guards are what stop an item from silently trying.
+    //  ⚠ A featured path's mark refuses: it comes from its sub-system. CmdPath says so out loud; this
+    //  guard is what stops an item from silently trying.
     public static void setMark(ServerPlayer p, GuPath path, long v) {
         if (path.isFeatured()) return;
         store(p, get(p).with(path, entry(p, path).withMark(v)));
     }
 
+    //  No featured guard -- every path earns specks the same way.
     public static void setSpeck(ServerPlayer p, GuPath path, long v) {
-        if (path.isFeatured()) return;
         store(p, get(p).with(path, entry(p, path).withSpeck(v)));
     }
 

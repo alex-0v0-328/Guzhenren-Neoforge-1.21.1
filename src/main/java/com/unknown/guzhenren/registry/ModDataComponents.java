@@ -1,7 +1,8 @@
 package com.unknown.guzhenren.registry;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.item.mortal.BoarState;
+import com.unknown.guzhenren.item.mortal.strength.BoarState;
+import com.unknown.guzhenren.item.mortal.strength.JinState;
 import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -21,6 +22,11 @@ public final class ModDataComponents {
             DATA_COMPONENTS.registerComponentType("boar_state", builder -> builder
                     .persistent(BoarState.CODEC)
                     .networkSynchronized(BoarState.STREAM_CODEC));
+
+    public static final Supplier<DataComponentType<JinState>> JIN_STATE =
+            DATA_COMPONENTS.registerComponentType("jin_state", builder -> builder
+                    .persistent(JinState.CODEC)
+                    .networkSynchronized(JinState.STREAM_CODEC));
 
     public static void register(IEventBus modEventBus) {
         DATA_COMPONENTS.register(modEventBus);

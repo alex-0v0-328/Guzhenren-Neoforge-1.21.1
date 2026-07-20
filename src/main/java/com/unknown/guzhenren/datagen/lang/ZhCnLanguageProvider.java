@@ -15,6 +15,8 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiType;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
+import com.unknown.guzhenren.custom.enums.strength.JunStrength;
+import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.data.PackOutput;
@@ -74,6 +76,15 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.wild", "野生·%s");
         add("guzhenren.display.boar_strength.1", "[一猪之力]");
         add("guzhenren.display.boar_strength.2", "[两猪之力]");
+        add("guzhenren.display.jun_strength.jin.1", "[一斤之力]");
+        add("guzhenren.display.jun_strength.jin.2", "[二斤之力]");
+        add("guzhenren.display.jun_strength.jin.3", "[三斤之力]");
+        add("guzhenren.display.jun_strength.jin.4", "[四斤之力]");
+        add("guzhenren.display.jun_strength.jin.5", "[五斤之力]");
+        add("guzhenren.display.jun_strength.jin.6", "[六斤之力]");
+        add("guzhenren.display.jun_strength.jin.7", "[七斤之力]");
+        add("guzhenren.display.jun_strength.jin.8", "[八斤之力]");
+        add("guzhenren.display.jun_strength.jin.9", "[九斤之力]");
 
         add("guzhenren.hud.lifespan", "寿元 %s");
     }
@@ -91,7 +102,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.failed.awakened", "%s 已开窍 —— 要重掷请先 /guzhenren reset");
         add("guzhenren.command.failed.unawakened", "%s 尚未开窍 —— 修为相关的值只能由 /guzhenren awaken 建立");
         add("guzhenren.command.failed.qi_mark", "气道的道痕是诸气之和，不能直接改 —— 请用 /guzhenren body qi <种类>");
-        add("guzhenren.command.failed.qi_speck", "气道没有道痕碎屑 —— 气道道痕是诸气之和，请用 /guzhenren body qi <种类>");
 
         add("guzhenren.command.info.aperture_index", "第 %s 窍");
         add("guzhenren.command.info.aperture_state", "空窍状态  %s");
@@ -109,7 +119,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.path_entry", "  %s  %s  道痕 %s");
         add("guzhenren.command.info.path_speck", " 碎屑 %s");
         add("guzhenren.command.info.strength", "力道造诣");
-        add("guzhenren.command.info.strength_entry", "  %s");
+        add("guzhenren.command.info.strength_entry", "  %s  %s");
         add("guzhenren.command.info.brilliance", "才情  %s");
         add("guzhenren.command.info.brilliance_rate", "%s个念头每秒");
         add("guzhenren.command.info.mind", "脑海");
@@ -158,23 +168,29 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("item.guzhenren.crystal_relics_gu", "紫晶舍利蛊");
         add("item.guzhenren.white_boar_gu", "白豕蛊");
         add("item.guzhenren.black_boar_gu", "黑豕蛊");
+        add("item.guzhenren.jin_strength_gu", "斤力蛊");
+        add("item.guzhenren.vitality_leaf_gu", "生机叶蛊");
         add("item.guzhenren.primeval_stone", "元石");
 
         add("itemGroup.guzhenren.mortal_gu", "凡蛊");
         add("itemGroup.guzhenren.gu_material", "蛊材");
 
-        add("guzhenren.item.failed.awakened", "你已开窍 —— 希望蛊对你再无用处");
-        add("guzhenren.item.failed.unawakened", "你尚未开窍 —— 无处容纳真元");
+        add("guzhenren.item.failed.awakened", "你已开窍");
+        add("guzhenren.item.failed.unawakened", "你未开窍");
         add("guzhenren.item.failed.essence_full", "真元已满");
-        add("guzhenren.item.failed.rank_mismatch", "境界不符 —— 此蛊需%s");
-        add("guzhenren.item.failed.stage_peak", "你已至巅峰 —— 破境非舍利蛊之力");
-        add("guzhenren.item.failed.beast_strength_held", "你已受过%s之力 —— 此蛊于你无用");
-        add("guzhenren.item.failed.boar_hungry", "此蛊太饿 —— 先喂食");
-        add("guzhenren.item.failed.boar_refine_essence", "真元不足 —— 无法炼化");
+        add("guzhenren.item.failed.rank_mismatch", "境界不符 — 此蛊需%s");
+        add("guzhenren.item.failed.stage_peak", "已至小境界巅峰");
+        add("guzhenren.item.failed.beast_strength_held", "已有%s之力");
+        add("guzhenren.item.failed.jun_strength_full", "已有九斤之力");
+        add("guzhenren.item.failed.vitality_active", "生机叶效果未散");
+        add("guzhenren.item.failed.gu_hungry", "蛊虫已开始饥饿");
+        add("guzhenren.item.failed.refine_essence", "真元不足无法炼化");
 
-        add("guzhenren.item.boar.uses", "已用 %s/%s");
-        add("guzhenren.item.boar.hungry", "%s饿了");
-        add("guzhenren.item.boar.starved", "%s饿死了");
+        add("guzhenren.item.gu.uses", "已用 %s/%s");
+        add("guzhenren.item.gu.hungry", "%s饿了");
+        add("guzhenren.item.gu.starved", "%s饿死了");
+
+        add("effect.guzhenren.vitality", "生机叶");
     }
     //endregion
 
@@ -204,12 +220,26 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addWisdomType();
         addBrilliance();
         addBeastStrength();
+        addStrengthBranch();
+        addJunStrength();
     }
 
     //  Beast strengths: taken by consuming a beast Gu, one kind once ever. Two boars today
     private void addBeastStrength() {
         add(BeastStrength.WHITE_BOAR, "白豕");
         add(BeastStrength.BLACK_BOAR, "黑豕");
+    }
+
+    //  力道的三条分支. 今日只是称号, 效果日后再挂; 气象天地流 尚无数据
+    private void addStrengthBranch() {
+        add(StrengthBranch.HUMAN, "人力钧力流");
+        add(StrengthBranch.BEASTS, "兽力虚影流");
+        add(StrengthBranch.ENVIRONMENT, "气象天地流");
+    }
+
+    //  人力钧力流的各档. 十斤 百斤 日后各自成档
+    private void addJunStrength() {
+        add(JunStrength.JIN, "斤");
     }
 
     //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie
