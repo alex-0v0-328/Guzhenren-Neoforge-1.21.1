@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.menu;
 
 import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService;
-import com.unknown.guzhenren.item.RefinableGuItem;
+import com.unknown.guzhenren.item.MortalGuItem;
 import com.unknown.guzhenren.registry.ModMenus;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,9 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
     public static final int COLS = 9;
     public static final int ROWS = 6;
     public static final int PAGE_SIZE = COLS * ROWS;
+
+    //  ⚠ Temporary pressure cap: the data is uncapped, the menu is not. 32 * 54 = 1728 slots.
+    public static final int MAX_PAGES = 32;
 
     public static final int BUTTON_PREV = 0;
     public static final int BUTTON_NEXT = 1;
@@ -78,9 +81,10 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
     public int pageCount() {return Math.max(1, pageData.get(DATA_PAGES));}
     public int aperture() {return aperture;}
 
-    //  ⚠ Always ONE page past the last full one, or a store holding exactly 54 could never be added to.
+    //  ⚠ Always ONE page past the last full one, or a store holding exactly 54 could never be added to;
+    //  clamped to MAX_PAGES, which is what makes 32 a real ceiling and not just a display limit.
     private int countPages() {
-        return ApertureStorageService.count(player, aperture) / PAGE_SIZE + 1;
+        return Math.min(MAX_PAGES, ApertureStorageService.count(player, aperture) / PAGE_SIZE + 1);
     }
 
     //region paging
@@ -168,14 +172,14 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(@NotNull Player who) {return who == player && who.isAlive();}
 
-    //  ⚠ Only a refinable Gu belongs here: the store exists so those get auto-fed, and a general
-    //  chest would make "aperture storage" mean nothing. See CLAUDE.md "Aperture storage".
+    //  ⚠ Any Gu (MortalGuItem) belongs here -- the aperture holds them all; a Gu material
+    //  (GuMaterialItem) does not. Auto-feed touches only the refinable ones. See CLAUDE.md.
     private static class GuSlot extends Slot {
         GuSlot(Container container, int index, int x, int y) {super(container, index, x, y);}
 
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
-            return stack.getItem() instanceof RefinableGuItem;
+            return stack.getItem() instanceof MortalGuItem;
         }
     }
 }
