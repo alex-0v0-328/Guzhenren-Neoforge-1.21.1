@@ -89,6 +89,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.jun_strength.jin.9", "[Strength of Nine Jin]");
 
         add("guzhenren.hud.lifespan", "Lifespan %s");
+        add("guzhenren.hud.refining", "Refining  %s / %s");
+        add("guzhenren.hud.using", "Using  %s / %s");
     }
     //endregion
 
@@ -193,12 +195,13 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.beast_strength_held", "Already hold the %s's strength");
         add("guzhenren.item.failed.jun_strength_full", "Already hold Nine Jin of strength");
         add("guzhenren.item.failed.vitality_active", "Vitality Leaf is still working");
-        add("guzhenren.item.failed.gu_hungry", "Gu is too hungry");
         add("guzhenren.item.failed.refine_essence", "NOT enough essence to refine");
 
         add("guzhenren.item.gu.uses", "Used %s/%s");
+        add("guzhenren.item.gu.refine_progress", "Refined %s/%s");
         add("guzhenren.item.gu.hungry", "Your %s is hungry");
         add("guzhenren.item.gu.starved", "Your %s starved to death");
+        add("guzhenren.item.gu.exhausted", "Your %s was forced past its limit and died");
         add("guzhenren.item.gu.vital_lost", "Your %s is gone -- health, soul and mind all suffer!");
 
         add("effect.guzhenren.vitality_leaf", "Vitality Leaf");

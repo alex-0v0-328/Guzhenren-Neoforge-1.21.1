@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.client;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.client.hud.ChargeHud;
 import com.unknown.guzhenren.client.hud.PlayerStatsHud;
 import com.unknown.guzhenren.client.screen.ApertureStorageScreen;
 import com.unknown.guzhenren.client.screen.PlayerInfoScreen;
@@ -26,10 +27,16 @@ public final class ClientEvents {
     private static final ResourceLocation PLAYER_STATS =
             ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "player_stats");
 
+    private static final ResourceLocation CHARGE =
+            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "charge");
+
     //  Above the hotbar, not above everything: chat, F3 and open screens still draw on top.
     @SubscribeEvent
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, PLAYER_STATS, PlayerStatsHud.INSTANCE);
+        //  ⚠ Above AIR_LEVEL, not HOTBAR: ChargeHud reads Gui.leftHeight/rightHeight, which only reach
+        //  their final value once the whole status stack has drawn.
+        event.registerAbove(VanillaGuiLayers.AIR_LEVEL, CHARGE, ChargeHud.INSTANCE);
     }
 
     @SubscribeEvent

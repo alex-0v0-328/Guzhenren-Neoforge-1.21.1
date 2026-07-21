@@ -88,6 +88,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.jun_strength.jin.9", "[九斤之力]");
 
         add("guzhenren.hud.lifespan", "寿元 %s");
+        add("guzhenren.hud.refining", "炼化中  %s / %s");
+        add("guzhenren.hud.using", "使用中  %s / %s");
     }
     //endregion
 
@@ -193,12 +195,13 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.beast_strength_held", "已有%s之力");
         add("guzhenren.item.failed.jun_strength_full", "已有九斤之力");
         add("guzhenren.item.failed.vitality_active", "生机叶效果未散");
-        add("guzhenren.item.failed.gu_hungry", "蛊虫已开始饥饿");
         add("guzhenren.item.failed.refine_essence", "真元不足无法炼化");
 
         add("guzhenren.item.gu.uses", "已用 %s/%s");
+        add("guzhenren.item.gu.refine_progress", "炼化 %s/%s");
         add("guzhenren.item.gu.hungry", "%s饿了");
         add("guzhenren.item.gu.starved", "%s饿死了");
+        add("guzhenren.item.gu.exhausted", "%s被强行催动，力竭而亡！");
         add("guzhenren.item.gu.vital_lost", "%s断绝，气血、魂魄与念头俱损！");
 
         add("effect.guzhenren.vitality_leaf", "生机叶");

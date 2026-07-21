@@ -27,23 +27,35 @@ public abstract class RefinableGuItem extends MortalGuItem {
 
     protected static final String FAILED_UNAWAKENED = "guzhenren.item.failed.unawakened";
     protected static final String FAILED_REFINE_ESSENCE = "guzhenren.item.failed.refine_essence";
-    protected static final String FAILED_HUNGRY = "guzhenren.item.failed.gu_hungry";
     private static final String TOOLTIP_USES = "guzhenren.item.gu.uses";
+    private static final String TOOLTIP_REFINE = "guzhenren.item.gu.refine_progress";
     private static final String MSG_HUNGRY = "guzhenren.item.gu.hungry";
     private static final String MSG_STARVED = "guzhenren.item.gu.starved";
+    private static final String MSG_EXHAUSTED = "guzhenren.item.gu.exhausted";
 
     protected RefinableGuItem(Properties properties, Rank rank, GuPath path) {
         super(properties, rank, path, true, true);
     }
 
     //region the numbers a leaf may bend
-    protected int refineCost() {return 1000;}
+    public int refineCost() {return 640;}
     protected int refinePerUse() {return 100;}
+
+    //  ⚠ The FLOOR is on the essence he holds, not on what a step invests -- the last step may legally
+    //  be smaller than this when less than 20 is left to pay.
+    protected int refineMinEssence() {return 20;}
     protected int maxHunger() {return 18;}
-    protected int usesPerGrant() {return 36;}
+    public int usesPerGrant() {return 36;}
     protected int hungryThreshold() {return 2;}
-    protected int refineCooldownTicks() {return 20;}
     protected long speckPerUse() {return 1L;}
+
+    //  Holding right-click: three seconds at the Gu's own rank, one above it, nine below. See CLAUDE.md.
+    protected int chargeTicks() {return 60;}
+    protected int fastChargeTicks() {return 20;}
+    protected int slowChargeTicks() {return 180;}
+
+    //  How far above the Gu he must stand before a single refine stops being capped at refinePerUse().
+    protected int uncappedRankGap() {return 2;}
 
     //  ⚠ Units, not hunger: 4 units buy one hunger point. That is what lets one formula serve both
     //  "four pork = one hunger" (1 unit each) and "one raw iron = one hunger" (4 units each).
@@ -88,23 +100,39 @@ public abstract class RefinableGuItem extends MortalGuItem {
     @Override
     protected boolean hasUse() {return true;}
 
-    //  Slow while it is being bound, quick once it answers to you.
+    //  ⚠ No cooldown override any more: the CHARGE is the pacing now. A one-second cooldown on top of a
+    //  four-second hold only broke the bar into stutters while he kept the button down.
+    //  ⚠ Both the refine and the use are charged, so this is what the hotbar bar counts down. The
+    //  comparison is 转数 against 转数 -- a bigger 阶段 buys nothing here.
+    //  ⚠ slowChargeTicks is UNREACHABLE today: 凡人 is refused outright by gate(), and there is no rank
+    //  between 凡人 and 一转 -- which is every refinable Gu's rank. A rank II Gu is what lights it up.
     @Override
-    protected int cooldownTicks(ItemStack stack) {
-        return refined(stack) ? COOLDOWN_TICKS : refineCooldownTicks();
+    protected int useDurationTicks(Player player, ItemStack stack) {
+        int gap = rankGap(player);
+        if (gap > 0) return fastChargeTicks();
+        return gap == 0 ? chargeTicks() : slowChargeTicks();
+    }
+
+    //  How many 转 he stands above this Gu; negative means below it. The one measure both the charge
+    //  time and the refine cap read, so "higher rank" can never mean two different things.
+    private int rankGap(Player player) {
+        return ApertureService.rank(player).ordinal() - rank().ordinal();
     }
 
     @Override
     protected @Nullable Refusal gate(Player player, ItemStack stack) {
-        if (!refined(stack)) {
-            if (!ApertureService.isAwakened(player)) return new Refusal(FAILED_UNAWAKENED);
-            return EssenceService.currentEssence(player) <= 0L ? new Refusal(FAILED_REFINE_ESSENCE) : null;
-        }
-        Refusal held = payoutGate(player);
-        if (held != null) return held;
+        //  ⚠ A mortal drives no Gu at all, refined or not -- an aperture is what pushes one.
+        if (!ApertureService.isAwakened(player)) return new Refusal(FAILED_UNAWAKENED);
 
-        //  Hunger 1 still works if the food in the other hand lifts it first -- apply() feeds before it uses.
-        return state(stack).hunger() + feed(player, stack).hunger() <= 1 ? new Refusal(FAILED_HUNGRY) : null;
+        if (!refined(stack)) {
+            //  ⚠ A floor, not a cost: below 20 essence he is refused outright rather than trickling.
+            return EssenceService.currentEssence(player) < refineMinEssence()
+                    ? new Refusal(FAILED_REFINE_ESSENCE)
+                    : null;
+        }
+        //  ⚠ Hunger is NOT a refusal any more: an empty Gu may always be forced, and dies of it.
+        //  See apply() and CLAUDE.md "The refinable Gu".
+        return payoutGate(player);
     }
 
     @Override
@@ -115,6 +143,9 @@ public abstract class RefinableGuItem extends MortalGuItem {
         }
 
         eat(player, stack);
+        //  ⚠ Read AFTER eating: food in the other hand still rescues a Gu that was about to be forced.
+        boolean forced = state(stack).hunger() <= 0;
+
         RefinedGuState state = state(stack);
         state = state.withUses(state.useCount() + 1).withHunger(state.hunger() - 1);
         PathService.addSpeck(player, path(), speckPerUse());
@@ -125,6 +156,18 @@ public abstract class RefinableGuItem extends MortalGuItem {
             state = state.withUses(0);
         }
         store(stack, state);
+
+        //  ⚠⚠ The forced use LANDS first -- speck, count, payout -- and only then does it die. This is
+        //  the second and last way a refined Gu ends, and it is still starvation: he brought it forward
+        //  by driving an empty Gu. It is NOT a payout, and this 1 must never be gated on "spent".
+        //  ⚠ Creative never loses the item (GuItem.spend), so it must not be told the Gu died either.
+        if (forced && !player.hasInfiniteMaterials()) {
+            exhausted(player, stack);
+            return 1;
+        }
+        //  The warning has to land on the USE too -- the day tick alone would stay silent through a
+        //  whole session of clicking it down from 9.
+        if (hungry(stack)) announceHungry(player, stack);
         return 0;
     }
 
@@ -178,10 +221,13 @@ public abstract class RefinableGuItem extends MortalGuItem {
 
     //region refining
     //  Invest what he can spare, capped per attempt -- a trickle still gets there, it just takes longer.
+    //  ⚠ Two ranks above the Gu the cap is GONE, so a single one-second hold can pay the whole 640 at
+    //  once, essence permitting. That is the reward for towering over it; one rank above only buys speed.
     private void refineStep(ServerPlayer player, ItemStack stack) {
         RefinedGuState state = state(stack);
         int remaining = refineCost() - state.refineProgress();
-        int invest = (int) Math.min(Math.min(refinePerUse(), remaining), EssenceService.currentEssence(player));
+        int cap = rankGap(player) >= uncappedRankGap() ? remaining : Math.min(refinePerUse(), remaining);
+        int invest = (int) Math.min(cap, EssenceService.currentEssence(player));
         if (invest <= 0) return;
 
         EssenceService.consume(player, invest);
@@ -206,9 +252,13 @@ public abstract class RefinableGuItem extends MortalGuItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
-        if (!refined(stack)) return;
-        tooltip.add(Component.translatable(TOOLTIP_USES, state(stack).useCount(), usesPerGrant())
-                .withStyle(ChatFormatting.GRAY));
+        //  Wild reads how far along the refining is; refined reads how far along the cycle is.
+        //  ⚠ Never both -- one line, whichever half of its life it is in.
+        tooltip.add(refined(stack)
+                ? Component.translatable(TOOLTIP_USES, state(stack).useCount(), usesPerGrant())
+                        .withStyle(ChatFormatting.GRAY)
+                : Component.translatable(TOOLTIP_REFINE, state(stack).refineProgress(), refineCost())
+                        .withStyle(ChatFormatting.GRAY));
     }
 
     //  Wild: how far refined. Refined: how fed. One bar, two meanings -- the name says which you read.
@@ -240,7 +290,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
             ItemStack stack = inventory.getItem(slot);
             if (!(stack.getItem() instanceof RefinableGuItem gu) || !gu.refined(stack)) continue;
 
-            if (gu.decay(stack, days)) {
+            if (gu.decay(player, stack, days)) {
                 inventory.setItem(slot, ItemStack.EMPTY);
                 starved(player, stack);
             } else if (gu.hungry(stack)) {
@@ -250,13 +300,21 @@ public abstract class RefinableGuItem extends MortalGuItem {
     }
 
     //  Bills the elapsed days against one Gu. True means it starved. ⚠ days can be far over 1.
-    public boolean decay(ItemStack stack, long days) {
+    //  ⚠ Creative starves it DOWN but never past: hunger still falls and still warns, the death simply
+    //  does not land -- exactly as lifespan drains to 0 in creative without killing (checkLethalState).
+    //  ⚠ The one guard for every death by hunger; the forced use carries the matching one in apply().
+    public boolean decay(ServerPlayer player, ItemStack stack, long days) {
         RefinedGuState state = state(stack);
         int left = state.hunger() - (int) Math.min(days, maxHunger());
-        if (left <= 0) return true;
-
-        store(stack, state.withHunger(left));
-        return false;
+        if (left > 0) {
+            store(stack, state.withHunger(left));
+            return false;
+        }
+        if (player.hasInfiniteMaterials()) {
+            store(stack, state.withHunger(0));
+            return false;
+        }
+        return true;
     }
 
     //  Feeds one stored Gu out of the player's own inventory, once it is hungry.
@@ -296,16 +354,20 @@ public abstract class RefinableGuItem extends MortalGuItem {
 
     public static void announceHungry(ServerPlayer player, ItemStack stack) {announce(player, stack, MSG_HUNGRY);}
 
-    //  It starved. Whoever was carrying it hears so; if it was someone's Vital Gu, its OWNER pays -- which
-    //  is why the mark stores a UUID and not a flag. ⚠ An offline owner is not billed and nothing is
-    //  queued: this mod has no pending-penalty concept, and one case does not justify inventing it.
-    public static void starved(ServerPlayer holder, ItemStack stack) {
-        announce(holder, stack, MSG_STARVED);
+    //  Its life ended. Whoever was carrying it hears so; if it was someone's Vital Gu, its OWNER pays --
+    //  which is why the mark stores a UUID and not a flag. ⚠ An offline owner is not billed and nothing
+    //  is queued: this mod has no pending-penalty concept, and one case does not justify inventing it.
+    private static void died(ServerPlayer holder, ItemStack stack, String key) {
+        announce(holder, stack, key);
         UUID uuid = owner(stack);
         if (uuid == null) return;
 
         ServerPlayer owner = holder.server.getPlayerList().getPlayer(uuid);
         if (owner != null) PlayerDataService.onVitalGuLost(owner, stack);
     }
+
+    //  ⚠ Two deaths, one funnel, two messages -- neglect and force are not the same story to tell.
+    public static void starved(ServerPlayer holder, ItemStack stack) {died(holder, stack, MSG_STARVED);}
+    public static void exhausted(ServerPlayer holder, ItemStack stack) {died(holder, stack, MSG_EXHAUSTED);}
     //endregion
 }

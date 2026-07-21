@@ -34,7 +34,7 @@ public final class ApertureStorageTick {
             ItemStack stack = next.get(i);
             if (!(stack.getItem() instanceof RefinableGuItem gu) || !gu.refined(stack)) continue;
 
-            if (gu.decay(stack, days)) {
+            if (gu.decay(player, stack, days)) {
                 next.set(i, ItemStack.EMPTY);
                 changed = true;
                 RefinableGuItem.starved(player, stack);
@@ -54,7 +54,7 @@ public final class ApertureStorageTick {
         ItemStack stack = ApertureStorageService.vital(player, aperture);
         if (!(stack.getItem() instanceof RefinableGuItem gu) || !gu.refined(stack)) return;
 
-        if (gu.decay(stack, days)) {
+        if (gu.decay(player, stack, days)) {
             ApertureStorageService.setVital(player, aperture, ItemStack.EMPTY);
             RefinableGuItem.starved(player, stack);
             return;
