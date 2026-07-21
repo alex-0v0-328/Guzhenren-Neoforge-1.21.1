@@ -2,13 +2,15 @@ package com.unknown.guzhenren.registry;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.item.RefinedGuState;
+import java.util.UUID;
 import java.util.function.Supplier;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-//  Per-stack item state. One today: a boar Gu's refinement, uses and hunger.
+//  Per-stack item state: a Gu's refinement, and whose Vital Gu it is.
 //  ⚠ networkSynchronized is not a packet -- it rides the vanilla stack sync. See CLAUDE.md "Networking".
 public final class ModDataComponents {
 
@@ -23,6 +25,13 @@ public final class ModDataComponents {
             DATA_COMPONENTS.registerComponentType("refined_gu_state", builder -> builder
                     .persistent(RefinedGuState.CODEC)
                     .networkSynchronized(RefinedGuState.STREAM_CODEC));
+
+    //  Whose Vital Gu (本命蛊) this is. ⚠ The owner's UUID, not a flag: a refined Gu may be handed to another
+    //  player, and the loss must always be billed to the one who bound it. Never cleared once set.
+    public static final Supplier<DataComponentType<UUID>> VITAL_OWNER =
+            DATA_COMPONENTS.registerComponentType("vital_owner", builder -> builder
+                    .persistent(UUIDUtil.CODEC)
+                    .networkSynchronized(UUIDUtil.STREAM_CODEC));
 
     public static void register(IEventBus modEventBus) {
         DATA_COMPONENTS.register(modEventBus);

@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
@@ -25,6 +26,7 @@ import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.display.ModDisplayText;
 import com.unknown.guzhenren.network.OpenApertureStoragePayload;
+import com.unknown.guzhenren.network.SetSecondaryPathPayload;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -80,11 +82,22 @@ public final class PlayerInfoScreen extends Screen {
     //  The storage tab does not render rows -- it opens a container instead.
     private static final int TAB_STORAGE = 3;
 
+    //  The 辅修流派 picker: 30 paths plus a "clear" cell, laid out as a grid so it needs no scrolling.
+    private static final int PICK_COLS = 4;
+    private static final int PICK_CELL_W = 84;
+    private static final int PICK_CELL_H = 14;
+    private static final int PICK_PAD = 8;
+
     private int leftPos;
     private int topPos;
     private int panelW;
     private int panelH;
     private int activeTab = 0;
+
+    //  Where the one clickable row landed this frame, or -1. ⚠ Set during render, read by mouseClicked
+    //  -- the rows are rebuilt every frame, so there is no stable index to remember instead.
+    private int clickableRowY = -1;
+    private boolean picking;
 
     public PlayerInfoScreen() {super(Component.translatable("guzhenren.screen.info.title"));}
 
@@ -125,10 +138,12 @@ public final class PlayerInfoScreen extends Screen {
         //  ⚠ Values are right-aligned against the tab rail, so numbers line up however long a label runs.
         int valueRight = tabLeft() - PAD;
         int y = topPos + CONTENT_TOP;
+        clickableRowY = -1;
         for (Row row : rows) {
             if (mouseY >= y - 1 && mouseY < y + LINE_H - 1 && mouseX >= leftPos && mouseX < tabLeft()) {
                 g.fill(leftPos + PAD - 2, y - 1, valueRight + 2, y + LINE_H - 1, ROW_HOVER);
             }
+            if (row.clickable()) clickableRowY = y;
             //  A row with no value is a section header, so it takes the accent.
             int labelColor = row.value() == null ? accent : TEXT;
             g.drawString(font, row.label(), leftPos + PAD + row.indent(), y, labelColor, false);
@@ -137,7 +152,64 @@ public final class PlayerInfoScreen extends Screen {
             }
             y += LINE_H;
         }
+        if (picking) renderPicker(g, mouseX, mouseY, accent);
     }
+
+    //region 辅修流派 picker
+    //  A modal grid over the panel: every path, plus one cell that clears the choice.
+    //  ⚠ Same fills as everything else -- no texture, so it scales with the window like the panel does.
+    private void renderPicker(GuiGraphics g, int mouseX, int mouseY, int accent) {
+        int x0 = pickLeft();
+        int y0 = pickTop();
+        int w = PICK_COLS * PICK_CELL_W + PICK_PAD * 2;
+        int h = pickRows() * PICK_CELL_H + PICK_PAD * 2 + HEADER_H;
+
+        g.fill(x0, y0, x0 + w, y0 + h, 0xF0000000);
+        g.renderOutline(x0, y0, w, h, BORDER);
+        g.drawString(font, Component.translatable("guzhenren.screen.pick.title"),
+                x0 + PICK_PAD, y0 + (HEADER_H - font.lineHeight) / 2, accent, false);
+        g.fill(x0 + PICK_PAD, y0 + HEADER_H, x0 + w - PICK_PAD, y0 + HEADER_H + 1, DIVIDER);
+
+        for (int i = 0; i < pickCount(); i++) {
+            int cx = x0 + PICK_PAD + (i % PICK_COLS) * PICK_CELL_W;
+            int cy = y0 + PICK_PAD + HEADER_H + (i / PICK_COLS) * PICK_CELL_H;
+            boolean hover = mouseX >= cx && mouseX < cx + PICK_CELL_W
+                    && mouseY >= cy && mouseY < cy + PICK_CELL_H;
+            if (hover) g.fill(cx, cy, cx + PICK_CELL_W, cy + PICK_CELL_H, ROW_HOVER);
+            g.drawString(font, ModDisplayText.path(pickPath(i)), cx + 3,
+                    cy + (PICK_CELL_H - font.lineHeight) / 2, TEXT, false);
+        }
+    }
+
+    //  Index 0 clears the choice; 1.. are the paths in declaration order.
+    private static int pickCount() {return GuPath.values().length + 1;}
+    private static @Nullable GuPath pickPath(int i) {return i == 0 ? null : GuPath.values()[i - 1];}
+    private static int pickRows() {return (pickCount() + PICK_COLS - 1) / PICK_COLS;}
+    private int pickWidth() {return PICK_COLS * PICK_CELL_W + PICK_PAD * 2;}
+    private int pickHeight() {return pickRows() * PICK_CELL_H + PICK_PAD * 2 + HEADER_H;}
+    private int pickLeft() {return leftPos + (panelW - pickWidth()) / 2;}
+    private int pickTop() {return topPos + (panelH - pickHeight()) / 2;}
+
+    private static MutableComponent pickHint() {return Component.translatable("guzhenren.screen.pick.hint");}
+
+    //  ⚠ Returns true even on a miss: a modal must swallow the click, or it would fall through to the
+    //  tab rail underneath and switch tabs while the picker is open.
+    private boolean clickPicker(double mx, double my) {
+        int x0 = pickLeft() + PICK_PAD;
+        int y0 = pickTop() + PICK_PAD + HEADER_H;
+        for (int i = 0; i < pickCount(); i++) {
+            int cx = x0 + (i % PICK_COLS) * PICK_CELL_W;
+            int cy = y0 + (i / PICK_COLS) * PICK_CELL_H;
+            if (mx < cx || mx >= cx + PICK_CELL_W || my < cy || my >= cy + PICK_CELL_H) continue;
+
+            PacketDistributor.sendToServer(new SetSecondaryPathPayload(ApertureData.PRIMARY, pickPath(i)));
+            picking = false;
+            return true;
+        }
+        picking = false;
+        return true;
+    }
+    //endregion
 
     //  A rail down the right edge. Active takes its domain's accent; storage greys out unawakened.
     private void renderTabs(GuiGraphics g, int mouseX, int mouseY) {
@@ -175,7 +247,15 @@ public final class PlayerInfoScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
+        if (picking) return button != 0 || clickPicker(mx, my);
         if (button == 0) {
+            //  The one clickable row. ⚠ Its y comes from the last frame's render -- rows are rebuilt
+            //  every frame, so there is no stable index to test against instead.
+            if (clickableRowY >= 0 && my >= clickableRowY - 1 && my < clickableRowY + LINE_H - 1
+                    && mx >= leftPos && mx < tabLeft()) {
+                picking = true;
+                return true;
+            }
             for (int i = 0; i < TAB_KEYS.length; i++) {
                 if (!inTab(mx, my, i) || !tabLive(i)) continue;
                 //  ⚠ Storage is a container, not a tab of rows -- ask the server to open it instead.
@@ -193,6 +273,13 @@ public final class PlayerInfoScreen extends Screen {
     //  The open key toggles the panel shut too, not only Escape.
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        //  ⚠ While the picker is up, both close keys close IT, not the panel -- otherwise picking a path
+        //  and backing out of one are the same keystroke.
+        if (picking && (keyCode == InputConstants.KEY_ESCAPE
+                || ModKeyMappings.OPEN_INFO.matches(keyCode, scanCode))) {
+            picking = false;
+            return true;
+        }
         if (ModKeyMappings.OPEN_INFO.matches(keyCode, scanCode)) {
             onClose();
             return true;
@@ -226,6 +313,12 @@ public final class PlayerInfoScreen extends Screen {
         if (awakened) {
             rows.add(new Row(indent, label("essence"),
                     Component.literal(ModDisplayText.pool(ap.currentEssence(), ap.maxEssence()))));
+
+            //  主修 is read-only -- it is whatever Vital Gu sits in the slot. 辅修 is the one row on this
+            //  whole panel the player may click. ⚠ The gray hint is the affordance; colour may not be.
+            rows.add(new Row(indent, label("primary_path"), ModDisplayText.path(ap.primaryPath())));
+            rows.add(new Row(indent, label("secondary_path"),
+                    ModDisplayText.path(ap.secondaryPath()).append(detail(pickHint())), true));
         }
         if (!ap.isAlive()) {
             rows.add(new Row(indent, label("state"), Component.translatable(ap.state().getTranslationKey())));
@@ -328,6 +421,8 @@ public final class PlayerInfoScreen extends Screen {
     }
 
     //  One display line: label at the left, value in a fixed column so numbers line up across rows.
-    private record Row(int indent, Component label, @Nullable Component value) {
+    //  ⚠ clickable is what makes a row an affordance; exactly one row (辅修流派) sets it today.
+    private record Row(int indent, Component label, @Nullable Component value, boolean clickable) {
+        Row(int indent, Component label, @Nullable Component value) {this(indent, label, value, false);}
     }
 }

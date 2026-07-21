@@ -75,6 +75,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.9", "Nine");
         add("guzhenren.display.none", "[NONE]");
         add("guzhenren.display.wild", "Wild %s");
+        add("guzhenren.display.vital", "Vital %s");
         add("guzhenren.display.boar_strength.1", "[Strength of One Boar]");
         add("guzhenren.display.boar_strength.2", "[Strength of Two Boars]");
         add("guzhenren.display.jun_strength.jin.1", "[Strength of One Jin]");
@@ -109,6 +110,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.realm", "Cultivation: %s");
         add("guzhenren.command.info.talent", "Aptitude:    %s");
         add("guzhenren.command.info.essence", "Essence:     %s / %s");
+        add("guzhenren.command.info.primary_path", "Primary:     %s");
+        add("guzhenren.command.info.secondary_path", "Secondary:   %s");
         add("guzhenren.command.info.soul", "Soul:        %s / %s");
         add("guzhenren.command.info.lifespan", "Lifespan:    %s");
         add("guzhenren.command.info.life_state", "Body:        %s");
@@ -143,6 +146,11 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.tab.mind", "Mind");
         add("guzhenren.screen.tab.storage", "Storage");
         add("guzhenren.menu.aperture_storage", "Aperture Storage");
+        add("guzhenren.menu.vital", "Vital");
+        add("guzhenren.screen.label.primary_path", "Primary Path");
+        add("guzhenren.screen.label.secondary_path", "Secondary Path");
+        add("guzhenren.screen.pick.title", "Choose a Secondary Path");
+        add("guzhenren.screen.pick.hint", "click to set");
         add("guzhenren.screen.label.realm", "Realm");
         add("guzhenren.screen.label.talent", "Aptitude");
         add("guzhenren.screen.label.essence", "Essence");
@@ -191,6 +199,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.uses", "Used %s/%s");
         add("guzhenren.item.gu.hungry", "Your %s is hungry");
         add("guzhenren.item.gu.starved", "Your %s starved to death");
+        add("guzhenren.item.gu.vital_lost", "Your %s is gone -- health, soul and mind all suffer!");
 
         add("effect.guzhenren.vitality_leaf", "Vitality Leaf");
     }
@@ -202,6 +211,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("death.attack.guzhenren.lifespan_exhausted", "%1$s ran out of lifespan");
         add("death.attack.guzhenren.soul_collapse", "%1$s suffered soul collapse");
         add("death.attack.guzhenren.mind_ocean_shattered", "%1$s shattered their Mind Ocean");
+        add("death.attack.guzhenren.vital_gu_lost", "%1$s lost their Vital Gu");
     }
     //endregion
 

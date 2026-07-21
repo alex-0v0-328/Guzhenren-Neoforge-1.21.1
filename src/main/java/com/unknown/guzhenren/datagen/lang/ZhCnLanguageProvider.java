@@ -74,6 +74,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.9", "九");
         add("guzhenren.display.none", "[无]");
         add("guzhenren.display.wild", "野生·%s");
+        add("guzhenren.display.vital", "本命·%s");
         add("guzhenren.display.boar_strength.1", "[一猪之力]");
         add("guzhenren.display.boar_strength.2", "[两猪之力]");
         add("guzhenren.display.jun_strength.jin.1", "[一斤之力]");
@@ -108,6 +109,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.realm", "玩家修为  %s");
         add("guzhenren.command.info.talent", "玩家天赋  %s");
         add("guzhenren.command.info.essence", "玩家真元  %s / %s");
+        add("guzhenren.command.info.primary_path", "主修流派  %s");
+        add("guzhenren.command.info.secondary_path", "辅修流派  %s");
         add("guzhenren.command.info.soul", "玩家魂魄  %s / %s");
         add("guzhenren.command.info.lifespan", "玩家寿元  %s");
         add("guzhenren.command.info.life_state", "肉身状态  %s");
@@ -143,6 +146,11 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.tab.mind", "脑海");
         add("guzhenren.screen.tab.storage", "空窍存储");
         add("guzhenren.menu.aperture_storage", "空窍存储");
+        add("guzhenren.menu.vital", "本命");
+        add("guzhenren.screen.label.primary_path", "主修流派");
+        add("guzhenren.screen.label.secondary_path", "辅修流派");
+        add("guzhenren.screen.pick.title", "选择辅修流派");
+        add("guzhenren.screen.pick.hint", "点击选择");
         add("guzhenren.screen.label.realm", "修为");
         add("guzhenren.screen.label.talent", "天赋");
         add("guzhenren.screen.label.essence", "真元");
@@ -191,6 +199,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.uses", "已用 %s/%s");
         add("guzhenren.item.gu.hungry", "%s饿了");
         add("guzhenren.item.gu.starved", "%s饿死了");
+        add("guzhenren.item.gu.vital_lost", "%s断绝，气血、魂魄与念头俱损！");
 
         add("effect.guzhenren.vitality_leaf", "生机叶");
     }
@@ -202,6 +211,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("death.attack.guzhenren.lifespan_exhausted", "%1$s 寿元耗尽而亡");
         add("death.attack.guzhenren.soul_collapse", "%1$s 魂魄衰竭而亡");
         add("death.attack.guzhenren.mind_ocean_shattered", "%1$s 脑海炸裂而亡");
+        add("death.attack.guzhenren.vital_gu_lost", "%1$s 本命蛊断绝而亡");
     }
     //endregion
 

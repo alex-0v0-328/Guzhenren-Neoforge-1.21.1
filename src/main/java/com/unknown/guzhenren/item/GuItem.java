@@ -3,7 +3,9 @@ package com.unknown.guzhenren.item;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.ModDisplayText;
+import com.unknown.guzhenren.registry.ModDataComponents;
 import java.util.List;
+import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,6 +42,15 @@ public abstract class GuItem extends Item {
 
     //  Why a use was refused: a red action-bar message. args feed the key's placeholders.
     public record Refusal(String key, Object... args) {}
+
+    //region Vital Gu
+    //  ⚠ Written once, by the aperture's Vital Gu slot, and NEVER cleared -- taking it back out does not
+    //  unbind it. The owner is stored so a Gu handed to someone else still bills its loss to him.
+    public static @Nullable UUID owner(ItemStack s) {return s.get(ModDataComponents.VITAL_OWNER.get());}
+    public static boolean isVital(ItemStack s) {return s.has(ModDataComponents.VITAL_OWNER.get());}
+    public static boolean isVitalOf(ItemStack s, Player p) {return p.getUUID().equals(owner(s));}
+    public static void bind(ItemStack s, Player p) {s.set(ModDataComponents.VITAL_OWNER.get(), p.getUUID());}
+    //endregion
 
     //  A plain Gu/material just sits in the inventory -- right-click passes through, as vanilla does.
     //  A usable Gu overrides hasUse() -> true and fills in gate() + apply().
@@ -91,6 +102,16 @@ public abstract class GuItem extends Item {
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         tooltip.add(ModDisplayText.guLine(rank, path, kindKey()).withStyle(ChatFormatting.GRAY));
     }
+
+    //  本命·黑豕蛊 once bound. ⚠ RefinableGuItem's 野生 wraps THIS, never the other way round.
+    @Override
+    public @NotNull Component getName(@NotNull ItemStack stack) {
+        return isVital(stack) ? ModDisplayText.vital(super.getName(stack)) : super.getName(stack);
+    }
+
+    //  The glint is the mark -- a bound Gu has to be findable in a full inventory at a glance.
+    @Override
+    public boolean isFoil(@NotNull ItemStack stack) {return isVital(stack) || super.isFoil(stack);}
 
     //  Refused: red on the action bar, nothing spent. Same class as a command's red -- see CLAUDE.md "Color".
     protected static void refuse(ServerPlayer player, String key, Object... args) {

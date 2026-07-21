@@ -90,6 +90,11 @@ public final class CmdInfo {
         if (awakened) {
             ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.essence",
                     aperture.currentEssence(), aperture.maxEssence()));
+            //  ⚠ Same rows in the same order as PlayerInfoScreen.apertureBlock -- the two must not drift.
+            ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.primary_path",
+                    ModDisplayText.path(aperture.primaryPath())));
+            ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.secondary_path",
+                    ModDisplayText.path(aperture.secondaryPath())));
         }
         if (!aperture.isAlive()) {
             ModCommandFeedback.detail(source, Component.translatable("guzhenren.command.info.aperture_state",

@@ -18,6 +18,15 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     //  Wide enough for "10 / 10" without the arrows shifting as the count grows.
     private static final int PAGE_LABEL_W = 40;
 
+    //  The Vital Gu annex hangs off the RIGHT edge, so the panel keeps its 222 height. See CLAUDE.md.
+    //  ⚠ Mirrors ApertureStorageMenu.VITAL_X -- the slot is registered there, the box is drawn here.
+    private static final int VITAL_LEFT = 178;
+    private static final int VITAL_RIGHT = 210;
+    private static final int VITAL_BOTTOM = 44;
+    private static final int VITAL_SLOT_X = 186;
+    private static final int VITAL_SLOT_Y = 22;
+    private static final String VITAL_KEY = "guzhenren.menu.vital";
+
     //  Storage green, matching the info panel's fourth tab.
     private static final int ACCENT = 0xFF81C784;
     private static final int PANEL_FILL = 0xBF000000;
@@ -62,6 +71,21 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
             int sx = x + 8 + col * SLOT;
             g.fill(sx, y + 198, sx + 16, y + 198 + 16, SLOT_FILL);
         }
+        renderVital(g, x, y);
+    }
+
+    //  Its own little panel, same three fills as the main one, and its accent bar sits on the same
+    //  line -- that alignment is what makes it read as part of the same window.
+    private void renderVital(GuiGraphics g, int x, int y) {
+        g.fill(x + VITAL_LEFT, y, x + VITAL_RIGHT, y + VITAL_BOTTOM, PANEL_FILL);
+        g.renderOutline(x + VITAL_LEFT, y, VITAL_RIGHT - VITAL_LEFT, VITAL_BOTTOM, BORDER);
+        g.fill(x + VITAL_LEFT + 4, y + 15, x + VITAL_RIGHT - 4, y + 16, ACCENT);
+
+        Component label = Component.translatable(VITAL_KEY);
+        int width = VITAL_RIGHT - VITAL_LEFT;
+        g.drawString(font, label, x + VITAL_LEFT + (width - font.width(label)) / 2, y + 5, ACCENT, false);
+        g.fill(x + VITAL_SLOT_X, y + VITAL_SLOT_Y,
+                x + VITAL_SLOT_X + 16, y + VITAL_SLOT_Y + 16, SLOT_FILL);
     }
 
     //  ⚠ Only the two static labels live here. The pager is drawn in render() instead, because

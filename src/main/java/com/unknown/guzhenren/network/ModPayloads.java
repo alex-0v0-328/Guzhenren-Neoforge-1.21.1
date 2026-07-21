@@ -12,9 +12,10 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 //  ⚠ The mod's ONE network registration, and the documented exception to "there is no networking".
-//  The ban exists so nobody hand-rolls what attachment sync gives free; a menu-open trigger is not
-//  that -- attachment sync is server->client only and cannot carry a keypress upstream.
-//  ⚠ Nothing else may be added here. See CLAUDE.md "Networking".
+//  The ban exists so nobody hand-rolls what attachment sync gives free; a CLIENT INTENT is not that --
+//  attachment sync is server->client only and cannot carry a choice upstream. Two exist: open my
+//  storage, and set my 辅修流派.
+//  ⚠ Downstream player data may never be added here. See CLAUDE.md "Networking".
 @EventBusSubscriber(modid = com.unknown.guzhenren.Guzhenren.MOD_ID)
 public final class ModPayloads {
 
@@ -28,6 +29,19 @@ public final class ModPayloads {
         PayloadRegistrar registrar = event.registrar(VERSION);
         registrar.playToServer(OpenApertureStoragePayload.TYPE, OpenApertureStoragePayload.STREAM_CODEC,
                 ModPayloads::openStorage);
+        registrar.playToServer(SetSecondaryPathPayload.TYPE, SetSecondaryPathPayload.STREAM_CODEC,
+                ModPayloads::setSecondaryPath);
+    }
+
+    //  ⚠ Never trust the wire: 辅修 is the player's own choice, but the index still has to exist, and
+    //  Aperture's ctor is what refuses a 辅修 equal to 主修 -- not this handler.
+    private static void setSecondaryPath(SetSecondaryPathPayload payload, IPayloadContext context) {
+        if (!(context.player() instanceof ServerPlayer player)) return;
+
+        int aperture = payload.aperture();
+        if (aperture < 0 || aperture >= ApertureService.get(player).count()) return;
+
+        ApertureService.setSecondaryPath(player, aperture, payload.path());
     }
 
     //  ⚠ Never trust the index off the wire: an unopened aperture has no storage to show.

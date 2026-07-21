@@ -18,6 +18,14 @@ public final class ModStreamCodecs {
         return ByteBufCodecs.VAR_INT.map(ordinal -> values[ordinal], Enum::ordinal);
     }
 
+    //  ⚠ Same ordinal trick, shifted by one so 0 can mean "unset" -- the only nullable field in the
+    //  data model is a path nobody has chosen yet. See Aperture's 主修/辅修.
+    public static <E extends Enum<E>> StreamCodec<ByteBuf, E> ofNullableEnum(Class<E> type) {
+        E[] values = type.getEnumConstants();
+        return ByteBufCodecs.VAR_INT.map(i -> i == 0 ? null : values[i - 1],
+                value -> value == null ? 0 : value.ordinal() + 1);
+    }
+
     //  An enum-keyed map on the wire. Hides the 4-type witness PathData/MindData would need inline.
     public static <K extends Enum<K>, V> StreamCodec<ByteBuf, Map<K, V>> enumMap(
             Class<K> key, StreamCodec<ByteBuf, V> value) {

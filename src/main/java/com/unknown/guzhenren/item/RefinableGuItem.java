@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.item;
 
+import com.unknown.guzhenren.attachment.PlayerDataService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
@@ -8,6 +9,7 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.ModDisplayText;
 import com.unknown.guzhenren.registry.ModDataComponents;
 import java.util.List;
+import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -240,7 +242,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
 
             if (gu.decay(stack, days)) {
                 inventory.setItem(slot, ItemStack.EMPTY);
-                announce(player, stack, MSG_STARVED);
+                starved(player, stack);
             } else if (gu.hungry(stack)) {
                 announce(player, stack, MSG_HUNGRY);
             }
@@ -292,7 +294,18 @@ public abstract class RefinableGuItem extends MortalGuItem {
         player.sendSystemMessage(Component.translatable(key, stack.getHoverName()));
     }
 
-    public static void announceStarved(ServerPlayer player, ItemStack stack) {announce(player, stack, MSG_STARVED);}
     public static void announceHungry(ServerPlayer player, ItemStack stack) {announce(player, stack, MSG_HUNGRY);}
+
+    //  It starved. Whoever was carrying it hears so; if it was someone's Vital Gu, its OWNER pays -- which
+    //  is why the mark stores a UUID and not a flag. ⚠ An offline owner is not billed and nothing is
+    //  queued: this mod has no pending-penalty concept, and one case does not justify inventing it.
+    public static void starved(ServerPlayer holder, ItemStack stack) {
+        announce(holder, stack, MSG_STARVED);
+        UUID uuid = owner(stack);
+        if (uuid == null) return;
+
+        ServerPlayer owner = holder.server.getPlayerList().getPlayer(uuid);
+        if (owner != null) PlayerDataService.onVitalGuLost(owner, stack);
+    }
     //endregion
 }

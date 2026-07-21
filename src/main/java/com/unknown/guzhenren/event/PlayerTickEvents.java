@@ -7,6 +7,7 @@ import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.item.RefinableGuItem;
+import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import com.unknown.guzhenren.registry.ModDamageTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -34,6 +35,11 @@ public final class PlayerTickEvents {
         if (days > 0L) {
             RefinableGuItem.starveAll(player, days);
             ApertureStorageTick.tickDay(player, days);
+
+            //  ⚠ The tick wrote the attachment behind an open menu's back, and that menu still holds
+            //  load()-time copies -- its next save would resurrect what just starved. The check lives
+            //  here, not in the service: a service reaching into menu/ inverts the one strict direction.
+            if (player.containerMenu instanceof ApertureStorageMenu menu) menu.reload();
         }
 
         EssenceService.regenStep(player);

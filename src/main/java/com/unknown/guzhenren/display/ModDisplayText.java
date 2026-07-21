@@ -8,6 +8,7 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.strength.JunStrength;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.jetbrains.annotations.Nullable;
 
 //  Every phrase that describes a cultivator, shared by the HUD and /gzr info so they can't drift.
 //  Values only, never labels; each caller wraps in its own key. See CLAUDE.md "Color".
@@ -43,6 +44,20 @@ public final class ModDisplayText {
 
     //  野生·黑豕蛊 / Wild Black Boar Gu -- one key for every Gu that has a wild form.
     public static MutableComponent wild(Component name) {return Component.translatable("guzhenren.display.wild", name);}
+
+    //  本命·黑豕蛊 / Vital Black Boar Gu. On the NAME, so the one-gray-line tooltip rule keeps its
+    //  single exception. ⚠ A block, not a one-liner: the key's name pushes it past 120.
+    public static MutableComponent vital(Component name) {
+        return Component.translatable("guzhenren.display.vital", name);
+    }
+
+    //  A path that may not have been chosen -- 主修 before a Vital Gu, 辅修 before the player picks.
+    //  ⚠ Reads [无] inline, the same shape an empty section header uses.
+    public static MutableComponent path(@Nullable GuPath path) {
+        return path == null
+                ? Component.translatable("guzhenren.display.none")
+                : Component.translatable(path.getTranslationKey());
+    }
 
     //  86 [ 14岁 ]
     public static MutableComponent lifespan(BodyData body) {

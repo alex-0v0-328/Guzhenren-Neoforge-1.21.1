@@ -8,17 +8,24 @@ import com.unknown.guzhenren.attachment.data.body.QiData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.HealthService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.ModAttachments;
+import com.unknown.guzhenren.registry.ModDamageTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 //  Cross-system operations. Event handlers call these and stay dumb.
 public final class PlayerDataService {
+
+    private static final String VITAL_LOST = "guzhenren.item.gu.vital_lost";
 
     private PlayerDataService() {}
 
@@ -69,6 +76,23 @@ public final class PlayerDataService {
         if (MindService.get(player).isOverflowing()) {
             MindService.empty(player);
         }
+    }
+
+    //  His Vital Gu is gone. Everything he is takes the hit at once, and the caps are left alone.
+    //  ⚠ 80% of the health he had LEFT can never kill by itself; halving a soul of 1 can, through the
+    //  ordinary lethal check. ⚠ Plain uncolored chat -- nothing was refused, and he must not miss it.
+    public static void onVitalGuLost(ServerPlayer owner, ItemStack stack) {
+        owner.sendSystemMessage(Component.translatable(VITAL_LOST, stack.getHoverName()));
+
+        SoulService.setCurrent(owner, SoulService.get(owner).currentSoul() / 2L);
+        for (WisdomType type : WisdomType.values()) {
+            MindService.setCurrent(owner, type, MindService.current(owner, type) / 2L);
+        }
+        owner.hurt(ModDamageTypes.source(owner, ModDamageTypes.VITAL_GU_LOST), owner.getHealth() * 0.8F);
+
+        //  ⚠ The ONE place 主修流派 is cleared -- the Gu is dead wherever it was, and both starve walks
+        //  land here. TODO(第二空窍): a Gu cannot say which aperture bound it, so this assumes PRIMARY.
+        ApertureService.setPrimaryPath(owner, ApertureService.PRIMARY, null);
     }
 
     //  Death clones and non-death clones (End portal return, /debug respawn) alike.

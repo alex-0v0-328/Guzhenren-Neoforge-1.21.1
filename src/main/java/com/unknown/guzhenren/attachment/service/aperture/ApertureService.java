@@ -14,6 +14,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
 //  The aperture (空窍) system. Index defaults to PRIMARY -- a second aperture has a place to live, no
 //  mechanic yet.
@@ -45,6 +46,24 @@ public final class ApertureService {
 
     //  No tier field: "set the tier" rolls a base inside its band. EXTREME hits 100; set() grants the physique.
     public static void setTalent(ServerPlayer p, Talent v) {setBaseEssence(p, Talent.randomPercent(v));}
+
+    //  ---- 主修 / 辅修 ----
+    //  Primary is DERIVED from the Vital Gu, but stored, because ApertureStorage is not synced and this
+    //  record is -- storing the path IS the sync. ⚠ No-ops when unchanged, the HealthService.refresh
+    //  idiom: setVital runs on every menu click and every day tick, and each write pushes a packet.
+    public static void setPrimaryPath(ServerPlayer p, int index, @Nullable GuPath v) {
+        Aperture aperture = aperture(p, index);
+        if (aperture.primaryPath() == v) return;
+        set(p, index, aperture.withPrimaryPath(v));
+    }
+
+    //  ⚠ The player's own choice, so it is NOT recomputed from anything. Aperture's ctor drops it when it
+    //  would equal 主修 -- binding a Vital Gu of the same path is what makes that fire.
+    public static void setSecondaryPath(ServerPlayer p, int index, @Nullable GuPath v) {
+        Aperture aperture = aperture(p, index);
+        if (aperture.secondaryPath() == v) return;
+        set(p, index, aperture.withSecondaryPath(v));
+    }
 
     //  Positive delta = better. Each enum owns its direction and its edge; Talent's runs backwards.
     public static void shiftRank(ServerPlayer p, int d) {setRank(p, aperture(p).rank().shift(d));}
