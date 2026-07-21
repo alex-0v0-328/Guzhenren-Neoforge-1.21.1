@@ -20,7 +20,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 
 //  Shared by every Cmd*: optional [targets], the awakening gate, the per-target apply.
-//  See CLAUDE.md "The awakening gate".
+//   CLAUDE.md "The awakening gate".
 public final class ModCommandSupport {
 
     private ModCommandSupport() {}

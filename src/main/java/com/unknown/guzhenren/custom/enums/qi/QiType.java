@@ -5,15 +5,17 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  气的种类. 天地人三气是升仙的门槛, 所以先做这三种 —— 后面还会有很多, 直接往下加即可
-//  ⚠ 气没有上限: 肉身能承载多少气就是多少, 见 QiData
+//  Kinds of qi (气). Heaven, Earth and Human are the threshold for ascension, which is why those three
+//  came first; more are expected, and adding one is just another constant.
+//  ⚠ Qi has no cap, deliberately -- it is an accumulator, not a pool  QiData.
 public enum QiType implements StringRepresentable, EnumTranslatable {
 
     HEAVEN,
     EARTH,
     HUMAN,
 
-    //  自然道痕: 没有任何效用, 但一样计入气道道痕. 「无效果」是它的定义, 不是待办
+    //  ⚠ Natural Qi does nothing and still counts toward the Qi Path's marks. Having no effect IS its
+    //  definition, not a TODO.
     NATURAL;
 
     public static final Codec<QiType> CODEC = StringRepresentable.fromEnum(QiType::values);

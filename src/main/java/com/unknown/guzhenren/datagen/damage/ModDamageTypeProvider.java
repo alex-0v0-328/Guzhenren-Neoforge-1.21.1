@@ -12,7 +12,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.damagesource.DamageType;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 
-//  Writes data/guzhenren/damage_type/*.json at runData. Not a runtime class -- see CLAUDE.md "Conventions".
+//  Writes data/guzhenren/damage_type/*.json at runData. Not a runtime class --  CLAUDE.md "Conventions".
 //  msgId builds the death key: "guzhenren.soul_collapse" -> "death.attack.guzhenren.soul_collapse".
 public class ModDamageTypeProvider extends DatapackBuiltinEntriesProvider {
 

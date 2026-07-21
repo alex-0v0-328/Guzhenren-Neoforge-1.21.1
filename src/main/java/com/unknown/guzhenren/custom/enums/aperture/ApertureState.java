@@ -5,8 +5,9 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  空窍的生死, 只有两态 (肉身的 LifeState 才有第三态「僵」)
-//  死掉的空窍吸不到天地元气 —— 这就是真元不回复的那道闸门, 见 EssenceService.regenPerDay
+//  Whether an aperture (空窍) lives. Two states only -- the body's LifeState is the one with a third.
+//  ⚠ A dead aperture draws nothing, and THIS is the gate essence regen hangs on, never the body's
+//   EssenceService.regenPerDay.
 public enum ApertureState implements StringRepresentable, EnumTranslatable {
 
     ALIVE,

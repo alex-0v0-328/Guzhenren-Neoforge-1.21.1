@@ -16,7 +16,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 //  Every Gu (蛊虫) and Gu Material (蛊材). An id is also its texture's file name -- see ModItemModelProvider.
 //  ⚠ 64 is Item.Properties' own default; a stacksTo(64) here would only be noise. A stateful Gu says stacksTo(1).
-//  TODO(data comp): a 蛊材 carrying a qi type + amount still needs its own component.
+//     TODO(data comp): a Gu material carrying a qi type + amount still needs its own component.
 public final class ModItems {
 
     private ModItems() {}
@@ -26,7 +26,7 @@ public final class ModItems {
     //  Essence a stone gives back. Lives here: the number is what registration chose, not what the class is.
     private static final long PRIMEVAL_STONE_ESSENCE = 20L;
 
-    //  Rank I, Human Path. Awakens once, then refuses -- see CLAUDE.md "The awakening gate".
+    //  Rank I, Human Path. Awakens once, then refuses --  CLAUDE.md "The awakening gate".
     public static final DeferredItem<Item> HOPE_GU = ITEMS.register("hope_gu",
             () -> new HopeGuItem(new Item.Properties()));
 
@@ -35,7 +35,7 @@ public final class ModItems {
             () -> new PrimevalStoneItem(new Item.Properties(), PRIMEVAL_STONE_ESSENCE));
 
     //  Relics Gu (舍利蛊), one per rank 1..5 -- one class; the rank is all registration varies.
-    //  ⚠ Named for that rank's essence color, but the strings do not transfer -- see CLAUDE.md "Items".
+    //  ⚠ Named for that rank's essence color, but the strings do not transfer --  CLAUDE.md "Items".
     public static final DeferredItem<Item> COPPER_RELICS_GU = ITEMS.register("copper_relics_gu",
             () -> new RelicsGuItem(new Item.Properties(), Rank.ONE));
     public static final DeferredItem<Item> STEEL_RELICS_GU = ITEMS.register("steel_relics_gu",
@@ -54,7 +54,7 @@ public final class ModItems {
     public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
             () -> new BoarGuItem(new Item.Properties().stacksTo(1), BeastStrength.BLACK_BOAR));
 
-    //  Jin Strength Gu (斤力蛊), the Human Jun branch's first -- refined, fed raw iron, nine uses.
+    //  Jin Strength Gu (斤力蛊), the Human Jun branch's first -- refined, fed raw iron, pays out every 36.
     //  ⚠ stacksTo(1) for the same reason as the boars: each carries its own refinement and hunger.
     public static final DeferredItem<Item> JIN_STRENGTH_GU = ITEMS.register("jin_strength_gu",
             () -> new JinStrengthGuItem(new Item.Properties().stacksTo(1)));

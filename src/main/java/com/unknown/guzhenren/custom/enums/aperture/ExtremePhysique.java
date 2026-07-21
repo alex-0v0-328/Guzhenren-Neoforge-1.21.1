@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
 
-    //  talentPaths: 该体质的天赋流派 (十绝体质自带的道)
+    //  talentPaths: the paths a Ten-Extremes physique is born holding.
     NONE(),
     VERDANT_GREAT_SUN(GuPath.SPACE),
     DESOLATE_ANCIENT_MOON(GuPath.TIME),
@@ -36,7 +36,7 @@ public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
 
     public List<GuPath> getTalentPaths() {return talentPaths;}
 
-    //  随机一个十绝体质: 排除 NONE 与 PURE_DREAM_REALITY_SEEKER, 其余十个等概率
+    //  One at random: NONE and PURE_DREAM_REALITY_SEEKER excluded, the other ten even.
     public static ExtremePhysique randomTenExtreme() {
         List<ExtremePhysique> pool = new ArrayList<>();
         for (ExtremePhysique p : values()) {

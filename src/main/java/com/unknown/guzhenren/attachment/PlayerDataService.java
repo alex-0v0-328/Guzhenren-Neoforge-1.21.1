@@ -37,7 +37,7 @@ public final class PlayerDataService {
     }
 
     //  ⚠ Everything a player is dealt once, at birth. Brilliance is rolled HERE, not at awakening -- awaken must
-    //  never touch it. A full reset is a rebirth, so resetAll calls this too. See CLAUDE.md "Birth".
+    //  never touch it. A full reset is a rebirth, so resetAll calls this too.  CLAUDE.md "Birth".
     public static void onBirth(Player player) {
         player.setData(ModAttachments.MIND, MindData.newborn());
         player.setData(ModAttachments.BORN, true);
@@ -65,7 +65,7 @@ public final class PlayerDataService {
     }
 
     //  Un-fire every lethal condition, or the player dies in a respawn loop. What ran out comes back
-    //  bare, not full: the cap survives, the contents do not. See CLAUDE.md "Time, sleep, death".
+    //  bare, not full: the cap survives, the contents do not.  CLAUDE.md "Time, sleep, death".
     public static void onRespawn(ServerPlayer player) {
         if (BodyService.get(player).isExhausted()) {
             BodyService.setLifespan(player, BodyData.DEFAULT_LIFESPAN);
@@ -90,8 +90,8 @@ public final class PlayerDataService {
         }
         owner.hurt(ModDamageTypes.source(owner, ModDamageTypes.VITAL_GU_LOST), owner.getHealth() * 0.8F);
 
-        //  ⚠ The ONE place 主修流派 is cleared -- the Gu is dead wherever it was, and both starve walks
-        //  land here. TODO(第二空窍): a Gu cannot say which aperture bound it, so this assumes PRIMARY.
+        //  ⚠ The ONE place the primary path is cleared -- the Gu is dead wherever it was, and both
+        //  starve walks land here.  TODO: a Gu cannot name the aperture that bound it, so PRIMARY.
         ApertureService.setPrimaryPath(owner, ApertureService.PRIMARY, null);
     }
 
@@ -127,7 +127,7 @@ public final class PlayerDataService {
         player.setData(ModAttachments.BODY,
                 BodyData.DEFAULT.withLastDayIndex(BodyService.get(player).lastDayIndex()));
 
-        //  Back to 凡人, so back to 20 -- the aperture was emptied above, not written through ApertureService.
+        //  Back to mortal, so back to 20 -- the aperture was emptied above, not written through ApertureService.
         if (player instanceof ServerPlayer server) HealthService.refresh(server);
     }
 }

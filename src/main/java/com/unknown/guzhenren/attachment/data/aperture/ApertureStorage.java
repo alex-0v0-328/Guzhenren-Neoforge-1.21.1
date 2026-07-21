@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 //  What each aperture holds: a Gu list per aperture, plus the one Gu its owner bound his fate to.
 //  Both are indexed the way ApertureData is. The store has no cap; the Vital Gu is one slot each.
 //  ⚠ Serialized but NOT synced -- the client sees these through the container menu, on vanilla's own
-//  channel. Syncing them would re-push every stack on every slot click. See CLAUDE.md "Networking".
+//  channel. Syncing them would re-push every stack on every slot click.  CLAUDE.md "Networking".
 public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> vital) {
 
     public static final ApertureStorage DEFAULT = new ApertureStorage(List.of(), List.of());
@@ -25,7 +25,7 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
                     .forGetter(ApertureStorage::vital)
     ).apply(instance, ApertureStorage::new));
 
-    //  TODO(migration): the pre-Vital-Gu shape was a bare list. Drop this alternative -- and the field
+    //    TODO(migration): the pre-Vital-Gu shape was a bare list. Drop this alternative -- and the field
     //  order it forces -- once no world older than 2026-07-21 has to be opened again.
     private static final Codec<ApertureStorage> LEGACY_CODEC = ItemStack.OPTIONAL_CODEC.listOf().listOf()
             .xmap(items -> new ApertureStorage(items, List.of()), ApertureStorage::byAperture);

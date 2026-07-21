@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.network;
 
+import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import net.minecraft.network.chat.Component;
@@ -14,9 +15,9 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 //  ⚠ The mod's ONE network registration, and the documented exception to "there is no networking".
 //  The ban exists so nobody hand-rolls what attachment sync gives free; a CLIENT INTENT is not that --
 //  attachment sync is server->client only and cannot carry a choice upstream. Two exist: open my
-//  storage, and set my 辅修流派.
-//  ⚠ Downstream player data may never be added here. See CLAUDE.md "Networking".
-@EventBusSubscriber(modid = com.unknown.guzhenren.Guzhenren.MOD_ID)
+//  storage, and set my secondary path.
+//  ⚠ Downstream player data may never be added here.  CLAUDE.md "Networking".
+@EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModPayloads {
 
     private ModPayloads() {}
@@ -33,8 +34,8 @@ public final class ModPayloads {
                 ModPayloads::setSecondaryPath);
     }
 
-    //  ⚠ Never trust the wire: 辅修 is the player's own choice, but the index still has to exist, and
-    //  Aperture's ctor is what refuses a 辅修 equal to 主修 -- not this handler.
+    //  ⚠ Never trust the wire: the secondary path is the player's own choice, but the index still has
+    //  to exist, and Aperture's ctor is what refuses one equal to the primary -- not this handler.
     private static void setSecondaryPath(SetSecondaryPathPayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
 

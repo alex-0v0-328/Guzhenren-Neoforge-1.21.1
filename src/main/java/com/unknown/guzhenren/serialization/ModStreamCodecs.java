@@ -19,7 +19,7 @@ public final class ModStreamCodecs {
     }
 
     //  ⚠ Same ordinal trick, shifted by one so 0 can mean "unset" -- the only nullable field in the
-    //  data model is a path nobody has chosen yet. See Aperture's 主修/辅修.
+    //  data model is a path nobody has chosen yet. See Aperture's primary / secondary path.
     public static <E extends Enum<E>> StreamCodec<ByteBuf, E> ofNullableEnum(Class<E> type) {
         E[] values = type.getEnumConstants();
         return ByteBufCodecs.VAR_INT.map(i -> i == 0 ? null : values[i - 1],

@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 //  The mind (脑海) system. Thoughts regen by Brilliance and top up on sleep; wills and emotions never do.
-//  See CLAUDE.md "Wisdom".
+//   CLAUDE.md "Wisdom".
 public final class MindService {
 
     private MindService() {}

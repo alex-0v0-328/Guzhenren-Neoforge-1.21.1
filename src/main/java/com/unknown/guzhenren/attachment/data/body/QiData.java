@@ -11,7 +11,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 //  The qi (气) system: marks per type, **no cap**, sparse -- an unearned type is absent and reads back as 0.
-//  ⚠ total() IS the Qi Path's marks; they are not stored in PathData. See CLAUDE.md "Qi".
+//  ⚠ total() IS the Qi Path's marks; they are not stored in PathData.  CLAUDE.md "Qi".
 public record QiData(Map<QiType, Long> marks) {
 
     public static final QiData DEFAULT = new QiData(Map.of());

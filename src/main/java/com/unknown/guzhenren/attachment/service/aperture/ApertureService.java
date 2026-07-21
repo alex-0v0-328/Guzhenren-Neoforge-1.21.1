@@ -25,7 +25,8 @@ public final class ApertureService {
 
     public static final int PRIMARY = ApertureData.PRIMARY;
 
-    //  A 十绝 physique's innate 道痕 / 碎屑, split evenly across its 天赋流派 (总数, so two paths get half each).
+    //  A Ten-Extremes physique's innate marks / specks, split evenly across its talent paths. ⚠ These
+    //  are TOTALS, so a physique with two paths gives half to each.
     public static final long TALENT_MARK_TOTAL = 10L;
     public static final long TALENT_SPECK_TOTAL = 1000L;
 
@@ -47,7 +48,7 @@ public final class ApertureService {
     //  No tier field: "set the tier" rolls a base inside its band. EXTREME hits 100; set() grants the physique.
     public static void setTalent(ServerPlayer p, Talent v) {setBaseEssence(p, Talent.randomPercent(v));}
 
-    //  ---- 主修 / 辅修 ----
+    //  ---- primary / secondary path ----
     //  Primary is DERIVED from the Vital Gu, but stored, because ApertureStorage is not synced and this
     //  record is -- storing the path IS the sync. ⚠ No-ops when unchanged, the HealthService.refresh
     //  idiom: setVital runs on every menu click and every day tick, and each write pushes a packet.
@@ -58,7 +59,7 @@ public final class ApertureService {
     }
 
     //  ⚠ The player's own choice, so it is NOT recomputed from anything. Aperture's ctor drops it when it
-    //  would equal 主修 -- binding a Vital Gu of the same path is what makes that fire.
+    //  would equal the primary -- binding a Vital Gu of that same path is what makes it fire.
     public static void setSecondaryPath(ServerPlayer p, int index, @Nullable GuPath v) {
         Aperture aperture = aperture(p, index);
         if (aperture.secondaryPath() == v) return;
@@ -87,7 +88,7 @@ public final class ApertureService {
             }
             aperture = aperture.withExtremePhysique(ExtremePhysique.NONE);
         } else {
-            //  Holding a physique *is* the Ten Extreme tier, and that tier is base 100 by definition.
+            //  Holding a physique *is* the Ten-Extremes tier, and that tier is base 100 by definition.
             aperture = aperture.withBaseEssence(Aperture.MAX_BASE).withExtremePhysique(physique);
         }
 
@@ -129,11 +130,11 @@ public final class ApertureService {
         return aperture;
     }
 
-    //  A 十绝 physique grants innate path 道痕/碎屑; changing it revokes the old grant and lays down the new.
+    //  A Ten-Extremes physique grants innate marks/specks; changing it revokes the old and lays the new.
     //  Read the physique AFTER enforce -- enforce is what actually rolls or clears it. Read is why not derived.
     //  Convention: a cross-domain "X grants Y" rule lives in the service that owns the trigger (physique is
-    //  空窍's, so it lives here) and calls the target domain's service. See CLAUDE.md "Invariants".
-    //  TODO(refactor): if such grant rules reach 2-3, extract a coordinator; one rule does not earn it.
+    //  the aperture's, so it lives here) and calls the target domain's service  CLAUDE.md.
+    //    TODO(refactor): if such grant rules reach 2-3, extract a coordinator; one rule does not earn it.
     private static void reconcileTalentPaths(ServerPlayer player, ExtremePhysique before, ExtremePhysique after) {
         if (before == after) return;
         grantTalentPaths(player, before, -1);
@@ -142,8 +143,8 @@ public final class ApertureService {
 
     //  ⚠ Granted marks carry no source tag -- they merge into the path's total ("natural" origin), so a
     //  revoke is a plain subtraction that clamps at 0. No need to track which marks the physique gave.
-    //  ⚠ addMark silently refuses a featured path (气道 today; 力道/宙道 by design) -- 大力真武体's 力道 and
-    //  荒古老月体's 宙道 grant fine now, but vanish the day either lights up. See CLAUDE.md "Featured body paths".
+    //  ⚠ addMark silently refuses a featured path (the Qi Path today; Strength and Time by design), so
+    //  Great Strength True Martial's Strength and Desolate Ancient Moon's Time vanish the day either lights up.
     private static void grantTalentPaths(ServerPlayer player, ExtremePhysique physique, int sign) {
         List<GuPath> paths = physique.getTalentPaths();
         if (paths.isEmpty()) return;

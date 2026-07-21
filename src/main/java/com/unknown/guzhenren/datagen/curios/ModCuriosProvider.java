@@ -8,7 +8,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import top.theillusivec4.curios.api.CuriosDataProvider;
 
 //  Writes data/guzhenren/curios/** at runData. A DataProvider, so it does not exist at runtime --
-//  same reason ModDamageTypeProvider lives in datagen/. See CLAUDE.md "Compat".
+//  same reason ModDamageTypeProvider lives in datagen/.  CLAUDE.md "Compat".
 public class ModCuriosProvider extends CuriosDataProvider {
 
     public ModCuriosProvider(PackOutput output, ExistingFileHelper fileHelper,

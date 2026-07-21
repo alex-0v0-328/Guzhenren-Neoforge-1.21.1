@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  What every Gu (蛊) item is: a rank, a path, one tooltip line, and the shape of its two clicks.
+//  What every Gu item is: a rank, a path, one tooltip line, and the shape of its two clicks.
 //  ⚠ Each template gates on both sides but writes only through a ServerPlayer; a subclass never re-implements that.
 public abstract class GuItem extends Item {
 
@@ -139,7 +139,7 @@ public abstract class GuItem extends Item {
         tooltip.add(ModDisplayText.guLine(rank, path, kindKey()).withStyle(ChatFormatting.GRAY));
     }
 
-    //  本命·黑豕蛊 once bound. ⚠ RefinableGuItem's 野生 wraps THIS, never the other way round.
+    //  本命·黑豕蛊 once bound. ⚠ RefinableGuItem's Wild prefix wraps THIS, never the other way round.
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
         return isVital(stack) ? ModDisplayText.vital(super.getName(stack)) : super.getName(stack);
@@ -149,7 +149,7 @@ public abstract class GuItem extends Item {
     @Override
     public boolean isFoil(@NotNull ItemStack stack) {return isVital(stack) || super.isFoil(stack);}
 
-    //  Refused: red on the action bar, nothing spent. Same class as a command's red -- see CLAUDE.md "Color".
+    //  Refused: red on the action bar, nothing spent. Same class as a command's red --  CLAUDE.md "Color".
     protected static void refuse(ServerPlayer player, String key, Object... args) {
         player.displayClientMessage(Component.translatable(key, args).withStyle(ChatFormatting.RED), true);
     }

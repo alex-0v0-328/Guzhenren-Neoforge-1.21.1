@@ -1,35 +1,18 @@
 package com.unknown.guzhenren.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
-import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathEntry;
-import com.unknown.guzhenren.attachment.data.body.SoulData;
-import com.unknown.guzhenren.attachment.data.body.StrengthData;
-import com.unknown.guzhenren.attachment.data.mind.MindData;
-import com.unknown.guzhenren.attachment.data.mind.MindPool;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.attachment.service.body.PathService;
-import com.unknown.guzhenren.attachment.service.body.QiService;
-import com.unknown.guzhenren.attachment.service.body.SoulService;
-import com.unknown.guzhenren.attachment.service.body.StrengthService;
-import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.client.ModKeyMappings;
-import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.qi.QiType;
-import com.unknown.guzhenren.custom.enums.strength.JunStrength;
-import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
-import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
+import com.unknown.guzhenren.display.InfoModel;
 import com.unknown.guzhenren.display.ModDisplayText;
 import com.unknown.guzhenren.network.OpenApertureStoragePayload;
 import com.unknown.guzhenren.network.SetSecondaryPathPayload;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -37,22 +20,22 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Mth;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 //  The G-key info panel: aperture / body / mind, plus a storage tab that opens a container instead.
-//  Reads the synced attachments client-side, like the HUD. Layout notes: CLAUDE.md "Client".
-//  TODO(refactor): this row logic mirrors CmdInfo -- extract a shared InfoModel when the view next grows.
+//  Reads the synced attachments client-side, like the HUD. Layout notes:  CLAUDE.md "Client".
+//  ⚠ WHICH rows exist is InfoModel's; this file only draws them and owns the layout.
 public final class PlayerInfoScreen extends Screen {
 
-    //  ⚠ No texture: the panel is drawn from fills, so it scales to any window. See CLAUDE.md "Client".
+    //  ⚠ No texture: the panel is drawn from fills, so it scales to any window.  CLAUDE.md "Client".
     private static final float SCREEN_FRACTION = 0.80F;
     private static final int PAD = 12;
     private static final int HEADER_H = 22;
     private static final int CONTENT_TOP = HEADER_H + 8;
     private static final int LINE_H = 12;
-    private static final int INDENT = 10;
 
     //  The tab rail down the right edge.
     private static final int TAB_W = 76;
@@ -69,7 +52,7 @@ public final class PlayerInfoScreen extends Screen {
     private static final int TAB_TEXT_DEAD = 0xFF6A6A6A;
 
     //  ⚠ One accent per DOMAIN, never per value -- colour says "which of the three you are looking at",
-    //  it never says a number is good or bad. See CLAUDE.md "Color".
+    //  it never says a number is good or bad.  CLAUDE.md "Color".
     private static final int[] ACCENT = {0xFF4FC3F7, 0xFFB388FF, 0xFFFFD54F, 0xFF81C784};
 
     private static final String[] TAB_KEYS = {
@@ -82,11 +65,15 @@ public final class PlayerInfoScreen extends Screen {
     //  The storage tab does not render rows -- it opens a container instead.
     private static final int TAB_STORAGE = 3;
 
-    //  The 辅修流派 picker: 30 paths plus a "clear" cell, laid out as a grid so it needs no scrolling.
+    //  The secondary-path picker: 30 paths plus a "clear" cell, a grid so it needs no scrolling.
     private static final int PICK_COLS = 4;
     private static final int PICK_CELL_W = 84;
     private static final int PICK_CELL_H = 14;
     private static final int PICK_PAD = 8;
+
+    //  A 2px hint between the values and the tab rail, drawn only when something is actually hidden.
+    private static final int SCROLL_W = 2;
+    private static final int SCROLL_GAP = 5;
 
     private int leftPos;
     private int topPos;
@@ -98,6 +85,10 @@ public final class PlayerInfoScreen extends Screen {
     //  -- the rows are rebuilt every frame, so there is no stable index to remember instead.
     private int clickableRowY = -1;
     private boolean picking;
+
+    //  Index of the first visible row. ⚠ Clamped in render(), not here or in mouseScrolled: only render
+    //  knows how many rows this tab actually built, and it rebuilds them every frame.
+    private int scrollRow;
 
     public PlayerInfoScreen() {super(Component.translatable("guzhenren.screen.info.title"));}
 
@@ -129,20 +120,24 @@ public final class PlayerInfoScreen extends Screen {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null || activeTab == TAB_STORAGE) return;
 
-        List<Row> rows = switch (activeTab) {
-            case 1 -> bodyRows(player);
-            case 2 -> mindRows(player);
-            default -> apertureRows(player);
-        };
+        List<Row> rows = rows(player);
+
+        //  ⚠ A WINDOW over the rows, not a clipped draw: whole rows only, so nothing is ever half a line
+        //  and every hit test stays exact. A full path list runs past the panel bottom without this.
+        int visible = visibleRows();
+        int hidden = Math.max(0, rows.size() - visible);
+        scrollRow = Mth.clamp(scrollRow, 0, hidden);
 
         //  ⚠ Values are right-aligned against the tab rail, so numbers line up however long a label runs.
         int valueRight = tabLeft() - PAD;
-        int y = topPos + CONTENT_TOP;
+        int y = contentTop();
         clickableRowY = -1;
-        for (Row row : rows) {
+        for (int i = scrollRow; i < Math.min(rows.size(), scrollRow + visible); i++) {
+            Row row = rows.get(i);
             if (mouseY >= y - 1 && mouseY < y + LINE_H - 1 && mouseX >= leftPos && mouseX < tabLeft()) {
                 g.fill(leftPos + PAD - 2, y - 1, valueRight + 2, y + LINE_H - 1, ROW_HOVER);
             }
+            //  ⚠ Only a VISIBLE clickable row is clickable -- scrolled away, it leaves -1 behind.
             if (row.clickable()) clickableRowY = y;
             //  A row with no value is a section header, so it takes the accent.
             int labelColor = row.value() == null ? accent : TEXT;
@@ -152,10 +147,39 @@ public final class PlayerInfoScreen extends Screen {
             }
             y += LINE_H;
         }
+        if (hidden > 0) renderScrollBar(g, rows.size(), visible, accent);
         if (picking) renderPicker(g, mouseX, mouseY, accent);
     }
 
-    //region 辅修流派 picker
+    //region scrolling
+    private int contentTop() {return topPos + CONTENT_TOP;}
+    private int contentBottom() {return topPos + panelH - PAD;}
+    private int visibleRows() {return Math.max(0, (contentBottom() - contentTop()) / LINE_H);}
+
+    //  Chrome, not a value -- it takes the domain accent the same way the header and active tab do.
+    private void renderScrollBar(GuiGraphics g, int total, int visible, int accent) {
+        int x0 = tabLeft() - SCROLL_GAP;
+        int top = contentTop();
+        int track = visible * LINE_H;
+
+        g.fill(x0, top, x0 + SCROLL_W, top + track, DIVIDER);
+        int thumb = Math.max(LINE_H, track * visible / total);
+        int offset = (track - thumb) * scrollRow / Math.max(1, total - visible);
+        g.fill(x0, top + offset, x0 + SCROLL_W, top + offset + thumb, accent);
+    }
+
+    //  ⚠ The picker swallows the wheel as well as the click, or the list would slide behind the modal.
+    @Override
+    public boolean mouseScrolled(double mx, double my, double dx, double dy) {
+        if (picking) return true;
+        if (dy == 0.0) return super.mouseScrolled(mx, my, dx, dy);
+
+        scrollRow = Math.max(0, scrollRow - (int) Math.signum(dy));
+        return true;
+    }
+    //endregion
+
+    //region secondary-path picker
     //  A modal grid over the panel: every path, plus one cell that clears the choice.
     //  ⚠ Same fills as everything else -- no texture, so it scales with the window like the panel does.
     private void renderPicker(GuiGraphics g, int mouseX, int mouseY, int accent) {
@@ -263,6 +287,8 @@ public final class PlayerInfoScreen extends Screen {
                     PacketDistributor.sendToServer(new OpenApertureStoragePayload(ApertureData.PRIMARY));
                 } else {
                     activeTab = i;
+                    //  A fresh tab starts at the top; the clamp alone would only fix an overshoot.
+                    scrollRow = 0;
                 }
                 return true;
             }
@@ -290,127 +316,95 @@ public final class PlayerInfoScreen extends Screen {
     @Override
     public boolean isPauseScreen() {return false;}
 
-    //  Aperture: realm, aptitude, essence (only once awakened), and its life state when not alive.
-    private List<Row> apertureRows(LocalPlayer player) {
-        ApertureData data = ApertureService.get(player);
-        List<Row> rows = new ArrayList<>();
-        if (data.count() <= 1) {
-            apertureBlock(rows, data.primary(), data.isAwakened(), 0);
-            return rows;
-        }
-        for (int i = 0; i < data.count(); i++) {
-            rows.add(new Row(0, Component.translatable("guzhenren.command.info.aperture_index", i + 1), null));
-            apertureBlock(rows, data.get(i), true, INDENT);
+    //  The model says WHICH rows and in what order; this turns each into a drawable one.
+    //  ⚠ MindHeader renders as nothing here -- the tab name is already that header. It is the one entry
+    //  the two surfaces do not share, and skipping it in code beats a comment asking you to remember.
+    private List<Row> rows(LocalPlayer player) {
+        List<InfoModel.Row> model = switch (activeTab) {
+            case 1 -> InfoModel.body(player);
+            case 2 -> InfoModel.mind(player);
+            default -> InfoModel.aperture(player);
+        };
+
+        List<Row> rows = new ArrayList<>(model.size());
+        for (InfoModel.Row row : model) {
+            Row drawn = draw(row.indent(), row.entry());
+            if (drawn != null) rows.add(drawn);
         }
         return rows;
     }
 
-    private void apertureBlock(List<Row> rows, Aperture ap, boolean awakened, int indent) {
-        rows.add(new Row(indent, label("realm"), ModDisplayText.realm(ap)));
-        MutableComponent talent = ModDisplayText.talent(ap);
-        if (awakened) talent.append(detail(ModDisplayText.baseFraction(ap.baseEssence())));
-        rows.add(new Row(indent, label("talent"), talent));
-        if (awakened) {
-            rows.add(new Row(indent, label("essence"),
-                    Component.literal(ModDisplayText.pool(ap.currentEssence(), ap.maxEssence()))));
+    //  ⚠ Exhaustive over a sealed Entry: a new row cannot be added to InfoModel without this failing to
+    //  compile. That is what replaced the old "must not drift" comment in two files.
+    private static @Nullable Row draw(int indent, InfoModel.Entry entry) {
+        return switch (entry) {
+            //  A section header takes the accent, which is what a null value means to render().
+            case InfoModel.ApertureIndex e -> new Row(indent,
+                    Component.translatable("guzhenren.command.info.aperture_index", e.number()), null);
+            case InfoModel.Realm e -> new Row(indent, label("realm"), ModDisplayText.realm(e.aperture()));
+            case InfoModel.Talent e -> new Row(indent, label("talent"), talent(e));
+            case InfoModel.Essence e -> new Row(indent, label("essence"), Component.literal(
+                    ModDisplayText.pool(e.aperture().currentEssence(), e.aperture().maxEssence())));
 
-            //  主修 is read-only -- it is whatever Vital Gu sits in the slot. 辅修 is the one row on this
-            //  whole panel the player may click. ⚠ The gray hint is the affordance; colour may not be.
-            rows.add(new Row(indent, label("primary_path"), ModDisplayText.path(ap.primaryPath())));
-            rows.add(new Row(indent, label("secondary_path"),
-                    ModDisplayText.path(ap.secondaryPath()).append(detail(pickHint())), true));
-        }
-        if (!ap.isAlive()) {
-            rows.add(new Row(indent, label("state"), Component.translatable(ap.state().getTranslationKey())));
-        }
+            //  The primary is read-only -- whatever Vital Gu sits in the slot. The secondary is the one
+            //  row on this panel he may click. ⚠ The gray hint is the affordance; colour may not be.
+            case InfoModel.PathChoice e -> e.primary()
+                    ? new Row(indent, label("primary_path"), ModDisplayText.path(e.path()))
+                    : new Row(indent, label("secondary_path"),
+                            ModDisplayText.path(e.path()).append(detail(pickHint())), true);
+            case InfoModel.ApertureLife e -> new Row(indent, label("state"), name(e.state().getTranslationKey()));
+
+            case InfoModel.BodyLife e -> new Row(indent, label("state"), name(e.state().getTranslationKey()));
+            case InfoModel.Form e -> new Row(indent, label("life_form"), name(e.form().getTranslationKey()));
+            case InfoModel.Soul e -> new Row(indent, label("soul"),
+                    Component.literal(ModDisplayText.pool(e.soul().currentSoul(), e.soul().maxSoul()))
+                            .append(detail(name(e.soul().tier().getTranslationKey()))));
+            case InfoModel.Lifespan e -> new Row(indent, label("lifespan"), ModDisplayText.lifespan(e.body()));
+            case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
+            case InfoModel.PathRow e -> new Row(indent, name(e.path().getTranslationKey()), pathValue(e.entry()));
+            case InfoModel.QiHeader e -> new Row(indent, label("qi"), qiValue(e));
+            case InfoModel.QiRow e -> new Row(indent, name(e.type().getTranslationKey()),
+                    Component.literal(Long.toString(e.mark())));
+            case InfoModel.StrengthHeader e -> new Row(indent, label("strength"), e.empty() ? none() : null);
+            case InfoModel.StrengthRow e -> new Row(indent, name(e.branch().getTranslationKey()), e.reading());
+
+            case InfoModel.BrillianceRow e -> new Row(indent, label("brilliance"),
+                    name(e.brilliance().getTranslationKey()).append(detail(Component.translatable(
+                            "guzhenren.command.info.brilliance_rate", e.brilliance().getThoughtsPerSecond()))));
+            case InfoModel.MindHeader ignored -> null;
+            case InfoModel.MindRow e -> new Row(indent, name(e.type().getTranslationKey()),
+                    Component.literal(ModDisplayText.pool(e.pool().current(), e.pool().max())));
+        };
     }
 
-    //  Body: life state (only when not alive), life form, soul, lifespan, paths, the Qi Path, beast strengths.
-    //  ⚠ Same rows in the same order as CmdInfo.body -- the two surfaces must not drift.
-    private List<Row> bodyRows(LocalPlayer player) {
-        BodyData body = BodyService.get(player);
-        SoulData soul = SoulService.get(player);
-        List<Row> rows = new ArrayList<>();
-
-        if (body.lifeState() != LifeState.ALIVE) {
-            rows.add(new Row(0, label("state"), Component.translatable(body.lifeState().getTranslationKey())));
-        }
-        rows.add(new Row(0, label("life_form"), Component.translatable(body.lifeForm().getTranslationKey())));
-        rows.add(new Row(0, label("soul"), Component.literal(ModDisplayText.pool(soul.currentSoul(), soul.maxSoul()))
-                .append(detail(Component.translatable(soul.tier().getTranslationKey())))));
-        rows.add(new Row(0, label("lifespan"), ModDisplayText.lifespan(body)));
-
-        //  Path attainment: every visible path except the Qi Path -- that one is its own section below.
-        //  Empty reads inline on the header, not as a separate line.
-        List<Map.Entry<GuPath, PathEntry>> paths = PathService.visibleEntries(player).entrySet().stream()
-                .filter(e -> e.getKey() != GuPath.QI).toList();
-        if (paths.isEmpty()) {
-            rows.add(new Row(0, label("paths"), none()));
-        } else {
-            rows.add(new Row(0, label("paths"), null));
-            for (Map.Entry<GuPath, PathEntry> e : paths) {
-                PathEntry entry = e.getValue();
-                MutableComponent value = Component.translatable("guzhenren.screen.path_value",
-                        Component.translatable(entry.attainment().getTranslationKey()), entry.mark());
-                if (entry.speck() > 0L) {
-                    value.append(Component.translatable("guzhenren.command.info.path_speck", entry.speck()));
-                }
-                rows.add(new Row(INDENT, Component.translatable(e.getKey().getTranslationKey()), value));
-            }
-        }
-
-        //  Qi Path: attainment + total marks on the header, or [NONE] while it is still none -- never a
-        //  bare none. The per-type breakdown sits below.
-        GuAttainment qiAttainment = PathService.attainment(player, GuPath.QI);
-        MutableComponent qiValue = qiAttainment == GuAttainment.NONE ? none()
-                : Component.translatable(qiAttainment.getTranslationKey());
-        long qiTotal = PathService.mark(player, GuPath.QI);
-        if (qiTotal > 0L) qiValue.append(Component.translatable("guzhenren.command.info.qi_total", qiTotal));
-        rows.add(new Row(0, label("qi"), qiValue));
-        for (QiType type : QiType.values()) {
-            long mark = QiService.mark(player, type);
-            if (mark <= 0L) continue;
-            rows.add(new Row(INDENT, Component.translatable(type.getTranslationKey()),
-                    Component.literal(Long.toString(mark))));
-        }
-
-        //  The Strength Path's two branches, one row each: how many beast strengths, and how many 斤 --
-        //  never which. Empty reads [NONE] inline, as the path list does.
-        //  ⚠ 力道 also stays in 流派造诣 above -- that row is its specks, these are the grades they bought.
-        StrengthData strength = StrengthService.get(player);
-        if (strength.isEmpty()) {
-            rows.add(new Row(0, label("strength"), none()));
-            return rows;
-        }
-        rows.add(new Row(0, label("strength"), null));
-        if (strength.hasBranch(StrengthBranch.BEASTS)) {
-            rows.add(new Row(INDENT, Component.translatable(StrengthBranch.BEASTS.getTranslationKey()),
-                    ModDisplayText.boarStrength(strength.boarCount())));
-        }
-        //  One row per kind that has any. ⚠ A second kind would repeat the branch title -- revisit then.
-        for (JunStrength kind : JunStrength.values()) {
-            int count = strength.junCount(kind);
-            if (count <= 0) continue;
-            rows.add(new Row(INDENT, Component.translatable(StrengthBranch.HUMAN.getTranslationKey()),
-                    ModDisplayText.junStrength(kind, count)));
-        }
-        return rows;
+    private static MutableComponent talent(InfoModel.Talent e) {
+        MutableComponent talent = ModDisplayText.talent(e.aperture());
+        if (e.awakened()) talent.append(detail(ModDisplayText.baseFraction(e.aperture().baseEssence())));
+        return talent;
     }
 
-    //  Mind: Brilliance with its regen rate, then the three cells -- the tab is the header already.
-    private List<Row> mindRows(LocalPlayer player) {
-        MindData mind = MindService.get(player);
-        List<Row> rows = new ArrayList<>();
-        rows.add(new Row(0, label("brilliance"), Component.translatable(mind.brilliance().getTranslationKey())
-                .copy().append(detail(Component.translatable(
-                        "guzhenren.command.info.brilliance_rate", mind.brilliance().getThoughtsPerSecond())))));
-        for (WisdomType type : WisdomType.values()) {
-            MindPool pool = mind.pool(type);
-            rows.add(new Row(0, Component.translatable(type.getTranslationKey()),
-                    Component.literal(ModDisplayText.pool(pool.current(), pool.max()))));
+    //  Marks always; specks only when he has some -- most mortals sit at one denomination, not both.
+    private static MutableComponent pathValue(PathEntry entry) {
+        MutableComponent value = Component.translatable("guzhenren.screen.path_value",
+                name(entry.attainment().getTranslationKey()), entry.mark());
+        if (entry.speck() > 0L) {
+            value.append(Component.translatable("guzhenren.command.info.path_speck", entry.speck()));
         }
-        return rows;
+        return value;
     }
+
+    //  Attainment plus total marks, or [NONE] while it is still none -- never a bare none.
+    private static MutableComponent qiValue(InfoModel.QiHeader e) {
+        MutableComponent value = e.attainment() == GuAttainment.NONE
+                ? none()
+                : name(e.attainment().getTranslationKey());
+        if (e.total() > 0L) {
+            value.append(Component.translatable("guzhenren.command.info.qi_total", e.total()));
+        }
+        return value;
+    }
+
+    private static MutableComponent name(String key) {return Component.translatable(key);}
 
     private static Component label(String name) {return Component.translatable("guzhenren.screen.label." + name);}
     private static MutableComponent none() {return Component.translatable("guzhenren.display.none");}
@@ -421,7 +415,7 @@ public final class PlayerInfoScreen extends Screen {
     }
 
     //  One display line: label at the left, value in a fixed column so numbers line up across rows.
-    //  ⚠ clickable is what makes a row an affordance; exactly one row (辅修流派) sets it today.
+    //  ⚠ clickable is what makes a row an affordance; exactly one row (the secondary path) sets it.
     private record Row(int indent, Component label, @Nullable Component value, boolean clickable) {
         Row(int indent, Component label, @Nullable Component value) {this(indent, label, value, false);}
     }

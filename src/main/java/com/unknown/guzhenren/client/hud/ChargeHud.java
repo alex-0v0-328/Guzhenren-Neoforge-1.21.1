@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 //  The bar a charged Gu use draws over the hotbar, with the running total above it. It rides vanilla's
 //  own held-item-name baseline, so armour and a mount's health push it up instead of hiding it.
 //  ⚠ Purely client-side and purely derived: the hold lives in vanilla's own useItemRemainingTicks, and
-//  the totals ride the stack's synced component. Nothing here is state. See CLAUDE.md "HUD".
+//  the totals ride the stack's synced component. Nothing here is state.  CLAUDE.md "HUD".
 public final class ChargeHud implements LayeredDraw.Layer {
 
     public static final ChargeHud INSTANCE = new ChargeHud();

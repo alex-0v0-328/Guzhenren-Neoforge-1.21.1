@@ -21,7 +21,8 @@ import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  A Gu that is 野生 until refined, then fed and used: 豕蛊, 斤力蛊, and everything shaped like them.
+//  A Gu that is wild (野生) until refined, then fed and used: the Boar Gu, the Jin Strength Gu, and
+//  anything shaped like them.
 //  ⚠ It is NEVER consumed -- starving is its only end, so a capped owner can hand it to another player.
 public abstract class RefinableGuItem extends MortalGuItem {
 
@@ -49,7 +50,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
     protected int hungryThreshold() {return 2;}
     protected long speckPerUse() {return 1L;}
 
-    //  Holding right-click: three seconds at the Gu's own rank, one above it, nine below. See CLAUDE.md.
+    //  Holding right-click: three seconds at the Gu's own rank, one above it, nine below.  CLAUDE.md.
     protected int chargeTicks() {return 60;}
     protected int fastChargeTicks() {return 20;}
     protected int slowChargeTicks() {return 180;}
@@ -91,7 +92,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
     }
 
     public boolean refined(ItemStack stack) {return state(stack).refineProgress() >= refineCost();}
-    //  What "蛊饿了" means. The threshold stays the item's business; this is the question callers ask.
+    //  What "the Gu is hungry" means. The threshold stays the item's business; callers only ask this.
     //  ⚠ Starvation is not asked, it is reported: decay() returns it, because only the biller knows.
     public boolean hungry(ItemStack stack) {return refined(stack) && state(stack).hunger() <= hungryThreshold();}
     //endregion
@@ -103,9 +104,9 @@ public abstract class RefinableGuItem extends MortalGuItem {
     //  ⚠ No cooldown override any more: the CHARGE is the pacing now. A one-second cooldown on top of a
     //  four-second hold only broke the bar into stutters while he kept the button down.
     //  ⚠ Both the refine and the use are charged, so this is what the hotbar bar counts down. The
-    //  comparison is 转数 against 转数 -- a bigger 阶段 buys nothing here.
-    //  ⚠ slowChargeTicks is UNREACHABLE today: 凡人 is refused outright by gate(), and there is no rank
-    //  between 凡人 and 一转 -- which is every refinable Gu's rank. A rank II Gu is what lights it up.
+    //  comparison is rank against rank -- a bigger stage buys nothing here.
+    //  ⚠ slowChargeTicks is UNREACHABLE today: a mortal is refused outright by gate(), and no rank sits
+    //  between mortal and Rank I -- which is every refinable Gu's rank. A Rank II Gu would light it up.
     @Override
     protected int useDurationTicks(Player player, ItemStack stack) {
         int gap = rankGap(player);
@@ -113,7 +114,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
         return gap == 0 ? chargeTicks() : slowChargeTicks();
     }
 
-    //  How many 转 he stands above this Gu; negative means below it. The one measure both the charge
+    //  How many ranks he stands above this Gu; negative means below it. The one measure both the charge
     //  time and the refine cap read, so "higher rank" can never mean two different things.
     private int rankGap(Player player) {
         return ApertureService.rank(player).ordinal() - rank().ordinal();
@@ -340,7 +341,9 @@ public abstract class RefinableGuItem extends MortalGuItem {
             int hunger = items * units / per;
             if (hunger <= 0) continue;
 
-            food.shrink((hunger * per + units - 1) / units);
+            //  ⚠ Creative pays no food here either -- eat() has carried this guard all along and this
+            //  walk did not, which left the same rule wearing two faces.
+            if (!player.hasInfiniteMaterials()) food.shrink((hunger * per + units - 1) / units);
             store(stack, state(stack).withHunger(state(stack).hunger() + hunger));
             ate = true;
         }

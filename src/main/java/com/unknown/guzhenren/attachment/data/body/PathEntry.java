@@ -9,13 +9,13 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 //  One path: Qi Path, Grandmaster, 1000 marks, 200 specks. mark and speck are two independent counts, never
-//  converted into each other (the ratio is a future thing). Attainment moves neither. See CLAUDE.md "Qi".
+//  converted into each other (the ratio is a future thing). Attainment moves neither.  CLAUDE.md "Qi".
 public record PathEntry(GuAttainment attainment, long mark, long speck) {
 
     public static final PathEntry DEFAULT = new PathEntry(GuAttainment.NONE, 0L, 0L);
 
-    //  The 仙-scale mark is 10000 of the 凡-scale speck. Independent counts today, never auto-converted.
-    //  TODO(convert): 道痕⇄碎屑 at 1:10000 -- no caller yet (needs a 蛊/item to trigger it).
+    //  One immortal-scale mark is 10000 mortal-scale specks. Independent counts, never auto-converted.
+    //     TODO(convert): mark <-> speck at 1:10000 -- no caller yet; it needs a Gu or item to trigger it.
     public static final long MARK_PER_SPECK = 10_000L;
 
     public static final Codec<PathEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(

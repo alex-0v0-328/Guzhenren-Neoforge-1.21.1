@@ -35,7 +35,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
     private static final int ROW_GAP = 2;
     private static final int GROUP_GAP = 7;
 
-    //  Fixed hues, NOT EssenceColor's per-rank palette -- see CLAUDE.md "HUD".
+    //  Fixed hues, NOT EssenceColor's per-rank palette --  CLAUDE.md "HUD".
     private static final int ESSENCE_FILL = 0xFF4FC3F7;
     private static final int SOUL_FILL = 0xFFB388FF;
     private static final int BAR_TRACK = 0xB0202020;

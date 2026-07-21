@@ -245,7 +245,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(BeastStrength.BLACK_BOAR, "Black Boar");
     }
 
-    //  The Strength Path's three branches. Titles today; their effects come later, and 气象天地流 has no data
+    //  The Strength Path's three branches. Titles today; effects come later, and ENVIRONMENT has no data
     private void addStrengthBranch() {
         add(StrengthBranch.HUMAN, "Human Jun Strength Branch");
         add(StrengthBranch.BEASTS, "Beast Strength Phantom Branch");
@@ -285,7 +285,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(Stage.PEAK, "Peak");
     }
 
-    //  甲乙丙丁 are the classic Chinese ordinals, so they land on A/B/C/D rather than on I..IV.
+    //  The grades 甲乙丙丁 are the classic Chinese ordinals, so they land on A/B/C/D, not I..IV.
     private void addTalent() {
         add(Talent.EXTREME, "Ten-Extremes Aptitude");
         add(Talent.FIRST, "Grade-A Aptitude");

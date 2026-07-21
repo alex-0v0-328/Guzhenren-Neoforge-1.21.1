@@ -9,7 +9,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-//  Every custom MobEffect. One today: what a 生机叶蛊 leaves behind.
+//  Every custom MobEffect. One today: what a Vitality Leaf Gu leaves behind.
 public final class ModEffects {
 
     private ModEffects() {}

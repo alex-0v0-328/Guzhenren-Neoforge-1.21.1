@@ -80,7 +80,7 @@ public final class EssenceService {
             double total = carry[i] + perStep;
             long whole = (long) total;
 
-            //  Unsynced and unserialized, so this write is free -- no packet. See CLAUDE.md "Networking".
+            //  Unsynced and unserialized, so this write is free -- no packet.  CLAUDE.md "Networking".
             carry[i] = (float) (total - whole);
             if (whole > 0L) set(player, i, current + whole);
         }

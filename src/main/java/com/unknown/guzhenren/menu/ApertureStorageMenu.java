@@ -203,7 +203,7 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
     public boolean stillValid(@NotNull Player who) {return who == player && who.isAlive();}
 
     //  ⚠ Any Gu (MortalGuItem) belongs here -- the aperture holds them all; a Gu material
-    //  (GuMaterialItem) does not. Auto-feed touches only the refinable ones. See CLAUDE.md.
+    //  (GuMaterialItem) does not. Auto-feed touches only the refinable ones.  CLAUDE.md.
     private static class GuSlot extends Slot {
         GuSlot(Container container, int index, int x, int y) {super(container, index, x, y);}
 

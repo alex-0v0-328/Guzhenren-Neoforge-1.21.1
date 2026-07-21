@@ -8,7 +8,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
-//  Max health follows the rank: 一转 20 .. 五转 100, the small stages not involved. See Rank.maxHealth.
+//  Max health follows the rank: Rank I 20 .. Rank V 100, stages not involved. See Rank.maxHealth.
 //  ⚠ An attribute modifier is NOT an attachment -- it does not ride a clone, so every entry point re-applies.
 public final class HealthService {
 

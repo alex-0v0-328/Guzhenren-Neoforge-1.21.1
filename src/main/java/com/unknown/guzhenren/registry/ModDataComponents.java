@@ -11,7 +11,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 //  Per-stack item state: a Gu's refinement, and whose Vital Gu it is.
-//  ⚠ networkSynchronized is not a packet -- it rides the vanilla stack sync. See CLAUDE.md "Networking".
+//  ⚠ networkSynchronized is not a packet -- it rides the vanilla stack sync.  CLAUDE.md "Networking".
 public final class ModDataComponents {
 
     private ModDataComponents() {}

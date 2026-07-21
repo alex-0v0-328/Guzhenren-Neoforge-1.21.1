@@ -10,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
 public enum Rank implements StringRepresentable, EnumTranslatable {
 
     //  rankBase: maxEssence = baseEssence * stage.multiplier * rank.rankBase
-    //  maxHealth: 该转的生命上限, 小境界不参与; lifeForm: 仙凡归属; essenceColor: 真元颜色 (深浅再按小境界算)
+    //  maxHealth: the rank's HP cap, untouched by stage; lifeForm: mortal or immortal; essenceColor:
+    //  the essence (真元) colour, which the stage then shades.
     NONE (      0L,  20, LifeForm.MORTAL,   EssenceColor.NONE),
     ONE  (      1L,  20, LifeForm.MORTAL,   EssenceColor.GREEN_COPPER),
     TWO  (     10L,  40, LifeForm.MORTAL,   EssenceColor.RED_STEEL),
@@ -18,8 +19,9 @@ public enum Rank implements StringRepresentable, EnumTranslatable {
     FOUR (  1_000L,  80, LifeForm.MORTAL,   EssenceColor.YELLOW_GOLDEN),
     FIVE ( 10_000L, 100, LifeForm.MORTAL,   EssenceColor.PURPLE_CRYSTAL),
 
-    //  仙人境的 rankBase 与 maxHealth 都是「故意留空」而非未定: 蛊仙不走真元这套, 以后另起一套
-    //  ⚠ maxHealth 的 0 读作「不动血量」, 不是 0 点血 —— 见 HealthService
+    //  The immortal ranks leave rankBase and maxHealth at 0 ON PURPOSE, not undecided: a Gu Immortal
+    //  does not run on essence, and gets its own system later.
+    //  ⚠ A maxHealth of 0 reads "leave HP alone", not "zero HP"  HealthService.
     SIX  (      0L,   0, LifeForm.IMMORTAL, EssenceColor.GREEN_GRAPE),
     SEVEN(      0L,   0, LifeForm.IMMORTAL, EssenceColor.RED_DATE),
     EIGHT(      0L,   0, LifeForm.IMMORTAL, EssenceColor.WHITE_LITCHI),
@@ -28,8 +30,8 @@ public enum Rank implements StringRepresentable, EnumTranslatable {
     public static final Codec<Rank> CODEC = StringRepresentable.fromEnum(Rank::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.rank.";
 
-    //  可设置区间: 一转 ~ 五转. NONE 在下界外 —— 那是 awaken / reset 的事
-    //  六~九转在上界外: rankBase 是故意留空的 0, 设进去真元上限直接归零
+    //  Settable range: Rank I..V. NONE sits below it -- awaken / reset own that.
+    //  ⚠ Rank VI..IX sit above it: their rankBase is a deliberate 0, so setting one zeroes the cap.
     public static final Rank LOWEST = ONE;
     public static final Rank HIGHEST = FIVE;
 
@@ -50,7 +52,7 @@ public enum Rank implements StringRepresentable, EnumTranslatable {
     public LifeForm getLifeForm() {return lifeForm;}
     public EssenceColor getEssenceColor() {return essenceColor;}
 
-    //  升降 d 档, 到边界即停 —— 五转再 up 不会溢出到六转, 那是另一套系统
+    //  Shift d ranks, stopping at the edge -- Rank V never spills into VI, which is another system.
     public Rank shift(int d) {return values()[Math.clamp(ordinal() + d, LOWEST.ordinal(), HIGHEST.ordinal())];}
     public static Rank[] settable() {return Arrays.copyOfRange(values(), LOWEST.ordinal(), HIGHEST.ordinal() + 1);}
 

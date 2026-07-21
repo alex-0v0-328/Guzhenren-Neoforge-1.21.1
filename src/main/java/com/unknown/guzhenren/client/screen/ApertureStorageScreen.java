@@ -18,7 +18,7 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     //  Wide enough for "10 / 10" without the arrows shifting as the count grows.
     private static final int PAGE_LABEL_W = 40;
 
-    //  The Vital Gu annex hangs off the RIGHT edge, so the panel keeps its 222 height. See CLAUDE.md.
+    //  The Vital Gu annex hangs off the RIGHT edge, so the panel keeps its 222 height.  CLAUDE.md.
     //  ⚠ Mirrors ApertureStorageMenu.VITAL_X -- the slot is registered there, the box is drawn here.
     private static final int VITAL_LEFT = 178;
     private static final int VITAL_RIGHT = 210;

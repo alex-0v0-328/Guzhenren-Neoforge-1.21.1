@@ -18,7 +18,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 //  The Strength Path (力道). Two of its three branches have data, and the two shapes differ: which beast
 //  strengths a body took (a set, one kind once ever), and how many of each Jun strength (a count, nine max).
-//  ⚠ Neither is a mark source -- 力道's specks stay in PathData. See CLAUDE.md "Strength Path".
+//  ⚠ Neither is a mark source -- the Strength Path's specks stay in PathData  CLAUDE.md.
 public record StrengthData(Set<BeastStrength> beasts, Map<JunStrength, Integer> jun) {
 
     public static final StrengthData DEFAULT = new StrengthData(Set.of(), Map.of());
@@ -63,7 +63,7 @@ public record StrengthData(Set<BeastStrength> beasts, Map<JunStrength, Integer> 
         return switch (branch) {
             case BEASTS -> !beasts.isEmpty();
             case HUMAN -> !jun.isEmpty();
-            //  ⚠ 气象天地流 has no field yet because it has no spec yet -- see StrengthBranch.
+            //  ⚠ ENVIRONMENT has no field yet because it has no spec yet -- see StrengthBranch.
             case ENVIRONMENT -> false;
         };
     }

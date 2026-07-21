@@ -19,7 +19,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.util.StringRepresentable;
 
 //  /gzr aperture -- lifestate, rank/stage/talent, physique, essence. No `max` leaf: the cap is derived.
-//  ⚠ Gated as ONE branch, which only works because `awaken` is at the root. See CLAUDE.md.
+//  ⚠ Gated as ONE branch, which only works because `awaken` is at the root.  CLAUDE.md.
 public final class CmdAperture {
 
     private CmdAperture() {}

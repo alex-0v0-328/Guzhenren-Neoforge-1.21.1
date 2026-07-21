@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-//  Jin Strength Gu (斤力蛊): 36 uses buy one 斤之力, up to nine, for the Human Jun branch.
+//  Jin Strength Gu (斤力蛊): 36 uses buy one jin of strength, up to nine, for the Human Jun branch.
 //  ⚠ Two feed rates, so two tags -- a tag carries one rate for every member.
 public class JinStrengthGuItem extends RefinableGuItem {
 

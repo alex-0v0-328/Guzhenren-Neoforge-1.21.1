@@ -11,7 +11,7 @@ import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
 
 //  Every phrase that describes a cultivator, shared by the HUD and /gzr info so they can't drift.
-//  Values only, never labels; each caller wraps in its own key. See CLAUDE.md "Color".
+//  Values only, never labels; each caller wraps in its own key.  CLAUDE.md "Color".
 public final class ModDisplayText {
 
     private ModDisplayText() {}
@@ -25,7 +25,7 @@ public final class ModDisplayText {
                 Component.translatable(aperture.stage().getTranslationKey()));
     }
 
-    //  甲等资质 [ 太日阳莽体 ] -- the bracket only shows up for a Ten Extreme physique holder.
+    //  甲等资质 [ 太日阳莽体 ] -- the bracket only shows up for a Ten-Extremes physique holder.
     public static MutableComponent talent(Aperture aperture) {
         MutableComponent line = Component.translatable(aperture.talent().getTranslationKey());
         if (aperture.extremePhysique() == ExtremePhysique.NONE) return line;
@@ -51,8 +51,8 @@ public final class ModDisplayText {
         return Component.translatable("guzhenren.display.vital", name);
     }
 
-    //  A path that may not have been chosen -- 主修 before a Vital Gu, 辅修 before the player picks.
-    //  ⚠ Reads [无] inline, the same shape an empty section header uses.
+    //  A path nobody may have chosen -- the primary before a Vital Gu, the secondary before he picks.
+    //  ⚠ Reads [无] / [NONE] inline, the same shape an empty section header uses.
     public static MutableComponent path(@Nullable GuPath path) {
         return path == null
                 ? Component.translatable("guzhenren.display.none")
@@ -76,7 +76,8 @@ public final class ModDisplayText {
         return Component.translatable("guzhenren.display.boar_strength." + count);
     }
 
-    //  一斤之力 .. 九斤之力. Keyed by kind AND count -- a later 十斤 gets its own nine keys, not a multiplier.
+    //  一斤之力 .. 九斤之力. Keyed by kind AND count -- a later Ten Jin gets its own nine keys, not a
+    //  multiplier.
     public static Component junStrength(JunStrength kind, int count) {
         return Component.translatable("guzhenren.display.jun_strength." + kind.getSerializedName() + "." + count);
     }

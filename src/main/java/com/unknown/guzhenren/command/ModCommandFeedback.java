@@ -5,7 +5,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 
 //  Default / green success / red failure. [GZR] tag stays default; only the message is colored.
-//  See CLAUDE.md "Color".
+//   CLAUDE.md "Color".
 public final class ModCommandFeedback {
 
     private ModCommandFeedback() {}

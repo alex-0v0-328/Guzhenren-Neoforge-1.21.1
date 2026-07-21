@@ -11,13 +11,13 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 
 //  The player-data lifecycle: the moments that are not a tick.
-//  Login carries no *resync* -- NeoForge re-sends the full set itself. See CLAUDE.md "Networking".
+//  Login carries no *resync* -- NeoForge re-sends the full set itself.  CLAUDE.md "Networking".
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerDataEvents {
 
     private PlayerDataEvents() {}
 
-    //  Fires on every login; onJoin is what makes it the *first* one. See CLAUDE.md "Birth".
+    //  Fires on every login; onJoin is what makes it the *first* one.  CLAUDE.md "Birth".
     @SubscribeEvent
     public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
@@ -26,7 +26,7 @@ public final class PlayerDataEvents {
     }
 
     //  Death respawns and non-death clones alike. keepInventory off the server, not level() --
-    //  Level-AutoCloseable gotcha (see CLAUDE.md).
+    //  Level-AutoCloseable gotcha ( CLAUDE.md).
     @SubscribeEvent
     public static void onClone(PlayerEvent.Clone event) {
         MinecraftServer server = event.getOriginal().getServer();
@@ -44,7 +44,7 @@ public final class PlayerDataEvents {
     }
 
     //  Only a natural wake pays out: the sole stopSleepInBed(false, false).
-    //  See CLAUDE.md "Time, sleep, death".
+    //   CLAUDE.md "Time, sleep, death".
     @SubscribeEvent
     public static void onWakeUp(PlayerWakeUpEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;

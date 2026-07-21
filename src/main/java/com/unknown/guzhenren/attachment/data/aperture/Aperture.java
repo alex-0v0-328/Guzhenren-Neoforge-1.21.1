@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 //  A player holds 0..2 of them.
 //  ⚠ The cap is derived here, so currentEssence is clamped structurally -- no writer can exceed it.
 //  ⚠ Both paths are NULLABLE -- the data model's only nulls. GuPath has no NONE, and "has not chosen"
-//  is a real state. See CLAUDE.md "Primary and secondary path".
+//  is a real state.  CLAUDE.md "Primary and secondary path".
 public record Aperture(
         Rank rank,
         Stage stage,
@@ -95,13 +95,13 @@ public record Aperture(
     public Aperture {
         baseEssence = baseEssence <= 0 ? 0 : Math.clamp(baseEssence, MIN_BASE, MAX_BASE);
         currentEssence = Math.clamp(currentEssence, 0L, maxEssence(rank, stage, baseEssence));
-        //  ⚠ 辅修 can never equal 主修 -- enforced here, so the pair is unrepresentable rather than
-        //  merely refused. Binding a Vital Gu of the 辅修 path is what makes this fire.
+        //  ⚠ The secondary path can never equal the primary -- enforced here, so the pair is
+        //  unrepresentable rather than merely refused. Binding a Vital Gu of it is what fires this.
         if (secondaryPath != null && secondaryPath == primaryPath) secondaryPath = null;
     }
 
     //  Awakening (开窍): Rank I Initial + a rolled tier + its physique, and a full pool.
-    //  ⚠ No paths: 主修 comes from a Vital Gu, 辅修 from the player. Awakening grants neither.
+    //  ⚠ No paths: the primary comes from a Vital Gu, the secondary from the player. Awakening grants neither.
     public static Aperture opened() {
         Talent talent = Talent.randomTalent();
         ExtremePhysique physique = talent == Talent.EXTREME
@@ -113,7 +113,7 @@ public record Aperture(
         return new Aperture(Rank.ONE, Stage.INIT, base, physique, max, ApertureState.ALIVE, null, null);
     }
 
-    //  ---- derived, never stored; see CLAUDE.md ----
+    //  ---- derived, never stored;  CLAUDE.md ----
     //  ⚠ Rank.SIX..NINE have rankBase == 0, so an immortal caps at 0. Deliberate -- do not "fix" it.
     public static long maxEssence(Rank rank, Stage stage, int base) {
         return Math.max(0L, (long) base * stage.getEssenceMultiplier() * rank.getRankBase());

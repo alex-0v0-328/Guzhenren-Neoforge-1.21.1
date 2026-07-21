@@ -5,8 +5,9 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  兽之力: 吞服兽类蛊虫改造肉身所得, 一种只能受一次. 今日只有黑白二豕, 牛象之流照此往下加
-//  ⚠ 列的是「玩家能受的力」, 不是兽的种类 —— 所以 StrengthData 存的是它的集合
+//  Beast strength: what swallowing a beast Gu reworks the body into, each kind taken once ever. Only
+//  the two boars today; ox and elephant would follow the same pattern.
+//  ⚠ These are strengths a player can take, not species -- which is why StrengthData stores a set.
 public enum BeastStrength implements StringRepresentable, EnumTranslatable {
 
     WHITE_BOAR,

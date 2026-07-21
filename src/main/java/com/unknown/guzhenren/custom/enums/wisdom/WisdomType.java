@@ -5,8 +5,9 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  智道三态: 念 -> 意 -> 情, 逐级凝练 (转化尚未实现, 见 CLAUDE.md "Pending")
-//  括号里是脑海的初始容量; 装不下就是脑海炸裂而亡, 见 MindPool
+//  The three cells of the Mind Ocean (脑海): Thoughts -> Wills -> Emotions, each condensed from the one
+//  before. ⚠ That conversion is not built  CLAUDE.md "Pending".
+//  The number is the starting capacity; overflowing it is what shatters the Mind Ocean  MindPool.
 public enum WisdomType implements StringRepresentable, EnumTranslatable {
 
     THOUGHTS(30_000L),
@@ -16,7 +17,7 @@ public enum WisdomType implements StringRepresentable, EnumTranslatable {
     public static final Codec<WisdomType> CODEC = StringRepresentable.fromEnum(WisdomType::values);
     private static final String KEY_PREFIX = "guzhenren.enum.wisdom.type.";
 
-    //  脑海初始容量. 上限日后可被蛊 / 丹药抬高, 所以要存, 不能派生
+    //  Starting capacity. ⚠ Stored, not derived: a Gu or a pill may raise the cap later.
     private final long defaultCapacity;
 
     WisdomType(long defaultCapacity) {

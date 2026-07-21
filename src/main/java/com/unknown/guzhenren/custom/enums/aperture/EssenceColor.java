@@ -5,22 +5,23 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  真元的颜色, 每转一色 (映射见 Rank); 深浅由 shade(stage) 按小境界算, 仙人境固定色
-//  ⚠ 整个文件至今零调用: HUD 用固定天蓝, 见 CLAUDE.md "Client". 这是留给粒子/物品/界面的钩子,
-//  shade() 与 Rank.getEssenceColor() 就是那个接口本身 —— 别当死代码删, 删了枚举只剩名字
+//  Essence (真元) colour, one a rank -- the mapping lives on Rank. shade(stage) darkens it by stage;
+//  the immortal ranks take a fixed one.
+//  ⚠ Nothing calls this yet: the HUD uses one fixed blue ( CLAUDE.md "Client"). It is the hook a
+//  particle, item or screen will take -- NOT dead code. Delete it and the enum is a bag of names.
 public enum EssenceColor implements StringRepresentable, EnumTranslatable {
 
-    //  凡人 / 未开窍: 灰
+    //  Mortal / unawakened: grey.
     NONE(0xFF808080, false),
 
-    //  一转 ~ 五转 (凡人境): 括号里是中阶色, 初阶提亮 / 巅峰压暗
+    //  Rank I..V (mortal): the value is the Middle-stage colour; Initial lightens it, Peak darkens it.
     GREEN_COPPER(0xFF3EC98A),
     RED_STEEL(0xFFD9503F),
     WHITE_SILVER(0xFFCCCCCC),
     YELLOW_GOLDEN(0xFFE8BE43),
     PURPLE_CRYSTAL(0xFFA855D4),
 
-    //  六转 ~ 九转 (仙人境): 固定色
+    //  Rank VI..IX (immortal): fixed, never shaded.
     GREEN_GRAPE(0xFF9ACD32, false),
     RED_DATE(0xFF8B2500, false),
     WHITE_LITCHI(0xFFF5F0E1, false),
@@ -29,7 +30,8 @@ public enum EssenceColor implements StringRepresentable, EnumTranslatable {
     public static final Codec<EssenceColor> CODEC = StringRepresentable.fromEnum(EssenceColor::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.essence_color.";
 
-    //  亮度系数, 下标与 Stage.ordinal() 对齐: 无 初 中 高 巅. 想整体调深浅改这一行
+    //  Brightness per stage, indexed by Stage.ordinal(): none, Initial, Middle, Upper, Peak. One line
+    //  retunes the whole palette.
     private static final float[] STAGE_BRIGHTNESS = {1.00F, 1.20F, 1.00F, 0.72F, 0.45F};
 
     private final int baseColor;
@@ -44,10 +46,10 @@ public enum EssenceColor implements StringRepresentable, EnumTranslatable {
         this.shadeByStage = shadeByStage;
     }
 
-    //  基色 (ARGB); 会变深浅的转这是中阶色, 不变的转这就是最终色
+    //  Base colour (ARGB): the Middle-stage shade where stages apply, the final colour where they do not.
     public int getBaseColor() {return baseColor;}
 
-    //  该小境界下的实际颜色 (ARGB); alpha 不动, 只缩放 RGB
+    //  The actual colour at that stage (ARGB). Alpha is untouched; only RGB scales.
     public int shade(@NotNull Stage stage) {
         if (!shadeByStage) return baseColor;
 

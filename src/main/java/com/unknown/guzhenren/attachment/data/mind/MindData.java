@@ -11,7 +11,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The mind (脑海) system: Brilliance (才情) and the Mind Ocean's three cells. See CLAUDE.md "Wisdom".
+//  The mind (脑海) system: Brilliance (才情) and the Mind Ocean's three cells.  CLAUDE.md "Wisdom".
 //  Dense, unlike PathData -- a missing key is filled from the enum's default capacity.
 public record MindData(Brilliance brilliance, Map<WisdomType, MindPool> pools) {
 
@@ -37,7 +37,7 @@ public record MindData(Brilliance brilliance, Map<WisdomType, MindPool> pools) {
         pools = Collections.unmodifiableMap(dense);
     }
 
-    //  A newborn: empty cells at their default caps, and a rolled Brilliance. See CLAUDE.md "Birth".
+    //  A newborn: empty cells at their default caps, and a rolled Brilliance.  CLAUDE.md "Birth".
     public static MindData newborn() {return new MindData(Brilliance.randomBrilliance(), Map.of());}
 
     public MindPool pool(WisdomType type) {return pools.get(type);}

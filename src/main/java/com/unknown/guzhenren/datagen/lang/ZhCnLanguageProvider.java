@@ -245,14 +245,14 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(BeastStrength.BLACK_BOAR, "黑豕");
     }
 
-    //  力道的三条分支. 今日只是称号, 效果日后再挂; 气象天地流 尚无数据
+    //  The Strength Path's three branches. Titles today; effects come later, and ENVIRONMENT has no data
     private void addStrengthBranch() {
         add(StrengthBranch.HUMAN, "人力钧力流");
         add(StrengthBranch.BEASTS, "兽力虚影流");
         add(StrengthBranch.ENVIRONMENT, "气象天地流");
     }
 
-    //  人力钧力流的各档. 十斤 百斤 日后各自成档
+    //  The Human Jun branch's kinds. Ten Jin and Hundred Jin each become their own later.
     private void addJunStrength() {
         add(JunStrength.JIN, "斤");
     }

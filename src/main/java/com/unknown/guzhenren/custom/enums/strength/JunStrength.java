@@ -5,8 +5,9 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  人力钧力流的力, 一档一个常量: 今日只有斤, 日后十斤 百斤 各自成档
-//  ⚠ MAX_PER_KIND 是「每人每档最多受九次」, 与蛊虫用几次用尽无关 —— 两个九是两回事
+//  The Human Jun Strength Branch (人力钧力流), one constant a kind: only Jin today, later Ten Jin and
+//  Hundred Jin. ⚠ MAX_PER_KIND is a cap on the PLAYER (nine of each kind, ever), nothing to do with how
+//  often a Gu may be used.
 public enum JunStrength implements StringRepresentable, EnumTranslatable {
 
     JIN;
