@@ -8,7 +8,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The Strength Path (力道), both branches: which beast strengths a body took, and how many of each
+//  The Strength Path [力道], both branches: which beast strengths a body took, and how many of each
 //  Jun strength. ⚠ Stored and shown only -- no attribute, no combat effect. The branches are titles today.
 public final class StrengthService {
 

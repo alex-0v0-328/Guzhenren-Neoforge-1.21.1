@@ -4,7 +4,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
-//  Vitality (生机): one health every ten ticks, for thirty-two seconds.
+//  Vitality [生机]: one health every ten ticks, for thirty-two seconds.
 //  ⚠ The two constants ARE the design -- 640 / 10 = 64 health. Change one and the other stops meaning it.
 public class VitalityLeafEffect extends MobEffect {
 

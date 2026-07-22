@@ -7,7 +7,7 @@ import java.util.List;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The aperture (空窍) system: 0..2 of them. Unawakened IS the empty list -- the whole point of
+//  The aperture [空窍] system: 0..2 of them. Unawakened IS the empty list -- the whole point of
 //  storing a list rather than flat fields. ⚠ Two is the world's own cap, not an arbitrary one.
 public record ApertureData(List<Aperture> apertures) {
 

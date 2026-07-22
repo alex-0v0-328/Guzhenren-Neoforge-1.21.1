@@ -9,7 +9,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The body (肉身): life state, life form, lifespan and age.
+//  The body [肉身]: life state, life form, lifespan and age.
 //  Soul, path and qi are the body's too, but keep their own attachments.
 //  lastDayIndex = last overworld day billed; makes aging idempotent and relog-safe.
 public record BodyData(

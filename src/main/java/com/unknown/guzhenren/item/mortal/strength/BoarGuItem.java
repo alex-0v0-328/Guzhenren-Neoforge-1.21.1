@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-//  Boar Gu (豕蛊): 36 uses buy this beast's strength, once ever, for the Beast Phantom branch.
+//  Boar Gu [豕蛊]: 36 uses buy this beast's strength, once ever, for the Beast Phantom branch.
 //  ⚠ One class, two items -- registration gives the beast. Everything else is RefinableGuItem's.
 public class BoarGuItem extends RefinableGuItem {
 

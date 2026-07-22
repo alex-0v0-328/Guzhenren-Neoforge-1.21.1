@@ -16,7 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
-//  The aperture (空窍) system. Index defaults to PRIMARY -- a second aperture has a place to live, no
+//  The aperture [空窍] system. Index defaults to PRIMARY -- a second aperture has a place to live, no
 //  mechanic yet.
 //  ⚠ Every write goes through set(): it enforces the physique invariant, and Aperture's ctor re-clamps.
 public final class ApertureService {
@@ -39,7 +39,7 @@ public final class ApertureService {
     public static Rank rank(Player p) {return aperture(p).rank();}
     public static Stage stage(Player p) {return aperture(p).stage();}
 
-    //  ---- write, on the primary aperture ----
+    //  ---- write, on the primary aperture [空窍] ----
     public static void setRank(ServerPlayer p, Rank v) {set(p, PRIMARY, aperture(p).withRank(v));}
     public static void setStage(ServerPlayer p, Stage v) {set(p, PRIMARY, aperture(p).withStage(v));}
     public static void setState(ServerPlayer p, ApertureState v) {set(p, PRIMARY, aperture(p).withState(v));}
@@ -95,7 +95,7 @@ public final class ApertureService {
         set(player, PRIMARY, aperture);
     }
 
-    //  Awakening (开窍). Appends an aperture -- the caller is what refuses a full holder. See CmdAperture.
+    //  Awakening [开窍]. Appends an aperture -- the caller is what refuses a full holder. See CmdAperture.
     public static void awaken(ServerPlayer player) {
         ExtremePhysique before = aperture(player).extremePhysique();
         store(player, get(player).opened(enforce(Aperture.opened())));

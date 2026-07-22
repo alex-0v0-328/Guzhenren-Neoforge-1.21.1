@@ -5,7 +5,7 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  The body's (肉身) life state, as against LifeForm's mortal/immortal. ZOMBIFIED is the third one:
+//  The body's [肉身] life state, as against LifeForm's mortal/immortal. ZOMBIFIED is the third one:
 //  the person is dead and the corpse still moves.
 //  ⚠ Not the same fact as the aperture's ApertureState -- the essence gate hangs there, never here.
 public enum LifeState implements StringRepresentable, EnumTranslatable {

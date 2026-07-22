@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  One cell of the Mind Ocean: thoughts / wills / emotions (念/意/情). The map key in MindData says which.
+//  One cell of the Mind Ocean: thoughts / wills / emotions [念/意/情]. The map key in MindData says which.
 //  current 0..max normal, max..2×max buffer, >2×max bursts; bufferUsed latches once past max.
 public record MindPool(long current, long max, boolean bufferUsed) {
 

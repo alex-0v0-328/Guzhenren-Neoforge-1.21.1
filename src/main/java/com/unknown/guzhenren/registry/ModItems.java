@@ -14,7 +14,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-//  Every Gu (蛊虫) and Gu Material (蛊材). An id is also its texture's file name -- see ModItemModelProvider.
+//  Every Gu [蛊虫] and Gu Material [蛊材]. An id is also its texture's file name -- see ModItemModelProvider.
 //  ⚠ 64 is Item.Properties' own default; a stacksTo(64) here would only be noise. A stateful Gu says stacksTo(1).
 //     TODO(data comp): a Gu material carrying a qi type + amount still needs its own component.
 public final class ModItems {
@@ -34,7 +34,7 @@ public final class ModItems {
     public static final DeferredItem<Item> PRIMEVAL_STONE = ITEMS.register("primeval_stone",
             () -> new PrimevalStoneItem(new Item.Properties(), PRIMEVAL_STONE_ESSENCE));
 
-    //  Relics Gu (舍利蛊), one per rank 1..5 -- one class; the rank is all registration varies.
+    //  Relics Gu [舍利蛊], one per rank 1..5 -- one class; the rank is all registration varies.
     //  ⚠ Named for that rank's essence color, but the strings do not transfer --  CLAUDE.md "Items".
     public static final DeferredItem<Item> COPPER_RELICS_GU = ITEMS.register("copper_relics_gu",
             () -> new RelicsGuItem(new Item.Properties(), Rank.ONE));
@@ -47,19 +47,19 @@ public final class ModItems {
     public static final DeferredItem<Item> CRYSTAL_RELICS_GU = ITEMS.register("crystal_relics_gu",
             () -> new RelicsGuItem(new Item.Properties(), Rank.FIVE));
 
-    //  Boar Gu (豕蛊), one per beast -- one class; the beast is all registration varies.
+    //  Boar Gu [豕蛊], one per beast -- one class; the beast is all registration varies.
     //  ⚠ stacksTo(1): each carries its own refinement and hunger, and a stack would share one component.
     public static final DeferredItem<Item> WHITE_BOAR_GU = ITEMS.register("white_boar_gu",
             () -> new BoarGuItem(new Item.Properties().stacksTo(1), BeastStrength.WHITE_BOAR));
     public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
             () -> new BoarGuItem(new Item.Properties().stacksTo(1), BeastStrength.BLACK_BOAR));
 
-    //  Jin Strength Gu (斤力蛊), the Human Jun branch's first -- refined, fed raw iron, pays out every 36.
+    //  Jin Strength Gu [斤力蛊], the Human Jun branch's first -- refined, fed raw iron, pays out every 36.
     //  ⚠ stacksTo(1) for the same reason as the boars: each carries its own refinement and hunger.
     public static final DeferredItem<Item> JIN_STRENGTH_GU = ITEMS.register("jin_strength_gu",
             () -> new JinStrengthGuItem(new Item.Properties().stacksTo(1)));
 
-    //  Vitality Leaf Gu (生机叶蛊), Rank I Wood Path -- stacks freely; it carries no per-stack state.
+    //  Vitality Leaf Gu [生机叶蛊], Rank I Wood Path -- stacks freely; it carries no per-stack state.
     public static final DeferredItem<Item> VITALITY_LEAF_GU = ITEMS.register("vitality_leaf_gu",
             () -> new VitalityLeafGuItem(new Item.Properties()));
 

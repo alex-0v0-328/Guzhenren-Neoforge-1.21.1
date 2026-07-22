@@ -16,7 +16,7 @@ import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  One mortal aperture (凡窍): what a cultivator *is*, plus the essence pool that hangs off it.
+//  One mortal aperture [凡窍]: what a cultivator *is*, plus the essence pool that hangs off it.
 //  A player holds 0..2 of them.
 //  ⚠ The cap is derived here, so currentEssence is clamped structurally -- no writer can exceed it.
 //  ⚠ Both paths are NULLABLE -- the data model's only nulls. GuPath has no NONE, and "has not chosen"
@@ -100,7 +100,7 @@ public record Aperture(
         if (secondaryPath != null && secondaryPath == primaryPath) secondaryPath = null;
     }
 
-    //  Awakening (开窍): Rank I Initial + a rolled tier + its physique, and a full pool.
+    //  Awakening [开窍]: Rank I Initial + a rolled tier + its physique, and a full pool.
     //  ⚠ No paths: the primary comes from a Vital Gu, the secondary from the player. Awakening grants neither.
     public static Aperture opened() {
         Talent talent = Talent.randomTalent();

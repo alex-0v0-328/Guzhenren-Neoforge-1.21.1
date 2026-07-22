@@ -11,7 +11,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The mind (脑海) system: Brilliance (才情) and the Mind Ocean's three cells.  CLAUDE.md "Wisdom".
+//  The mind [脑海] system: Brilliance [才情] and the Mind Ocean's three cells.  CLAUDE.md "Wisdom".
 //  Dense, unlike PathData -- a missing key is filled from the enum's default capacity.
 public record MindData(Brilliance brilliance, Map<WisdomType, MindPool> pools) {
 

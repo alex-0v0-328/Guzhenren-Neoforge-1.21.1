@@ -7,7 +7,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr awaken -- awakening (开窍), the one-way transition into having an aperture at all.
+//  /gzr awaken -- awakening [开窍], the one-way transition into having an aperture at all.
 //  ⚠ At the root, not under `aperture`: hoisting it is what lets that branch carry a single requires().
 public final class CmdAwaken {
 

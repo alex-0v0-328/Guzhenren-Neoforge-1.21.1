@@ -5,7 +5,7 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  Essence (真元) colour, one a rank -- the mapping lives on Rank. shade(stage) darkens it by stage;
+//  Essence [真元] colour, one a rank -- the mapping lives on Rank. shade(stage) darkens it by stage;
 //  the immortal ranks take a fixed one.
 //  ⚠ Nothing calls this yet: the HUD uses one fixed blue ( CLAUDE.md "Client"). It is the hook a
 //  particle, item or screen will take -- NOT dead code. Delete it and the enum is a bag of names.

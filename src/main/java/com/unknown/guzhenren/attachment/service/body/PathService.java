@@ -10,7 +10,7 @@ import java.util.Map;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The path (流派) system. Attainment, marks and specks are independent -- no mark<->speck conversion.
+//  The path [流派] system. Attainment, marks and specks are independent -- no mark<->speck conversion.
 //  ⚠ Featured means the MARK comes from a sub-system (Qi Path = QiData) and is not writable. Specks are
 //  ordinary on every path, featured or not.
 public final class PathService {

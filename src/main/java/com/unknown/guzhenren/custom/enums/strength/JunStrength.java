@@ -5,7 +5,7 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  The Human Jun Strength Branch (人力钧力流), one constant a kind: only Jin today, later Ten Jin and
+//  The Human Jun Strength Branch [人力钧力流], one constant a kind: only Jin today, later Ten Jin and
 //  Hundred Jin. ⚠ MAX_PER_KIND is a cap on the PLAYER (nine of each kind, ever), nothing to do with how
 //  often a Gu may be used.
 public enum JunStrength implements StringRepresentable, EnumTranslatable {

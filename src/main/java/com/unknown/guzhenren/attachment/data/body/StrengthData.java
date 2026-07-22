@@ -16,7 +16,7 @@ import java.util.Set;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The Strength Path (力道). Two of its three branches have data, and the two shapes differ: which beast
+//  The Strength Path [力道]. Two of its three branches have data, and the two shapes differ: which beast
 //  strengths a body took (a set, one kind once ever), and how many of each Jun strength (a count, nine max).
 //  ⚠ Neither is a mark source -- the Strength Path's specks stay in PathData  CLAUDE.md.
 public record StrengthData(Set<BeastStrength> beasts, Map<JunStrength, Integer> jun) {

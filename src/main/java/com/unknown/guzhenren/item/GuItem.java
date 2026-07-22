@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  What every Gu item is: a rank, a path, one tooltip line, and the shape of its two clicks.
+//  What every Gu [蛊虫] item is: a rank, a path, one tooltip line, and the shape of its two clicks.
 //  ⚠ Each template gates on both sides but writes only through a ServerPlayer; a subclass never re-implements that.
 public abstract class GuItem extends Item {
 
@@ -36,7 +36,7 @@ public abstract class GuItem extends Item {
         this.path = path;
     }
 
-    //  Gu (蛊虫) or Gu Material (蛊材) -- the tooltip's last word. The class says which; nothing else may.
+    //  Gu [蛊虫] or Gu Material [蛊材] -- the tooltip's last word. The class says which; nothing else may.
     protected abstract String kindKey();
     public Rank rank() {return rank;}
     public GuPath path() {return path;}

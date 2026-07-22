@@ -6,7 +6,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The qi (气) system. No cap, no lethal state: a body carries what it carries.
+//  The qi [气] system. No cap, no lethal state: a body carries what it carries.
 //  ⚠ total() is the Qi Path's marks -- PathService reads it, PathData never stores it.
 public final class QiService {
 

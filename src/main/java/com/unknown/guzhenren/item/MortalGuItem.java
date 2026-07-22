@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-//  Mortal Gu (凡蛊) -- a Gu of ranks 1..5. Concrete: a plain Gu needs no class of its own.
+//  Mortal Gu [凡蛊] -- a Gu of ranks 1..5. Concrete: a plain Gu needs no class of its own.
 //  ⚠ feedable is what turns the left-click template on; reusable is what makes a use spend nothing.
 public class MortalGuItem extends GuItem {
 

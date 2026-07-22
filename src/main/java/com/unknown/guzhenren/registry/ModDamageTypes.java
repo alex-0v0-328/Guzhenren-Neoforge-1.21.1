@@ -13,13 +13,13 @@ public final class ModDamageTypes {
 
     private ModDamageTypes() {}
 
-    //  Died of a spent lifespan (寿元耗尽而亡)
+    //  Died of a spent lifespan [寿元耗尽而亡]
     public static final ResourceKey<DamageType> LIFESPAN_EXHAUSTED = key("lifespan_exhausted");
 
-    //  Died of a collapsed soul (魂魄衰竭而亡)
+    //  Died of a collapsed soul [魂魄衰竭而亡]
     public static final ResourceKey<DamageType> SOUL_COLLAPSE = key("soul_collapse");
 
-    //  Died of a shattered Mind Ocean (脑海炸裂而亡) -- a cell over capacity,  CLAUDE.md "Wisdom".
+    //  Died of a shattered Mind Ocean [脑海炸裂而亡] -- a cell over capacity,  CLAUDE.md "Wisdom".
     public static final ResourceKey<DamageType> MIND_OCEAN_SHATTERED = key("mind_ocean_shattered");
 
     //  Lost the Gu he bound his fate to. 80% of what he had left -- it never kills alone.

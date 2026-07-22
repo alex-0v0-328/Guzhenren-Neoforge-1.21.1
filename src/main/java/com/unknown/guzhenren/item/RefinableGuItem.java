@@ -21,7 +21,7 @@ import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  A Gu that is wild (野生) until refined, then fed and used: the Boar Gu, the Jin Strength Gu, and
+//  A Gu that is wild [野生] until refined, then fed and used: the Boar Gu, the Jin Strength Gu, and
 //  anything shaped like them.
 //  ⚠ It is NEVER consumed -- starving is its only end, so a capped owner can hand it to another player.
 public abstract class RefinableGuItem extends MortalGuItem {

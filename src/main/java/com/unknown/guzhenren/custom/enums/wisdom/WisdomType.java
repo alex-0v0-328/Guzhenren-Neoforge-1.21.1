@@ -5,7 +5,7 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  The three cells of the Mind Ocean (脑海): Thoughts -> Wills -> Emotions, each condensed from the one
+//  The three cells of the Mind Ocean [脑海]: Thoughts -> Wills -> Emotions, each condensed from the one
 //  before. ⚠ That conversion is not built  CLAUDE.md "Pending".
 //  The number is the starting capacity; overflowing it is what shatters the Mind Ocean  MindPool.
 public enum WisdomType implements StringRepresentable, EnumTranslatable {

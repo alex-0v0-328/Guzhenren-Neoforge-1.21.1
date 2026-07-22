@@ -9,7 +9,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.network.codec.StreamCodec;
 
-//  The path (流派) system. Sparse -- defaults pruned, an absent key reads as the default (get() never null).
+//  The path [流派] system. Sparse -- defaults pruned, an absent key reads as the default (get() never null).
 //  ⚠ A featured path's MARK is not here (its sub-system's total). Its speck is ordinary and lives here.
 public record PathData(Map<GuPath, PathEntry> entries) {
 

@@ -19,7 +19,7 @@ import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-//  Aperture (空窍) / Body (肉身) / Mind (脑海) -- three domains, eight record attachments;
+//  Aperture [空窍] / Body [肉身] / Mind [脑海] -- three domains, eight record attachments;
 //  write only through attachment/service.
 //  ⚠ .sync() is why this mod has no packets --  CLAUDE.md "Networking".
 //  ⚠ An id mirrors its record class (strength_data <-> StrengthData), never the bare domain word:
@@ -36,7 +36,7 @@ public final class ModAttachments {
     private static final BiPredicate<IAttachmentHolder, ServerPlayer> OWNER_ONLY =
             (holder, viewer) -> holder == viewer;
 
-    //region Aperture
+    //region Aperture [空窍]
     //  No copyOnDeath: onClone is the single source of truth for what a clone inherits --
     //  a death copy and a reset can't both be the last word, so only one place may write.
     public static final Supplier<AttachmentType<ApertureData>> APERTURE = ATTACHMENT_TYPES.register(
@@ -59,7 +59,7 @@ public final class ModAttachments {
                     .build());
     //endregion
 
-    //region Body
+    //region Body [肉身]
     public static final Supplier<AttachmentType<BodyData>> BODY = ATTACHMENT_TYPES.register(
             "body_data", () -> AttachmentType.builder(() -> BodyData.DEFAULT)
                     .serialize(BodyData.CODEC)
@@ -93,7 +93,7 @@ public final class ModAttachments {
                     .build());
     //endregion
 
-    //region Mind
+    //region Mind [脑海]
     //  Synced though no HUD reads it yet -- player data like the rest, ready for a Mind Ocean screen.
     public static final Supplier<AttachmentType<MindData>> MIND = ATTACHMENT_TYPES.register(
             "mind_data", () -> AttachmentType.builder(() -> MindData.DEFAULT)
@@ -103,7 +103,7 @@ public final class ModAttachments {
     //endregion
 
     //  ⚠ Has this player ever been born? Serialized, never synced -- vanilla has no "first join" signal,
-    //  and Brilliance (才情) is rolled exactly once, at birth.  CLAUDE.md "Birth".
+    //  and Brilliance [才情] is rolled exactly once, at birth.  CLAUDE.md "Birth".
     public static final Supplier<AttachmentType<Boolean>> BORN = ATTACHMENT_TYPES.register(
             "born_flag", () -> AttachmentType.builder(() -> Boolean.FALSE)
                     .serialize(Codec.BOOL)

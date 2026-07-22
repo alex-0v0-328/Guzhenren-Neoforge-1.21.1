@@ -10,7 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-//  Per-stack item state: a Gu's refinement, and whose Vital Gu it is.
+//  Per-stack item state: a Gu's refinement [炼化], and whose Vital Gu [本命蛊] it is.
 //  ⚠ networkSynchronized is not a packet -- it rides the vanilla stack sync.  CLAUDE.md "Networking".
 public final class ModDataComponents {
 
@@ -26,7 +26,7 @@ public final class ModDataComponents {
                     .persistent(RefinedGuState.CODEC)
                     .networkSynchronized(RefinedGuState.STREAM_CODEC));
 
-    //  Whose Vital Gu (本命蛊) this is. ⚠ The owner's UUID, not a flag: a refined Gu may be handed to another
+    //  Whose Vital Gu [本命蛊] this is. ⚠ The owner's UUID, not a flag: a refined Gu may be handed to another
     //  player, and the loss must always be billed to the one who bound it. Never cleared once set.
     public static final Supplier<DataComponentType<UUID>> VITAL_OWNER =
             DATA_COMPONENTS.registerComponentType("vital_owner", builder -> builder

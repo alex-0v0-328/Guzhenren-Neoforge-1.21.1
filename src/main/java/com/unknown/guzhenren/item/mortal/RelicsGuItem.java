@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-//  Relics Gu (舍利蛊): raises the stage by one. One class, five items -- registration gives the rank.
+//  Relics Gu [舍利蛊]: raises the stage by one. One class, five items -- registration gives the rank.
 //  ⚠ "Never crosses rank" needs no guard: Stage.shift stops at the peak, and breaking through is a mechanic.
 public class RelicsGuItem extends MortalGuItem {
 

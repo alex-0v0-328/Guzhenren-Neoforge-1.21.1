@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-//  Hope Gu (希望蛊): awakens on use, once and never again. The essence bar appearing IS the success.
+//  Hope Gu [希望蛊]: awakens on use, once and never again. The essence bar appearing IS the success.
 //  ⚠ ApertureService.awaken appends without asking -- this gate is all that refuses a second aperture.
 public class HopeGuItem extends MortalGuItem {
 

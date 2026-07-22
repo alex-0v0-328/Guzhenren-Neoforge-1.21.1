@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  Brilliance (才情) IS the regen rate of thoughts. Rolled by weight at BIRTH, never at awakening, and
+//  Brilliance [才情] IS the regen rate of thoughts. Rolled by weight at BIRTH, never at awakening, and
 //  fixed for life  CLAUDE.md "Mind Ocean".
 //  ⚠ Unlike Talent, these run LOW to HIGH, so shift(+1) really is ordinal + 1.
 public enum Brilliance implements StringRepresentable, EnumTranslatable {

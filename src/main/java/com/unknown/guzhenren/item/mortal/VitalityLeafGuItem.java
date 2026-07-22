@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-//  Vitality Leaf Gu (生机叶蛊): one click, 64 health over 32 seconds, and the leaf is gone.
+//  Vitality Leaf Gu [生机叶蛊]: one click, 64 health over 32 seconds, and the leaf is gone.
 //  ⚠ No refining and no feeding, deliberately -- a recovery item earns none of that machinery.
 public class VitalityLeafGuItem extends MortalGuItem {
 

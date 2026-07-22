@@ -5,7 +5,7 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  Whether an aperture (空窍) lives. Two states only -- the body's LifeState is the one with a third.
+//  Whether an aperture [空窍] lives. Two states only -- the body's LifeState is the one with a third.
 //  ⚠ A dead aperture draws nothing, and THIS is the gate essence regen hangs on, never the body's
 //   EssenceService.regenPerDay.
 public enum ApertureState implements StringRepresentable, EnumTranslatable {

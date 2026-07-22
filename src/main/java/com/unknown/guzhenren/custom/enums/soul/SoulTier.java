@@ -5,7 +5,7 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  Soul (魂魄) tier, looked up from the soul value and never stored. The number is the inclusive floor:
+//  Soul [魂魄] tier, looked up from the soul value and never stored. The number is the inclusive floor:
 //  people x 100, except One-Person Soul, which is pulled down to 1.
 //  ⚠ Hundred-Million-Person Soul is the top tier but not a ceiling: anything above still reads as it.
 public enum SoulTier implements StringRepresentable, EnumTranslatable {

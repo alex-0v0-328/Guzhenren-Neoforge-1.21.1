@@ -5,7 +5,7 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
-//  Kinds of qi (气). Heaven, Earth and Human are the threshold for ascension, which is why those three
+//  Kinds of qi [气]. Heaven, Earth and Human are the threshold for ascension, which is why those three
 //  came first; more are expected, and adding one is just another constant.
 //  ⚠ Qi has no cap, deliberately -- it is an accumulator, not a pool  QiData.
 public enum QiType implements StringRepresentable, EnumTranslatable {

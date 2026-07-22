@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-//  Primeval Stone (元石): restores essence on use, eating as many stones as filling up takes.
+//  Primeval Stone [元石]: restores essence on use, eating as many stones as filling up takes.
 //  ⚠ EssenceService.add is a silent no-op unawakened -- gate first, or the stone is eaten for nothing.
 public class PrimevalStoneItem extends GuMaterialItem {
 

@@ -8,7 +8,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The mind (脑海) system. Thoughts regen by Brilliance and top up on sleep; wills and emotions never do.
+//  The mind [脑海] system. Thoughts regen by Brilliance [才情] and top up on sleep; wills and emotions never do.
 //   CLAUDE.md "Wisdom".
 public final class MindService {
 
@@ -30,7 +30,7 @@ public final class MindService {
     private static void set(ServerPlayer p, WisdomType t, MindPool v) {store(p, get(p).with(t, v));}
     private static void store(ServerPlayer p, MindData d) {p.setData(ModAttachments.MIND, d);}
 
-    //  ---- Brilliance (才情) ----  rolled at birth (PlayerDataService.onBirth), never here; these are
+    //  ---- Brilliance [才情] ----  rolled at birth (PlayerDataService.onBirth), never here; these are
     //  the command's.
     public static void setBrilliance(ServerPlayer p, Brilliance v) {store(p, get(p).withBrilliance(v));}
     public static void shiftBrilliance(ServerPlayer p, int d) {setBrilliance(p, brilliance(p).shift(d));}

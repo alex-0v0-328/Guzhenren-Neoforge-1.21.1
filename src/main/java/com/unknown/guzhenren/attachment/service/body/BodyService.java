@@ -8,7 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The body (肉身) system: life state, life form, lifespan. One in-game day: age +1, lifespan -1.
+//  The body [肉身] system: life state, life form, lifespan. One in-game day: age +1, lifespan -1.
 public final class BodyService {
 
     private BodyService() {}

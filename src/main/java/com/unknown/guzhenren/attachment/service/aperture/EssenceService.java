@@ -7,7 +7,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The essence (真元) system: one pool per aperture. Formulas and worked examples: CLAUDE.md "Formulas".
+//  The essence [真元] system: one pool per aperture. Formulas and worked examples: CLAUDE.md "Formulas".
 //  ⚠ Every write here is a silent no-op on an unawakened player -- the caller must refuse first.
 //  The cap is Aperture's own derived value and its ctor clamps against it -- nothing here has to.
 public final class EssenceService {

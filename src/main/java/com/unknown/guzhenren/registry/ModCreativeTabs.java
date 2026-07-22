@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-//  One tab per branch of the item tree: Mortal Gu (凡蛊) and Gu Material (蛊材).
+//  One tab per branch of the item tree: Mortal Gu [凡蛊] and Gu Material [蛊材].
 //  Contents are derived from ModItems by class -- a new item joins its tab with no line here.
 public final class ModCreativeTabs {
 

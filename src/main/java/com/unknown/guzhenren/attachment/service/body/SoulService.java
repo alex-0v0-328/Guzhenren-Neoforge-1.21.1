@@ -6,7 +6,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The soul (魂魄) system. Refills on a completed sleep; draining it to zero is fatal.
+//  The soul [魂魄] system. Refills on a completed sleep; draining it to zero is fatal.
 //  ⚠ Zero is death for maxSoul too -- a cap of 0 clamps current to 0.  CLAUDE.md "Invariants".
 public final class SoulService {
 
