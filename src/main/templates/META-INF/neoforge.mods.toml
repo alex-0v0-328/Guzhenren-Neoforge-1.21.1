@@ -89,6 +89,15 @@ config="${mod_id}.mixins.json"
     side="BOTH"
 
 # Optional integrations. Neither has to be installed; both load before us when they are.
+# The prerequisite mod. REQUIRED, not optional: the body it defines is what this mod's parts install
+# into. ordering=AFTER so its registries exist before ours touch them.
+[[dependencies.${mod_id}]]
+    modId="customplayer"
+    type="required"
+    versionRange="[1.0.0,)"
+    ordering="AFTER"
+    side="BOTH"
+
 [[dependencies.${mod_id}]]
     modId="jei"
     type="optional"

@@ -127,6 +127,11 @@ configurations {
 }
 
 dependencies {
+    // The prerequisite mod: the body this one hangs cultivation on. REQUIRED, and therefore a plain
+    // implementation -- unlike the two optional integrations below, a dependent SHOULD inherit this.
+    // Resolved from the composite build declared in settings.gradle, not from a repository.
+    implementation "com.unknown.customplayer:customplayer:1.0.0"
+
     // Both integrations are optional: the API at compile time, the full mod at runtime.
     // localRuntime, never runtimeOnly -- a dependent of this mod must not inherit them.
 
