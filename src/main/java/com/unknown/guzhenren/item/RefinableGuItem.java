@@ -48,6 +48,10 @@ public abstract class RefinableGuItem extends MortalGuItem {
     protected int maxHunger() {return 18;}
     public int usesPerGrant() {return 36;}
     protected int hungryThreshold() {return 2;}
+
+    //  What one use costs in hunger. ⚠ A Gu whose single use IS the whole meal bends this; it must still
+    //  return at least 1, or the Gu could be driven forever and starvation would stop being its one end.
+    protected int hungerPerUse(ItemStack stack) {return 1;}
     protected long speckPerUse() {return 1L;}
 
     //  Holding right-click: three seconds at the Gu's own rank, one above it, nine below.  CLAUDE.md.
@@ -105,8 +109,8 @@ public abstract class RefinableGuItem extends MortalGuItem {
     //  four-second hold only broke the bar into stutters while he kept the button down.
     //  ⚠ Both the refine and the use are charged, so this is what the hotbar bar counts down. The
     //  comparison is rank against rank -- a bigger stage buys nothing here.
-    //  ⚠ slowChargeTicks is UNREACHABLE today: a mortal is refused outright by gate(), and no rank sits
-    //  between mortal and Rank I -- which is every refinable Gu's rank. A Rank II Gu would light it up.
+    //  ⚠ slowChargeTicks was unreachable until the Liquor Worm [酒虫] series: it runs ranks I..IV, so a
+    //  Rank I cultivator refining a Rank IV worm finally stands BELOW one. It is live -- do not prune it.
     @Override
     protected int useDurationTicks(Player player, ItemStack stack) {
         int gap = rankGap(player);
@@ -127,7 +131,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
 
         if (!refined(stack)) {
             //  ⚠ A floor, not a cost: below 20 essence he is refused outright rather than trickling.
-            return EssenceService.currentEssence(player) < refineMinEssence()
+            return EssenceService.spendable(player) < refineMinEssence()
                     ? new Refusal(FAILED_REFINE_ESSENCE)
                     : null;
         }
@@ -148,7 +152,8 @@ public abstract class RefinableGuItem extends MortalGuItem {
         boolean forced = state(stack).hunger() <= 0;
 
         RefinedGuState state = state(stack);
-        state = state.withUses(state.useCount() + 1).withHunger(state.hunger() - 1);
+        state = state.withUses(state.useCount() + 1)
+                .withHunger(state.hunger() - Math.max(1, hungerPerUse(stack)));
         PathService.addSpeck(player, path(), speckPerUse());
 
         //  The 36th pays out and the count starts over -- useCount is progress toward the NEXT payout.
@@ -228,7 +233,9 @@ public abstract class RefinableGuItem extends MortalGuItem {
         RefinedGuState state = state(stack);
         int remaining = refineCost() - state.refineProgress();
         int cap = rankGap(player) >= uncappedRankGap() ? remaining : Math.min(refinePerUse(), remaining);
-        int invest = (int) Math.min(cap, EssenceService.currentEssence(player));
+        //  ⚠ spendable(), not currentEssence: a distilling cultivator's ordinary pool is 0 by design, and
+        //  his distilled points are worth two apiece -- refining is exactly what that discount is for.
+        int invest = (int) Math.min(cap, EssenceService.spendable(player));
         if (invest <= 0) return;
 
         EssenceService.consume(player, invest);

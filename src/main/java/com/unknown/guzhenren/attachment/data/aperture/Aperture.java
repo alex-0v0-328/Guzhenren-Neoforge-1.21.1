@@ -21,6 +21,8 @@ import org.jetbrains.annotations.Nullable;
 //  ⚠ The cap is derived here, so currentEssence is clamped structurally -- no writer can exceed it.
 //  ⚠ Both paths are NULLABLE -- the data model's only nulls. GuPath has no NONE, and "has not chosen"
 //  is a real state.  CLAUDE.md "Primary and secondary path".
+//  ⚠ distilledEssence [精炼真元] is a SECOND pool, not a discount on the first: a Liquor Worm empties the
+//  ordinary one and redirects regen here, where every point spends as two.
 public record Aperture(
         Rank rank,
         Stage stage,
@@ -29,7 +31,8 @@ public record Aperture(
         long currentEssence,
         ApertureState state,
         @Nullable GuPath primaryPath,
-        @Nullable GuPath secondaryPath
+        @Nullable GuPath secondaryPath,
+        long distilledEssence
 ) {
 
     //  Aptitude base: 20..100. Only NONE is 0 -- a real aperture never is. See ApertureService.
@@ -38,7 +41,7 @@ public record Aperture(
 
     //  The read fallback for "no aperture there". Never stored: unawakened is an empty list, not this.
     public static final Aperture NONE = new Aperture(
-            Rank.NONE, Stage.NONE, 0, ExtremePhysique.NONE, 0L, ApertureState.ALIVE, null, null);
+            Rank.NONE, Stage.NONE, 0, ExtremePhysique.NONE, 0L, ApertureState.ALIVE, null, null, 0L);
 
     //  All optional: a field added later must not invalidate old saves.
     public static final Codec<Aperture> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -50,10 +53,11 @@ public record Aperture(
             Codec.LONG.optionalFieldOf("current_essence", 0L).forGetter(Aperture::currentEssence),
             ApertureState.CODEC.optionalFieldOf("state", ApertureState.ALIVE).forGetter(Aperture::state),
             GuPath.CODEC.optionalFieldOf("primary_path").forGetter(a -> Optional.ofNullable(a.primaryPath())),
-            GuPath.CODEC.optionalFieldOf("secondary_path").forGetter(a -> Optional.ofNullable(a.secondaryPath()))
-    ).apply(instance, (rank, stage, base, physique, essence, state, primary, secondary) ->
+            GuPath.CODEC.optionalFieldOf("secondary_path").forGetter(a -> Optional.ofNullable(a.secondaryPath())),
+            Codec.LONG.optionalFieldOf("distilled_essence", 0L).forGetter(Aperture::distilledEssence)
+    ).apply(instance, (rank, stage, base, physique, essence, state, primary, secondary, distilled) ->
             new Aperture(rank, stage, base, physique, essence, state,
-                    primary.orElse(null), secondary.orElse(null))));
+                    primary.orElse(null), secondary.orElse(null), distilled)));
 
     private static final StreamCodec<ByteBuf, Rank> RANK = ModStreamCodecs.ofEnum(Rank.class);
     private static final StreamCodec<ByteBuf, Stage> STAGE = ModStreamCodecs.ofEnum(Stage.class);
@@ -75,7 +79,8 @@ public record Aperture(
                     ByteBufCodecs.VAR_LONG.decode(buf),
                     STATE.decode(buf),
                     PATH.decode(buf),
-                    PATH.decode(buf));
+                    PATH.decode(buf),
+                    ByteBufCodecs.VAR_LONG.decode(buf));
         }
 
         @Override
@@ -88,6 +93,7 @@ public record Aperture(
             STATE.encode(buf, value.state());
             PATH.encode(buf, value.primaryPath());
             PATH.encode(buf, value.secondaryPath());
+            ByteBufCodecs.VAR_LONG.encode(buf, value.distilledEssence());
         }
     };
 
@@ -95,6 +101,9 @@ public record Aperture(
     public Aperture {
         baseEssence = baseEssence <= 0 ? 0 : Math.clamp(baseEssence, MIN_BASE, MAX_BASE);
         currentEssence = Math.clamp(currentEssence, 0L, maxEssence(rank, stage, baseEssence));
+        //  ⚠ The distilled pool shares the ordinary cap -- regen is simply redirected into it, so the
+        //  ceiling regen stops at must be the same one. It is NOT halved for the 1:2 spend rate.
+        distilledEssence = Math.clamp(distilledEssence, 0L, maxEssence(rank, stage, baseEssence));
         //  ⚠ The secondary path can never equal the primary -- enforced here, so the pair is
         //  unrepresentable rather than merely refused. Binding a Vital Gu of it is what fires this.
         if (secondaryPath != null && secondaryPath == primaryPath) secondaryPath = null;
@@ -110,7 +119,7 @@ public record Aperture(
 
         int base = Talent.randomPercent(talent);
         long max = maxEssence(Rank.ONE, Stage.INIT, base);
-        return new Aperture(Rank.ONE, Stage.INIT, base, physique, max, ApertureState.ALIVE, null, null);
+        return new Aperture(Rank.ONE, Stage.INIT, base, physique, max, ApertureState.ALIVE, null, null, 0L);
     }
 
     //  ---- derived, never stored;  CLAUDE.md ----
@@ -125,37 +134,41 @@ public record Aperture(
     public boolean isAlive() {return state == ApertureState.ALIVE;}
     public Aperture refilled() {return withCurrentEssence(maxEssence());}
 
-    //  ---- withers ----  eight components: each one is a block, and the tail wraps
+    //  ---- withers ----  nine components: each one is a block, and the tail wraps
     public Aperture withRank(Rank v) {
         return new Aperture(v, stage, baseEssence, extremePhysique, currentEssence, state,
-                primaryPath, secondaryPath);
+                primaryPath, secondaryPath, distilledEssence);
     }
     public Aperture withStage(Stage v) {
         return new Aperture(rank, v, baseEssence, extremePhysique, currentEssence, state,
-                primaryPath, secondaryPath);
+                primaryPath, secondaryPath, distilledEssence);
     }
     public Aperture withBaseEssence(int v) {
         return new Aperture(rank, stage, v, extremePhysique, currentEssence, state,
-                primaryPath, secondaryPath);
+                primaryPath, secondaryPath, distilledEssence);
     }
     public Aperture withExtremePhysique(ExtremePhysique v) {
         return new Aperture(rank, stage, baseEssence, v, currentEssence, state,
-                primaryPath, secondaryPath);
+                primaryPath, secondaryPath, distilledEssence);
     }
     public Aperture withCurrentEssence(long v) {
         return new Aperture(rank, stage, baseEssence, extremePhysique, v, state,
-                primaryPath, secondaryPath);
+                primaryPath, secondaryPath, distilledEssence);
     }
     public Aperture withState(ApertureState v) {
         return new Aperture(rank, stage, baseEssence, extremePhysique, currentEssence, v,
-                primaryPath, secondaryPath);
+                primaryPath, secondaryPath, distilledEssence);
     }
     public Aperture withPrimaryPath(@Nullable GuPath v) {
         return new Aperture(rank, stage, baseEssence, extremePhysique, currentEssence, state,
-                v, secondaryPath);
+                v, secondaryPath, distilledEssence);
     }
     public Aperture withSecondaryPath(@Nullable GuPath v) {
         return new Aperture(rank, stage, baseEssence, extremePhysique, currentEssence, state,
-                primaryPath, v);
+                primaryPath, v, distilledEssence);
+    }
+    public Aperture withDistilledEssence(long v) {
+        return new Aperture(rank, stage, baseEssence, extremePhysique, currentEssence, state,
+                primaryPath, secondaryPath, v);
     }
 }

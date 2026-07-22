@@ -20,6 +20,10 @@ public final class ModItemTags {
     public static final TagKey<Item> JIN_FEED = key("jin_feed");
     public static final TagKey<Item> JIN_FEED_DENSE = key("jin_feed_dense");
 
+    //  What a liquor worm [酒虫] drinks. ⚠ One tag, one rate -- the four ranks differ by how MANY units
+    //  buy a hunger point (4/8/16/32), never by what a single liquor is worth.
+    public static final TagKey<Item> LIQUOR_FEED = key("liquor_feed");
+
     private static TagKey<Item> key(String name) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, name));
     }

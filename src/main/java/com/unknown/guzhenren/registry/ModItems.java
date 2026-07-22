@@ -3,9 +3,12 @@ package com.unknown.guzhenren.registry;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
+import com.unknown.guzhenren.item.material.LiquorItem;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.item.mortal.strength.BoarGuItem;
 import com.unknown.guzhenren.item.mortal.HopeGuItem;
+import com.unknown.guzhenren.item.mortal.LifespanGuItem;
+import com.unknown.guzhenren.item.mortal.liquor.LiquorWormItem;
 import com.unknown.guzhenren.item.mortal.strength.JinStrengthGuItem;
 import com.unknown.guzhenren.item.mortal.RelicsGuItem;
 import com.unknown.guzhenren.item.mortal.VitalityLeafGuItem;
@@ -62,6 +65,34 @@ public final class ModItems {
     //  Vitality Leaf Gu [生机叶蛊], Rank I Wood Path -- stacks freely; it carries no per-stack state.
     public static final DeferredItem<Item> VITALITY_LEAF_GU = ITEMS.register("vitality_leaf_gu",
             () -> new VitalityLeafGuItem(new Item.Properties()));
+
+    //  Lifespan Gu [寿蛊] ×3, Rank I Heaven Path -- one class; the span is all registration varies.
+    //  ⚠ The three ranges are decimal magnitudes today, but they are passed EXPLICITLY, not derived from
+    //  a tier: nothing about the design says the next one must be 1000..9999.
+    public static final DeferredItem<Item> LIFESPAN_GU = ITEMS.register("lifespan_gu",
+            () -> new LifespanGuItem(new Item.Properties(), 1, 9));
+    public static final DeferredItem<Item> TENS_LIFESPAN_GU = ITEMS.register("tens_lifespan_gu",
+            () -> new LifespanGuItem(new Item.Properties(), 10, 99));
+    public static final DeferredItem<Item> HUNDREDS_LIFESPAN_GU = ITEMS.register("hundreds_lifespan_gu",
+            () -> new LifespanGuItem(new Item.Properties(), 100, 999));
+
+    //  Liquor Worm [酒虫], one per rank I..IV -- one class; the rank is all registration varies, and
+    //  every number it needs falls out of that.
+    //  ⚠ Usable only at its OWN rank. Below or above, it can still be refined but never driven.
+    public static final DeferredItem<Item> LIQUOR_WORM = ITEMS.register("liquor_worm",
+            () -> new LiquorWormItem(new Item.Properties().stacksTo(1), Rank.ONE));
+    public static final DeferredItem<Item> FOUR_FLAVORS_LIQUOR_WORM = ITEMS.register("four_flavors_liquor_worm",
+            () -> new LiquorWormItem(new Item.Properties().stacksTo(1), Rank.TWO));
+    public static final DeferredItem<Item> SEVEN_FRAGRANCES_LIQUOR_WORM = ITEMS.register(
+            "seven_fragrances_liquor_worm",
+            () -> new LiquorWormItem(new Item.Properties().stacksTo(1), Rank.THREE));
+    public static final DeferredItem<Item> NINE_EYES_LIQUOR_WORM = ITEMS.register("nine_eyes_liquor_worm",
+            () -> new LiquorWormItem(new Item.Properties().stacksTo(1), Rank.FOUR));
+
+    //  Liquor [酒], Rank I Food Path -- what every liquor worm drinks, and drinkable itself: 60% nausea.
+    //  ⚠ Stacks: the food is Properties data, so nothing per-stack rides on it.
+    public static final DeferredItem<Item> LIQUOR = ITEMS.register("liquor",
+            () -> new LiquorItem(new Item.Properties()));
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

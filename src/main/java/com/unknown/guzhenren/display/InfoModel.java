@@ -56,6 +56,9 @@ public final class InfoModel {
     public record Realm(Aperture aperture) implements Entry {}
     public record Talent(Aperture aperture, boolean awakened) implements Entry {}
     public record Essence(Aperture aperture) implements Entry {}
+    //  ⚠ Only while the pool is non-empty -- outside a Liquor Worm [酒虫] it is always 0, and a row that
+    //  reads 0 every day of a cultivator's life teaches nothing.
+    public record Distilled(Aperture aperture) implements Entry {}
     //  ⚠ One record for both: only the label differs, and the panel hangs its picker off the secondary.
     public record PathChoice(boolean primary, @Nullable GuPath path) implements Entry {}
     public record ApertureLife(ApertureState state) implements Entry {}
@@ -105,6 +108,7 @@ public final class InfoModel {
         rows.add(new Row(indent, new Talent(aperture, awakened)));
         if (awakened) {
             rows.add(new Row(indent, new Essence(aperture)));
+            if (aperture.distilledEssence() > 0L) rows.add(new Row(indent, new Distilled(aperture)));
             rows.add(new Row(indent, new PathChoice(true, aperture.primaryPath())));
             rows.add(new Row(indent, new PathChoice(false, aperture.secondaryPath())));
         }

@@ -111,6 +111,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.realm", "玩家修为  %s");
         add("guzhenren.command.info.talent", "玩家天赋  %s");
         add("guzhenren.command.info.essence", "玩家真元  %s / %s");
+        add("guzhenren.command.info.distilled", "精炼真元  %s / %s");
         add("guzhenren.command.info.primary_path", "主修流派  %s");
         add("guzhenren.command.info.secondary_path", "辅修流派  %s");
         add("guzhenren.command.info.soul", "玩家魂魄  %s / %s");
@@ -156,6 +157,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.realm", "修为");
         add("guzhenren.screen.label.talent", "天赋");
         add("guzhenren.screen.label.essence", "真元");
+        add("guzhenren.screen.label.distilled", "精炼真元");
         add("guzhenren.screen.label.state", "状态");
         add("guzhenren.screen.label.life_form", "形态");
         add("guzhenren.screen.label.soul", "魂魄");
@@ -182,7 +184,15 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("item.guzhenren.black_boar_gu", "黑豕蛊");
         add("item.guzhenren.jin_strength_gu", "斤力蛊");
         add("item.guzhenren.vitality_leaf_gu", "生机叶蛊");
+        add("item.guzhenren.lifespan_gu", "寿蛊");
+        add("item.guzhenren.tens_lifespan_gu", "十年寿蛊");
+        add("item.guzhenren.hundreds_lifespan_gu", "百年寿蛊");
+        add("item.guzhenren.liquor_worm", "酒虫");
+        add("item.guzhenren.four_flavors_liquor_worm", "四味酒虫");
+        add("item.guzhenren.seven_fragrances_liquor_worm", "七香酒虫");
+        add("item.guzhenren.nine_eyes_liquor_worm", "九眼酒虫");
         add("item.guzhenren.primeval_stone", "元石");
+        add("item.guzhenren.liquor", "酒");
 
         add("itemGroup.guzhenren.mortal_gu", "凡蛊");
         add("itemGroup.guzhenren.gu_material", "蛊材");
@@ -196,15 +206,19 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.jun_strength_full", "已有九斤之力");
         add("guzhenren.item.failed.vitality_active", "生机叶效果未散");
         add("guzhenren.item.failed.refine_essence", "真元不足无法炼化");
+        add("guzhenren.item.failed.liquor_rank", "唯%s修士方可催动此蛊");
+        add("guzhenren.item.failed.liquor_distilling", "精炼未止");
 
         add("guzhenren.item.gu.uses", "已用 %s/%s");
         add("guzhenren.item.gu.refine_progress", "炼化 %s/%s");
+        add("guzhenren.item.gu.lifespan_gained", "寿元 +%s 年");
         add("guzhenren.item.gu.hungry", "%s饿了");
         add("guzhenren.item.gu.starved", "%s饿死了");
         add("guzhenren.item.gu.exhausted", "%s被强行催动，力竭而亡！");
         add("guzhenren.item.gu.vital_lost", "%s断绝，气血、魂魄与念头俱损！");
 
         add("effect.guzhenren.vitality_leaf", "生机叶");
+        add("effect.guzhenren.liquor_worm", "酒虫");
     }
     //endregion
 

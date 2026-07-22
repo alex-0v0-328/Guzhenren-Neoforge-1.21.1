@@ -71,7 +71,10 @@ public abstract class GuItem extends Item {
     public final @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
                                                                  @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!hasUse()) return InteractionResultHolder.pass(stack);
+        //  ⚠⚠ DELEGATE, never pass: vanilla's Item.use is what starts eating, so returning pass here made
+        //  every edible Gu material silently inedible. The rule for all four hooks below is the same --
+        //  when the template does not own the click, it must be completely transparent.
+        if (!hasUse()) return super.use(level, player, hand);
 
         Refusal refusal = gate(player, stack);
         if (refusal != null) {
@@ -94,7 +97,9 @@ public abstract class GuItem extends Item {
     @Override
     public final @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level level,
                                                     @NotNull LivingEntity entity) {
-        if (!hasUse() || !(entity instanceof Player player)) return stack;
+        //  ⚠ Transparent when the template is not driving -- this is where vanilla calls entity.eat().
+        if (!hasUse()) return super.finishUsingItem(stack, level, entity);
+        if (!(entity instanceof Player player)) return stack;
 
         Refusal refusal = gate(player, stack);
         if (refusal != null) {
@@ -107,13 +112,17 @@ public abstract class GuItem extends Item {
 
     @Override
     public final int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
+        //  ⚠ Transparent again: a food's eat time is vanilla's to decide, not ours.
+        if (!hasUse()) return super.getUseDuration(stack, entity);
         return entity instanceof Player player ? useDurationTicks(player, stack) : 0;
     }
 
     //  ⚠ NONE, not BOW: a Gu is not drawn like a weapon, and the hotbar bar is the whole feedback.
     //  The movement slowdown vanilla applies while using still lands, which suits a four-second channel.
     @Override
-    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {return UseAnim.NONE;}
+    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
+        return hasUse() ? UseAnim.NONE : super.getUseAnimation(stack);
+    }
 
     //  ⚠ No gate and no refusal, unlike use(): left-click is also mining and fighting, so hasSwing must
     //  answer the whole question and a swing it cannot serve passes silently. Takes the player for that.
@@ -152,6 +161,14 @@ public abstract class GuItem extends Item {
     //  Refused: red on the action bar, nothing spent. Same class as a command's red --  CLAUDE.md "Color".
     protected static void refuse(ServerPlayer player, String key, Object... args) {
         player.displayClientMessage(Component.translatable(key, args).withStyle(ChatFormatting.RED), true);
+    }
+
+    //  ⚠ The ONE exception to "success says nothing": an outcome the player cannot otherwise read, which
+    //  today means a RANDOM one. Uncolored, because nothing was refused -- red is refusal's alone.
+    //  ⚠ Action bar, not chat, and the pair is deliberate: this answers a click he just made and is
+    //  looking at, while RefinableGuItem.announce interrupts someone busy with something else.
+    protected static void inform(ServerPlayer player, String key, Object... args) {
+        player.displayClientMessage(Component.translatable(key, args), true);
     }
 
     //  Stack-sensitive: one Gu's actions can differ in weight -- a slow refine, a quick use.

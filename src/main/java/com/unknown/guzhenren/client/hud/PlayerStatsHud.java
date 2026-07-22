@@ -38,6 +38,11 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
     //  Fixed hues, NOT EssenceColor's per-rank palette --  CLAUDE.md "HUD".
     private static final int ESSENCE_FILL = 0xFF4FC3F7;
     private static final int SOUL_FILL = 0xFFB388FF;
+
+    //  ⚠ Deliberately the SAME hue family as essence, several shades down: distilled essence [精炼真元]
+    //  is that same essence concentrated, and the bar right below it should read as a relative, not a
+    //  stranger. Identity, not status -- see the note above.
+    private static final int DISTILLED_FILL = 0xFF1565C0;
     private static final int BAR_TRACK = 0xB0202020;
     private static final int BAR_BORDER = 0xC0000000;
     private static final int TEXT_COLOR = 0xFFFFFFFF;
@@ -64,6 +69,13 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         if (ApertureService.isAwakened(player)) {
             bar(graphics, font, y, aperture.currentEssence(), aperture.maxEssence(), ESSENCE_FILL);
             y += BAR_HEIGHT + ROW_GAP;
+
+            //  ⚠ Only while it holds something. Outside a Liquor Worm this pool is 0 for a cultivator's
+            //  whole life, and a permanent empty bar would push every row below it down for nothing.
+            if (aperture.distilledEssence() > 0L) {
+                bar(graphics, font, y, aperture.distilledEssence(), aperture.maxEssence(), DISTILLED_FILL);
+                y += BAR_HEIGHT + ROW_GAP;
+            }
         }
 
         bar(graphics, font, y, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);

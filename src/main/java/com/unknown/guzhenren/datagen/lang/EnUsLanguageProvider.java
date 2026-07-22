@@ -112,6 +112,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.realm", "Cultivation: %s");
         add("guzhenren.command.info.talent", "Aptitude:    %s");
         add("guzhenren.command.info.essence", "Essence:     %s / %s");
+        add("guzhenren.command.info.distilled", "Distilled:   %s / %s");
         add("guzhenren.command.info.primary_path", "Primary:     %s");
         add("guzhenren.command.info.secondary_path", "Secondary:   %s");
         add("guzhenren.command.info.soul", "Soul:        %s / %s");
@@ -156,6 +157,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.realm", "Realm");
         add("guzhenren.screen.label.talent", "Aptitude");
         add("guzhenren.screen.label.essence", "Essence");
+        add("guzhenren.screen.label.distilled", "Distilled");
         add("guzhenren.screen.label.state", "State");
         add("guzhenren.screen.label.life_form", "Form");
         add("guzhenren.screen.label.soul", "Soul");
@@ -182,7 +184,15 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("item.guzhenren.black_boar_gu", "Black Boar Gu");
         add("item.guzhenren.jin_strength_gu", "Jin Strength Gu");
         add("item.guzhenren.vitality_leaf_gu", "Vitality Leaf Gu");
+        add("item.guzhenren.lifespan_gu", "Lifespan Gu");
+        add("item.guzhenren.tens_lifespan_gu", "Tens Years Lifespan Gu");
+        add("item.guzhenren.hundreds_lifespan_gu", "Hundreds Years Lifespan Gu");
+        add("item.guzhenren.liquor_worm", "Liquor Worm");
+        add("item.guzhenren.four_flavors_liquor_worm", "Four Flavors Liquor Worm");
+        add("item.guzhenren.seven_fragrances_liquor_worm", "Seven Fragrances Liquor Worm");
+        add("item.guzhenren.nine_eyes_liquor_worm", "Nine Eyes Liquor Worm");
         add("item.guzhenren.primeval_stone", "Primeval Stone");
+        add("item.guzhenren.liquor", "Liquor");
 
         add("itemGroup.guzhenren.mortal_gu", "Mortal Gu");
         add("itemGroup.guzhenren.gu_material", "Gu Material");
@@ -196,15 +206,19 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.jun_strength_full", "Already hold Nine Jin of strength");
         add("guzhenren.item.failed.vitality_active", "Vitality Leaf is still working");
         add("guzhenren.item.failed.refine_essence", "NOT enough essence to refine");
+        add("guzhenren.item.failed.liquor_rank", "Only a cultivator at %s can drive this worm");
+        add("guzhenren.item.failed.liquor_distilling", "You are already distilling");
 
         add("guzhenren.item.gu.uses", "Used %s/%s");
         add("guzhenren.item.gu.refine_progress", "Refined %s/%s");
+        add("guzhenren.item.gu.lifespan_gained", "Lifespan +%s years");
         add("guzhenren.item.gu.hungry", "Your %s is hungry");
         add("guzhenren.item.gu.starved", "Your %s starved to death");
         add("guzhenren.item.gu.exhausted", "Your %s was forced past its limit and died");
         add("guzhenren.item.gu.vital_lost", "Your %s is gone -- health, soul and mind all suffer!");
 
         add("effect.guzhenren.vitality_leaf", "Vitality Leaf");
+        add("effect.guzhenren.liquor_worm", "Liquor Worm");
     }
     //endregion
 

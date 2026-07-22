@@ -345,6 +345,8 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.Talent e -> new Row(indent, label("talent"), talent(e));
             case InfoModel.Essence e -> new Row(indent, label("essence"), Component.literal(
                     ModDisplayText.pool(e.aperture().currentEssence(), e.aperture().maxEssence())));
+            case InfoModel.Distilled e -> new Row(indent, label("distilled"), Component.literal(
+                    ModDisplayText.pool(e.aperture().distilledEssence(), e.aperture().maxEssence())));
 
             //  The primary is read-only -- whatever Vital Gu sits in the slot. The secondary is the one
             //  row on this panel he may click. ⚠ The gray hint is the affordance; colour may not be.

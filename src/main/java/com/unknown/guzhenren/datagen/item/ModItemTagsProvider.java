@@ -2,6 +2,7 @@ package com.unknown.guzhenren.datagen.item;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.registry.ModItemTags;
+import com.unknown.guzhenren.registry.ModItems;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -30,5 +31,9 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         //  ⚠ Two tags, not one with both members: a block is worth nine, and a tag holds one rate.
         tag(ModItemTags.JIN_FEED).add(Items.RAW_IRON);
         tag(ModItemTags.JIN_FEED_DENSE).add(Items.RAW_IRON_BLOCK);
+
+        //  ⚠ Our own liquor only. A sibling mod's drink joins by adding to the tag, not by us guessing
+        //  which vanilla item counts -- there is no vanilla liquor, and a potion is not one.
+        tag(ModItemTags.LIQUOR_FEED).add(ModItems.LIQUOR.get());
     }
 }

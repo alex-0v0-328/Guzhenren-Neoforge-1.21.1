@@ -63,6 +63,8 @@ public final class CmdInfo {
             case InfoModel.Realm e -> key("realm", ModDisplayText.realm(e.aperture()));
             case InfoModel.Talent e -> talent(e);
             case InfoModel.Essence e -> key("essence", e.aperture().currentEssence(), e.aperture().maxEssence());
+            case InfoModel.Distilled e -> key("distilled", e.aperture().distilledEssence(),
+                    e.aperture().maxEssence());
             case InfoModel.PathChoice e -> key(e.primary() ? "primary_path" : "secondary_path",
                     ModDisplayText.path(e.path()));
             case InfoModel.ApertureLife e -> key("aperture_state", enumName(e.state().getTranslationKey()));

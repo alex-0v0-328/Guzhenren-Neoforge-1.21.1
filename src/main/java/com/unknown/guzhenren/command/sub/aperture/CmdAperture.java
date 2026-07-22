@@ -58,6 +58,12 @@ public final class CmdAperture {
                         .then(currentNode("set", EssenceService::set))
                         .then(currentNode("add", EssenceService::add))
                         .then(currentNode("sub", (p, v) -> EssenceService.add(p, -v))))
+                //  ⚠ No refill: the distilled pool [精炼真元] is not filled, it is EARNED by drinking.
+                //  Its own cap is the ordinary one, so refill would just duplicate the leaf above.
+                .then(Commands.literal("distilled")
+                        .then(currentNode("set", EssenceService::setDistilled))
+                        .then(currentNode("add", EssenceService::addDistilled))
+                        .then(currentNode("sub", (p, v) -> EssenceService.addDistilled(p, -v))))
                 .then(ModCommandSupport.withTargets(Commands.literal("refill"),
                         context -> ModCommandSupport.applyOnAwakened(context, EssenceService::refill)));
     }

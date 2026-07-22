@@ -42,9 +42,21 @@ public final class PlayerTickEvents {
             if (player.containerMenu instanceof ApertureStorageMenu menu) menu.reload();
         }
 
+        closeDistilling(player);
         EssenceService.regenStep(player);
         MindService.regenStep(player);
         checkLethalState(player);
+    }
+
+    //  Phase 3's close: whatever he never spent pays back at 1:2, and the distilled pool [精炼真元] empties.
+    //  ⚠⚠ A LEVEL, not an edge, and it has to be: 1.21.1's MobEffect has no expiry hook at all, so there
+    //  is no edge to hang this on. Reading the level also catches milk, /effect clear and death -- none of
+    //  which would have fired an expiry hook even if one existed.
+    //  ⚠ Runs BEFORE regenStep, so the tick the effect ends on already regenerates into the ordinary pool.
+    private static void closeDistilling(ServerPlayer player) {
+        if (EssenceService.distilledEssence(player) > 0L && !EssenceService.isDistilling(player)) {
+            EssenceService.endDistilling(player);
+        }
     }
 
     //  Lifespan gone, soul collapsed, or Mind Ocean burst. onRespawn stops the death loop.
