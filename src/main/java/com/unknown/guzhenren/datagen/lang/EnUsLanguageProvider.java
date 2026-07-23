@@ -187,6 +187,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("item.guzhenren.lifespan_gu", "Lifespan Gu");
         add("item.guzhenren.tens_lifespan_gu", "Tens Years Lifespan Gu");
         add("item.guzhenren.hundreds_lifespan_gu", "Hundreds Years Lifespan Gu");
+        add("item.guzhenren.thousands_lifespan_gu", "Thousands Years Lifespan Gu");
         add("item.guzhenren.liquor_worm", "Liquor Worm");
         add("item.guzhenren.four_flavors_liquor_worm", "Four Flavors Liquor Worm");
         add("item.guzhenren.seven_fragrances_liquor_worm", "Seven Fragrances Liquor Worm");

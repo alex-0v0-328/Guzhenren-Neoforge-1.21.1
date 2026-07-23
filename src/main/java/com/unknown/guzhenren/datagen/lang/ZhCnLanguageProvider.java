@@ -187,6 +187,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("item.guzhenren.lifespan_gu", "寿蛊");
         add("item.guzhenren.tens_lifespan_gu", "十年寿蛊");
         add("item.guzhenren.hundreds_lifespan_gu", "百年寿蛊");
+        add("item.guzhenren.thousands_lifespan_gu", "千年寿蛊");
         add("item.guzhenren.liquor_worm", "酒虫");
         add("item.guzhenren.four_flavors_liquor_worm", "四味酒虫");
         add("item.guzhenren.seven_fragrances_liquor_worm", "七香酒虫");
