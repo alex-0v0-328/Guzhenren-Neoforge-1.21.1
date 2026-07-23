@@ -163,9 +163,8 @@ public abstract class RefinableGuItem extends MortalGuItem {
         }
         store(stack, state);
 
-        //  ⚠⚠ The forced use LANDS first -- speck, count, payout -- and only then does it die. This is
-        //  the second and last way a refined Gu ends, and it is still starvation: he brought it forward
-        //  by driving an empty Gu. It is NOT a payout, and this 1 must never be gated on "spent".
+        //  ⚠⚠ The forced use LANDS first -- speck, count, payout -- then it dies. Still starvation, NOT a
+        //  payout; this 1 is a death and must never be gated on "spent".  CLAUDE.md "The refinable Gu".
         //  ⚠ Creative never loses the item (GuItem.spend), so it must not be told the Gu died either.
         if (forced && !player.hasInfiniteMaterials()) {
             exhausted(player, stack);

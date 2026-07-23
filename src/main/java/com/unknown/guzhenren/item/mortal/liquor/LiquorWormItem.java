@@ -49,9 +49,8 @@ public class LiquorWormItem extends RefinableGuItem {
     @Override
     public int refineCost() {return scaled(BASE_REFINE_COST, 10, tier());}
 
-    //  ⚠ This ladder MUST track refineCost's, or rank IV would be 12,800 four-second holds. The "two
-    //  ranks above lifts the cap" escape cannot help here: rank IV would need rank VI, and VI..IX have
-    //  rankBase == 0 on purpose.  CLAUDE.md "Bounds".
+    //  ⚠ This ladder MUST track refineCost's, or rank IV would be 12,800 four-second holds -- and the
+    //  "two ranks above lifts the cap" escape can't help (rank VI needed, VI..IX are 0).  CLAUDE.md "Bounds".
     @Override
     protected int refinePerUse() {return scaled(BASE_REFINE_PER_USE, 10, tier());}
 
@@ -76,9 +75,8 @@ public class LiquorWormItem extends RefinableGuItem {
     @Override
     protected int feedUnits(ItemStack food) {return food.is(ModItemTags.LIQUOR_FEED) ? 1 : 0;}
 
-    //  ⚠ Rank must match EXACTLY, unlike every other refinable Gu. Refining is still open to anyone with
-    //  an aperture -- standing below it only makes the hold longer, which is what finally makes
-    //  RefinableGuItem's nine-second bucket reachable.
+    //  ⚠ Rank must match EXACTLY, unlike every other refinable Gu. Refining stays open to any cultivator --
+    //  standing below only lengthens the hold, which makes the nine-second bucket reachable.  CLAUDE.md.
     @Override
     protected @Nullable Refusal payoutGate(Player player) {
         if (ApertureService.rank(player) != rank()) {

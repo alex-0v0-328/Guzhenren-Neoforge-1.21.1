@@ -39,9 +39,8 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
     private static final int ESSENCE_FILL = 0xFF4FC3F7;
     private static final int SOUL_FILL = 0xFFB388FF;
 
-    //  ⚠ Deliberately the SAME hue family as essence, several shades down: distilled essence [精炼真元]
-    //  is that same essence concentrated, and the bar right below it should read as a relative, not a
-    //  stranger. Identity, not status -- see the note above.
+    //  ⚠ Deliberately the SAME hue family as essence, several shades down: distilled essence [精炼真元] is
+    //  that essence concentrated, so it reads as a relative of the bar above, not a stranger. Identity.
     private static final int DISTILLED_FILL = 0xFF1565C0;
     private static final int BAR_TRACK = 0xB0202020;
     private static final int BAR_BORDER = 0xC0000000;

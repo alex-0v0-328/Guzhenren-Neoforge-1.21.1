@@ -12,10 +12,8 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-//  ⚠ The mod's ONE network registration, and the documented exception to "there is no networking".
-//  The ban exists so nobody hand-rolls what attachment sync gives free; a CLIENT INTENT is not that --
-//  attachment sync is server->client only and cannot carry a choice upstream. Two exist: open my
-//  storage, and set my secondary path.
+//  ⚠ The mod's ONE network registration, the documented exception to "no networking": a CLIENT INTENT,
+//  which attachment sync (server->client) cannot carry upstream. Two exist -- open storage, set secondary path.
 //  ⚠ Downstream player data may never be added here.  CLAUDE.md "Networking".
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModPayloads {

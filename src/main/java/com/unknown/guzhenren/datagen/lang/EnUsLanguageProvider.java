@@ -104,8 +104,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.unknown_value", "Unknown value: %s");
 
         add("guzhenren.command.failed.awakened", "%s has already awakened -- run /guzhenren reset first to re-roll");
-        add("guzhenren.command.failed.unawakened", "%s has not awakened -- cultivation values are established by /guzhenren awaken");
-        add("guzhenren.command.failed.qi_mark", "The Qi Path's marks are the sum of every qi -- set them with /guzhenren body qi <type>");
+        add("guzhenren.command.failed.unawakened",
+                "%s has not awakened -- cultivation values are established by /guzhenren awaken");
+        add("guzhenren.command.failed.qi_mark",
+                "The Qi Path's marks are the sum of every qi -- set them with /guzhenren body qi <type>");
 
         add("guzhenren.command.info.aperture_index", "Aperture %s");
         add("guzhenren.command.info.aperture_state", "Aperture:    %s");

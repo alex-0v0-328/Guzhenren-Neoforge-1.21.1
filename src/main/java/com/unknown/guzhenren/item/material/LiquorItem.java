@@ -30,9 +30,8 @@ public class LiquorItem extends GuMaterialItem {
 
     //  ⚠ alwaysEdible: a full stomach is no reason a cultivator cannot drink, and the nausea is the
     //  point of the item -- gating it behind hunger would hide the whole effect from a fed player.
-    //  ⚠⚠ The effect goes in as a SUPPLIER, not an instance: NeoForge deprecated the eager overload
-    //  because FoodProperties is built during registration, and a MobEffectInstance resolves its
-    //  Holder<MobEffect> on construction -- too early, while the registry is still filling.
+    //  ⚠⚠ The effect goes in as a SUPPLIER, not an instance: NeoForge deprecated the eager overload --
+    //  a MobEffectInstance resolves its Holder too early, while the registry is still filling.  CLAUDE.md.
     private static FoodProperties liquor() {
         return new FoodProperties.Builder()
                 .nutrition(NUTRITION)

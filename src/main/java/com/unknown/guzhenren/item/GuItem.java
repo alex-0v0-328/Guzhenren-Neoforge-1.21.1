@@ -71,9 +71,8 @@ public abstract class GuItem extends Item {
     public final @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
                                                                  @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        //  ⚠⚠ DELEGATE, never pass: vanilla's Item.use is what starts eating, so returning pass here made
-        //  every edible Gu material silently inedible. The rule for all four hooks below is the same --
-        //  when the template does not own the click, it must be completely transparent.
+        //  ⚠⚠ DELEGATE, never pass: Item.use is what starts eating, so pass here made every edible Gu
+        //  material silently inedible. All four hooks below: not owning the click means fully transparent.
         if (!hasUse()) return super.use(level, player, hand);
 
         Refusal refusal = gate(player, stack);

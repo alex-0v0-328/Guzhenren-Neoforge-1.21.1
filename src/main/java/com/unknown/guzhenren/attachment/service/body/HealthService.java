@@ -30,9 +30,8 @@ public final class HealthService {
         int target = ApertureService.rank(player).getMaxHealth();
         double bonus = target > 0 ? target - VANILLA_MAX_HEALTH : 0.0D;
 
-        //  ⚠ Every aperture write lands here, and essence regen is one of them -- once a second, forever.
-        //  So this has to cost nothing when the rank has not moved: re-adding would sync an attribute
-        //  to the client on every heartbeat.
+        //  ⚠ Every aperture write lands here -- essence regen too, once a second. So it must cost nothing
+        //  when the rank has not moved, or re-adding syncs the attribute to the client every heartbeat.
         AttributeModifier held = instance.getModifier(MODIFIER_ID);
         if (held == null ? bonus == 0.0D : held.amount() == bonus) return;
 

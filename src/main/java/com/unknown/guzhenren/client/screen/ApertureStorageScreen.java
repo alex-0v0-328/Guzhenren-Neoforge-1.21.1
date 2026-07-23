@@ -88,9 +88,8 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
                 x + VITAL_SLOT_X + 16, y + VITAL_SLOT_Y + 16, SLOT_FILL);
     }
 
-    //  ⚠ Only the two static labels live here. The pager is drawn in render() instead, because
-    //  renderLabels' matrix is already translated to leftPos/topPos -- mixing the two coordinate
-    //  systems is exactly what once put the page number underneath the "<" button.
+    //  ⚠ Only the two static labels live here. The pager is drawn in render() instead: renderLabels'
+    //  matrix is already translated to leftPos/topPos, and mixing the two once misplaced the page number.
     @Override
     protected void renderLabels(@NotNull GuiGraphics g, int mouseX, int mouseY) {
         g.drawString(font, title, titleLabelX, titleLabelY, ACCENT, false);

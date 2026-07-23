@@ -9,9 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 public enum Rank implements StringRepresentable, EnumTranslatable {
 
-    //  rankBase: maxEssence = baseEssence * stage.multiplier * rank.rankBase
-    //  maxHealth: the rank's HP cap, untouched by stage; lifeForm: mortal or immortal; essenceColor:
-    //  the essence [真元] colour, which the stage then shades.
+    //  Columns -- rankBase (maxEssence = baseEssence * stage.mult * rankBase), maxHealth (HP cap, stage-free),
+    //  lifeForm (mortal/immortal), essenceColor (essence [真元] colour, which the stage shades).
     NONE (      0L,  20, LifeForm.MORTAL,   EssenceColor.NONE),
     ONE  (      1L,  20, LifeForm.MORTAL,   EssenceColor.GREEN_COPPER),
     TWO  (     10L,  40, LifeForm.MORTAL,   EssenceColor.RED_STEEL),

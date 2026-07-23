@@ -10,9 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  "I picked this secondary path." The SECOND and last payload, same shape as the first: a client
-//  intent, carrying no player data. Attachment sync is server->client only and cannot carry a choice
-//  upstream, and the info panel is a plain Screen -- it has no container, so not even clickMenuButton.
+//  "I picked this secondary path." The SECOND and last payload, a client intent carrying no player data.
+//  The info panel is a plain Screen -- no container, not even clickMenuButton, so it needs its own.
 //  ⚠ Two upstream triggers is the whole ceiling.  CLAUDE.md "Networking".
 public record SetSecondaryPathPayload(int aperture, @Nullable GuPath path) implements CustomPacketPayload {
 

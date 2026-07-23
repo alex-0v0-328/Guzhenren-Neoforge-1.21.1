@@ -87,9 +87,8 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         }
         addSlot(new VitalSlot(VITAL_X, VITAL_Y));
 
-        //  ⚠ THE save trigger. Overriding slotsChanged does nothing: SimpleContainer.setChanged only
-        //  notifies registered listeners, and AbstractContainerMenu is not a ContainerListener -- so
-        //  that override was never called and a logout with the menu open ate the deposit.
+        //  ⚠ THE save trigger. Overriding slotsChanged does nothing (menu is not a ContainerListener), so
+        //  a logout with the menu open ate the deposit.  CLAUDE.md "Aperture storage".
         page.addListener(container -> save());
         vital.addListener(container -> save());
 

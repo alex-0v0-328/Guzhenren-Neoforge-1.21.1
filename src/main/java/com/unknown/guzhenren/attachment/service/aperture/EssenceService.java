@@ -119,9 +119,8 @@ public final class EssenceService {
     }
 
     //  One step per aperture, every REGEN_INTERVAL_TICKS. The carry is indexed by aperture.
-    //  ⚠ Phase 2: while a Liquor Worm runs, the SAME rate fills the distilled pool instead -- "自然恢复
-    //  效率不变". Redirecting is also what makes phase 1's "regen stops" true, with no second flag that
-    //  could fall out of step with the effect.
+    //  ⚠ Phase 2: while a Liquor Worm runs, the SAME rate fills the distilled pool instead ("自然恢复效率
+    //  不变"). That redirect is also what makes phase 1's "regen stops" true, with no second flag.  CLAUDE.md.
     public static void regenStep(ServerPlayer player) {
         ApertureData data = ApertureService.get(player);
         float[] carry = player.getData(ModAttachments.ESSENCE_CARRY);

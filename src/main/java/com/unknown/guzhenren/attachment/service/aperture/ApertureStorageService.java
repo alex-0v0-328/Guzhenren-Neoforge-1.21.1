@@ -34,9 +34,8 @@ public final class ApertureStorageService {
     //  reading a Gu's DECLARED path is not calling item behaviour  CLAUDE.md "Extending & compat".
     public static void setVital(ServerPlayer p, int aperture, ItemStack stack) {
         p.setData(ModAttachments.APERTURE_STORAGE, get(p).withVital(aperture, stack));
-        //  ⚠ Emptying the slot does NOT clear the primary path. A Vital Gu has to be held to be used, so
-        //  the slot stands empty most of the time -- the primary follows the MARK, and only its death
-        //  clears it (PlayerDataService.onVitalGuLost). Binding a different Gu is what overwrites it.
+        //  ⚠ Emptying the slot does NOT clear the primary path -- it follows the MARK, not the slot (a Gu
+        //  must be held to be used). Only its death clears it (onVitalGuLost).  CLAUDE.md "Vital Gu".
         if (stack.getItem() instanceof GuItem gu) ApertureService.setPrimaryPath(p, aperture, gu.path());
     }
 

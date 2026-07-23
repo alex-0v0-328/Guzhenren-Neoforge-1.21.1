@@ -33,12 +33,10 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 //  WHICH rows an info view has, in what order, decided once and rendered twice: /gzr info and the G panel.
-//  ⚠ Structure only. The two surfaces do NOT share a text shape -- the command bakes its label and its
-//  indent into each key ('Essence:     %s / %s'), the panel puts the label in a column and the value in
-//  another ('800/800'). Formatting therefore stays with each surface;  CLAUDE.md "Info panel".
-//  ⚠⚠ Entry is SEALED so both switches are exhaustive: adding a row here is a compile error until both
-//  surfaces handle it. That guarantee is the whole reason this class exists -- the two used to carry
-//  "must not drift" comments and nothing enforcing it.
+//  ⚠ Structure only, not text -- the command bakes label+indent into each key ('Essence:     %s / %s'),
+//  the panel puts label and value in separate columns. Formatting stays per-surface.  CLAUDE.md "Info panel".
+//  ⚠⚠ Entry is SEALED so both switches are exhaustive: a new row is a compile error until both surfaces
+//  handle it. That guarantee replaced the "must not drift" comments the two used to carry.  CLAUDE.md.
 public final class InfoModel {
 
     private InfoModel() {}

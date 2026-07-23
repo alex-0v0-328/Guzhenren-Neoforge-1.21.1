@@ -36,9 +36,8 @@ public final class PlayerTickEvents {
             RefinableGuItem.starveAll(player, days);
             ApertureStorageTick.tickDay(player, days);
 
-            //  ⚠ The tick wrote the attachment behind an open menu's back, and that menu still holds
-            //  load()-time copies -- its next save would resurrect what just starved. The check lives
-            //  here, not in the service: a service reaching into menu/ inverts the one strict direction.
+            //  ⚠ The tick wrote behind an open menu's back (it holds load()-time copies), so its next
+            //  save would resurrect what just starved. Lives here, not the service -- no menu/ import.
             if (player.containerMenu instanceof ApertureStorageMenu menu) menu.reload();
         }
 
@@ -49,9 +48,8 @@ public final class PlayerTickEvents {
     }
 
     //  Phase 3's close: whatever he never spent pays back at 1:2, and the distilled pool [精炼真元] empties.
-    //  ⚠⚠ A LEVEL, not an edge, and it has to be: 1.21.1's MobEffect has no expiry hook at all, so there
-    //  is no edge to hang this on. Reading the level also catches milk, /effect clear and death -- none of
-    //  which would have fired an expiry hook even if one existed.
+    //  ⚠⚠ A LEVEL, not an edge: 1.21.1's MobEffect has no expiry hook. Reading it also catches milk,
+    //  /effect clear and death -- none of which would fire one.  CLAUDE.md "Liquor Worm".
     //  ⚠ Runs BEFORE regenStep, so the tick the effect ends on already regenerates into the ordinary pool.
     private static void closeDistilling(ServerPlayer player) {
         if (EssenceService.distilledEssence(player) > 0L && !EssenceService.isDistilling(player)) {
