@@ -77,15 +77,27 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.vital", "本命·%s");
         add("guzhenren.display.boar_strength.1", "[一猪之力]");
         add("guzhenren.display.boar_strength.2", "[两猪之力]");
-        add("guzhenren.display.jun_strength.jin.1", "[一斤之力]");
-        add("guzhenren.display.jun_strength.jin.2", "[二斤之力]");
-        add("guzhenren.display.jun_strength.jin.3", "[三斤之力]");
-        add("guzhenren.display.jun_strength.jin.4", "[四斤之力]");
-        add("guzhenren.display.jun_strength.jin.5", "[五斤之力]");
-        add("guzhenren.display.jun_strength.jin.6", "[六斤之力]");
-        add("guzhenren.display.jun_strength.jin.7", "[七斤之力]");
-        add("guzhenren.display.jun_strength.jin.8", "[八斤之力]");
-        add("guzhenren.display.jun_strength.jin.9", "[九斤之力]");
+        add("guzhenren.display.strength.num_join", "%s%s");
+        add("guzhenren.display.strength.num_tens.1", "十");
+        add("guzhenren.display.strength.num_tens.2", "二十");
+        add("guzhenren.display.strength.num_tens.3", "三十");
+        add("guzhenren.display.strength.num_tens.4", "四十");
+        add("guzhenren.display.strength.num_tens.5", "五十");
+        add("guzhenren.display.strength.num_tens.6", "六十");
+        add("guzhenren.display.strength.num_tens.7", "七十");
+        add("guzhenren.display.strength.num_tens.8", "八十");
+        add("guzhenren.display.strength.num_tens.9", "九十");
+        add("guzhenren.display.strength.num_units.1", "一");
+        add("guzhenren.display.strength.num_units.2", "二");
+        add("guzhenren.display.strength.num_units.3", "三");
+        add("guzhenren.display.strength.num_units.4", "四");
+        add("guzhenren.display.strength.num_units.5", "五");
+        add("guzhenren.display.strength.num_units.6", "六");
+        add("guzhenren.display.strength.num_units.7", "七");
+        add("guzhenren.display.strength.num_units.8", "八");
+        add("guzhenren.display.strength.num_units.9", "九");
+        add("guzhenren.display.strength.jin_reading", "[%s斤之力]");
+        add("guzhenren.display.strength.jun_reading", "[%s钧之力]");
 
         add("guzhenren.hud.lifespan", "寿元 %s");
         add("guzhenren.hud.refining", "炼化中  %s / %s");
@@ -183,6 +195,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("item.guzhenren.white_boar_gu", "白豕蛊");
         add("item.guzhenren.black_boar_gu", "黑豕蛊");
         add("item.guzhenren.jin_strength_gu", "斤力蛊");
+        add("item.guzhenren.tens_jin_strength_gu", "十斤之力蛊");
+        add("item.guzhenren.jun_strength_gu", "钧力蛊");
+        add("item.guzhenren.tens_jun_strength_gu", "十钧之力蛊");
         add("item.guzhenren.vitality_leaf_gu", "生机叶蛊");
         add("item.guzhenren.lifespan_gu", "寿蛊");
         add("item.guzhenren.tens_lifespan_gu", "十年寿蛊");
@@ -204,7 +219,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.rank_mismatch", "境界不符 — 此蛊需%s");
         add("guzhenren.item.failed.stage_peak", "已至小境界巅峰");
         add("guzhenren.item.failed.beast_strength_held", "已有%s之力");
-        add("guzhenren.item.failed.jun_strength_full", "已有九斤之力");
+        add("guzhenren.item.failed.jun_strength_full", "此力已满九层");
         add("guzhenren.item.failed.vitality_active", "生机叶效果未散");
         add("guzhenren.item.failed.refine_essence", "真元不足无法炼化");
         add("guzhenren.item.failed.liquor_rank", "唯%s修士方可催动此蛊");
@@ -267,9 +282,12 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(StrengthBranch.ENVIRONMENT, "气象天地流");
     }
 
-    //  The Human Jun branch's kinds. Ten Jin and Hundred Jin each become their own later.
+    //  The Human Jun branch's kinds -- Jin, Ten Jin, Jun (=100 Jin), Ten Jun.
     private void addJunStrength() {
         add(JunStrength.JIN, "斤");
+        add(JunStrength.TEN_JIN, "十斤");
+        add(JunStrength.JUN, "钧");
+        add(JunStrength.TEN_JUN, "十钧");
     }
 
     //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie

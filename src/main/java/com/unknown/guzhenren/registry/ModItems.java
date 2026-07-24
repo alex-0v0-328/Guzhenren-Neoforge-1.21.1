@@ -3,13 +3,14 @@ package com.unknown.guzhenren.registry;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
+import com.unknown.guzhenren.custom.enums.strength.JunStrength;
 import com.unknown.guzhenren.item.material.LiquorItem;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.item.mortal.strength.BoarGuItem;
 import com.unknown.guzhenren.item.mortal.HopeGuItem;
 import com.unknown.guzhenren.item.mortal.LifespanGuItem;
 import com.unknown.guzhenren.item.mortal.liquor.LiquorWormItem;
-import com.unknown.guzhenren.item.mortal.strength.JinStrengthGuItem;
+import com.unknown.guzhenren.item.mortal.strength.JunStrengthGuItem;
 import com.unknown.guzhenren.item.mortal.RelicsGuItem;
 import com.unknown.guzhenren.item.mortal.VitalityLeafGuItem;
 import net.minecraft.world.item.Item;
@@ -57,10 +58,16 @@ public final class ModItems {
     public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
             () -> new BoarGuItem(new Item.Properties().stacksTo(1), BeastStrength.BLACK_BOAR));
 
-    //  Jin Strength Gu [斤力蛊], the Human Jun branch's first -- refined, fed raw iron, pays out every 36.
-    //  ⚠ stacksTo(1) for the same reason as the boars: each carries its own refinement and hunger.
+    //  Human Jun Strength Branch [人力钧力流] ×4, Ranks I-IV -- one class; the rank and Jun kind vary.
+    //  18 uses buy one of nine layers.  ⚠ stacksTo(1): each carries its own refinement and hunger.
     public static final DeferredItem<Item> JIN_STRENGTH_GU = ITEMS.register("jin_strength_gu",
-            () -> new JinStrengthGuItem(new Item.Properties().stacksTo(1)));
+            () -> new JunStrengthGuItem(new Item.Properties().stacksTo(1), Rank.ONE, JunStrength.JIN));
+    public static final DeferredItem<Item> TENS_JIN_STRENGTH_GU = ITEMS.register("tens_jin_strength_gu",
+            () -> new JunStrengthGuItem(new Item.Properties().stacksTo(1), Rank.TWO, JunStrength.TEN_JIN));
+    public static final DeferredItem<Item> JUN_STRENGTH_GU = ITEMS.register("jun_strength_gu",
+            () -> new JunStrengthGuItem(new Item.Properties().stacksTo(1), Rank.THREE, JunStrength.JUN));
+    public static final DeferredItem<Item> TENS_JUN_STRENGTH_GU = ITEMS.register("tens_jun_strength_gu",
+            () -> new JunStrengthGuItem(new Item.Properties().stacksTo(1), Rank.FOUR, JunStrength.TEN_JUN));
 
     //  Vitality Leaf Gu [生机叶蛊], Rank I Wood Path -- stacks freely; it carries no per-stack state.
     public static final DeferredItem<Item> VITALITY_LEAF_GU = ITEMS.register("vitality_leaf_gu",

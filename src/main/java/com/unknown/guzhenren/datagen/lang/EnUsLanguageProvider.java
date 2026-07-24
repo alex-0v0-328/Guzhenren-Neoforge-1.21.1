@@ -78,15 +78,27 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.vital", "Vital %s");
         add("guzhenren.display.boar_strength.1", "[Strength of One Boar]");
         add("guzhenren.display.boar_strength.2", "[Strength of Two Boars]");
-        add("guzhenren.display.jun_strength.jin.1", "[Strength of One Jin]");
-        add("guzhenren.display.jun_strength.jin.2", "[Strength of Two Jin]");
-        add("guzhenren.display.jun_strength.jin.3", "[Strength of Three Jin]");
-        add("guzhenren.display.jun_strength.jin.4", "[Strength of Four Jin]");
-        add("guzhenren.display.jun_strength.jin.5", "[Strength of Five Jin]");
-        add("guzhenren.display.jun_strength.jin.6", "[Strength of Six Jin]");
-        add("guzhenren.display.jun_strength.jin.7", "[Strength of Seven Jin]");
-        add("guzhenren.display.jun_strength.jin.8", "[Strength of Eight Jin]");
-        add("guzhenren.display.jun_strength.jin.9", "[Strength of Nine Jin]");
+        add("guzhenren.display.strength.num_join", "%s %s");
+        add("guzhenren.display.strength.num_tens.1", "Ten");
+        add("guzhenren.display.strength.num_tens.2", "Twenty");
+        add("guzhenren.display.strength.num_tens.3", "Thirty");
+        add("guzhenren.display.strength.num_tens.4", "Forty");
+        add("guzhenren.display.strength.num_tens.5", "Fifty");
+        add("guzhenren.display.strength.num_tens.6", "Sixty");
+        add("guzhenren.display.strength.num_tens.7", "Seventy");
+        add("guzhenren.display.strength.num_tens.8", "Eighty");
+        add("guzhenren.display.strength.num_tens.9", "Ninety");
+        add("guzhenren.display.strength.num_units.1", "One");
+        add("guzhenren.display.strength.num_units.2", "Two");
+        add("guzhenren.display.strength.num_units.3", "Three");
+        add("guzhenren.display.strength.num_units.4", "Four");
+        add("guzhenren.display.strength.num_units.5", "Five");
+        add("guzhenren.display.strength.num_units.6", "Six");
+        add("guzhenren.display.strength.num_units.7", "Seven");
+        add("guzhenren.display.strength.num_units.8", "Eight");
+        add("guzhenren.display.strength.num_units.9", "Nine");
+        add("guzhenren.display.strength.jin_reading", "[Strength of %s Jin]");
+        add("guzhenren.display.strength.jun_reading", "[Strength of %s Jun]");
 
         add("guzhenren.hud.lifespan", "Lifespan %s");
         add("guzhenren.hud.refining", "Refining  %s / %s");
@@ -185,6 +197,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("item.guzhenren.white_boar_gu", "White Boar Gu");
         add("item.guzhenren.black_boar_gu", "Black Boar Gu");
         add("item.guzhenren.jin_strength_gu", "Jin Strength Gu");
+        add("item.guzhenren.tens_jin_strength_gu", "Tens Jin Strength Gu");
+        add("item.guzhenren.jun_strength_gu", "Jun Strength Gu");
+        add("item.guzhenren.tens_jun_strength_gu", "Tens Jun Strength Gu");
         add("item.guzhenren.vitality_leaf_gu", "Vitality Leaf Gu");
         add("item.guzhenren.lifespan_gu", "Lifespan Gu");
         add("item.guzhenren.tens_lifespan_gu", "Tens Years Lifespan Gu");
@@ -206,7 +221,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.rank_mismatch", "Wrong realm - this Gu needs %s");
         add("guzhenren.item.failed.stage_peak", "You are at the Stage Peak");
         add("guzhenren.item.failed.beast_strength_held", "Already hold the %s's strength");
-        add("guzhenren.item.failed.jun_strength_full", "Already hold Nine Jin of strength");
+        add("guzhenren.item.failed.jun_strength_full", "This strength is already at nine layers");
         add("guzhenren.item.failed.vitality_active", "Vitality Leaf is still working");
         add("guzhenren.item.failed.refine_essence", "NOT enough essence to refine");
         add("guzhenren.item.failed.liquor_rank", "Only a cultivator at %s can drive this worm");
@@ -269,9 +284,12 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(StrengthBranch.ENVIRONMENT, "Atmospheric Heaven and Earth Branch");
     }
 
-    //  The Human Jun branch's grades. Ten Jin and Hundred Jin become their own later
+    //  The Human Jun branch's kinds -- Jin, Ten Jin, Jun (=100 Jin), Ten Jun.
     private void addJunStrength() {
         add(JunStrength.JIN, "Jin");
+        add(JunStrength.TEN_JIN, "Ten Jin");
+        add(JunStrength.JUN, "Jun");
+        add(JunStrength.TEN_JUN, "Ten Jun");
     }
 
     //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie

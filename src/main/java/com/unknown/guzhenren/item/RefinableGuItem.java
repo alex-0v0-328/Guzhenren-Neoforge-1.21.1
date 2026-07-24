@@ -52,7 +52,19 @@ public abstract class RefinableGuItem extends MortalGuItem {
     //  What one use costs in hunger. ⚠ A Gu whose single use IS the whole meal bends this; it must still
     //  return at least 1, or the Gu could be driven forever and starvation would stop being its one end.
     protected int hungerPerUse(ItemStack stack) {return 1;}
-    protected long speckPerUse() {return 1L;}
+
+    //  ⚠ 0 pending final balance -- the hook stays, apply() skips the speck write at 0.
+    protected long speckPerUse() {return 0L;}
+
+    //  0-indexed rank offset, the exponent a rank-scaled ladder is built on (Rank I = 0).
+    protected int tier() {return rank().ordinal() - Rank.ONE.ordinal();}
+
+    //  base * factor^tier -- one ×N-per-rank ladder, shared by every rank-scaled leaf.
+    protected static int scaled(int base, int factor, int tier) {
+        int value = base;
+        for (int i = 0; i < tier; i++) value *= factor;
+        return value;
+    }
 
     //  Holding right-click: three seconds at the Gu's own rank, one above it, nine below.  CLAUDE.md.
     protected int chargeTicks() {return 60;}
@@ -154,7 +166,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
         RefinedGuState state = state(stack);
         state = state.withUses(state.useCount() + 1)
                 .withHunger(state.hunger() - Math.max(1, hungerPerUse(stack)));
-        PathService.addSpeck(player, path(), speckPerUse());
+        if (speckPerUse() > 0) PathService.addSpeck(player, path(), speckPerUse());
 
         //  The 36th pays out and the count starts over -- useCount is progress toward the NEXT payout.
         if (state.useCount() >= usesPerGrant()) {

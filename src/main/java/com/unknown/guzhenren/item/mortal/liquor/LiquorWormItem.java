@@ -36,15 +36,6 @@ public class LiquorWormItem extends RefinableGuItem {
         super(properties, rank, GuPath.FOOD);
     }
 
-    //  0..3 for ranks I..IV -- the exponent both ladders are built on, and the effect's amplifier.
-    private int tier() {return rank().ordinal() - Rank.ONE.ordinal();}
-
-    private static int scaled(int base, int factor, int tier) {
-        int value = base;
-        for (int i = 0; i < tier; i++) value *= factor;
-        return value;
-    }
-
     //region the numbers this Gu bends
     @Override
     public int refineCost() {return scaled(BASE_REFINE_COST, 10, tier());}

@@ -21,7 +21,6 @@ import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiType;
-import com.unknown.guzhenren.custom.enums.strength.JunStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
@@ -153,7 +152,7 @@ public final class InfoModel {
         }
     }
 
-    //  The Strength Path's branches, one row each: how many beast strengths and how many jin, never which.
+    //  The Strength Path's branches: a beast-strengths row, and the Human Jun branch combined onto one.
     //  ⚠ The Strength Path also stays in the path list above -- that row is its specks, these are the
     //  grades those uses bought. Two different facts.
     private static void strength(List<Row> rows, Player player) {
@@ -165,13 +164,9 @@ public final class InfoModel {
             rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.BEASTS,
                     ModDisplayText.boarStrength(data.boarCount()))));
         }
-        //  One row per kind that has any. ⚠ A second kind would repeat the branch title -- revisit then.
-        for (JunStrength kind : JunStrength.values()) {
-            int count = data.junCount(kind);
-            if (count > 0) {
-                rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN,
-                        ModDisplayText.junStrength(kind, count))));
-            }
+        //  The whole Human Jun branch on ONE row -- the 钧 family then the 斤 family, empty ones omitted.
+        if (data.hasBranch(StrengthBranch.HUMAN)) {
+            rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN, ModDisplayText.junStrengthLine(data))));
         }
     }
 

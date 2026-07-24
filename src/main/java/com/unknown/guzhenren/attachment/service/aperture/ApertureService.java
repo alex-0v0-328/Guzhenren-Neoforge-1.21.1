@@ -25,10 +25,10 @@ public final class ApertureService {
 
     public static final int PRIMARY = ApertureData.PRIMARY;
 
-    //  A Ten-Extremes physique's innate marks / specks, split evenly across its talent paths. ⚠ These
-    //  are TOTALS, so a physique with two paths gives half to each.
-    public static final long TALENT_MARK_TOTAL = 10L;
-    public static final long TALENT_SPECK_TOTAL = 1000L;
+    //  A Ten-Extremes physique's innate marks / specks, split evenly across its talent paths (TOTALS).
+    //  ⚠ Both 0 pending final balance -- the reconcile machinery stays, it just lays nothing down.
+    public static final long TALENT_MARK_TOTAL = 0L;
+    public static final long TALENT_SPECK_TOTAL = 0L;
 
     //  ---- read ----
     public static ApertureData get(Player p) {return p.getData(ModAttachments.APERTURE);}
@@ -151,8 +151,8 @@ public final class ApertureService {
         long mark = sign * (TALENT_MARK_TOTAL / paths.size());
         long speck = sign * (TALENT_SPECK_TOTAL / paths.size());
         for (GuPath path : paths) {
-            PathService.addMark(player, path, mark);
-            PathService.addSpeck(player, path, speck);
+            if (mark != 0) PathService.addMark(player, path, mark);
+            if (speck != 0) PathService.addSpeck(player, path, speck);
         }
     }
 }

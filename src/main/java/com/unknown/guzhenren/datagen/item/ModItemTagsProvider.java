@@ -14,7 +14,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  Item tags: what the two feedable Gu eat.
+//  Item tags: what the feedable Gu eat.
 //  ⚠ The block-tag future is empty on purpose -- this mod has no blocks for ItemTagsProvider to copy from.
 public class ModItemTagsProvider extends ItemTagsProvider {
 
@@ -28,9 +28,11 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         tag(ModItemTags.BOAR_FEED).add(Items.PORKCHOP, Items.COOKED_PORKCHOP, Items.PIG_SPAWN_EGG);
 
-        //  ⚠ Two tags, not one with both members: a block is worth nine, and a tag holds one rate.
+        //  ⚠ Two tags a tier, not one with both: a block is worth nine, and a tag holds one rate.
         tag(ModItemTags.JIN_FEED).add(Items.RAW_IRON);
         tag(ModItemTags.JIN_FEED_DENSE).add(Items.RAW_IRON_BLOCK);
+        tag(ModItemTags.JIN_FEED_SMELTED).add(Items.IRON_INGOT);
+        tag(ModItemTags.JIN_FEED_SMELTED_DENSE).add(Items.IRON_BLOCK);
 
         //  ⚠ Our own liquor only. A sibling mod's drink joins by adding to the tag, not by us guessing
         //  which vanilla item counts -- there is no vanilla liquor, and a potion is not one.
