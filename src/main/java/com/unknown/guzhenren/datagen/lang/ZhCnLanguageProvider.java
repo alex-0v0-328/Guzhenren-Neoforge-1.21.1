@@ -15,7 +15,7 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiType;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
-import com.unknown.guzhenren.custom.enums.strength.JunStrength;
+import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
@@ -219,7 +219,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.rank_mismatch", "境界不符 — 此蛊需%s");
         add("guzhenren.item.failed.stage_peak", "已至小境界巅峰");
         add("guzhenren.item.failed.beast_strength_held", "已有%s之力");
-        add("guzhenren.item.failed.jun_strength_full", "此力已满九层");
+        add("guzhenren.item.failed.human_strength_full", "此力已满九层");
         add("guzhenren.item.failed.vitality_active", "生机叶效果未散");
         add("guzhenren.item.failed.refine_essence", "真元不足无法炼化");
         add("guzhenren.item.failed.liquor_rank", "唯%s修士方可催动此蛊");
@@ -266,7 +266,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addBrilliance();
         addBeastStrength();
         addStrengthBranch();
-        addJunStrength();
+        addHumanStrength();
     }
 
     //  Beast strengths: taken by consuming a beast Gu, one kind once ever. Two boars today
@@ -283,11 +283,11 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     }
 
     //  The Human Jun branch's kinds -- Jin, Ten Jin, Jun (=100 Jin), Ten Jun.
-    private void addJunStrength() {
-        add(JunStrength.JIN, "斤");
-        add(JunStrength.TEN_JIN, "十斤");
-        add(JunStrength.JUN, "钧");
-        add(JunStrength.TEN_JUN, "十钧");
+    private void addHumanStrength() {
+        add(HumanStrength.JIN, "斤");
+        add(HumanStrength.TEN_JIN, "十斤");
+        add(HumanStrength.JUN, "钧");
+        add(HumanStrength.TEN_JUN, "十钧");
     }
 
     //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie

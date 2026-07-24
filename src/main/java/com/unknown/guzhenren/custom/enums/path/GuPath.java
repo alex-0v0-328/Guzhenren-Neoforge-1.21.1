@@ -21,9 +21,8 @@ public enum GuPath implements StringRepresentable, EnumTranslatable {
     public static final Codec<GuPath> CODEC = StringRepresentable.fromEnum(GuPath::values);
     private static final String KEY_PREFIX = "guzhenren.enum.path.path.";
 
-    //  ⚠ A featured path [肉体特殊流派]: its MARKS come from a sub-system (QiData) with its own
-    //  breakdown, not from PathData. ⚠⚠ Specks stay ordinary here; light one up only once that
-    //  sub-system exists  CLAUDE.md "Featured paths".
+    //  ⚠ A featured path [肉体特殊流派]: its MARKS are a sub-system's total (QiData), not PathData's.
+    //  ⚠⚠ Membership is CLOSED at QI; specks stay ordinary  CLAUDE.md "Featured paths".
     private static final Set<GuPath> FEATURED = EnumSet.of(QI);
 
     @Override

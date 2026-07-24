@@ -46,3 +46,9 @@ GZR-CONTEXT-*.md
 
 # Local Claude Code skills (downloaded + self-authored). Personal tool config, not repo content.
 .claude/skills/
+
+# Assistant auto-memory (migrated here from ~/.claude/projects). Machine-local, never committed.
+/memory/
+
+# Local Claude Code settings — holds a machine-specific autoMemoryDirectory path.
+.claude/settings.local.json

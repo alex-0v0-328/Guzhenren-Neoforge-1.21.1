@@ -6,7 +6,7 @@ import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.strength.JunStrength;
+import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
@@ -79,22 +79,22 @@ public final class ModDisplayText {
 
     //  The Human Jun branch's [人力钧力流] one line: the 钧 family then the 斤 family, each a bracket, an
     //  empty family omitted. ⚠ The Ten-kind's layer count IS the tens digit, the base kind's the units.
-    public static MutableComponent junStrengthLine(StrengthData data) {
+    public static MutableComponent humanStrengthLine(StrengthData data) {
         MutableComponent line = Component.empty();
-        appendJunFamily(line, "guzhenren.display.strength.jun_reading",
-                data.junCount(JunStrength.TEN_JUN), data.junCount(JunStrength.JUN));
-        appendJunFamily(line, "guzhenren.display.strength.jin_reading",
-                data.junCount(JunStrength.TEN_JIN), data.junCount(JunStrength.JIN));
+        appendFamily(line, "guzhenren.display.strength.jun_reading",
+                data.humanStrengthCount(HumanStrength.TEN_JUN), data.humanStrengthCount(HumanStrength.JUN));
+        appendFamily(line, "guzhenren.display.strength.jin_reading",
+                data.humanStrengthCount(HumanStrength.TEN_JIN), data.humanStrengthCount(HumanStrength.JIN));
         return line;
     }
 
-    private static void appendJunFamily(MutableComponent line, String readingKey, int tens, int units) {
+    private static void appendFamily(MutableComponent line, String readingKey, int tens, int units) {
         if (tens == 0 && units == 0) return;
-        line.append(Component.translatable(readingKey, junNumber(tens, units)));
+        line.append(Component.translatable(readingKey, familyNumber(tens, units)));
     }
 
     //  A reading 1..99 from a tens digit and a units digit: 十, 九十九, 五. The join key spaces them for en.
-    private static Component junNumber(int tens, int units) {
+    private static Component familyNumber(int tens, int units) {
         Component t = tens > 0 ? Component.translatable("guzhenren.display.strength.num_tens." + tens) : null;
         Component u = units > 0 ? Component.translatable("guzhenren.display.strength.num_units." + units) : null;
         if (t != null && u != null) return Component.translatable("guzhenren.display.strength.num_join", t, u);

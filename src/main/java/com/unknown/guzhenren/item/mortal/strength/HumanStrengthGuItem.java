@@ -3,7 +3,7 @@ package com.unknown.guzhenren.item.mortal.strength;
 import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.strength.JunStrength;
+import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.item.RefinableGuItem;
 import com.unknown.guzhenren.registry.ModItemTags;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,11 +14,11 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 //  The Human Jun Strength Branch [人力钧力流], one class for all four ranks: registration gives the rank
-//  and the Jun kind, and every number falls out of the rank -- the LiquorWorm/Relics shape.
+//  and the kind, and every number falls out of the rank -- the LiquorWorm/Relics shape.
 //  ⚠ Ranks III-IV eat SMELTED iron (ingot/block); I-II eat raw iron. Refine cost climbs ×10 a rank.
-public class JunStrengthGuItem extends RefinableGuItem {
+public class HumanStrengthGuItem extends RefinableGuItem {
 
-    private static final String FAILED_JUN_FULL = "guzhenren.item.failed.jun_strength_full";
+    private static final String FAILED_LAYERS_FULL = "guzhenren.item.failed.human_strength_full";
 
     //  An iron item is four units, a block nine of those (36). unitsPerHunger climbs so the same iron
     //  feeds a higher-rank Gu more slowly -- every value divides 36, so a feed lands on a whole point.
@@ -26,14 +26,14 @@ public class JunStrengthGuItem extends RefinableGuItem {
     private static final int IRON_BLOCK_UNITS = 36;
     private static final int[] UNITS_PER_HUNGER = {4, 12, 12, 36};
 
-    private static final int JUN_PER_GRANT = 1;
+    private static final int LAYERS_PER_GRANT = 1;
     private static final int USES_PER_LAYER = 18;
     private static final int BASE_REFINE_COST = 640;
     private static final int BASE_REFINE_PER_USE = 100;
 
-    private final JunStrength kind;
+    private final HumanStrength kind;
 
-    public JunStrengthGuItem(Properties properties, Rank rank, JunStrength kind) {
+    public HumanStrengthGuItem(Properties properties, Rank rank, HumanStrength kind) {
         super(properties, rank, GuPath.STRENGTH);
         this.kind = kind;
     }
@@ -64,11 +64,11 @@ public class JunStrengthGuItem extends RefinableGuItem {
 
     @Override
     protected @Nullable Refusal payoutGate(Player player) {
-        return StrengthService.jun(player, kind) >= JunStrength.MAX_PER_KIND
-                ? new Refusal(FAILED_JUN_FULL)
+        return StrengthService.humanStrength(player, kind) >= HumanStrength.MAX_PER_KIND
+                ? new Refusal(FAILED_LAYERS_FULL)
                 : null;
     }
 
     @Override
-    protected void payout(ServerPlayer player) {StrengthService.addJun(player, kind, JUN_PER_GRANT);}
+    protected void payout(ServerPlayer player) {StrengthService.addHumanStrength(player, kind, LAYERS_PER_GRANT);}
 }

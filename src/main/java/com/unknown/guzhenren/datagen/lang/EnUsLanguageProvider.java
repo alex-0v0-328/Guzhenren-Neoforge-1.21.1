@@ -15,7 +15,7 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiType;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
-import com.unknown.guzhenren.custom.enums.strength.JunStrength;
+import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
@@ -221,7 +221,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.rank_mismatch", "Wrong realm - this Gu needs %s");
         add("guzhenren.item.failed.stage_peak", "You are at the Stage Peak");
         add("guzhenren.item.failed.beast_strength_held", "Already hold the %s's strength");
-        add("guzhenren.item.failed.jun_strength_full", "This strength is already at nine layers");
+        add("guzhenren.item.failed.human_strength_full", "This strength is already at nine layers");
         add("guzhenren.item.failed.vitality_active", "Vitality Leaf is still working");
         add("guzhenren.item.failed.refine_essence", "NOT enough essence to refine");
         add("guzhenren.item.failed.liquor_rank", "Only a cultivator at %s can drive this worm");
@@ -268,7 +268,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addBrilliance();
         addBeastStrength();
         addStrengthBranch();
-        addJunStrength();
+        addHumanStrength();
     }
 
     //  Beast strengths: taken by consuming a beast Gu, one kind once ever. Two boars today
@@ -285,11 +285,11 @@ public class EnUsLanguageProvider extends LanguageProvider {
     }
 
     //  The Human Jun branch's kinds -- Jin, Ten Jin, Jun (=100 Jin), Ten Jun.
-    private void addJunStrength() {
-        add(JunStrength.JIN, "Jin");
-        add(JunStrength.TEN_JIN, "Ten Jin");
-        add(JunStrength.JUN, "Jun");
-        add(JunStrength.TEN_JUN, "Ten Jun");
+    private void addHumanStrength() {
+        add(HumanStrength.JIN, "Jin");
+        add(HumanStrength.TEN_JIN, "Ten Jin");
+        add(HumanStrength.JUN, "Jun");
+        add(HumanStrength.TEN_JUN, "Ten Jun");
     }
 
     //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie

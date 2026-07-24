@@ -7,15 +7,15 @@ import org.jetbrains.annotations.NotNull;
 
 //  The Human Jun Strength Branch [人力钧力流], one constant a kind: Jin, Ten Jin, Jun (=100 Jin), Ten Jun.
 //  ⚠ MAX_PER_KIND caps the PLAYER (nine layers of each kind, ever), not how often a Gu may be used.
-public enum JunStrength implements StringRepresentable, EnumTranslatable {
+public enum HumanStrength implements StringRepresentable, EnumTranslatable {
 
     JIN,
     TEN_JIN,
     JUN,
     TEN_JUN;
 
-    public static final Codec<JunStrength> CODEC = StringRepresentable.fromEnum(JunStrength::values);
-    private static final String KEY_PREFIX = "guzhenren.enum.strength.jun_strength.";
+    public static final Codec<HumanStrength> CODEC = StringRepresentable.fromEnum(HumanStrength::values);
+    private static final String KEY_PREFIX = "guzhenren.enum.strength.human_strength.";
 
     public static final int MAX_PER_KIND = 9;
 

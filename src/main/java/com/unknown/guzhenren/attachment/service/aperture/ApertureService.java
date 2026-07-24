@@ -143,8 +143,8 @@ public final class ApertureService {
 
     //  ⚠ Granted marks carry no source tag -- they merge into the path's total ("natural" origin), so a
     //  revoke is a plain subtraction that clamps at 0. No need to track which marks the physique gave.
-    //  ⚠ addMark silently refuses a featured path (the Qi Path today; Strength and Time by design), so
-    //  Great Strength True Martial's Strength and Desolate Ancient Moon's Time vanish the day either lights up.
+    //  ⚠ addMark silently refuses a featured path, but membership is closed at the Qi Path -- so Great
+    //  Strength True Martial's Strength and Desolate Ancient Moon's Time are safe to grant here.
     private static void grantTalentPaths(ServerPlayer player, ExtremePhysique physique, int sign) {
         List<GuPath> paths = physique.getTalentPaths();
         if (paths.isEmpty()) return;

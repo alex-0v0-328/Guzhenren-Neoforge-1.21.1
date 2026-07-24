@@ -166,7 +166,7 @@ public final class InfoModel {
         }
         //  The whole Human Jun branch on ONE row -- the 钧 family then the 斤 family, empty ones omitted.
         if (data.hasBranch(StrengthBranch.HUMAN)) {
-            rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN, ModDisplayText.junStrengthLine(data))));
+            rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN, ModDisplayText.humanStrengthLine(data))));
         }
     }
 
