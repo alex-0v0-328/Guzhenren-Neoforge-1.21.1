@@ -10,42 +10,38 @@ import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.command.ModEnumArgument;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.Nullable;
 
-//  /gzr body path <p> -- marks and specks are raw counts, attainment is graded; every leaf re-reads the path.
-//  ⚠ A featured path's mark/speck are read-only here (its sub-system's total); attainment is not.
+//  /gzr body path <p> -- marks and specks are counts per source tag, attainment is graded.
+//  ⚠ Both totals derive from the tags, so there is nothing to set on a total. See MarkTag.
 public final class CmdPath {
 
     private CmdPath() {}
 
+    //  ⚠ Each nested enum needs its OWN argument name, or the count that follows collides with it.
     private static final String ARG_PATH = "path";
+    private static final String ARG_TAG = "tag";
 
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("path")
                 .then(ModEnumArgument.arg(ARG_PATH, GuPath.values())
-                        .then(mark())
-                        .then(speck())
+                        .then(tagged("mark", PathService::setMark, PathService::addMark))
+                        .then(tagged("speck", PathService::setSpeck, PathService::addSpeck))
                         .then(attainment()));
     }
 
-    private static ArgumentBuilder<CommandSourceStack, ?> mark() {
-        return Commands.literal("mark")
-                .then(countNode("set", PathService::setMark, ModCommandSupport.FAILED_QI_MARK))
-                .then(countNode("add", PathService::addMark, ModCommandSupport.FAILED_QI_MARK))
-                .then(countNode("sub", (p, path, v) -> PathService.addMark(p, path, -v),
-                        ModCommandSupport.FAILED_QI_MARK));
-    }
-
-    //  ⚠ No featured refusal here: specks are ordinary on every path, the Qi Path included.
-    private static ArgumentBuilder<CommandSourceStack, ?> speck() {
-        return Commands.literal("speck")
-                .then(countNode("set", PathService::setSpeck, null))
-                .then(countNode("add", PathService::addSpeck, null))
-                .then(countNode("sub", (p, path, v) -> PathService.addSpeck(p, path, -v), null));
+    //  ⚠ The tag argument takes any word: Brigadier cannot narrow one argument by a sibling's value, so
+    //  a tag that does not belong to this path is refused in the handler rather than hidden from the tree.
+    private static ArgumentBuilder<CommandSourceStack, ?> tagged(
+            String literal, TagOperation set, TagOperation add) {
+        return Commands.literal(literal).then(ModEnumArgument.arg(ARG_TAG, MarkTag.values())
+                .then(countNode("set", set))
+                .then(countNode("add", add))
+                .then(countNode("sub", (player, path, tag, value) -> add.apply(player, path, tag, -value))));
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> attainment() {
@@ -66,25 +62,26 @@ public final class CmdPath {
 
     //region builders
 
-    //  A null key means this leaf has nothing to refuse -- specks write on every path.
-    private static ArgumentBuilder<CommandSourceStack, ?> countNode(
-            String literal, CountOperation operation, @Nullable String featuredRefusalKey) {
+    private static ArgumentBuilder<CommandSourceStack, ?> countNode(String literal, TagOperation operation) {
         return Commands.literal(literal).then(ModCommandSupport.withTargets(
                 Commands.argument(ModCommandSupport.ARG_VALUE, LongArgumentType.longArg()),
                 context -> {
                     GuPath path = pathOf(context);
-                    if (featuredRefusalKey != null && path.isFeatured()) {
-                        return refuse(context, featuredRefusalKey);
-                    }
+                    MarkTag tag = tagOf(context);
+                    if (!tag.fitsOn(path)) return refuseTag(context, tag, path);
 
                     long value = LongArgumentType.getLong(context, ModCommandSupport.ARG_VALUE);
-                    return ModCommandSupport.apply(context, player -> operation.apply(player, path, value));
+                    return ModCommandSupport.apply(context,
+                            player -> operation.apply(player, path, tag, value));
                 }));
     }
 
-    //  Not a per-target refusal: the argument itself is what is wrong, whoever the targets are.
-    private static int refuse(CommandContext<CommandSourceStack> context, String key) {
-        ModCommandFeedback.failure(context.getSource(), Component.translatable(key));
+    //  Not a per-target refusal: the pair of arguments is what is wrong, whoever the targets are.
+    private static int refuseTag(CommandContext<CommandSourceStack> context, MarkTag tag, GuPath path) {
+        ModCommandFeedback.failure(context.getSource(), Component.translatable(
+                ModCommandSupport.FAILED_TAG_PATH,
+                Component.translatable(tag.getTranslationKey()),
+                Component.translatable(path.getTranslationKey())));
         return 0;
     }
 
@@ -99,10 +96,14 @@ public final class CmdPath {
         return ModEnumArgument.get(context, ARG_PATH, GuPath.values());
     }
 
+    private static MarkTag tagOf(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        return ModEnumArgument.get(context, ARG_TAG, MarkTag.values());
+    }
+
     //endregion
 
     @FunctionalInterface
-    private interface CountOperation {
-        void apply(ServerPlayer player, GuPath path, long value);
+    private interface TagOperation {
+        void apply(ServerPlayer player, GuPath path, MarkTag tag, long value);
     }
 }

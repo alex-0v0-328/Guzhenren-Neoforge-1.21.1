@@ -1,7 +1,6 @@
 package com.unknown.guzhenren.client.hud;
 
-import com.unknown.guzhenren.item.RefinableGuItem;
-import com.unknown.guzhenren.item.RefinedGuState;
+import com.unknown.guzhenren.item.GuItem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -23,8 +22,6 @@ public final class ChargeHud implements LayeredDraw.Layer {
 
     private ChargeHud() {}
 
-    private static final String LABEL_REFINING = "guzhenren.hud.refining";
-    private static final String LABEL_USING = "guzhenren.hud.using";
 
     //  Hotbar is 182 wide, so the bar lines up with it. The HEIGHT is not fixed -- see barTop.
     private static final int BAR_WIDTH = 182;
@@ -52,7 +49,7 @@ public final class ChargeHud implements LayeredDraw.Layer {
         if (!player.isUsingItem()) return;
 
         ItemStack stack = player.getUseItem();
-        if (!(stack.getItem() instanceof RefinableGuItem gu)) return;
+        if (!(stack.getItem() instanceof GuItem gu)) return;
 
         int total = stack.getUseDuration(player);
         if (total <= 0) return;
@@ -67,8 +64,10 @@ public final class ChargeHud implements LayeredDraw.Layer {
         graphics.fill(x, y, x + BAR_WIDTH, y + BAR_HEIGHT, TRACK);
         graphics.fill(x, y, x + Math.round(BAR_WIDTH * Math.clamp(progress, 0.0F, 1.0F)), y + BAR_HEIGHT, FILL);
 
+        Component label = gu.chargeCaption(stack);
+        if (label == null) return;
+
         Font font = minecraft.font;
-        Component label = caption(gu, stack);
         graphics.drawString(font, label, x + (BAR_WIDTH - font.width(label)) / 2,
                 y - TEXT_GAP - font.lineHeight, TEXT_COLOR, true);
     }
@@ -84,14 +83,5 @@ public final class ChargeHud implements LayeredDraw.Layer {
         //  Vanilla lifts the same line in creative, where there is no health row under it.
         if (minecraft.gameMode != null && !minecraft.gameMode.canHurtPlayer()) baseline += CREATIVE_LIFT;
         return baseline - NAME_GAP - BAR_HEIGHT;
-    }
-
-    //  炼化中 320 / 640 while wild, 使用中 12 / 36 once it answers to him -- the same two numbers the
-    //  tooltip carries, so the bar never says something the item does not.
-    private static Component caption(RefinableGuItem gu, ItemStack stack) {
-        RefinedGuState state = RefinableGuItem.state(stack);
-        return gu.refined(stack)
-                ? Component.translatable(LABEL_USING, state.useCount(), gu.usesPerGrant())
-                : Component.translatable(LABEL_REFINING, state.refineProgress(), gu.refineCost());
     }
 }

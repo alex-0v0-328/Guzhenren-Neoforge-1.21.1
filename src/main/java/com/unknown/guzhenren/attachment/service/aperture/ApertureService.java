@@ -10,6 +10,7 @@ import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.registry.ModAttachments;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
@@ -143,16 +144,14 @@ public final class ApertureService {
 
     //  ⚠ Granted marks carry no source tag -- they merge into the path's total ("natural" origin), so a
     //  revoke is a plain subtraction that clamps at 0. No need to track which marks the physique gave.
-    //  ⚠ addMark silently refuses a featured path, but membership is closed at the Qi Path -- so Great
-    //  Strength True Martial's Strength and Desolate Ancient Moon's Time are safe to grant here.
     private static void grantTalentPaths(ServerPlayer player, ExtremePhysique physique, int sign) {
         List<GuPath> paths = physique.getTalentPaths();
         if (paths.isEmpty()) return;
         long mark = sign * (TALENT_MARK_TOTAL / paths.size());
         long speck = sign * (TALENT_SPECK_TOTAL / paths.size());
         for (GuPath path : paths) {
-            if (mark != 0) PathService.addMark(player, path, mark);
-            if (speck != 0) PathService.addSpeck(player, path, speck);
+            if (mark != 0) PathService.addMark(player, path, MarkTag.NATURAL, mark);
+            if (speck != 0) PathService.addSpeck(player, path, MarkTag.NATURAL, speck);
         }
     }
 }

@@ -6,9 +6,11 @@ import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.effect.DeathQiEffect;
 import com.unknown.guzhenren.item.RefinableGuItem;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import com.unknown.guzhenren.registry.ModDamageTypes;
+import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -42,9 +44,28 @@ public final class PlayerTickEvents {
         }
 
         closeDistilling(player);
+        tickDeathQi(player);
         EssenceService.regenStep(player);
         MindService.regenStep(player);
         checkLethalState(player);
+    }
+
+    //  Death Qi [死气]: lifespan bleeds, health falls to one heart, and essence regen is choked over in
+    //  EssenceService.isChoked. ⚠ Runs BEFORE checkLethalState, so the tick that empties lifespan kills
+    //  on the same tick rather than a second later -- and the debt is what a Life Qi cure refunds from.
+    private static void tickDeathQi(ServerPlayer player) {
+        if (!player.hasEffect(ModEffects.DEATH_QI)) return;
+
+        //  ⚠ This method only ever runs on a heartbeat, so the year interval must be a MULTIPLE of it:
+        //  120 = 6 x 20 lands exactly, which is why ten years a minute needs no carry the way regen does.
+        if (player.tickCount % DeathQiEffect.YEAR_INTERVAL_TICKS == 0) {
+            BodyService.drainByDeathQi(player, DeathQiEffect.YEARS_PER_INTERVAL);
+        }
+        //  Never past one heart: Death Qi takes the lifespan, and the lifespan is what kills.
+        if (player.getHealth() > DeathQiEffect.HEALTH_FLOOR) {
+            player.setHealth(Math.max(DeathQiEffect.HEALTH_FLOOR,
+                    player.getHealth() - DeathQiEffect.HEALTH_PER_HEARTBEAT));
+        }
     }
 
     //  Phase 3's close: whatever he never spent pays back at 1:2, and the distilled pool [精炼真元] empties.

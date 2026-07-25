@@ -3,9 +3,12 @@ package com.unknown.guzhenren.attachment.service.aperture;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
+import com.unknown.guzhenren.effect.EssenceQiEffect;
 import com.unknown.guzhenren.registry.ModAttachments;
 import com.unknown.guzhenren.registry.ModEffects;
+import java.util.Arrays;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
 //  The essence [真元] system: one pool per aperture. Formulas and worked examples: CLAUDE.md "Formulas".
@@ -46,6 +49,16 @@ public final class EssenceService {
     }
 
     public static boolean isDistilling(Player p) {return p.hasEffect(ModEffects.LIQUOR_WORM);}
+
+    //  ⚠ Death Qi [死气] chokes an aperture: no ambient qi reaches it at all. Outranks both the
+    //  distilling redirect and the Essence Qi bonus, so it is checked first and returns.
+    public static boolean isChoked(Player p) {return p.hasEffect(ModEffects.DEATH_QI);}
+
+    //  ⚠ Read the amplifier; the percentages live on EssenceQiEffect and have exactly one home.
+    public static double essenceQiBonus(Player player) {
+        MobEffectInstance effect = player.getEffect(ModEffects.ESSENCE_QI);
+        return effect == null ? 0.0 : EssenceQiEffect.bonus(effect.getAmplifier());
+    }
 
     //  ---- write ----
     public static void add(ServerPlayer p, long d) {set(p, currentEssence(p) + d);}
@@ -124,7 +137,15 @@ public final class EssenceService {
     public static void regenStep(ServerPlayer player) {
         ApertureData data = ApertureService.get(player);
         float[] carry = player.getData(ModAttachments.ESSENCE_CARRY);
+
+        //  ⚠ Drop the carry too, or it banks up through the whole curse and dumps the instant it lifts.
+        if (isChoked(player)) {
+            Arrays.fill(carry, 0.0F);
+            return;
+        }
+
         boolean distilling = isDistilling(player);
+        double bonus = essenceQiBonus(player);
 
         for (int i = 0; i < data.count(); i++) {
             Aperture aperture = data.get(i);
@@ -136,7 +157,7 @@ public final class EssenceService {
                 continue;
             }
 
-            double perStep = regenPerTick(aperture) * REGEN_INTERVAL_TICKS;
+            double perStep = regenPerTick(aperture) * REGEN_INTERVAL_TICKS * (1.0 + bonus);
             if (perStep <= 0.0) continue;
 
             double total = carry[i] + perStep;

@@ -4,7 +4,6 @@ import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
-import com.unknown.guzhenren.attachment.data.body.QiData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
@@ -76,6 +75,10 @@ public final class PlayerDataService {
         if (MindService.get(player).isOverflowing()) {
             MindService.empty(player);
         }
+        //  ⚠ Unconditional, unlike the three above: the debt is not a lethal state to un-fire but a
+        //  tally that the death already settled. Left standing, a Life Qi [生气] would refund lifespan
+        //  against a Death Qi [死气] curse this player no longer carries.
+        BodyService.clearDeathQiDebt(player);
     }
 
     //  His Vital Gu is gone. Everything he is takes the hit at once, and the caps are left alone.
@@ -103,7 +106,6 @@ public final class PlayerDataService {
         to.setData(ModAttachments.BODY, from.getData(ModAttachments.BODY));
         to.setData(ModAttachments.SOUL, from.getData(ModAttachments.SOUL));
         to.setData(ModAttachments.PATH, from.getData(ModAttachments.PATH));
-        to.setData(ModAttachments.QI, from.getData(ModAttachments.QI));
         to.setData(ModAttachments.STRENGTH, from.getData(ModAttachments.STRENGTH));
         to.setData(ModAttachments.MIND, from.getData(ModAttachments.MIND));
         to.setData(ModAttachments.BORN, from.getData(ModAttachments.BORN));
@@ -118,7 +120,6 @@ public final class PlayerDataService {
         player.setData(ModAttachments.APERTURE_STORAGE, ApertureStorage.DEFAULT);
         player.setData(ModAttachments.SOUL, SoulData.DEFAULT);
         player.setData(ModAttachments.PATH, PathData.DEFAULT);
-        player.setData(ModAttachments.QI, QiData.DEFAULT);
         player.setData(ModAttachments.STRENGTH, StrengthData.DEFAULT);
         player.setData(ModAttachments.ESSENCE_CARRY, new float[ApertureData.MAX_APERTURES]);
         onBirth(player);

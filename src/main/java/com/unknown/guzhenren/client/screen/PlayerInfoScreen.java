@@ -365,8 +365,9 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
             case InfoModel.PathRow e -> new Row(indent, name(e.path().getTranslationKey()), pathValue(e.entry()));
             case InfoModel.QiHeader e -> new Row(indent, label("qi"), qiValue(e));
-            case InfoModel.QiRow e -> new Row(indent, name(e.type().getTranslationKey()),
-                    Component.literal(Long.toString(e.mark())));
+            case InfoModel.QiRow e -> new Row(indent, name(e.tag().getTranslationKey()),
+                    Component.translatable(e.speck() ? "guzhenren.screen.qi_speck" : "guzhenren.screen.qi_mark",
+                            e.amount()));
             case InfoModel.StrengthHeader e -> new Row(indent, label("strength"), e.empty() ? none() : null);
             case InfoModel.StrengthRow e -> new Row(indent, name(e.branch().getTranslationKey()), e.reading());
 
@@ -395,13 +396,16 @@ public final class PlayerInfoScreen extends Screen {
         return value;
     }
 
-    //  Attainment plus total marks, or [NONE] while it is still none -- never a bare none.
+    //  Attainment plus both totals, or [NONE] while it is still none -- never a bare none.
     private static MutableComponent qiValue(InfoModel.QiHeader e) {
         MutableComponent value = e.attainment() == GuAttainment.NONE
                 ? none()
                 : name(e.attainment().getTranslationKey());
-        if (e.total() > 0L) {
-            value.append(Component.translatable("guzhenren.command.info.qi_total", e.total()));
+        if (e.totalMark() > 0L) {
+            value.append(Component.translatable("guzhenren.command.info.qi_total", e.totalMark()));
+        }
+        if (e.totalSpeck() > 0L) {
+            value.append(Component.translatable("guzhenren.command.info.qi_speck_total", e.totalSpeck()));
         }
         return value;
     }

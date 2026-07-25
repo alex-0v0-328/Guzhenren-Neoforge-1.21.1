@@ -11,7 +11,6 @@ import com.unknown.guzhenren.attachment.data.mind.MindPool;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
-import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
@@ -20,7 +19,7 @@ import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.qi.QiType;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
@@ -68,8 +67,10 @@ public final class InfoModel {
     public record Lifespan(BodyData body) implements Entry {}
     public record PathsHeader(boolean empty) implements Entry {}
     public record PathRow(GuPath path, PathEntry entry) implements Entry {}
-    public record QiHeader(GuAttainment attainment, long total) implements Entry {}
-    public record QiRow(QiType type, long mark) implements Entry {}
+    public record QiHeader(GuAttainment attainment, long totalMark, long totalSpeck) implements Entry {}
+    //  One tag's amount, on the Qi Path. ⚠ speck says WHICH map it came from -- the Qi Path shows both,
+    //  marks (天地人自然气) then specks (剑生元力死气), 无TAG last.
+    public record QiRow(MarkTag tag, long amount, boolean speck) implements Entry {}
     public record StrengthHeader(boolean empty) implements Entry {}
     public record StrengthRow(StrengthBranch branch, Component reading) implements Entry {}
     //endregion
@@ -141,15 +142,33 @@ public final class InfoModel {
         }
     }
 
-    //  Attainment plus total marks on the header, then only the types he actually has -- QiData is sparse.
+    //  ⚠ The Qi Path is the one path shown broken down by tag: its header carries both totals, then a row
+    //  per tag with a mark, then a row per tag with a speck. Only the tags he has -- PathEntry is sparse.
     private static void qi(List<Row> rows, Player player) {
         rows.add(new Row(0, new QiHeader(PathService.attainment(player, GuPath.QI),
-                PathService.mark(player, GuPath.QI))));
+                PathService.mark(player, GuPath.QI), PathService.speck(player, GuPath.QI))));
 
-        for (QiType type : QiType.values()) {
-            long mark = QiService.mark(player, type);
-            if (mark > 0L) rows.add(new Row(INDENT, new QiRow(type, mark)));
+        for (MarkTag tag : QI_TAGS) {
+            long mark = PathService.mark(player, GuPath.QI, tag);
+            if (mark > 0L) rows.add(new Row(INDENT, new QiRow(tag, mark, false)));
         }
+        for (MarkTag tag : QI_TAGS) {
+            long speck = PathService.speck(player, GuPath.QI, tag);
+            if (speck > 0L) rows.add(new Row(INDENT, new QiRow(tag, speck, true)));
+        }
+    }
+
+    //  Every tag the Qi Path can carry: its own in enum order, then NATURAL last -- 无TAG reads bottom,
+    //  matching how a mark or speck with no source lands there. Built once.
+    private static final List<MarkTag> QI_TAGS = qiTags();
+
+    private static List<MarkTag> qiTags() {
+        List<MarkTag> tags = new ArrayList<>();
+        for (MarkTag tag : MarkTag.values()) {
+            if (tag.owner() == GuPath.QI) tags.add(tag);
+        }
+        tags.add(MarkTag.NATURAL);
+        return tags;
     }
 
     //  The Strength Path's branches: a beast-strengths row, and the Human Jun branch combined onto one.

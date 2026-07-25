@@ -9,7 +9,7 @@ import com.unknown.guzhenren.custom.enums.body.LifeState;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-//  /gzr body -- lifestate, lifeform, soul, lifespan/age, plus qi (CmdQi) and path (CmdPath).
+//  /gzr body -- lifestate, lifeform, soul, lifespan/age, plus path (CmdPath), which now carries qi as tags.
 //  Ungated throughout: a mortal has soul, ages, dies and can be zombified without an aperture.
 public final class CmdBody {
 
@@ -24,7 +24,6 @@ public final class CmdBody {
                 .then(soul())
                 .then(counter("lifespan", BodyService::setLifespan, BodyService::addLifespan))
                 .then(counter("age", BodyService::setAge, BodyService::addAge))
-                .then(CmdQi.node())
                 .then(CmdPath.node())
                 .then(CmdStrength.node());
     }

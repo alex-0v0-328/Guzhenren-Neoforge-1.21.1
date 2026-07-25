@@ -12,7 +12,7 @@ import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.qi.QiType;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
@@ -102,6 +102,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.hud.lifespan", "寿元 %s");
         add("guzhenren.hud.refining", "炼化中  %s / %s");
         add("guzhenren.hud.using", "使用中  %s / %s");
+        add("guzhenren.hud.refining_plain", "炼化中");
     }
     //endregion
 
@@ -116,7 +117,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
 
         add("guzhenren.command.failed.awakened", "%s 已开窍 —— 要重掷请先 /guzhenren reset");
         add("guzhenren.command.failed.unawakened", "%s 尚未开窍 —— 修为相关的值只能由 /guzhenren awaken 建立");
-        add("guzhenren.command.failed.qi_mark", "气道的道痕是诸气之和，不能直接改 —— 请用 /guzhenren body qi <种类>");
+        add("guzhenren.command.failed.tag_path", "%s 不是 %s 的来源 —— 通用来源是 natural");
 
         add("guzhenren.command.info.aperture_index", "第 %s 窍");
         add("guzhenren.command.info.aperture_state", "空窍状态  %s");
@@ -132,7 +133,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.life_form", "玩家形态  %s");
         add("guzhenren.command.info.qi", "玩家气道  %s");
         add("guzhenren.command.info.qi_total", " 道痕 %s");
-        add("guzhenren.command.info.qi_entry", "  %s  %s");
+        add("guzhenren.command.info.qi_speck_total", " 碎屑 %s");
+        add("guzhenren.command.info.qi_mark_entry", "  %s  道痕 %s");
+        add("guzhenren.command.info.qi_speck_entry", "  %s  碎屑 %s");
         add("guzhenren.command.info.paths", "流派造诣");
         add("guzhenren.command.info.path_entry", "  %s  %s  道痕 %s");
         add("guzhenren.command.info.path_speck", " 碎屑 %s");
@@ -179,6 +182,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.strength", "力道造诣");
         add("guzhenren.screen.label.brilliance", "才情");
         add("guzhenren.screen.path_value", "%s 道痕 %s");
+        add("guzhenren.screen.qi_mark", "道痕 %s");
+        add("guzhenren.screen.qi_speck", "碎屑 %s");
     }
     //endregion
 
@@ -210,6 +215,28 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("item.guzhenren.primeval_stone", "元石");
         add("item.guzhenren.liquor", "酒");
 
+        add("item.guzhenren.first_sword_qi", "一转剑气");
+        add("item.guzhenren.second_sword_qi", "二转剑气");
+        add("item.guzhenren.third_sword_qi", "三转剑气");
+        add("item.guzhenren.fourth_sword_qi", "四转剑气");
+        add("item.guzhenren.fifth_sword_qi", "五转剑气");
+        add("item.guzhenren.first_strength_qi", "一转力气");
+        add("item.guzhenren.second_strength_qi", "二转力气");
+        add("item.guzhenren.third_strength_qi", "三转力气");
+        add("item.guzhenren.fourth_strength_qi", "四转力气");
+        add("item.guzhenren.fifth_strength_qi", "五转力气");
+        add("item.guzhenren.first_life_qi", "一转生气");
+        add("item.guzhenren.second_life_qi", "二转生气");
+        add("item.guzhenren.third_life_qi", "三转生气");
+        add("item.guzhenren.fourth_life_qi", "四转生气");
+        add("item.guzhenren.fifth_life_qi", "五转生气");
+        add("item.guzhenren.first_essence_qi", "一转元气");
+        add("item.guzhenren.second_essence_qi", "二转元气");
+        add("item.guzhenren.third_essence_qi", "三转元气");
+        add("item.guzhenren.fourth_essence_qi", "四转元气");
+        add("item.guzhenren.fifth_essence_qi", "五转元气");
+        add("item.guzhenren.fifth_death_qi", "五转死气");
+
         add("itemGroup.guzhenren.mortal_gu", "凡蛊");
         add("itemGroup.guzhenren.gu_material", "蛊材");
 
@@ -232,9 +259,13 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.starved", "%s饿死了");
         add("guzhenren.item.gu.exhausted", "%s被强行催动，力竭而亡！");
         add("guzhenren.item.gu.vital_lost", "%s断绝，气血、魂魄与念头俱损！");
+        add("guzhenren.item.death_qi_cured", "生气化去死气 —— 回复 %s 年寿元");
 
         add("effect.guzhenren.vitality_leaf", "生机叶");
         add("effect.guzhenren.liquor_worm", "酒虫");
+        add("effect.guzhenren.life_qi", "生气");
+        add("effect.guzhenren.essence_qi", "元气");
+        add("effect.guzhenren.death_qi", "死气");
     }
     //endregion
 
@@ -259,7 +290,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addLifeForm();
         addLifeState();
         addSoulTier();
-        addQiType();
+        addMarkTag();
         addPath();
         addAttainment();
         addWisdomType();
@@ -369,13 +400,21 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(ExtremePhysique.PURE_DREAM_REALITY_SEEKER, "纯梦求真体");
     }
 
-    //  Heaven, earth and human qi are the threshold for ascension; natural qi has no effect.
-    //  Their sum IS the Qi Path's marks (never stored twice, see QiData)
-    private void addQiType() {
-        add(QiType.HEAVEN, "天气");
-        add(QiType.EARTH, "地气");
-        add(QiType.HUMAN, "人气");
-        add(QiType.NATURAL, "自然气");
+    //  Where a mark or speck came from. NATURAL is universal and does nothing; the rest name their path's
+    //  own sources, and the two Strength ones reuse their branch's wording rather than invent a second.
+    private void addMarkTag() {
+        add(MarkTag.NATURAL, "自然");
+        add(MarkTag.QI_HEAVEN, "天气");
+        add(MarkTag.QI_EARTH, "地气");
+        add(MarkTag.QI_HUMAN, "人气");
+        add(MarkTag.QI_NATURAL, "自然气");
+        add(MarkTag.QI_DEATH, "死气");
+        add(MarkTag.QI_SWORD, "剑气");
+        add(MarkTag.QI_LIFE, "生气");
+        add(MarkTag.QI_ESSENCE, "元气");
+        add(MarkTag.QI_STRENGTH, "力气");
+        add(MarkTag.STRENGTH_BEASTS, "兽力虚影流");
+        add(MarkTag.STRENGTH_HUMAN, "人力钧力流");
     }
 
     private void addPath() {

@@ -12,7 +12,7 @@ import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.qi.QiType;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
@@ -102,6 +102,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
 
         add("guzhenren.hud.lifespan", "Lifespan %s");
         add("guzhenren.hud.refining", "Refining  %s / %s");
+        add("guzhenren.hud.refining_plain", "Refining");
         add("guzhenren.hud.using", "Using  %s / %s");
     }
     //endregion
@@ -118,8 +119,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.failed.awakened", "%s has already awakened -- run /guzhenren reset first to re-roll");
         add("guzhenren.command.failed.unawakened",
                 "%s has not awakened -- cultivation values are established by /guzhenren awaken");
-        add("guzhenren.command.failed.qi_mark",
-                "The Qi Path's marks are the sum of every qi -- set them with /guzhenren body qi <type>");
+        add("guzhenren.command.failed.tag_path",
+                "%s is not a source on the %s -- the universal source is natural");
 
         add("guzhenren.command.info.aperture_index", "Aperture %s");
         add("guzhenren.command.info.aperture_state", "Aperture:    %s");
@@ -135,7 +136,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.life_form", "Life form:   %s");
         add("guzhenren.command.info.qi", "Qi Path: %s");
         add("guzhenren.command.info.qi_total", " Marks %s");
-        add("guzhenren.command.info.qi_entry", "  %s  %s");
+        add("guzhenren.command.info.qi_speck_total", " Specks %s");
+        add("guzhenren.command.info.qi_mark_entry", "  %s  Marks %s");
+        add("guzhenren.command.info.qi_speck_entry", "  %s  Specks %s");
         add("guzhenren.command.info.paths", "Paths:");
         add("guzhenren.command.info.path_entry", "  %s  %s  Marks %s");
         add("guzhenren.command.info.path_speck", " Specks %s");
@@ -181,6 +184,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.strength", "Strength Path");
         add("guzhenren.screen.label.brilliance", "Brilliance");
         add("guzhenren.screen.path_value", "%s Marks %s");
+        add("guzhenren.screen.qi_mark", "Marks %s");
+        add("guzhenren.screen.qi_speck", "Specks %s");
     }
     //endregion
 
@@ -212,6 +217,28 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("item.guzhenren.primeval_stone", "Primeval Stone");
         add("item.guzhenren.liquor", "Liquor");
 
+        add("item.guzhenren.first_sword_qi", "Rank I Sword Qi");
+        add("item.guzhenren.second_sword_qi", "Rank II Sword Qi");
+        add("item.guzhenren.third_sword_qi", "Rank III Sword Qi");
+        add("item.guzhenren.fourth_sword_qi", "Rank IV Sword Qi");
+        add("item.guzhenren.fifth_sword_qi", "Rank V Sword Qi");
+        add("item.guzhenren.first_strength_qi", "Rank I Strength Qi");
+        add("item.guzhenren.second_strength_qi", "Rank II Strength Qi");
+        add("item.guzhenren.third_strength_qi", "Rank III Strength Qi");
+        add("item.guzhenren.fourth_strength_qi", "Rank IV Strength Qi");
+        add("item.guzhenren.fifth_strength_qi", "Rank V Strength Qi");
+        add("item.guzhenren.first_life_qi", "Rank I Life Qi");
+        add("item.guzhenren.second_life_qi", "Rank II Life Qi");
+        add("item.guzhenren.third_life_qi", "Rank III Life Qi");
+        add("item.guzhenren.fourth_life_qi", "Rank IV Life Qi");
+        add("item.guzhenren.fifth_life_qi", "Rank V Life Qi");
+        add("item.guzhenren.first_essence_qi", "Rank I Essence Qi");
+        add("item.guzhenren.second_essence_qi", "Rank II Essence Qi");
+        add("item.guzhenren.third_essence_qi", "Rank III Essence Qi");
+        add("item.guzhenren.fourth_essence_qi", "Rank IV Essence Qi");
+        add("item.guzhenren.fifth_essence_qi", "Rank V Essence Qi");
+        add("item.guzhenren.fifth_death_qi", "Rank V Death Qi");
+
         add("itemGroup.guzhenren.mortal_gu", "Mortal Gu");
         add("itemGroup.guzhenren.gu_material", "Gu Material");
 
@@ -234,9 +261,13 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.starved", "Your %s starved to death");
         add("guzhenren.item.gu.exhausted", "Your %s was forced past its limit and died");
         add("guzhenren.item.gu.vital_lost", "Your %s is gone -- health, soul and mind all suffer!");
+        add("guzhenren.item.death_qi_cured", "Life Qi dispels the Death Qi -- %s years of lifespan restored");
 
         add("effect.guzhenren.vitality_leaf", "Vitality Leaf");
         add("effect.guzhenren.liquor_worm", "Liquor Worm");
+        add("effect.guzhenren.life_qi", "Life Qi");
+        add("effect.guzhenren.essence_qi", "Essence Qi");
+        add("effect.guzhenren.death_qi", "Death Qi");
     }
     //endregion
 
@@ -261,7 +292,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addLifeForm();
         addLifeState();
         addSoulTier();
-        addQiType();
+        addMarkTag();
         addPath();
         addAttainment();
         addWisdomType();
@@ -372,13 +403,21 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(ExtremePhysique.PURE_DREAM_REALITY_SEEKER, "Pure Dream Reality Seeker");
     }
 
-    //  Heaven, earth and human qi are the threshold for ascension; natural qi has no effect.
-    //  Their sum IS the Qi Path's marks (never stored twice, see QiData)
-    private void addQiType() {
-        add(QiType.HEAVEN, "Heaven Qi");
-        add(QiType.EARTH, "Earth Qi");
-        add(QiType.HUMAN, "Human Qi");
-        add(QiType.NATURAL, "Natural Qi");
+    //  Where a mark or speck came from. NATURAL is universal and does nothing; the rest name their path's
+    //  own sources, and the two Strength ones reuse their branch's wording rather than invent a second.
+    private void addMarkTag() {
+        add(MarkTag.NATURAL, "Natural");
+        add(MarkTag.QI_HEAVEN, "Heaven Qi");
+        add(MarkTag.QI_EARTH, "Earth Qi");
+        add(MarkTag.QI_HUMAN, "Human Qi");
+        add(MarkTag.QI_NATURAL, "Natural Qi");
+        add(MarkTag.QI_DEATH, "Death Qi");
+        add(MarkTag.QI_SWORD, "Sword Qi");
+        add(MarkTag.QI_LIFE, "Life Qi");
+        add(MarkTag.QI_ESSENCE, "Essence Qi");
+        add(MarkTag.QI_STRENGTH, "Strength Qi");
+        add(MarkTag.STRENGTH_BEASTS, "Beast Strength Phantom Branch");
+        add(MarkTag.STRENGTH_HUMAN, "Human Jun Strength Branch");
     }
 
     private void addPath() {

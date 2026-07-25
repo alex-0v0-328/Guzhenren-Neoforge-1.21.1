@@ -10,7 +10,7 @@ import java.util.Map;
 import net.minecraft.network.codec.StreamCodec;
 
 //  The path [流派] system. Sparse -- defaults pruned, an absent key reads as the default (get() never null).
-//  ⚠ A featured path's MARK is not here (its sub-system's total). Its speck is ordinary and lives here.
+//  ⚠ Marks and specks are tag breakdowns; the totals derive. See PathEntry and CLAUDE.md "道痕/碎屑 tags".
 public record PathData(Map<GuPath, PathEntry> entries) {
 
     public static final PathData DEFAULT = new PathData(Map.of());
@@ -23,11 +23,11 @@ public record PathData(Map<GuPath, PathEntry> entries) {
 
     public PathData {
         //  EnumMap: stable ordinal order in NBT and on the wire.
-        //  ⚠ Only the MARK of a featured path is zeroed -- a stored copy could only disagree with the
-        //  sub-system's total. Its SPECK is an ordinary stored count; featured says nothing about specks.
+        //  ⚠ This is the ONE door a tag passes through, so a tag on a path it does not belong to is
+        //  unrepresentable rather than merely refused -- the same guarantee the old featured zeroing gave.
         Map<GuPath, PathEntry> pruned = new EnumMap<>(GuPath.class);
         entries.forEach((path, entry) -> {
-            PathEntry kept = path.isFeatured() ? entry.withMark(0L) : entry;
+            PathEntry kept = entry.retainingTagsFor(path);
             if (!kept.isDefault()) pruned.put(path, kept);
         });
         entries = Collections.unmodifiableMap(pruned);

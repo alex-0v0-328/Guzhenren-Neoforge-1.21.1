@@ -36,6 +36,28 @@ public final class BodyService {
     public static void addLifespan(ServerPlayer p, long d) {setLifespan(p, get(p).lifespan() + d);}
     private static void store(ServerPlayer p, BodyData data) {p.setData(ModAttachments.BODY, data);}
 
+    //region Death Qi [死气] debt
+    //  ⚠ One write, two facts: lifespan drops and the tally rises together, or a cure could refund
+    //  lifespan Death Qi never took. Life Qi [生气] hands back three quarters and clears the tally.
+    public static void drainByDeathQi(ServerPlayer player, long years) {
+        BodyData body = get(player);
+        store(player, body.withLifespan(body.lifespan() - years)
+                .withDeathQiLifespanLost(body.deathQiLifespanLost() + years));
+    }
+
+    //  Returns what was handed back, so the caller can say so. Floors, so a debt of 1 refunds nothing.
+    public static long refundDeathQiDebt(ServerPlayer player, int numerator, int denominator) {
+        BodyData body = get(player);
+        long refund = body.deathQiLifespanLost() * numerator / denominator;
+        store(player, body.withLifespan(body.lifespan() + refund).withDeathQiLifespanLost(0L));
+        return refund;
+    }
+
+    //  ⚠ A respawn must clear it: the debt outlived the death that settled it, and Life Qi would
+    //  otherwise refund lifespan against a curse the player no longer carries.
+    public static void clearDeathQiDebt(ServerPlayer p) {store(p, get(p).withDeathQiLifespanLost(0L));}
+    //endregion
+
     //  Bill every whole day since last billing. A stored day index, not a countdown -- idempotent, relog-safe.
     //  ⚠ Returns the days billed, because it is the only place that knows: anything else on the day
     //  rollover (a Gu's hunger) would otherwise need a second copy of lastDayIndex.

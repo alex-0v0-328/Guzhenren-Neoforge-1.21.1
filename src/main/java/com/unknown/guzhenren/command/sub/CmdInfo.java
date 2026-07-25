@@ -77,7 +77,8 @@ public final class CmdInfo {
             case InfoModel.PathsHeader e -> header("paths", e.empty());
             case InfoModel.PathRow e -> pathLine(e.path(), e.entry());
             case InfoModel.QiHeader e -> qiHeader(e);
-            case InfoModel.QiRow e -> key("qi_entry", enumName(e.type().getTranslationKey()), e.mark());
+            case InfoModel.QiRow e -> key(e.speck() ? "qi_speck_entry" : "qi_mark_entry",
+                    enumName(e.tag().getTranslationKey()), e.amount());
             case InfoModel.StrengthHeader e -> header("strength", e.empty());
             case InfoModel.StrengthRow e -> key("strength_entry",
                     enumName(e.branch().getTranslationKey()), e.reading());
@@ -96,13 +97,14 @@ public final class CmdInfo {
         return key("talent", talent);
     }
 
-    //  Attainment, or [NONE] while it is still none -- never a bare none. Total omitted while 0.
+    //  Attainment, or [NONE] while it is still none -- never a bare none. Each total omitted while 0.
     private static MutableComponent qiHeader(InfoModel.QiHeader e) {
         Component value = e.attainment() == GuAttainment.NONE
                 ? none()
                 : enumName(e.attainment().getTranslationKey());
         MutableComponent header = key("qi", value);
-        if (e.total() > 0L) header.append(key("qi_total", e.total()));
+        if (e.totalMark() > 0L) header.append(key("qi_total", e.totalMark()));
+        if (e.totalSpeck() > 0L) header.append(key("qi_speck_total", e.totalSpeck()));
         return header;
     }
 

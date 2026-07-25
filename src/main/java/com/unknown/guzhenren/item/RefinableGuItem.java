@@ -5,6 +5,7 @@ import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.ModDisplayText;
 import com.unknown.guzhenren.registry.ModDataComponents;
@@ -55,6 +56,19 @@ public abstract class RefinableGuItem extends MortalGuItem {
 
     //  ⚠ 0 pending final balance -- the hook stays, apply() skips the speck write at 0.
     protected long speckPerUse() {return 0L;}
+
+    //  炼化中 320 / 640 while wild, 使用中 12 / 36 once it answers to him -- the same two numbers the
+    //  tooltip carries, so the bar never says something the item does not.
+    @Override
+    public Component chargeCaption(ItemStack stack) {
+        RefinedGuState state = state(stack);
+        return refined(stack)
+                ? Component.translatable("guzhenren.hud.using", state.useCount(), usesPerGrant())
+                : Component.translatable("guzhenren.hud.refining", state.refineProgress(), refineCost());
+    }
+
+    //  Which source those specks are booked under. A leaf whose branch owns a tag overrides this.
+    protected MarkTag speckTag() {return MarkTag.NATURAL;}
 
     //  0-indexed rank offset, the exponent a rank-scaled ladder is built on (Rank I = 0).
     protected int tier() {return rank().ordinal() - Rank.ONE.ordinal();}
@@ -166,7 +180,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
         RefinedGuState state = state(stack);
         state = state.withUses(state.useCount() + 1)
                 .withHunger(state.hunger() - Math.max(1, hungerPerUse(stack)));
-        if (speckPerUse() > 0) PathService.addSpeck(player, path(), speckPerUse());
+        if (speckPerUse() > 0) PathService.addSpeck(player, path(), speckTag(), speckPerUse());
 
         //  The 36th pays out and the count starts over -- useCount is progress toward the NEXT payout.
         if (state.useCount() >= usesPerGrant()) {

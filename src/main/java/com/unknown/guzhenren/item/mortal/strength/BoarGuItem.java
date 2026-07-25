@@ -2,6 +2,7 @@ package com.unknown.guzhenren.item.mortal.strength;
 
 import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.item.RefinableGuItem;
@@ -40,4 +41,8 @@ public class BoarGuItem extends RefinableGuItem {
 
     @Override
     protected void payout(ServerPlayer player) {StrengthService.grant(player, beast);}
+
+    //  These specks are the branch's own, so a later system can revoke or convert exactly them.
+    @Override
+    protected MarkTag speckTag() {return MarkTag.STRENGTH_BEASTS;}
 }

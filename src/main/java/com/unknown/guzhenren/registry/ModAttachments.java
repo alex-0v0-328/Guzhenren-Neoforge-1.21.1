@@ -6,7 +6,6 @@ import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
-import com.unknown.guzhenren.attachment.data.body.QiData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
@@ -19,7 +18,7 @@ import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-//  Aperture [空窍] / Body [肉身] / Mind [脑海] -- three domains, eight record attachments;
+//  Aperture [空窍] / Body [肉身] / Mind [脑海] -- three domains, seven record attachments;
 //  write only through attachment/service.
 //  ⚠ .sync() is why this mod has no packets --  CLAUDE.md "Networking".
 //  ⚠ An id mirrors its record class (strength_data <-> StrengthData), never the bare domain word:
@@ -76,13 +75,6 @@ public final class ModAttachments {
             "path_data", () -> AttachmentType.builder(() -> PathData.DEFAULT)
                     .serialize(PathData.CODEC)
                     .sync(OWNER_ONLY, PathData.STREAM_CODEC)
-                    .build());
-
-    //  ⚠ Uncapped, and QiData.total() IS the Qi Path's marks -- PATH stores no copy.  CLAUDE.md "Qi".
-    public static final Supplier<AttachmentType<QiData>> QI = ATTACHMENT_TYPES.register(
-            "qi_data", () -> AttachmentType.builder(() -> QiData.DEFAULT)
-                    .serialize(QiData.CODEC)
-                    .sync(OWNER_ONLY, QiData.STREAM_CODEC)
                     .build());
 
     //  ⚠ Which beast strengths the body took, not how many -- see StrengthData. Display-only today.

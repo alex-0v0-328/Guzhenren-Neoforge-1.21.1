@@ -67,6 +67,10 @@ public abstract class GuItem extends Item {
     //  click starts vanilla's hold instead and finishUsingItem is what applies it.
     protected int useDurationTicks(Player player, ItemStack stack) {return 0;}
 
+    //  What ChargeHud writes over the bar while the hold runs. null draws the bar alone.
+    //  ⚠ public because the HUD lives in client/, and it reads this off the item it is drawing for.
+    public @Nullable Component chargeCaption(ItemStack stack) {return null;}
+
     @Override
     public final @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
                                                                  @NotNull InteractionHand hand) {
