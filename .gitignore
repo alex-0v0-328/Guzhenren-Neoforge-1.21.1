@@ -52,3 +52,10 @@ GZR-CONTEXT-*.md
 
 # Local Claude Code settings — holds a machine-specific autoMemoryDirectory path.
 .claude/settings.local.json
+
+### Kimi Code ###
+# Kimi-side entry doc — mirrors CLAUDE.md, which is also untracked. Personal tool config.
+AGENTS.md
+
+# Local Kimi Code config (skills copied from .claude/skills, machine-specific MCP servers).
+.kimi-code/

@@ -47,47 +47,47 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //  The values, shared by the HUD and /guzhenren info (see ModDisplayText); each caller adds its label.
     //  realm joins directly in Chinese (一转巅峰) but needs a space here -- the separator lives in the key
     private void addDisplayKeys() {
-        add("guzhenren.display.realm", "%s %s");
-        add("guzhenren.display.gu_line", "%s %s %s");
-        add("guzhenren.display.gu", "Gu");
-        add("guzhenren.display.gu_material", "Gu Material");
-        add("guzhenren.display.physique", "[%s]");
-        add("guzhenren.display.lifespan", "%s [age %s]");
-        add("guzhenren.display.base_fraction", "%s %s");
-        add("guzhenren.display.base_round", "%s");
-        add("guzhenren.display.base_full", "One Hundred");
-        add("guzhenren.display.base_tens.2", "Twenty");
-        add("guzhenren.display.base_tens.3", "Thirty");
-        add("guzhenren.display.base_tens.4", "Forty");
-        add("guzhenren.display.base_tens.5", "Fifty");
-        add("guzhenren.display.base_tens.6", "Sixty");
-        add("guzhenren.display.base_tens.7", "Seventy");
-        add("guzhenren.display.base_tens.8", "Eighty");
-        add("guzhenren.display.base_tens.9", "Ninety");
-        add("guzhenren.display.base_units.1", "One");
-        add("guzhenren.display.base_units.2", "Two");
-        add("guzhenren.display.base_units.3", "Three");
-        add("guzhenren.display.base_units.4", "Four");
-        add("guzhenren.display.base_units.5", "Five");
-        add("guzhenren.display.base_units.6", "Six");
-        add("guzhenren.display.base_units.7", "Seven");
-        add("guzhenren.display.base_units.8", "Eight");
-        add("guzhenren.display.base_units.9", "Nine");
-        add("guzhenren.display.none", "[NONE]");
-        add("guzhenren.display.wild", "Wild %s");
-        add("guzhenren.display.vital", "Vital %s");
-        add("guzhenren.display.boar_strength.1", "[Strength of One Boar]");
-        add("guzhenren.display.boar_strength.2", "[Strength of Two Boars]");
-        add("guzhenren.display.strength.num_join", "%s %s");
-        add("guzhenren.display.strength.num_tens.1", "Ten");
-        add("guzhenren.display.strength.num_tens.2", "Twenty");
-        add("guzhenren.display.strength.num_tens.3", "Thirty");
-        add("guzhenren.display.strength.num_tens.4", "Forty");
-        add("guzhenren.display.strength.num_tens.5", "Fifty");
-        add("guzhenren.display.strength.num_tens.6", "Sixty");
-        add("guzhenren.display.strength.num_tens.7", "Seventy");
-        add("guzhenren.display.strength.num_tens.8", "Eighty");
-        add("guzhenren.display.strength.num_tens.9", "Ninety");
+        add("guzhenren.display.realm",                "%s %s");
+        add("guzhenren.display.gu_line",              "%s %s %s");
+        add("guzhenren.display.gu",                   "Gu");
+        add("guzhenren.display.gu_material",          "Gu Material");
+        add("guzhenren.display.physique",             "[%s]");
+        add("guzhenren.display.lifespan",             "%s [age %s]");
+        add("guzhenren.display.base_fraction",        "%s %s");
+        add("guzhenren.display.base_round",           "%s");
+        add("guzhenren.display.base_full",            "One Hundred");
+        add("guzhenren.display.base_tens.2",          "Twenty");
+        add("guzhenren.display.base_tens.3",          "Thirty");
+        add("guzhenren.display.base_tens.4",          "Forty");
+        add("guzhenren.display.base_tens.5",          "Fifty");
+        add("guzhenren.display.base_tens.6",          "Sixty");
+        add("guzhenren.display.base_tens.7",          "Seventy");
+        add("guzhenren.display.base_tens.8",          "Eighty");
+        add("guzhenren.display.base_tens.9",          "Ninety");
+        add("guzhenren.display.base_units.1",         "One");
+        add("guzhenren.display.base_units.2",         "Two");
+        add("guzhenren.display.base_units.3",         "Three");
+        add("guzhenren.display.base_units.4",         "Four");
+        add("guzhenren.display.base_units.5",         "Five");
+        add("guzhenren.display.base_units.6",         "Six");
+        add("guzhenren.display.base_units.7",         "Seven");
+        add("guzhenren.display.base_units.8",         "Eight");
+        add("guzhenren.display.base_units.9",         "Nine");
+        add("guzhenren.display.none",                 "[NONE]");
+        add("guzhenren.display.wild",                 "Wild %s");
+        add("guzhenren.display.vital",                "Vital %s");
+        add("guzhenren.display.boar_strength.1",      "[Strength of One Boar]");
+        add("guzhenren.display.boar_strength.2",      "[Strength of Two Boars]");
+        add("guzhenren.display.strength.num_join",    "%s %s");
+        add("guzhenren.display.strength.num_tens.1",  "Ten");
+        add("guzhenren.display.strength.num_tens.2",  "Twenty");
+        add("guzhenren.display.strength.num_tens.3",  "Thirty");
+        add("guzhenren.display.strength.num_tens.4",  "Forty");
+        add("guzhenren.display.strength.num_tens.5",  "Fifty");
+        add("guzhenren.display.strength.num_tens.6",  "Sixty");
+        add("guzhenren.display.strength.num_tens.7",  "Seventy");
+        add("guzhenren.display.strength.num_tens.8",  "Eighty");
+        add("guzhenren.display.strength.num_tens.9",  "Ninety");
         add("guzhenren.display.strength.num_units.1", "One");
         add("guzhenren.display.strength.num_units.2", "Two");
         add("guzhenren.display.strength.num_units.3", "Three");
@@ -100,10 +100,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.strength.jin_reading", "[Strength of %s Jin]");
         add("guzhenren.display.strength.jun_reading", "[Strength of %s Jun]");
 
-        add("guzhenren.hud.lifespan", "Lifespan %s");
-        add("guzhenren.hud.refining", "Refining  %s / %s");
-        add("guzhenren.hud.refining_plain", "Refining");
-        add("guzhenren.hud.using", "Using  %s / %s");
+        add("guzhenren.hud.lifespan",                 "Lifespan %s");
+        add("guzhenren.hud.refining",                 "Refining  %s / %s");
+        add("guzhenren.hud.refining_plain",           "Refining");
+        add("guzhenren.hud.using",                    "Using  %s / %s");
     }
     //endregion
 
@@ -111,81 +111,79 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //  Three feedback classes: info default / success green / failure red, all tagged [GZR]
     //  (see ModCommandFeedback)
     private void addCommandKeys() {
-        add("guzhenren.command.header", "[GZR]");
-        add("guzhenren.command.tagged", "[GZR] %s");
-        add("guzhenren.command.updated", "Updated %s player(s)");
-        add("guzhenren.command.unknown_value", "Unknown value: %s");
+        add("guzhenren.command.header",               "[GZR]");
+        add("guzhenren.command.tagged",               "[GZR] %s");
+        add("guzhenren.command.updated",              "Updated %s player(s)");
+        add("guzhenren.command.unknown_value",        "Unknown value: %s");
 
-        add("guzhenren.command.failed.awakened", "%s has already awakened -- run /guzhenren reset first to re-roll");
-        add("guzhenren.command.failed.unawakened",
-                "%s has not awakened -- cultivation values are established by /guzhenren awaken");
-        add("guzhenren.command.failed.tag_path",
-                "%s is not a source on the %s -- the universal source is natural");
+        add("guzhenren.command.failed.awakened",      "%s has already awakened -- run /guzhenren reset first to re-roll");
+        add("guzhenren.command.failed.unawakened",    "%s has not awakened -- cultivation values are established by /guzhenren awaken");
+        add("guzhenren.command.failed.tag_path",      "%s is not a source on the %s -- the universal source is natural");
 
-        add("guzhenren.command.info.aperture_index", "Aperture %s");
-        add("guzhenren.command.info.aperture_state", "Aperture:    %s");
-        add("guzhenren.command.info.realm", "Cultivation: %s");
-        add("guzhenren.command.info.talent", "Aptitude:    %s");
-        add("guzhenren.command.info.essence", "Essence:     %s / %s");
-        add("guzhenren.command.info.distilled", "Distilled:   %s / %s");
-        add("guzhenren.command.info.primary_path", "Primary:     %s");
-        add("guzhenren.command.info.secondary_path", "Secondary:   %s");
-        add("guzhenren.command.info.soul", "Soul:        %s / %s");
-        add("guzhenren.command.info.lifespan", "Lifespan:    %s");
-        add("guzhenren.command.info.life_state", "Body:        %s");
-        add("guzhenren.command.info.life_form", "Life form:   %s");
-        add("guzhenren.command.info.qi", "Qi Path: %s");
-        add("guzhenren.command.info.qi_total", " Marks %s");
-        add("guzhenren.command.info.qi_speck_total", " Specks %s");
-        add("guzhenren.command.info.qi_mark_entry", "  %s  Marks %s");
-        add("guzhenren.command.info.qi_speck_entry", "  %s  Specks %s");
-        add("guzhenren.command.info.paths", "Paths:");
-        add("guzhenren.command.info.path_entry", "  %s  %s  Marks %s");
-        add("guzhenren.command.info.path_speck", " Specks %s");
-        add("guzhenren.command.info.strength", "Strength Path:");
-        add("guzhenren.command.info.strength_entry", "  %s  %s");
-        add("guzhenren.command.info.brilliance", "Brilliance:  %s");
+        add("guzhenren.command.info.aperture_index",  "Aperture %s");
+        add("guzhenren.command.info.aperture_state",  "Aperture:    %s");
+        add("guzhenren.command.info.realm",           "Cultivation: %s");
+        add("guzhenren.command.info.talent",          "Aptitude:    %s");
+        add("guzhenren.command.info.essence",         "Essence:     %s / %s");
+        add("guzhenren.command.info.distilled",       "Distilled:   %s / %s");
+        add("guzhenren.command.info.primary_path",    "Primary:     %s");
+        add("guzhenren.command.info.secondary_path",  "Secondary:   %s");
+        add("guzhenren.command.info.soul",            "Soul:        %s / %s");
+        add("guzhenren.command.info.lifespan",        "Lifespan:    %s");
+        add("guzhenren.command.info.life_state",      "Body:        %s");
+        add("guzhenren.command.info.life_form",       "Life form:   %s");
+        add("guzhenren.command.info.qi",              "Qi Path: %s");
+        add("guzhenren.command.info.qi_total",        " Marks %s");
+        add("guzhenren.command.info.qi_speck_total",  " Specks %s");
+        add("guzhenren.command.info.qi_mark_entry",   "  %s  Marks %s");
+        add("guzhenren.command.info.qi_speck_entry",  "  %s  Specks %s");
+        add("guzhenren.command.info.paths",           "Paths:");
+        add("guzhenren.command.info.path_entry",      "  %s  %s  Marks %s");
+        add("guzhenren.command.info.path_speck",      " Specks %s");
+        add("guzhenren.command.info.strength",        "Strength Path:");
+        add("guzhenren.command.info.strength_entry",  "  %s  %s");
+        add("guzhenren.command.info.brilliance",      "Brilliance:  %s");
         add("guzhenren.command.info.brilliance_rate", "%s thoughts/s");
-        add("guzhenren.command.info.mind", "Mind Ocean:");
-        add("guzhenren.command.info.mind_entry", "  %s  %s / %s");
+        add("guzhenren.command.info.mind",            "Mind Ocean:");
+        add("guzhenren.command.info.mind_entry",      "  %s  %s / %s");
 
         //  Derived detail for the operator, dimmed at the end of a line: aptitude base / soul title.
-        add("guzhenren.command.info.detail", " [%s]");
+        add("guzhenren.command.info.detail",          " [%s]");
     }
     //endregion
 
     //region SCREEN
     //  The G-key info panel (see client/screen/PlayerInfoScreen) plus its keybind
     private void addScreenKeys() {
-        add("key.categories.guzhenren", "Guzhenren");
-        add("key.guzhenren.open_info", "Open Info Panel");
+        add("key.categories.guzhenren",              "Guzhenren");
+        add("key.guzhenren.open_info",               "Open Info Panel");
 
-        add("guzhenren.screen.info.title", "Info");
-        add("guzhenren.screen.tab.aperture", "Aperture");
-        add("guzhenren.screen.tab.body", "Body");
-        add("guzhenren.screen.tab.mind", "Mind");
-        add("guzhenren.screen.tab.storage", "Storage");
-        add("guzhenren.menu.aperture_storage", "Aperture Storage");
-        add("guzhenren.menu.vital", "Vital");
-        add("guzhenren.screen.label.primary_path", "Primary Path");
+        add("guzhenren.screen.info.title",           "Info");
+        add("guzhenren.screen.tab.aperture",         "Aperture");
+        add("guzhenren.screen.tab.body",             "Body");
+        add("guzhenren.screen.tab.mind",             "Mind");
+        add("guzhenren.screen.tab.storage",          "Storage");
+        add("guzhenren.menu.aperture_storage",       "Aperture Storage");
+        add("guzhenren.menu.vital",                  "Vital");
+        add("guzhenren.screen.label.primary_path",   "Primary Path");
         add("guzhenren.screen.label.secondary_path", "Secondary Path");
-        add("guzhenren.screen.pick.title", "Choose a Secondary Path");
-        add("guzhenren.screen.pick.hint", "click to set");
-        add("guzhenren.screen.label.realm", "Realm");
-        add("guzhenren.screen.label.talent", "Aptitude");
-        add("guzhenren.screen.label.essence", "Essence");
-        add("guzhenren.screen.label.distilled", "Distilled");
-        add("guzhenren.screen.label.state", "State");
-        add("guzhenren.screen.label.life_form", "Form");
-        add("guzhenren.screen.label.soul", "Soul");
-        add("guzhenren.screen.label.lifespan", "Lifespan");
-        add("guzhenren.screen.label.qi", "Qi Path");
-        add("guzhenren.screen.label.paths", "Paths");
-        add("guzhenren.screen.label.strength", "Strength Path");
-        add("guzhenren.screen.label.brilliance", "Brilliance");
-        add("guzhenren.screen.path_value", "%s Marks %s");
-        add("guzhenren.screen.qi_mark", "Marks %s");
-        add("guzhenren.screen.qi_speck", "Specks %s");
+        add("guzhenren.screen.pick.title",           "Choose a Secondary Path");
+        add("guzhenren.screen.pick.hint",            "click to set");
+        add("guzhenren.screen.label.realm",          "Realm");
+        add("guzhenren.screen.label.talent",         "Aptitude");
+        add("guzhenren.screen.label.essence",        "Essence");
+        add("guzhenren.screen.label.distilled",      "Distilled");
+        add("guzhenren.screen.label.state",          "State");
+        add("guzhenren.screen.label.life_form",      "Form");
+        add("guzhenren.screen.label.soul",           "Soul");
+        add("guzhenren.screen.label.lifespan",       "Lifespan");
+        add("guzhenren.screen.label.qi",             "Qi Path");
+        add("guzhenren.screen.label.paths",          "Paths");
+        add("guzhenren.screen.label.strength",       "Strength Path");
+        add("guzhenren.screen.label.brilliance",     "Brilliance");
+        add("guzhenren.screen.path_value",           "%s Marks %s");
+        add("guzhenren.screen.qi_mark",              "Marks %s");
+        add("guzhenren.screen.qi_speck",             "Specks %s");
     }
     //endregion
 
@@ -193,91 +191,91 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //  A refusal here addresses "you", so the command's keys don't fit -- those name a target.
     //  Nothing is said on success: the essence bar is the one that speaks.
     private void addItemKeys() {
-        add("item.guzhenren.hope_gu", "Hope Gu");
-        add("item.guzhenren.copper_relics_gu", "Green Copper Relics Gu");
-        add("item.guzhenren.steel_relics_gu", "Red Steel Relics Gu");
-        add("item.guzhenren.silver_relics_gu", "White Silver Relics Gu");
-        add("item.guzhenren.gold_relics_gu", "Yellow Gold Relics Gu");
-        add("item.guzhenren.crystal_relics_gu", "Purple Crystal Relics Gu");
-        add("item.guzhenren.white_boar_gu", "White Boar Gu");
-        add("item.guzhenren.black_boar_gu", "Black Boar Gu");
-        add("item.guzhenren.jin_strength_gu", "Jin Strength Gu");
-        add("item.guzhenren.tens_jin_strength_gu", "Tens Jin Strength Gu");
-        add("item.guzhenren.jun_strength_gu", "Jun Strength Gu");
-        add("item.guzhenren.tens_jun_strength_gu", "Tens Jun Strength Gu");
-        add("item.guzhenren.vitality_leaf_gu", "Vitality Leaf Gu");
-        add("item.guzhenren.lifespan_gu", "Lifespan Gu");
-        add("item.guzhenren.tens_lifespan_gu", "Tens Years Lifespan Gu");
-        add("item.guzhenren.hundreds_lifespan_gu", "Hundreds Years Lifespan Gu");
-        add("item.guzhenren.thousands_lifespan_gu", "Thousands Years Lifespan Gu");
-        add("item.guzhenren.liquor_worm", "Liquor Worm");
-        add("item.guzhenren.four_flavors_liquor_worm", "Four Flavors Liquor Worm");
+        add("item.guzhenren.hope_gu",                      "Hope Gu");
+        add("item.guzhenren.copper_relics_gu",             "Green Copper Relics Gu");
+        add("item.guzhenren.steel_relics_gu",              "Red Steel Relics Gu");
+        add("item.guzhenren.silver_relics_gu",             "White Silver Relics Gu");
+        add("item.guzhenren.gold_relics_gu",               "Yellow Gold Relics Gu");
+        add("item.guzhenren.crystal_relics_gu",            "Purple Crystal Relics Gu");
+        add("item.guzhenren.white_boar_gu",                "White Boar Gu");
+        add("item.guzhenren.black_boar_gu",                "Black Boar Gu");
+        add("item.guzhenren.jin_strength_gu",              "Jin Strength Gu");
+        add("item.guzhenren.tens_jin_strength_gu",         "Tens Jin Strength Gu");
+        add("item.guzhenren.jun_strength_gu",              "Jun Strength Gu");
+        add("item.guzhenren.tens_jun_strength_gu",         "Tens Jun Strength Gu");
+        add("item.guzhenren.vitality_leaf_gu",             "Vitality Leaf Gu");
+        add("item.guzhenren.lifespan_gu",                  "Lifespan Gu");
+        add("item.guzhenren.tens_lifespan_gu",             "Tens Years Lifespan Gu");
+        add("item.guzhenren.hundreds_lifespan_gu",         "Hundreds Years Lifespan Gu");
+        add("item.guzhenren.thousands_lifespan_gu",        "Thousands Years Lifespan Gu");
+        add("item.guzhenren.liquor_worm",                  "Liquor Worm");
+        add("item.guzhenren.four_flavors_liquor_worm",     "Four Flavors Liquor Worm");
         add("item.guzhenren.seven_fragrances_liquor_worm", "Seven Fragrances Liquor Worm");
-        add("item.guzhenren.nine_eyes_liquor_worm", "Nine Eyes Liquor Worm");
-        add("item.guzhenren.primeval_stone", "Primeval Stone");
-        add("item.guzhenren.liquor", "Liquor");
+        add("item.guzhenren.nine_eyes_liquor_worm",        "Nine Eyes Liquor Worm");
+        add("item.guzhenren.primeval_stone",               "Primeval Stone");
+        add("item.guzhenren.liquor",                       "Liquor");
 
-        add("item.guzhenren.first_sword_qi", "Rank I Sword Qi");
-        add("item.guzhenren.second_sword_qi", "Rank II Sword Qi");
-        add("item.guzhenren.third_sword_qi", "Rank III Sword Qi");
-        add("item.guzhenren.fourth_sword_qi", "Rank IV Sword Qi");
-        add("item.guzhenren.fifth_sword_qi", "Rank V Sword Qi");
-        add("item.guzhenren.first_strength_qi", "Rank I Strength Qi");
-        add("item.guzhenren.second_strength_qi", "Rank II Strength Qi");
-        add("item.guzhenren.third_strength_qi", "Rank III Strength Qi");
-        add("item.guzhenren.fourth_strength_qi", "Rank IV Strength Qi");
-        add("item.guzhenren.fifth_strength_qi", "Rank V Strength Qi");
-        add("item.guzhenren.first_life_qi", "Rank I Life Qi");
-        add("item.guzhenren.second_life_qi", "Rank II Life Qi");
-        add("item.guzhenren.third_life_qi", "Rank III Life Qi");
-        add("item.guzhenren.fourth_life_qi", "Rank IV Life Qi");
-        add("item.guzhenren.fifth_life_qi", "Rank V Life Qi");
-        add("item.guzhenren.first_essence_qi", "Rank I Essence Qi");
-        add("item.guzhenren.second_essence_qi", "Rank II Essence Qi");
-        add("item.guzhenren.third_essence_qi", "Rank III Essence Qi");
-        add("item.guzhenren.fourth_essence_qi", "Rank IV Essence Qi");
-        add("item.guzhenren.fifth_essence_qi", "Rank V Essence Qi");
-        add("item.guzhenren.fifth_death_qi", "Rank V Death Qi");
+        add("item.guzhenren.first_sword_qi",               "Rank I Sword Qi");
+        add("item.guzhenren.second_sword_qi",              "Rank II Sword Qi");
+        add("item.guzhenren.third_sword_qi",               "Rank III Sword Qi");
+        add("item.guzhenren.fourth_sword_qi",              "Rank IV Sword Qi");
+        add("item.guzhenren.fifth_sword_qi",               "Rank V Sword Qi");
+        add("item.guzhenren.first_strength_qi",            "Rank I Strength Qi");
+        add("item.guzhenren.second_strength_qi",           "Rank II Strength Qi");
+        add("item.guzhenren.third_strength_qi",            "Rank III Strength Qi");
+        add("item.guzhenren.fourth_strength_qi",           "Rank IV Strength Qi");
+        add("item.guzhenren.fifth_strength_qi",            "Rank V Strength Qi");
+        add("item.guzhenren.first_life_qi",                "Rank I Life Qi");
+        add("item.guzhenren.second_life_qi",               "Rank II Life Qi");
+        add("item.guzhenren.third_life_qi",                "Rank III Life Qi");
+        add("item.guzhenren.fourth_life_qi",               "Rank IV Life Qi");
+        add("item.guzhenren.fifth_life_qi",                "Rank V Life Qi");
+        add("item.guzhenren.first_essence_qi",             "Rank I Essence Qi");
+        add("item.guzhenren.second_essence_qi",            "Rank II Essence Qi");
+        add("item.guzhenren.third_essence_qi",             "Rank III Essence Qi");
+        add("item.guzhenren.fourth_essence_qi",            "Rank IV Essence Qi");
+        add("item.guzhenren.fifth_essence_qi",             "Rank V Essence Qi");
+        add("item.guzhenren.fifth_death_qi",               "Rank V Death Qi");
 
-        add("itemGroup.guzhenren.mortal_gu", "Mortal Gu");
-        add("itemGroup.guzhenren.gu_material", "Gu Material");
+        add("itemGroup.guzhenren.mortal_gu",               "Mortal Gu");
+        add("itemGroup.guzhenren.gu_material",             "Gu Material");
 
-        add("guzhenren.item.failed.awakened", "You have already awakened");
-        add("guzhenren.item.failed.unawakened", "You have NOT awakened");
-        add("guzhenren.item.failed.essence_full", "Essence is already FULL");
-        add("guzhenren.item.failed.rank_mismatch", "Wrong realm - this Gu needs %s");
-        add("guzhenren.item.failed.stage_peak", "You are at the Stage Peak");
-        add("guzhenren.item.failed.beast_strength_held", "Already hold the %s's strength");
-        add("guzhenren.item.failed.human_strength_full", "This strength is already at nine layers");
-        add("guzhenren.item.failed.vitality_active", "Vitality Leaf is still working");
-        add("guzhenren.item.failed.refine_essence", "NOT enough essence to refine");
-        add("guzhenren.item.failed.liquor_rank", "Only a cultivator at %s can drive this worm");
-        add("guzhenren.item.failed.liquor_distilling", "You are already distilling");
+        add("guzhenren.item.failed.awakened",              "You have already awakened");
+        add("guzhenren.item.failed.unawakened",            "You have NOT awakened");
+        add("guzhenren.item.failed.essence_full",          "Essence is already FULL");
+        add("guzhenren.item.failed.rank_mismatch",         "Wrong realm - this Gu needs %s");
+        add("guzhenren.item.failed.stage_peak",            "You are at the Stage Peak");
+        add("guzhenren.item.failed.beast_strength_held",   "Already hold the %s's strength");
+        add("guzhenren.item.failed.human_strength_full",   "This strength is already at nine layers");
+        add("guzhenren.item.failed.vitality_active",       "Vitality Leaf is still working");
+        add("guzhenren.item.failed.refine_essence",        "NOT enough essence to refine");
+        add("guzhenren.item.failed.liquor_rank",           "Only a cultivator at %s can drive this worm");
+        add("guzhenren.item.failed.liquor_distilling",     "You are already distilling");
 
-        add("guzhenren.item.gu.uses", "Used %s/%s");
-        add("guzhenren.item.gu.refine_progress", "Refined %s/%s");
-        add("guzhenren.item.gu.lifespan_gained", "Lifespan +%s years");
-        add("guzhenren.item.gu.hungry", "Your %s is hungry");
-        add("guzhenren.item.gu.starved", "Your %s starved to death");
-        add("guzhenren.item.gu.exhausted", "Your %s was forced past its limit and died");
-        add("guzhenren.item.gu.vital_lost", "Your %s is gone -- health, soul and mind all suffer!");
-        add("guzhenren.item.death_qi_cured", "Life Qi dispels the Death Qi -- %s years of lifespan restored");
+        add("guzhenren.item.gu.uses",                      "Used %s/%s");
+        add("guzhenren.item.gu.refine_progress",           "Refined %s/%s");
+        add("guzhenren.item.gu.lifespan_gained",           "Lifespan +%s years");
+        add("guzhenren.item.gu.hungry",                    "Your %s is hungry");
+        add("guzhenren.item.gu.starved",                   "Your %s starved to death");
+        add("guzhenren.item.gu.exhausted",                 "Your %s was forced past its limit and died");
+        add("guzhenren.item.gu.vital_lost",                "Your %s is gone -- health, soul and mind all suffer!");
+        add("guzhenren.item.death_qi_cured",               "Life Qi dispels the Death Qi -- %s years of lifespan restored");
 
-        add("effect.guzhenren.vitality_leaf", "Vitality Leaf");
-        add("effect.guzhenren.liquor_worm", "Liquor Worm");
-        add("effect.guzhenren.life_qi", "Life Qi");
-        add("effect.guzhenren.essence_qi", "Essence Qi");
-        add("effect.guzhenren.death_qi", "Death Qi");
+        add("effect.guzhenren.vitality_leaf",              "Vitality Leaf");
+        add("effect.guzhenren.liquor_worm",                "Liquor Worm");
+        add("effect.guzhenren.life_qi",                    "Life Qi");
+        add("effect.guzhenren.essence_qi",                 "Essence Qi");
+        add("effect.guzhenren.death_qi",                   "Death Qi");
     }
     //endregion
 
     //region DEATH
     //  The key is decided by the DamageType's msgId: msgId "guzhenren.xxx" -> "death.attack.guzhenren.xxx"
     private void addDeathMessages() {
-        add("death.attack.guzhenren.lifespan_exhausted", "%1$s ran out of lifespan");
-        add("death.attack.guzhenren.soul_collapse", "%1$s suffered soul collapse");
+        add("death.attack.guzhenren.lifespan_exhausted",   "%1$s ran out of lifespan");
+        add("death.attack.guzhenren.soul_collapse",        "%1$s suffered soul collapse");
         add("death.attack.guzhenren.mind_ocean_shattered", "%1$s shattered their Mind Ocean");
-        add("death.attack.guzhenren.vital_gu_lost", "%1$s lost their Vital Gu");
+        add("death.attack.guzhenren.vital_gu_lost",        "%1$s lost their Vital Gu");
     }
     //endregion
 
@@ -310,189 +308,189 @@ public class EnUsLanguageProvider extends LanguageProvider {
 
     //  The Strength Path's three branches. Titles today; effects come later, and ENVIRONMENT has no data
     private void addStrengthBranch() {
-        add(StrengthBranch.HUMAN, "Human Jun Strength Branch");
-        add(StrengthBranch.BEASTS, "Beast Strength Phantom Branch");
+        add(StrengthBranch.HUMAN,       "Human Jun Strength Branch");
+        add(StrengthBranch.BEASTS,      "Beast Strength Phantom Branch");
         add(StrengthBranch.ENVIRONMENT, "Atmospheric Heaven and Earth Branch");
     }
 
     //  The Human Jun branch's kinds -- Jin, Ten Jin, Jun (=100 Jin), Ten Jun.
     private void addHumanStrength() {
-        add(HumanStrength.JIN, "Jin");
+        add(HumanStrength.JIN,     "Jin");
         add(HumanStrength.TEN_JIN, "Ten Jin");
-        add(HumanStrength.JUN, "Jun");
+        add(HumanStrength.JUN,     "Jun");
         add(HumanStrength.TEN_JUN, "Ten Jun");
     }
 
     //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie
     private void addApertureState() {
         add(ApertureState.ALIVE, "Alive");
-        add(ApertureState.DEAD, "Dead");
+        add(ApertureState.DEAD,  "Dead");
     }
 
     private void addRank() {
-        add(Rank.NONE, "Mortal");
-        add(Rank.ONE, "Rank I");
-        add(Rank.TWO, "Rank II");
+        add(Rank.NONE,  "Mortal");
+        add(Rank.ONE,   "Rank I");
+        add(Rank.TWO,   "Rank II");
         add(Rank.THREE, "Rank III");
-        add(Rank.FOUR, "Rank IV");
-        add(Rank.FIVE, "Rank V");
-        add(Rank.SIX, "Rank VI");
+        add(Rank.FOUR,  "Rank IV");
+        add(Rank.FIVE,  "Rank V");
+        add(Rank.SIX,   "Rank VI");
         add(Rank.SEVEN, "Rank VII");
         add(Rank.EIGHT, "Rank VIII");
-        add(Rank.NINE, "Rank IX");
+        add(Rank.NINE,  "Rank IX");
     }
 
     private void addStage() {
         //  Deliberately blank: nothing is shown while unawakened
-        add(Stage.NONE, "");
-        add(Stage.INIT, "Initial");
+        add(Stage.NONE,   "");
+        add(Stage.INIT,   "Initial");
         add(Stage.MIDDLE, "Middle");
-        add(Stage.UPPER, "Upper");
-        add(Stage.PEAK, "Peak");
+        add(Stage.UPPER,  "Upper");
+        add(Stage.PEAK,   "Peak");
     }
 
     //  The grades 甲乙丙丁 are the classic Chinese ordinals, so they land on A/B/C/D, not I..IV.
     private void addTalent() {
         add(Talent.EXTREME, "Ten-Extremes Aptitude");
-        add(Talent.FIRST, "Grade-A Aptitude");
-        add(Talent.SECOND, "Grade-B Aptitude");
-        add(Talent.THIRD, "Grade-C Aptitude");
-        add(Talent.FOURTH, "Grade-D Aptitude");
-        add(Talent.NONE, "Unawakened");
+        add(Talent.FIRST,   "Grade-A Aptitude");
+        add(Talent.SECOND,  "Grade-B Aptitude");
+        add(Talent.THIRD,   "Grade-C Aptitude");
+        add(Talent.FOURTH,  "Grade-D Aptitude");
+        add(Talent.NONE,    "Unawakened");
     }
 
     private void addLifeForm() {
-        add(LifeForm.MORTAL, "Mortal");
+        add(LifeForm.MORTAL,   "Mortal");
         add(LifeForm.IMMORTAL, "Immortal");
     }
 
     private void addLifeState() {
-        add(LifeState.ALIVE, "Alive");
+        add(LifeState.ALIVE,  "Alive");
         add(LifeState.ZOMBIE, "Zombified");
-        add(LifeState.DEAD, "Dead");
+        add(LifeState.DEAD,   "Dead");
     }
 
     //  Essence colors, one per rank; the shade within a rank is computed by EssenceColor.shade from the
     //  stage, so it needs no text of its own
     private void addEssenceColor() {
-        add(EssenceColor.NONE, "None");
-        add(EssenceColor.GREEN_COPPER, "Green Copper");
-        add(EssenceColor.RED_STEEL, "Red Steel");
-        add(EssenceColor.WHITE_SILVER, "White Silver");
-        add(EssenceColor.YELLOW_GOLDEN, "Yellow Golden");
+        add(EssenceColor.NONE,           "None");
+        add(EssenceColor.GREEN_COPPER,   "Green Copper");
+        add(EssenceColor.RED_STEEL,      "Red Steel");
+        add(EssenceColor.WHITE_SILVER,   "White Silver");
+        add(EssenceColor.YELLOW_GOLDEN,  "Yellow Golden");
         add(EssenceColor.PURPLE_CRYSTAL, "Purple Crystal");
-        add(EssenceColor.GREEN_GRAPE, "Green Grape");
-        add(EssenceColor.RED_DATE, "Red Date");
-        add(EssenceColor.WHITE_LITCHI, "White Litchi");
+        add(EssenceColor.GREEN_GRAPE,    "Green Grape");
+        add(EssenceColor.RED_DATE,       "Red Date");
+        add(EssenceColor.WHITE_LITCHI,   "White Litchi");
         add(EssenceColor.YELLOW_APRICOT, "Yellow Apricot");
     }
 
     private void addTenExtreme() {
         //  Deliberately blank: nothing is shown for a player without an extreme physique
-        add(ExtremePhysique.NONE, "");
-        add(ExtremePhysique.VERDANT_GREAT_SUN, "Verdant Great Sun");
-        add(ExtremePhysique.DESOLATE_ANCIENT_MOON, "Desolate Ancient Moon");
-        add(ExtremePhysique.NORTHERN_DARK_ICE_SOUL, "Northern Dark Ice Soul");
-        add(ExtremePhysique.BOUNDLESS_FOREST_SAMSARA, "Boundless Forest Samsara");
+        add(ExtremePhysique.NONE,                               "");
+        add(ExtremePhysique.VERDANT_GREAT_SUN,                  "Verdant Great Sun");
+        add(ExtremePhysique.DESOLATE_ANCIENT_MOON,              "Desolate Ancient Moon");
+        add(ExtremePhysique.NORTHERN_DARK_ICE_SOUL,             "Northern Dark Ice Soul");
+        add(ExtremePhysique.BOUNDLESS_FOREST_SAMSARA,           "Boundless Forest Samsara");
         add(ExtremePhysique.BLAZING_GLORY_LIGHTNING_BRILLIANCE, "Blazing Glory Lightning Brilliance");
-        add(ExtremePhysique.MYRIAD_GOLD_WONDROUS_ESSENCE, "Myriad Gold Wondrous Essence");
-        add(ExtremePhysique.GREAT_STRENGTH_TRUE_MARTIAL, "Great Strength True Martial");
-        add(ExtremePhysique.CAREFREE_WISDOM_HEART, "Carefree Wisdom Heart");
-        add(ExtremePhysique.PROFOUND_EARTH_ORIGIN, "Profound Earth Origin");
-        add(ExtremePhysique.UNIVERSE_GREAT_DERIVATION, "Universe Great Derivation");
-        add(ExtremePhysique.PURE_DREAM_REALITY_SEEKER, "Pure Dream Reality Seeker");
+        add(ExtremePhysique.MYRIAD_GOLD_WONDROUS_ESSENCE,       "Myriad Gold Wondrous Essence");
+        add(ExtremePhysique.GREAT_STRENGTH_TRUE_MARTIAL,        "Great Strength True Martial");
+        add(ExtremePhysique.CAREFREE_WISDOM_HEART,              "Carefree Wisdom Heart");
+        add(ExtremePhysique.PROFOUND_EARTH_ORIGIN,              "Profound Earth Origin");
+        add(ExtremePhysique.UNIVERSE_GREAT_DERIVATION,          "Universe Great Derivation");
+        add(ExtremePhysique.PURE_DREAM_REALITY_SEEKER,          "Pure Dream Reality Seeker");
     }
 
     //  Where a mark or speck came from. NATURAL is universal and does nothing; the rest name their path's
     //  own sources, and the two Strength ones reuse their branch's wording rather than invent a second.
     private void addMarkTag() {
-        add(MarkTag.NATURAL, "Natural");
-        add(MarkTag.QI_HEAVEN, "Heaven Qi");
-        add(MarkTag.QI_EARTH, "Earth Qi");
-        add(MarkTag.QI_HUMAN, "Human Qi");
-        add(MarkTag.QI_NATURAL, "Natural Qi");
-        add(MarkTag.QI_DEATH, "Death Qi");
-        add(MarkTag.QI_SWORD, "Sword Qi");
-        add(MarkTag.QI_LIFE, "Life Qi");
-        add(MarkTag.QI_ESSENCE, "Essence Qi");
-        add(MarkTag.QI_STRENGTH, "Strength Qi");
+        add(MarkTag.NATURAL,         "Natural");
+        add(MarkTag.QI_HEAVEN,       "Heaven Qi");
+        add(MarkTag.QI_EARTH,        "Earth Qi");
+        add(MarkTag.QI_HUMAN,        "Human Qi");
+        add(MarkTag.QI_NATURAL,      "Natural Qi");
+        add(MarkTag.QI_DEATH,        "Death Qi");
+        add(MarkTag.QI_SWORD,        "Sword Qi");
+        add(MarkTag.QI_LIFE,         "Life Qi");
+        add(MarkTag.QI_ESSENCE,      "Essence Qi");
+        add(MarkTag.QI_STRENGTH,     "Strength Qi");
         add(MarkTag.STRENGTH_BEASTS, "Beast Strength Phantom Branch");
-        add(MarkTag.STRENGTH_HUMAN, "Human Jun Strength Branch");
+        add(MarkTag.STRENGTH_HUMAN,  "Human Jun Strength Branch");
     }
 
     private void addPath() {
-        add(GuPath.HEAVEN, "Heaven Path");
-        add(GuPath.RULE, "Rule Path");
-        add(GuPath.SPACE, "Space Path");
-        add(GuPath.TIME, "Time Path");
-        add(GuPath.HUMAN, "Human Path");
-        add(GuPath.METAL, "Metal Path");
-        add(GuPath.WOOD, "Wood Path");
-        add(GuPath.WATER, "Water Path");
-        add(GuPath.FIRE, "Fire Path");
-        add(GuPath.EARTH, "Earth Path");
-        add(GuPath.ICE_SNOW, "Ice-Snow Path");
-        add(GuPath.LIGHTNING, "Lightning Path");
-        add(GuPath.QI, "Qi Path");
-        add(GuPath.SOUND, "Sound Path");
-        add(GuPath.LIGHT, "Light Path");
-        add(GuPath.DARK, "Dark Path");
-        add(GuPath.STRENGTH, "Strength Path");
-        add(GuPath.DREAM, "Dream Path");
-        add(GuPath.REFINEMENT, "Refinement Path");
-        add(GuPath.WISDOM, "Wisdom Path");
-        add(GuPath.THEFT, "Theft Path");
-        add(GuPath.LUCK, "Luck Path");
-        add(GuPath.KILLING, "Killing Path");
-        add(GuPath.BLOOD, "Blood Path");
-        add(GuPath.SOUL, "Soul Path");
-        add(GuPath.ENSLAVEMENT, "Enslavement Path");
-        add(GuPath.FOOD, "Food Path");
-        add(GuPath.FORMATION, "Formation Path");
-        add(GuPath.PAINTING, "Painting Path");
+        add(GuPath.HEAVEN,         "Heaven Path");
+        add(GuPath.RULE,           "Rule Path");
+        add(GuPath.SPACE,          "Space Path");
+        add(GuPath.TIME,           "Time Path");
+        add(GuPath.HUMAN,          "Human Path");
+        add(GuPath.METAL,          "Metal Path");
+        add(GuPath.WOOD,           "Wood Path");
+        add(GuPath.WATER,          "Water Path");
+        add(GuPath.FIRE,           "Fire Path");
+        add(GuPath.EARTH,          "Earth Path");
+        add(GuPath.ICE_SNOW,       "Ice-Snow Path");
+        add(GuPath.LIGHTNING,      "Lightning Path");
+        add(GuPath.QI,             "Qi Path");
+        add(GuPath.SOUND,          "Sound Path");
+        add(GuPath.LIGHT,          "Light Path");
+        add(GuPath.DARK,           "Dark Path");
+        add(GuPath.STRENGTH,       "Strength Path");
+        add(GuPath.DREAM,          "Dream Path");
+        add(GuPath.REFINEMENT,     "Refinement Path");
+        add(GuPath.WISDOM,         "Wisdom Path");
+        add(GuPath.THEFT,          "Theft Path");
+        add(GuPath.LUCK,           "Luck Path");
+        add(GuPath.KILLING,        "Killing Path");
+        add(GuPath.BLOOD,          "Blood Path");
+        add(GuPath.SOUL,           "Soul Path");
+        add(GuPath.ENSLAVEMENT,    "Enslavement Path");
+        add(GuPath.FOOD,           "Food Path");
+        add(GuPath.FORMATION,      "Formation Path");
+        add(GuPath.PAINTING,       "Painting Path");
         add(GuPath.TRANSFORMATION, "Transformation Path");
     }
 
     private void addAttainment() {
-        add(GuAttainment.NONE, "None");
-        add(GuAttainment.ORDINARY, "Ordinary");
-        add(GuAttainment.QUASI_MASTER, "Quasi-Master");
-        add(GuAttainment.MASTER, "Master");
-        add(GuAttainment.QUASI_GRANDMASTER, "Quasi-Grandmaster");
-        add(GuAttainment.GRANDMASTER, "Grandmaster");
-        add(GuAttainment.QUASI_GREAT_GRANDMASTER, "Quasi-Great Grandmaster");
-        add(GuAttainment.GREAT_GRANDMASTER, "Great Grandmaster");
+        add(GuAttainment.NONE,                      "None");
+        add(GuAttainment.ORDINARY,                  "Ordinary");
+        add(GuAttainment.QUASI_MASTER,              "Quasi-Master");
+        add(GuAttainment.MASTER,                    "Master");
+        add(GuAttainment.QUASI_GRANDMASTER,         "Quasi-Grandmaster");
+        add(GuAttainment.GRANDMASTER,               "Grandmaster");
+        add(GuAttainment.QUASI_GREAT_GRANDMASTER,   "Quasi-Great Grandmaster");
+        add(GuAttainment.GREAT_GRANDMASTER,         "Great Grandmaster");
         add(GuAttainment.QUASI_SUPREME_GRANDMASTER, "Quasi-Supreme Grandmaster");
-        add(GuAttainment.SUPREME_GRANDMASTER, "Supreme Grandmaster");
+        add(GuAttainment.SUPREME_GRANDMASTER,       "Supreme Grandmaster");
     }
 
     //  Soul tiers: looked up from maxSoul (soul = men × 100), never stored on their own
     private void addSoulTier() {
-        add(SoulTier.ONE, "One-Person Soul");
-        add(SoulTier.TEN, "Ten-Person Soul");
-        add(SoulTier.HUNDRED, "Hundred-Person Soul");
-        add(SoulTier.THOUSAND, "Thousand-Person Soul");
-        add(SoulTier.TEN_THOUSAND, "Ten-Thousand-Person Soul");
+        add(SoulTier.ONE,              "One-Person Soul");
+        add(SoulTier.TEN,              "Ten-Person Soul");
+        add(SoulTier.HUNDRED,          "Hundred-Person Soul");
+        add(SoulTier.THOUSAND,         "Thousand-Person Soul");
+        add(SoulTier.TEN_THOUSAND,     "Ten-Thousand-Person Soul");
         add(SoulTier.HUNDRED_THOUSAND, "Hundred-Thousand-Person Soul");
-        add(SoulTier.MILLION, "Million-Person Soul");
-        add(SoulTier.TEN_MILLION, "Ten-Million-Person Soul");
-        add(SoulTier.HUNDRED_MILLION, "Hundred-Million-Person Soul");
+        add(SoulTier.MILLION,          "Million-Person Soul");
+        add(SoulTier.TEN_MILLION,      "Ten-Million-Person Soul");
+        add(SoulTier.HUNDRED_MILLION,  "Hundred-Million-Person Soul");
     }
 
     //  The three cells; initial capacities 30000 / 5 / 2, and overflowing them shatters the Mind Ocean
     private void addWisdomType() {
         add(WisdomType.THOUGHTS, "Thoughts");
-        add(WisdomType.WILLS, "Wills");
+        add(WisdomType.WILLS,    "Wills");
         add(WisdomType.EMOTIONS, "Emotions");
     }
 
     //  Brilliance: the natural thought regen rate (1 / 4 / 16 / 64 / 256 a second), rolled at birth
     private void addBrilliance() {
-        add(Brilliance.ORDINARY, "Ordinary Brilliance");
-        add(Brilliance.DECENT, "Decent Brilliance");
+        add(Brilliance.ORDINARY,    "Ordinary Brilliance");
+        add(Brilliance.DECENT,      "Decent Brilliance");
         add(Brilliance.DISTINCTIVE, "Distinctive Brilliance");
         add(Brilliance.OUTSTANDING, "Outstanding Brilliance");
-        add(Brilliance.UNRIVALED, "Unrivaled Brilliance");
+        add(Brilliance.UNRIVALED,   "Unrivaled Brilliance");
     }
     //endregion
 }
