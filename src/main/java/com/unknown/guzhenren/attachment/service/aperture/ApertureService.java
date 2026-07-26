@@ -26,10 +26,11 @@ public final class ApertureService {
 
     public static final int PRIMARY = ApertureData.PRIMARY;
 
-    //  A Ten-Extremes physique's innate marks / specks, split evenly across its talent paths (TOTALS).
-    //  ⚠ Both 0 pending final balance -- the reconcile machinery stays, it just lays nothing down.
-    public static final long TALENT_MARK_TOTAL = 0L;
-    public static final long TALENT_SPECK_TOTAL = 0L;
+    //  What a Ten-Extremes [十绝] body is born holding, laid down at 开窍.
+    //  ⚠⚠ The two halves go to DIFFERENT places: the specks split evenly across the physique's OWN talent
+    //  paths (two paths → 2500 apiece), the marks are always 人气 on the Qi Path, whatever the physique.
+    public static final long TALENT_SPECK_TOTAL = 5000L;
+    public static final long TALENT_QI_HUMAN_MARK = 10L;
 
     //  ---- read ----
     public static ApertureData get(Player p) {return p.getData(ModAttachments.APERTURE);}
@@ -142,16 +143,17 @@ public final class ApertureService {
         grantTalentPaths(player, after, 1);
     }
 
-    //  ⚠ Granted marks carry no source tag -- they merge into the path's total ("natural" origin), so a
-    //  revoke is a plain subtraction that clamps at 0. No need to track which marks the physique gave.
+    //  ⚠ Every quantity here names its tag, so a revoke subtracts exactly what the physique laid down --
+    //  QI_HUMAN off the Qi Path, NATURAL off each talent path, each clamped at 0 by PathData.
     private static void grantTalentPaths(ServerPlayer player, ExtremePhysique physique, int sign) {
         List<GuPath> paths = physique.getTalentPaths();
+        //  Empty means NONE, the one physique that is not a Ten-Extremes body -- it is born with nothing.
         if (paths.isEmpty()) return;
-        long mark = sign * (TALENT_MARK_TOTAL / paths.size());
+
+        //  ⚠ The marks do NOT follow the talent paths: 人气 is one of 升仙's three, and the head start on
+        //  it is what every Ten-Extremes body has in common.  CLAUDE.md "Invariants".
+        PathService.addMark(player, GuPath.QI, MarkTag.QI_HUMAN, sign * TALENT_QI_HUMAN_MARK);
         long speck = sign * (TALENT_SPECK_TOTAL / paths.size());
-        for (GuPath path : paths) {
-            if (mark != 0) PathService.addMark(player, path, MarkTag.NATURAL, mark);
-            if (speck != 0) PathService.addSpeck(player, path, MarkTag.NATURAL, speck);
-        }
+        for (GuPath path : paths) PathService.addSpeck(player, path, MarkTag.NATURAL, speck);
     }
 }

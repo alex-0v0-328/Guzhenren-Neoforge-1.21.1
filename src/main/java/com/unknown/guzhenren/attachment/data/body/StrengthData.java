@@ -41,10 +41,10 @@ public record StrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Integer
         takenBeasts.addAll(beasts);
         beasts = Collections.unmodifiableSet(takenBeasts);
 
-        //  EnumMap for the same reason. 0 is "never taken", so it is pruned; nine is the ceiling.
+        //  EnumMap for the same reason. 0 is "never taken", so it is pruned; the ceiling is the kind's own.
         Map<HumanStrength, Integer> pruned = new EnumMap<>(HumanStrength.class);
         humanStrength.forEach((kind, count) -> {
-            if (count != null && count > 0) pruned.put(kind, Math.min(count, HumanStrength.MAX_PER_KIND));
+            if (count != null && count > 0) pruned.put(kind, Math.min(count, kind.getMaxLayers()));
         });
         humanStrength = Collections.unmodifiableMap(pruned);
     }
@@ -57,6 +57,23 @@ public record StrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Integer
 
     //  ⚠ Every constant is a boar today. The day one is not, this needs a filter -- not a rename.
     public int boarCount() {return beasts.size();}
+
+    //  Every kind's layers weighed in 斤 -- the one total both surfaces show. ⚠ 0..9999 by construction,
+    //  and it equals jinReading() + junReading() * 30; the caps are what keep it out of a fifth digit.
+    public int totalJin() {
+        int total = 0;
+        for (HumanStrength kind : HumanStrength.values()) total += humanStrengthCount(kind) * kind.getJin();
+        return total;
+    }
+
+    //  A family's reading: the base kind's layers, plus ten a layer of its ×10 kind. 0..330 and 0..99.
+    //  ⚠ Layer ARITHMETIC, not a tens digit -- 30 layers a kind stopped fitting one on 2026-07-26.
+    public int junReading() {return reading(HumanStrength.JUN, HumanStrength.TEN_JUN);}
+    public int jinReading() {return reading(HumanStrength.JIN, HumanStrength.TEN_JIN);}
+
+    private int reading(HumanStrength base, HumanStrength ten) {
+        return humanStrengthCount(base) + HumanStrength.TEN_FACTOR * humanStrengthCount(ten);
+    }
 
     //  Whether this branch has anything to show. Its own row appears only then.
     public boolean hasBranch(StrengthBranch branch) {

@@ -7,6 +7,7 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.item.RefinableGuItem;
 import com.unknown.guzhenren.registry.ModItemTags;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
@@ -31,6 +32,8 @@ public class HumanStrengthGuItem extends RefinableGuItem {
     private static final int USES_PER_LAYER = 18;
     private static final int BASE_REFINE_COST = 640;
     private static final int BASE_REFINE_PER_USE = 100;
+    private static final int BASE_SPECK_PER_USE = 1;
+    private static final int SPECK_LADDER = 4;
 
     private final HumanStrength kind;
 
@@ -51,6 +54,10 @@ public class HumanStrengthGuItem extends RefinableGuItem {
 
     @Override
     protected int unitsPerHunger() {return UNITS_PER_HUNGER[tier()];}
+
+    //  1 / 4 / 16 / 64 a use, climbing ×4 a rank. ⚠ Booked under the branch's own tag, see speckTag().
+    @Override
+    protected long speckPerUse() {return scaled(BASE_SPECK_PER_USE, SPECK_LADDER, tier());}
     //endregion
 
     //  Raw iron for Ranks I-II, smelted iron for III-IV; a block is worth nine ingots either way.
@@ -63,15 +70,19 @@ public class HumanStrengthGuItem extends RefinableGuItem {
         return food.is(normal) ? IRON_UNITS : 0;
     }
 
+    //  ⚠ The ceiling is the KIND's, not one number for all four -- 钧 and 十钧 hold 30 layers, 斤 and
+    //  十斤 nine. The message carries it, or the refusal would name a limit that is not this Gu's.
     @Override
-    protected @Nullable Refusal payoutGate(Player player) {
-        return StrengthService.humanStrength(player, kind) >= HumanStrength.MAX_PER_KIND
-                ? new Refusal(FAILED_LAYERS_FULL)
+    protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
+        return StrengthService.humanStrength(player, kind) >= kind.getMaxLayers()
+                ? new Refusal(FAILED_LAYERS_FULL, Component.literal(String.valueOf(kind.getMaxLayers())))
                 : null;
     }
 
     @Override
-    protected void payout(ServerPlayer player) {StrengthService.addHumanStrength(player, kind, LAYERS_PER_GRANT);}
+    protected void payout(ServerPlayer player, ItemStack stack) {
+        StrengthService.addHumanStrength(player, kind, LAYERS_PER_GRANT);
+    }
 
     //  These specks are the branch's own, so a later system can revoke or convert exactly them.
     @Override

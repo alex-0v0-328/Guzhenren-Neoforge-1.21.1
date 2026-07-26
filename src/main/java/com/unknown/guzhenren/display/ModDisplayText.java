@@ -6,7 +6,6 @@ import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
@@ -77,25 +76,41 @@ public final class ModDisplayText {
         return Component.translatable("guzhenren.display.boar_strength." + count);
     }
 
-    //  The Human Jun branch's [人力钧力流] one line: the 钧 family then the 斤 family, each a bracket, an
-    //  empty family omitted. ⚠ The Ten-kind's layer count IS the tens digit, the base kind's the units.
+    //  人力钧力流's one line: [9999斤] first, then a bracket a family -- 钧 (0..330) then 斤 (0..99), an
+    //  empty one omitted. ⚠ The total is ARABIC and the readings are spelled; the two brackets sum to it.
     public static MutableComponent humanStrengthLine(StrengthData data) {
         MutableComponent line = Component.empty();
-        appendFamily(line, "guzhenren.display.strength.jun_reading",
-                data.humanStrengthCount(HumanStrength.TEN_JUN), data.humanStrengthCount(HumanStrength.JUN));
-        appendFamily(line, "guzhenren.display.strength.jin_reading",
-                data.humanStrengthCount(HumanStrength.TEN_JIN), data.humanStrengthCount(HumanStrength.JIN));
+        int total = data.totalJin();
+        if (total > 0) line.append(Component.translatable("guzhenren.display.strength.jin_total", total));
+        appendFamily(line, "guzhenren.display.strength.jun_reading", data.junReading());
+        appendFamily(line, "guzhenren.display.strength.jin_reading", data.jinReading());
         return line;
     }
 
-    private static void appendFamily(MutableComponent line, String readingKey, int tens, int units) {
-        if (tens == 0 && units == 0) return;
-        line.append(Component.translatable(readingKey, familyNumber(tens, units)));
+    private static void appendFamily(MutableComponent line, String readingKey, int reading) {
+        if (reading <= 0) return;
+        line.append(Component.translatable(readingKey, strengthNumber(reading)));
     }
 
-    //  A reading 1..99 from a tens digit and a units digit: 十, 九十九, 五. The join key spaces them for en.
-    private static Component familyNumber(int tens, int units) {
-        Component t = tens > 0 ? Component.translatable("guzhenren.display.strength.num_tens." + tens) : null;
+    //  A reading 1..330 spelled out: 五, 九十九, 一百零五, 一百一十, 三百三十.
+    //  ⚠ 110 is 一百一十, NOT 一百十 -- once a hundred leads, the tens digit 1 needs its own word.
+    private static Component strengthNumber(int n) {
+        if (n < 100) return belowHundred(n, false);
+        Component h = Component.translatable("guzhenren.display.strength.num_hundreds." + (n / 100));
+        int rest = n % 100;
+        if (rest == 0) return h;
+        //  一百零五: a missing tens digit is spoken, or the units would read as tens.
+        String join = rest < 10 ? "guzhenren.display.strength.num_join_zero" : "guzhenren.display.strength.num_join";
+        return Component.translatable(join, h, belowHundred(rest, true));
+    }
+
+    //  1..99. `led` marks a hundreds digit before it, which is the one thing that changes 十 into 一十.
+    private static Component belowHundred(int n, boolean led) {
+        int tens = n / 10;
+        int units = n % 10;
+        Component t = tens == 0 ? null : Component.translatable(led && tens == 1
+                ? "guzhenren.display.strength.num_tens_led.1"
+                : "guzhenren.display.strength.num_tens." + tens);
         Component u = units > 0 ? Component.translatable("guzhenren.display.strength.num_units." + units) : null;
         if (t != null && u != null) return Component.translatable("guzhenren.display.strength.num_join", t, u);
         return t != null ? t : u;

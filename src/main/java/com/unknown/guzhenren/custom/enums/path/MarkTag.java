@@ -26,9 +26,13 @@ public enum MarkTag implements StringRepresentable, EnumTranslatable {
     QI_ESSENCE     (GuPath.QI),
     QI_STRENGTH    (GuPath.QI),
 
-    //  Strength Path [力道], one per branch that has an item writing specks. ⚠ No ENVIRONMENT tag -- that
-    //  branch has no data because it has no spec, and a tag for it would be the same empty shell.
+    //  Strength Path [力道]. ⚠⚠ TWO LEVELS on the beast side: STRENGTH_BOAR is a KIND of STRENGTH_BEASTS
+    //  (see parent()), because the coming 互斥 check weighs sub-branches of one path against each other.
+    //  ⚠⚠ Only the species tag is WRITTEN -- speck() sums the tag maps, so booking a use under both would
+    //  make one boar use read as two specks. The parent is the grouping, not a second quantity.
+    //  TODO(互斥): 兼修 penalty -- 1+1 should land near 1.5, not 2.  CLAUDE.md "Pending".
     STRENGTH_BEASTS(GuPath.STRENGTH),
+    STRENGTH_BOAR  (GuPath.STRENGTH),
     STRENGTH_HUMAN (GuPath.STRENGTH);
 
     public static final Codec<MarkTag> CODEC = StringRepresentable.fromEnum(MarkTag::values);
@@ -42,6 +46,10 @@ public enum MarkTag implements StringRepresentable, EnumTranslatable {
     //  Fire Path" rule -- PathData enforces it at the door, so a mismatch is unrepresentable.
     public boolean fitsOn(GuPath path) {return owner == null || owner == path;}
     public @Nullable GuPath owner() {return owner;}
+
+    //  The broader tag this one is a KIND of -- 豕力 is a 兽力虚影流, and the coming 互斥 check walks up
+    //  it. ⚠ A method, not a ctor column: an enum constant may not name another in its own arguments.
+    public @Nullable MarkTag parent() {return this == STRENGTH_BOAR ? STRENGTH_BEASTS : null;}
 
     @Override
     public @NotNull String getSerializedName() {return name().toLowerCase();}

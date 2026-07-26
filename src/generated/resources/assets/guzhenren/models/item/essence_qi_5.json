@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "guzhenren:item/third_essence_qi"
+    "layer0": "guzhenren:item/essence_qi_5"
   }
 }

@@ -22,6 +22,9 @@ public class BoarGuItem extends RefinableGuItem {
     //  Pork is worth one unit, and four units buy a hunger point -- the classic four-pork rate.
     private static final int PORK_UNITS = 1;
 
+    //  Both boars are Rank I, so there is no ladder here: one speck a use, flat.
+    private static final long SPECK_PER_USE = 1L;
+
     private final BeastStrength beast;
 
     public BoarGuItem(Properties properties, BeastStrength beast) {
@@ -33,16 +36,19 @@ public class BoarGuItem extends RefinableGuItem {
     protected int feedUnits(ItemStack food) {return food.is(ModItemTags.BOAR_FEED) ? PORK_UNITS : 0;}
 
     @Override
-    protected @Nullable Refusal payoutGate(Player player) {
+    protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
         return StrengthService.has(player, beast)
                 ? new Refusal(FAILED_STRENGTH_HELD, Component.translatable(beast.getTranslationKey()))
                 : null;
     }
 
     @Override
-    protected void payout(ServerPlayer player) {StrengthService.grant(player, beast);}
+    protected void payout(ServerPlayer player, ItemStack stack) {StrengthService.grant(player, beast);}
 
-    //  These specks are the branch's own, so a later system can revoke or convert exactly them.
     @Override
-    protected MarkTag speckTag() {return MarkTag.STRENGTH_BEASTS;}
+    protected long speckPerUse() {return SPECK_PER_USE;}
+
+    //  ⚠ The SPECIES' tag, read off the beast itself -- a tiger Gu would need no line here at all.
+    @Override
+    protected MarkTag speckTag() {return beast.getMarkTag();}
 }

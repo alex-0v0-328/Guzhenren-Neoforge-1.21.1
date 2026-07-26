@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -98,10 +99,13 @@ public abstract class RefinableGuItem extends MortalGuItem {
     protected abstract int feedUnits(ItemStack food);
 
     //  Why this player cannot use it right now -- typically "you already hold what it grants".
-    protected abstract @Nullable Refusal payoutGate(Player player);
+    //  ⚠ Takes the stack, as gate() does: what a Gu carrying its own store can hand out depends on it.
+    protected abstract @Nullable Refusal payoutGate(Player player, ItemStack stack);
 
     //  What the 36th use buys. Runs once per completed cycle.
-    protected abstract void payout(ServerPlayer player);
+    //  ⚠ It may write the stack's OWN components, never its RefinedGuState -- apply() holds a copy of that
+    //  and stores it afterwards, so a hunger or use-count write here would be silently clobbered.
+    protected abstract void payout(ServerPlayer player, ItemStack stack);
     //endregion
 
     //region state
@@ -163,7 +167,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
         }
         //  ⚠ Hunger is NOT a refusal any more: an empty Gu may always be forced, and dies of it.
         //  See apply() and CLAUDE.md "The refinable Gu".
-        return payoutGate(player);
+        return payoutGate(player, stack);
     }
 
     @Override
@@ -184,7 +188,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
 
         //  The 36th pays out and the count starts over -- useCount is progress toward the NEXT payout.
         if (state.useCount() >= usesPerGrant()) {
-            payout(player);
+            payout(player, stack);
             state = state.withUses(0);
         }
         store(stack, state);
@@ -266,9 +270,10 @@ public abstract class RefinableGuItem extends MortalGuItem {
         EssenceService.consume(player, invest);
         int next = state.refineProgress() + invest;
 
-        //  Completing it hands back a half-fed Gu, so the owner starts on the feeding clock.
+        //  ⚠ Completing it hands back a FULL Gu (it was half until 2026-07-27) -- the feeding clock
+        //  starts at the top, so the first thing a new owner does is use it, not feed it.
         store(stack, next >= refineCost()
-                ? new RefinedGuState(refineCost(), 0, maxHunger() / 2)
+                ? new RefinedGuState(refineCost(), 0, maxHunger())
                 : state.withRefine(next));
     }
     //endregion
@@ -285,13 +290,16 @@ public abstract class RefinableGuItem extends MortalGuItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
-        //  Wild reads how far along the refining is; refined reads how far along the cycle is.
         //  ⚠ Never both -- one line, whichever half of its life it is in.
-        tooltip.add(refined(stack)
+        tooltip.add(progressLine(stack).withStyle(ChatFormatting.GRAY));
+    }
+
+    //  Wild reads how far along the refining is; refined reads how far along the cycle is.
+    //  A leaf whose cycle counts to one replaces the refined half -- "已用 0/1" would say nothing.
+    protected MutableComponent progressLine(ItemStack stack) {
+        return refined(stack)
                 ? Component.translatable(TOOLTIP_USES, state(stack).useCount(), usesPerGrant())
-                        .withStyle(ChatFormatting.GRAY)
-                : Component.translatable(TOOLTIP_REFINE, state(stack).refineProgress(), refineCost())
-                        .withStyle(ChatFormatting.GRAY));
+                : Component.translatable(TOOLTIP_REFINE, state(stack).refineProgress(), refineCost());
     }
 
     //  Wild: how far refined. Refined: how fed. One bar, two meanings -- the name says which you read.

@@ -14,6 +14,7 @@ import com.unknown.guzhenren.item.material.qi.QiMaterialItem;
 import com.unknown.guzhenren.item.mortal.strength.BoarGuItem;
 import com.unknown.guzhenren.item.mortal.HopeGuItem;
 import com.unknown.guzhenren.item.mortal.LifespanGuItem;
+import com.unknown.guzhenren.item.mortal.PrimevalElderGuItem;
 import com.unknown.guzhenren.item.mortal.liquor.LiquorWormItem;
 import com.unknown.guzhenren.item.mortal.strength.HumanStrengthGuItem;
 import com.unknown.guzhenren.item.mortal.RelicsGuItem;
@@ -103,6 +104,20 @@ public final class ModItems {
     public static final DeferredItem<Item> NINE_EYES_LIQUOR_WORM = ITEMS.register("nine_eyes_liquor_worm",
             () -> new LiquorWormItem(new Item.Properties().stacksTo(1), Rank.FOUR));
 
+    //  Primeval Elder Gu [元老蛊], one per rank I..V -- one class; the rank is all registration varies, and
+    //  the vault it holds, what it eats and how fast it refines all fall out of that.
+    //  ⚠ stacksTo(1): the stones it holds ride the stack, and a stack would share one component.
+    public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_1 = ITEMS.register("primeval_elder_gu_1",
+            () -> new PrimevalElderGuItem(new Item.Properties().stacksTo(1), Rank.ONE));
+    public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_2 = ITEMS.register("primeval_elder_gu_2",
+            () -> new PrimevalElderGuItem(new Item.Properties().stacksTo(1), Rank.TWO));
+    public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_3 = ITEMS.register("primeval_elder_gu_3",
+            () -> new PrimevalElderGuItem(new Item.Properties().stacksTo(1), Rank.THREE));
+    public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_4 = ITEMS.register("primeval_elder_gu_4",
+            () -> new PrimevalElderGuItem(new Item.Properties().stacksTo(1), Rank.FOUR));
+    public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_5 = ITEMS.register("primeval_elder_gu_5",
+            () -> new PrimevalElderGuItem(new Item.Properties().stacksTo(1), Rank.FIVE));
+
     //  Liquor [酒], Rank I Food Path -- what every liquor worm drinks, and drinkable itself: 60% nausea.
     //  ⚠ Stacks: the food is Properties data, so nothing per-stack rides on it.
     public static final DeferredItem<Item> LIQUOR = ITEMS.register("liquor",
@@ -113,49 +128,45 @@ public final class ModItems {
     //  RefinableGuItem there is no per-stack state, which is exactly why they are not one.
     //  Every kind pays specks under its own tag (1/4/16/64/256 by rank); three of them leave an effect.
     //  ⚠ Sword and Strength Qi register the BASE class -- specks are all they do, so no leaf earns its keep.
-    public static final DeferredItem<Item> FIRST_SWORD_QI = qiMaterial("first_sword_qi", Rank.ONE, MarkTag.QI_SWORD);
-    public static final DeferredItem<Item> SECOND_SWORD_QI = qiMaterial("second_sword_qi", Rank.TWO, MarkTag.QI_SWORD);
-    public static final DeferredItem<Item> THIRD_SWORD_QI = qiMaterial("third_sword_qi", Rank.THREE, MarkTag.QI_SWORD);
-    public static final DeferredItem<Item> FOURTH_SWORD_QI = qiMaterial("fourth_sword_qi", Rank.FOUR, MarkTag.QI_SWORD);
-    public static final DeferredItem<Item> FIFTH_SWORD_QI = qiMaterial("fifth_sword_qi", Rank.FIVE, MarkTag.QI_SWORD);
+    public static final DeferredItem<Item> SWORD_QI_1 = qiMaterial("sword_qi_1", Rank.ONE, MarkTag.QI_SWORD);
+    public static final DeferredItem<Item> SWORD_QI_2 = qiMaterial("sword_qi_2", Rank.TWO, MarkTag.QI_SWORD);
+    public static final DeferredItem<Item> SWORD_QI_3 = qiMaterial("sword_qi_3", Rank.THREE, MarkTag.QI_SWORD);
+    public static final DeferredItem<Item> SWORD_QI_4 = qiMaterial("sword_qi_4", Rank.FOUR, MarkTag.QI_SWORD);
+    public static final DeferredItem<Item> SWORD_QI_5 = qiMaterial("sword_qi_5", Rank.FIVE, MarkTag.QI_SWORD);
 
-    public static final DeferredItem<Item> FIRST_STRENGTH_QI =
-            qiMaterial("first_strength_qi", Rank.ONE, MarkTag.QI_STRENGTH);
-    public static final DeferredItem<Item> SECOND_STRENGTH_QI =
-            qiMaterial("second_strength_qi", Rank.TWO, MarkTag.QI_STRENGTH);
-    public static final DeferredItem<Item> THIRD_STRENGTH_QI =
-            qiMaterial("third_strength_qi", Rank.THREE, MarkTag.QI_STRENGTH);
-    public static final DeferredItem<Item> FOURTH_STRENGTH_QI =
-            qiMaterial("fourth_strength_qi", Rank.FOUR, MarkTag.QI_STRENGTH);
-    public static final DeferredItem<Item> FIFTH_STRENGTH_QI =
-            qiMaterial("fifth_strength_qi", Rank.FIVE, MarkTag.QI_STRENGTH);
+    public static final DeferredItem<Item> STRENGTH_QI_1 = qiMaterial("strength_qi_1", Rank.ONE, MarkTag.QI_STRENGTH);
+    public static final DeferredItem<Item> STRENGTH_QI_2 = qiMaterial("strength_qi_2", Rank.TWO, MarkTag.QI_STRENGTH);
+    public static final DeferredItem<Item> STRENGTH_QI_3 = qiMaterial("strength_qi_3", Rank.THREE, MarkTag.QI_STRENGTH);
+    public static final DeferredItem<Item> STRENGTH_QI_4 = qiMaterial("strength_qi_4", Rank.FOUR, MarkTag.QI_STRENGTH);
+    public static final DeferredItem<Item> STRENGTH_QI_5 = qiMaterial("strength_qi_5", Rank.FIVE, MarkTag.QI_STRENGTH);
 
     //  Life Qi [生气]: health regeneration, and the one thing that cures Death Qi.
-    public static final DeferredItem<Item> FIRST_LIFE_QI = ITEMS.register("first_life_qi",
+    public static final DeferredItem<Item> LIFE_QI_1 = ITEMS.register("life_qi_1",
             () -> new LifeQiItem(qiProperties(), Rank.ONE));
-    public static final DeferredItem<Item> SECOND_LIFE_QI = ITEMS.register("second_life_qi",
+    public static final DeferredItem<Item> LIFE_QI_2 = ITEMS.register("life_qi_2",
             () -> new LifeQiItem(qiProperties(), Rank.TWO));
-    public static final DeferredItem<Item> THIRD_LIFE_QI = ITEMS.register("third_life_qi",
+    public static final DeferredItem<Item> LIFE_QI_3 = ITEMS.register("life_qi_3",
             () -> new LifeQiItem(qiProperties(), Rank.THREE));
-    public static final DeferredItem<Item> FOURTH_LIFE_QI = ITEMS.register("fourth_life_qi",
+    public static final DeferredItem<Item> LIFE_QI_4 = ITEMS.register("life_qi_4",
             () -> new LifeQiItem(qiProperties(), Rank.FOUR));
-    public static final DeferredItem<Item> FIFTH_LIFE_QI = ITEMS.register("fifth_life_qi",
+    public static final DeferredItem<Item> LIFE_QI_5 = ITEMS.register("life_qi_5",
             () -> new LifeQiItem(qiProperties(), Rank.FIVE));
 
     //  Essence Qi [元气]: faster essence regen for a minute; the rank buys the rate, not the time.
-    public static final DeferredItem<Item> FIRST_ESSENCE_QI = ITEMS.register("first_essence_qi",
+    public static final DeferredItem<Item> ESSENCE_QI_1 = ITEMS.register("essence_qi_1",
             () -> new EssenceQiItem(qiProperties(), Rank.ONE));
-    public static final DeferredItem<Item> SECOND_ESSENCE_QI = ITEMS.register("second_essence_qi",
+    public static final DeferredItem<Item> ESSENCE_QI_2 = ITEMS.register("essence_qi_2",
             () -> new EssenceQiItem(qiProperties(), Rank.TWO));
-    public static final DeferredItem<Item> THIRD_ESSENCE_QI = ITEMS.register("third_essence_qi",
+    public static final DeferredItem<Item> ESSENCE_QI_3 = ITEMS.register("essence_qi_3",
             () -> new EssenceQiItem(qiProperties(), Rank.THREE));
-    public static final DeferredItem<Item> FOURTH_ESSENCE_QI = ITEMS.register("fourth_essence_qi",
+    public static final DeferredItem<Item> ESSENCE_QI_4 = ITEMS.register("essence_qi_4",
             () -> new EssenceQiItem(qiProperties(), Rank.FOUR));
-    public static final DeferredItem<Item> FIFTH_ESSENCE_QI = ITEMS.register("fifth_essence_qi",
+    public static final DeferredItem<Item> ESSENCE_QI_5 = ITEMS.register("essence_qi_5",
             () -> new EssenceQiItem(qiProperties(), Rank.FIVE));
 
     //  ⚠ Death Qi [死气] exists at Rank V ALONE -- there is no ladder, so nothing about it scales.
-    public static final DeferredItem<Item> FIFTH_DEATH_QI = ITEMS.register("fifth_death_qi",
+    //  ⚠ The id still carries its rank (`_5`), so the one-of-a-kind reads like every other rung.
+    public static final DeferredItem<Item> DEATH_QI_5 = ITEMS.register("death_qi_5",
             () -> new DeathQiItem(qiProperties(), Rank.FIVE));
 
     private static DeferredItem<Item> qiMaterial(String id, Rank rank, MarkTag tag) {

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "guzhenren:item/second_sword_qi"
+    "layer0": "guzhenren:item/sword_qi_2"
   }
 }

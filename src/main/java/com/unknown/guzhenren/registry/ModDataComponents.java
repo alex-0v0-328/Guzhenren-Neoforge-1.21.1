@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.registry;
 
+import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.item.RefinedGuState;
 import java.util.UUID;
@@ -7,10 +8,11 @@ import java.util.function.Supplier;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-//  Per-stack item state: a Gu's refinement [炼化], and whose Vital Gu [本命蛊] it is.
+//  Per-stack item state: a Gu's refinement [炼化], whose Vital Gu [本命蛊] it is, and what it stores.
 //  ⚠ networkSynchronized is not a packet -- it rides the vanilla stack sync.  CLAUDE.md "Networking".
 public final class ModDataComponents {
 
@@ -32,6 +34,13 @@ public final class ModDataComponents {
             DATA_COMPONENTS.registerComponentType("vital_owner", builder -> builder
                     .persistent(UUIDUtil.CODEC)
                     .networkSynchronized(UUIDUtil.STREAM_CODEC));
+
+    //  Primeval Stones [元石] held inside a Primeval Elder Gu [元老蛊], which eats its own upkeep out of them.
+    //  ⚠ A bare long, like VITAL_OWNER: one number, so a record around it would be pure ceremony.
+    public static final Supplier<DataComponentType<Long>> STORED_STONES =
+            DATA_COMPONENTS.registerComponentType("stored_stones", builder -> builder
+                    .persistent(Codec.LONG)
+                    .networkSynchronized(ByteBufCodecs.VAR_LONG));
 
     public static void register(IEventBus modEventBus) {
         DATA_COMPONENTS.register(modEventBus);

@@ -24,11 +24,9 @@ public class LiquorWormItem extends RefinableGuItem {
     private static final String FAILED_RANK = "guzhenren.item.failed.liquor_rank";
     private static final String FAILED_DISTILLING = "guzhenren.item.failed.liquor_distilling";
 
-    //  Rank I's numbers. ⚠ The two ladders differ on purpose: cost climbs by ten a rank so the essence
-    //  wall is real, feeding only doubles so the bar never becomes unfillable.
+    //  Rank I's numbers. ⚠ Only the cost ladders -- feeding does NOT, see unitsPerHunger below.
     private static final int BASE_REFINE_COST = 1280;
     private static final int BASE_REFINE_PER_USE = 100;
-    private static final int BASE_UNITS_PER_HUNGER = 4;
 
     private static final int MAX_HUNGER = 36;
 
@@ -45,9 +43,9 @@ public class LiquorWormItem extends RefinableGuItem {
     @Override
     protected int refinePerUse() {return scaled(BASE_REFINE_PER_USE, 10, tier());}
 
-    @Override
-    protected int unitsPerHunger() {return scaled(BASE_UNITS_PER_HUNGER, 2, tier());}
-
+    //  ⚠⚠ NOT a ladder (it doubled a rank until 2026-07-27): four bottles buy one day at EVERY rank, so
+    //  the daily upkeep is flat and only the MEAL grows -- 4 瓶/1 天, 8/2, 16/4, 32/8. The base's 4 is it,
+    //  which is why there is no override here any more.
     @Override
     protected int maxHunger() {return MAX_HUNGER;}
 
@@ -69,7 +67,7 @@ public class LiquorWormItem extends RefinableGuItem {
     //  ⚠ Rank must match EXACTLY, unlike every other refinable Gu. Refining stays open to any cultivator --
     //  standing below only lengthens the hold, which makes the nine-second bucket reachable.  CLAUDE.md.
     @Override
-    protected @Nullable Refusal payoutGate(Player player) {
+    protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
         if (ApertureService.rank(player) != rank()) {
             return new Refusal(FAILED_RANK, Component.translatable(rank().getTranslationKey()));
         }
@@ -81,7 +79,7 @@ public class LiquorWormItem extends RefinableGuItem {
     //  Phase 1 and the clock that opens phase 2. Phase 3's close is PlayerTickEvents' job: a MobEffect
     //  has no expiry hook, and milk or death would skip one anyway.
     @Override
-    protected void payout(ServerPlayer player) {
+    protected void payout(ServerPlayer player, ItemStack stack) {
         EssenceService.beginDistilling(player);
         player.addEffect(new MobEffectInstance(
                 ModEffects.LIQUOR_WORM, BodyService.TICKS_PER_DAY, tier()));
