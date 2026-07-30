@@ -2,6 +2,7 @@ package com.unknown.guzhenren.attachment.data.body;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
@@ -55,8 +56,13 @@ public record StrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Integer
     public StrengthData with(BeastStrength beast) {return rebuilt(beast, true);}
     public StrengthData without(BeastStrength beast) {return rebuilt(beast, false);}
 
-    //  ⚠ Every constant is a boar today. The day one is not, this needs a filter -- not a rename.
-    public int boarCount() {return beasts.size();}
+    //  Each beast family's reading, summed over what he took from it -- 白豕 + 黑豕 = 两猪之力.
+    //  ⚠ Keyed by the SPECIES tag, which IS the family level, so a new beast needs no change here.
+    public Map<MarkTag, Integer> beastReadings() {
+        Map<MarkTag, Integer> readings = new EnumMap<>(MarkTag.class);
+        for (BeastStrength beast : beasts) readings.merge(beast.getMarkTag(), beast.getReading(), Integer::sum);
+        return readings;
+    }
 
     //  Every kind's layers weighed in 斤 -- the one total both surfaces show. ⚠ 0..9999 by construction,
     //  and it equals jinReading() + junReading() * 30; the caps are what keep it out of a fifth digit.

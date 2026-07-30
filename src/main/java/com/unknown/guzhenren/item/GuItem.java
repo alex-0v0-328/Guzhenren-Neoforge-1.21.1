@@ -67,6 +67,16 @@ public abstract class GuItem extends Item {
     //  click starts vanilla's hold instead and finishUsingItem is what applies it.
     protected int useDurationTicks(Player player, ItemStack stack) {return 0;}
 
+    //  Sneak + right-click: a SECOND right-click action, not a variant of the first. A Gu that wants one
+    //  fills these three; use() routes to them and the ordinary hooks are never consulted.
+    //  ⚠ INSTANT by design -- vanilla's hold carries no flag saying which of the two started it, so
+    //  finishUsingItem would have to guess. Give this a charge only once that is solved.
+    //  ⚠⚠ Takes the stack, and answering FALSE falls through to the ordinary click -- which is what
+    //  keeps a crouching player able to do the plain thing (refine, for one).
+    protected boolean hasSneakUse(Player player, ItemStack stack) {return false;}
+    protected @Nullable Refusal sneakGate(Player player, ItemStack stack) {return null;}
+    protected int sneakApply(ServerPlayer player, ItemStack stack) {return 0;}
+
     //  What ChargeHud writes over the bar while the hold runs. null draws the bar alone.
     //  ⚠ public because the HUD lives in client/, and it reads this off the item it is drawing for.
     public @Nullable Component chargeCaption(ItemStack stack) {return null;}
@@ -75,23 +85,27 @@ public abstract class GuItem extends Item {
     public final @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
                                                                  @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        boolean sneak = player.isShiftKeyDown() && hasSneakUse(player, stack);
         //  ⚠⚠ DELEGATE, never pass: Item.use is what starts eating, so pass here made every edible Gu
         //  material silently inedible. All four hooks below: not owning the click means fully transparent.
-        if (!hasUse()) return super.use(level, player, hand);
+        if (!sneak && !hasUse()) return super.use(level, player, hand);
 
-        Refusal refusal = gate(player, stack);
+        Refusal refusal = sneak ? sneakGate(player, stack) : gate(player, stack);
         if (refusal != null) {
             if (player instanceof ServerPlayer server) refuse(server, refusal.key(), refusal.args());
             //  ⚠ consume, not fail: FAIL does not consumesAction(), so Minecraft.startUseItem would fall
             //  through and use the OTHER hand -- a refused Gu would eat the food held for it.
             return InteractionResultHolder.consume(stack);
         }
-        //  A charged use only STARTS here; letting go early simply applies nothing.
-        if (useDurationTicks(player, stack) > 0) {
+        //  A charged use only STARTS here; letting go early simply applies nothing. ⚠ Never the sneak
+        //  action -- see hasSneakUse.
+        if (!sneak && useDurationTicks(player, stack) > 0) {
             player.startUsingItem(hand);
             return InteractionResultHolder.consume(stack);
         }
-        if (player instanceof ServerPlayer server) spend(server, stack, apply(server, stack));
+        if (player instanceof ServerPlayer server) {
+            spend(server, stack, sneak ? sneakApply(server, stack) : apply(server, stack));
+        }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
@@ -127,23 +141,9 @@ public abstract class GuItem extends Item {
         return hasUse() ? UseAnim.NONE : super.getUseAnimation(stack);
     }
 
-    //  ⚠ No gate and no refusal, unlike use(): left-click is also mining and fighting, so hasSwing must
-    //  answer the whole question and a swing it cannot serve passes silently. Takes the player for that.
-    protected boolean hasSwing(Player player, ItemStack stack) {return false;}
-    protected int swingApply(ServerPlayer player, ItemStack stack) {return 0;}
-
-    //  ⚠ ItemCooldowns gates use() but not this, and continueAttack swings every tick while left-click is
-    //  held -- without the guard below a feeding Gu would eat twenty items a second while mining.
-    @Override
-    public final boolean onEntitySwing(@NotNull ItemStack stack, @NotNull LivingEntity entity,
-                                       @NotNull InteractionHand hand) {
-        if (!(entity instanceof Player player) || !hasSwing(player, stack)) return false;
-        if (player.getCooldowns().isOnCooldown(this)) return false;
-        if (player instanceof ServerPlayer server) spend(server, stack, swingApply(server, stack));
-
-        //  ⚠ Never true: that would cancel the arm animation and the ClientboundAnimatePacket with it.
-        return false;
-    }
+    //  ⚠⚠ NO left-click template, deliberately (2026-07-30): a Gu answers the right click and nothing
+    //  else. `hasSwing`/`swingApply`/`onEntitySwing` were deleted -- feeding lives on 蹲+右键 now, and
+    //  left-click stays what vanilla makes it, mining and fighting. **Do not bring the swing back.**
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,

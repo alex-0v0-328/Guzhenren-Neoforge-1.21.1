@@ -42,10 +42,9 @@ public abstract class RefinableGuItem extends MortalGuItem {
 
     //region the numbers a leaf may bend
     public int refineCost() {return 640;}
-    protected int refinePerUse() {return 100;}
 
-    //  ⚠ The FLOOR is on the essence he holds, not on what a step invests -- the last step may legally
-    //  be smaller than this when less than 20 is left to pay.
+    //  ⚠⚠ The ONLY throttle left on refining since the per-hold cap went (2026-07-30). The FLOOR is on the
+    //  essence he holds, not on what a step invests -- the last step legally pays less than this.
     protected int refineMinEssence() {return 20;}
     protected int maxHunger() {return 18;}
     public int usesPerGrant() {return 36;}
@@ -85,9 +84,6 @@ public abstract class RefinableGuItem extends MortalGuItem {
     protected int chargeTicks() {return 60;}
     protected int fastChargeTicks() {return 20;}
     protected int slowChargeTicks() {return 180;}
-
-    //  How far above the Gu he must stand before a single refine stops being capped at refinePerUse().
-    protected int uncappedRankGap() {return 2;}
 
     //  ⚠ Units, not hunger: 4 units buy one hunger point. That is what lets one formula serve both
     //  "four pork = one hunger" (1 unit each) and "one raw iron = one hunger" (4 units each).
@@ -148,8 +144,8 @@ public abstract class RefinableGuItem extends MortalGuItem {
         return gap == 0 ? chargeTicks() : slowChargeTicks();
     }
 
-    //  How many ranks he stands above this Gu; negative means below it. The one measure both the charge
-    //  time and the refine cap read, so "higher rank" can never mean two different things.
+    //  How many ranks he stands above this Gu; negative means below it. ⚠ Since the per-hold cap went
+    //  (2026-07-30) this feeds the charge time ALONE -- a bigger 转数 buys speed and nothing else.
     private int rankGap(Player player) {
         return ApertureService.rank(player).ordinal() - rank().ordinal();
     }
@@ -206,17 +202,23 @@ public abstract class RefinableGuItem extends MortalGuItem {
         return 0;
     }
 
-    //  Feeds only when it can: bound, its food in the other hand, room to eat.
-    //  ⚠ Silent when it cannot -- the bar rising is the feedback, and a swing is not a command.
+    //  ⚠⚠ 蹲+右键 is the ONLY way to feed by hand -- the left-click template is gone (2026-07-30), so a
+    //  Gu answers the right click and nothing else. The plain right click still feeds before it uses.
+    //  ⚠⚠ Answering false is what lets a CROUCHING player still refine and still use: with no food in
+    //  the other hand, sneak+right-click is simply the ordinary right-click.
     @Override
-    protected boolean hasSwing(Player player, ItemStack stack) {
-        return refined(stack) && feed(player, stack).hunger() > 0;
-    }
+    protected boolean hasSneakUse(Player player, ItemStack stack) {return canEat(player, stack);}
 
     @Override
-    protected int swingApply(ServerPlayer player, ItemStack stack) {
+    protected int sneakApply(ServerPlayer player, ItemStack stack) {
         eat(player, stack);
         return 0;
+    }
+
+    //  Whether it can eat RIGHT NOW. ⚠ Not `feedable()`, which is the boolean axis saying whether this
+    //  kind of Gu is fed at all -- two different questions, and one name for both read as neither.
+    private boolean canEat(Player player, ItemStack stack) {
+        return refined(stack) && feed(player, stack).hunger() > 0;
     }
     //endregion
 
@@ -255,16 +257,14 @@ public abstract class RefinableGuItem extends MortalGuItem {
     //endregion
 
     //region refining
-    //  Invest what he can spare, capped per attempt -- a trickle still gets there, it just takes longer.
-    //  ⚠ Two ranks above the Gu the cap is GONE, so a single one-second hold can pay the whole 640 at
-    //  once, essence permitting. That is the reward for towering over it; one rank above only buys speed.
+    //  ⚠⚠ Invest EVERYTHING he can spare -- no refinable Gu caps a hold any more (2026-07-30), so how many
+    //  holds a refine takes is his POOL's answer, not a constant. Do not bring back a refinePerUse.
     private void refineStep(ServerPlayer player, ItemStack stack) {
         RefinedGuState state = state(stack);
         int remaining = refineCost() - state.refineProgress();
-        int cap = rankGap(player) >= uncappedRankGap() ? remaining : Math.min(refinePerUse(), remaining);
         //  ⚠ spendable(), not currentEssence: a distilling cultivator's ordinary pool is 0 by design, and
         //  his distilled points are worth two apiece -- refining is exactly what that discount is for.
-        int invest = (int) Math.min(cap, EssenceService.spendable(player));
+        int invest = (int) Math.min(remaining, EssenceService.spendable(player));
         if (invest <= 0) return;
 
         EssenceService.consume(player, invest);

@@ -9,6 +9,7 @@ import com.unknown.guzhenren.item.RefinableGuItem;
 import com.unknown.guzhenren.registry.ModEffects;
 import com.unknown.guzhenren.registry.ModItemTags;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -24,11 +25,14 @@ public class LiquorWormItem extends RefinableGuItem {
     private static final String FAILED_RANK = "guzhenren.item.failed.liquor_rank";
     private static final String FAILED_DISTILLING = "guzhenren.item.failed.liquor_distilling";
 
-    //  Rank I's numbers. ⚠ Only the cost ladders -- feeding does NOT, see unitsPerHunger below.
-    private static final int BASE_REFINE_COST = 1280;
-    private static final int BASE_REFINE_PER_USE = 100;
+    private static final String TOOLTIP_HUNGER = "guzhenren.item.gu.hunger_progress";
 
-    private static final int MAX_HUNGER = 36;
+    //  Rank I's numbers -- 1,000 is 1.25× a Rank I peak Ten-Extremes pool, flat across the ladder.
+    private static final int BASE_REFINE_COST = 1000;
+
+    //  ⚠ A MEAL is the unit here: 8 × 2^tier bottles buying 2^tier days, so 8/32/128/512 for 1/2/4/8 days.
+    private static final int BASE_LIQUOR_PER_DAY = 8;
+    private static final int MEALS_HELD = 2;
 
     public LiquorWormItem(Properties properties, Rank rank) {
         super(properties, rank, GuPath.FOOD);
@@ -38,27 +42,26 @@ public class LiquorWormItem extends RefinableGuItem {
     @Override
     public int refineCost() {return scaled(BASE_REFINE_COST, 10, tier());}
 
-    //  ⚠ This ladder MUST track refineCost's, or rank IV would be 12,800 four-second holds -- and the
-    //  "two ranks above lifts the cap" escape can't help (rank VI needed, VI..IX are 0).  CLAUDE.md "Bounds".
-    @Override
-    protected int refinePerUse() {return scaled(BASE_REFINE_PER_USE, 10, tier());}
+    //  How many days one meal covers -- 1/2/4/8. The bar holds TWO of them and the 饿 mark is one.
+    private int mealDays() {return scaled(1, 2, tier());}
 
-    //  ⚠⚠ NOT a ladder (it doubled a rank until 2026-07-27): four bottles buy one day at EVERY rank, so
-    //  the daily upkeep is flat and only the MEAL grows -- 4 瓶/1 天, 8/2, 16/4, 32/8. The base's 4 is it,
-    //  which is why there is no override here any more.
+    //  ⚠⚠ TWO MEALS deep, not two days: fed today, hungry a meal later, dead a meal after that. At Rank I
+    //  that reads literally as 「第二天不喂第三天饿死」; higher up the same shape runs on a longer meal.
     @Override
-    protected int maxHunger() {return MAX_HUNGER;}
+    protected int maxHunger() {return MEALS_HELD * mealDays();}
+
+    //  ⚠ One meal left, never the base's 2 -- 「蛊饿了」 has to mean "the last meal is running" at any rank.
+    @Override
+    protected int hungryThreshold() {return mealDays();}
+
+    //  Bottles a DAY, ×2 a rank, so a meal costs 8/32/128/512. ⚠ The daily upkeep is what ladders now
+    //  (it was deliberately flat until 2026-07-30) -- a higher rank really does drink more.
+    @Override
+    protected int unitsPerHunger() {return scaled(BASE_LIQUOR_PER_DAY, 2, tier());}
 
     //  Every use pays out -- there is no counting up to a grant here, the drink IS the grant.
     @Override
     public int usesPerGrant() {return 1;}
-
-    //  ⚠ One use is the whole meal: it drains to the hungry mark rather than costing a point. Below that
-    //  mark the floor of 1 in RefinableGuItem takes over, so the last drops still walk it down to death.
-    @Override
-    protected int hungerPerUse(ItemStack stack) {
-        return Math.max(1, state(stack).hunger() - hungryThreshold());
-    }
     //endregion
 
     @Override
@@ -83,5 +86,14 @@ public class LiquorWormItem extends RefinableGuItem {
         EssenceService.beginDistilling(player);
         player.addEffect(new MobEffectInstance(
                 ModEffects.LIQUOR_WORM, BodyService.TICKS_PER_DAY, tier()));
+    }
+
+    //  ⚠ 已用 0/1 says nothing when the drink IS the grant, so the refined half reads the feeding clock
+    //  instead -- the one number that moves. Wild still reads 炼化 320/1000 from the base.
+    @Override
+    protected MutableComponent progressLine(ItemStack stack) {
+        return refined(stack)
+                ? Component.translatable(TOOLTIP_HUNGER, state(stack).hunger(), maxHunger())
+                : super.progressLine(stack);
     }
 }

@@ -6,6 +6,7 @@ import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
@@ -70,10 +71,18 @@ public final class ModDisplayText {
     //  800/800. A raw String, not a Component -- drawn straight into the HUD bar.
     public static String pool(long current, long max) {return current + "/" + max;}
 
-    //  一猪之力 / 两猪之力. Keyed by the count: zh wants 一/两, en wants One/Two and a plural.
-    //  ⚠ One key per count -- a third beast strength needs a third key, never a concatenation.
-    public static Component boarStrength(int count) {
-        return Component.translatable("guzhenren.display.boar_strength." + count);
+    //  兽力虚影流's line: a bracket a family -- 一猪之力, 两猪之力, 百虎之力. An empty family never appears.
+    //  ⚠ The reading is a CLOSED set -- 一两十百千万 are all defined, so a new beast brings only a name.
+    public static MutableComponent beastStrengthLine(StrengthData data) {
+        MutableComponent line = Component.empty();
+        data.beastReadings().forEach((family, reading) -> line.append(beastReading(family, reading)));
+        return line;
+    }
+
+    private static Component beastReading(MarkTag family, int reading) {
+        return Component.translatable("guzhenren.display.strength.beast_reading",
+                Component.translatable("guzhenren.display.strength.beast_number." + reading),
+                Component.translatable("guzhenren.display.strength.beast." + family.getSerializedName()));
     }
 
     //  人力钧力流's one line: [9999斤] first, then a bracket a family -- 钧 (0..330) then 斤 (0..99), an

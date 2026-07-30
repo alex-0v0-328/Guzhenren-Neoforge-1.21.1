@@ -17,7 +17,6 @@ public final class StrengthService {
     //  ---- read ----
     public static StrengthData get(Player p) {return p.getData(ModAttachments.STRENGTH);}
     public static boolean has(Player p, BeastStrength b) {return get(p).has(b);}
-    public static int boarCount(Player p) {return get(p).boarCount();}
     public static int humanStrength(Player p, HumanStrength k) {return get(p).humanStrengthCount(k);}
     public static boolean hasBranch(Player p, StrengthBranch b) {return get(p).hasBranch(b);}
 

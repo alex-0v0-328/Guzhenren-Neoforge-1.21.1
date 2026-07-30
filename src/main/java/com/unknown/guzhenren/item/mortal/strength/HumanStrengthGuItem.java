@@ -30,8 +30,8 @@ public class HumanStrengthGuItem extends RefinableGuItem {
 
     private static final int LAYERS_PER_GRANT = 1;
     private static final int USES_PER_LAYER = 18;
-    private static final int BASE_REFINE_COST = 640;
-    private static final int BASE_REFINE_PER_USE = 100;
+    //  1.5× the peak Ten-Extremes pool of its own rank (800 / 8k / 80k / 800k), flat across the ladder.
+    private static final int BASE_REFINE_COST = 1200;
     private static final int BASE_SPECK_PER_USE = 1;
     private static final int SPECK_LADDER = 4;
 
@@ -45,9 +45,6 @@ public class HumanStrengthGuItem extends RefinableGuItem {
     //region the numbers this Gu bends
     @Override
     public int refineCost() {return scaled(BASE_REFINE_COST, 10, tier());}
-
-    @Override
-    protected int refinePerUse() {return scaled(BASE_REFINE_PER_USE, 10, tier());}
 
     @Override
     public int usesPerGrant() {return USES_PER_LAYER;}

@@ -179,9 +179,9 @@ public final class InfoModel {
         rows.add(new Row(0, new StrengthHeader(data.isEmpty())));
         if (data.isEmpty()) return;
 
+        //  One row for the whole beast branch too -- a bracket a family, empty ones omitted.
         if (data.hasBranch(StrengthBranch.BEASTS)) {
-            rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.BEASTS,
-                    ModDisplayText.boarStrength(data.boarCount()))));
+            rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.BEASTS, ModDisplayText.beastStrengthLine(data))));
         }
         //  The whole Human Jun branch on ONE row -- the 钧 family then the 斤 family, empty ones omitted.
         if (data.hasBranch(StrengthBranch.HUMAN)) {

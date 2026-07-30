@@ -25,12 +25,18 @@ public class BoarGuItem extends RefinableGuItem {
     //  Both boars are Rank I, so there is no ladder here: one speck a use, flat.
     private static final long SPECK_PER_USE = 1L;
 
+    //  1.5× a Rank I peak Ten-Extremes pool (800), the same ratio the four Human Jun Gu carry.
+    private static final int REFINE_COST = 1200;
+
     private final BeastStrength beast;
 
     public BoarGuItem(Properties properties, BeastStrength beast) {
         super(properties, Rank.ONE, GuPath.STRENGTH);
         this.beast = beast;
     }
+
+    @Override
+    public int refineCost() {return REFINE_COST;}
 
     @Override
     protected int feedUnits(ItemStack food) {return food.is(ModItemTags.BOAR_FEED) ? PORK_UNITS : 0;}

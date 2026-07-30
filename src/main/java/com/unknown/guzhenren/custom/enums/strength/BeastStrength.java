@@ -10,19 +10,25 @@ import org.jetbrains.annotations.NotNull;
 //  ⚠ These are strengths a player can take, not species -- which is why StrengthData stores a set.
 public enum BeastStrength implements StringRepresentable, EnumTranslatable {
 
-    //  ⚠⚠ The speck tag is the SPECIES', never the branch's: both boars book under 豕力, and a tiger or
-    //  a bear brings its own. That is what keeps a new beast to one constant here plus one in MarkTag.
-    WHITE_BOAR(MarkTag.STRENGTH_BOAR),
-    BLACK_BOAR(MarkTag.STRENGTH_BOAR);
+    //  Columns -- speck tag (the SPECIES', never the branch's: both boars book under 豕力), reading.
+    //  ⚠⚠ The two boars are the ONLY constants that stack; every later beast is ONE carrying its reading.
+    WHITE_BOAR(MarkTag.STRENGTH_BOAR,  1),
+    BLACK_BOAR(MarkTag.STRENGTH_BOAR,  1);
 
     public static final Codec<BeastStrength> CODEC = StringRepresentable.fromEnum(BeastStrength::values);
     private static final String KEY_PREFIX = "guzhenren.enum.strength.beast_strength.";
 
     private final MarkTag markTag;
+    private final int reading;
 
-    BeastStrength(MarkTag markTag) {this.markTag = markTag;}
+    BeastStrength(MarkTag markTag, int reading) {
+        this.markTag = markTag;
+        this.reading = reading;
+    }
 
     public MarkTag getMarkTag() {return markTag;}
+    //  How many beasts of its family one such body is worth -- 一/两/十/百/千/万, summed within the family.
+    public int getReading() {return reading;}
 
     @Override
     public @NotNull String getSerializedName() {return name().toLowerCase();}

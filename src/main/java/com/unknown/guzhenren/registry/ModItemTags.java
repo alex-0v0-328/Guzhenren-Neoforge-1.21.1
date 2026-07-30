@@ -22,8 +22,8 @@ public final class ModItemTags {
     public static final TagKey<Item> JIN_FEED_SMELTED = key("jin_feed_smelted");
     public static final TagKey<Item> JIN_FEED_SMELTED_DENSE = key("jin_feed_smelted_dense");
 
-    //  What a liquor worm [酒虫] drinks. ⚠ One tag, one rate -- the four ranks differ by how MANY units
-    //  buy a hunger point (4/8/16/32), never by what a single liquor is worth.
+    //  What a liquor worm [酒虫] drinks. ⚠ One tag, one rate, and it is FLAT across the four ranks:
+    //  eight bottles buy one hunger point at every one of them. Only the refine cost ladders.
     public static final TagKey<Item> LIQUOR_FEED = key("liquor_feed");
 
     private static TagKey<Item> key(String name) {

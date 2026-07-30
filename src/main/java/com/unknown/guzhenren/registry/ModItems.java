@@ -80,16 +80,17 @@ public final class ModItems {
             () -> new VitalityLeafGuItem(new Item.Properties()));
 
     //  Lifespan Gu [寿蛊] ×4, Rank I Heaven Path -- one class; the span is all registration varies.
-    //  ⚠ The four ranges are decimal magnitudes, but they are passed EXPLICITLY, not derived from a
-    //  tier -- a fifth need not be 10000..99999.
+    //  ⚠ The ranges are passed EXPLICITLY, not derived from a tier -- a fifth need not follow the shape.
+    //  ⚠⚠ Narrowed 2026-07-30: a 十年寿蛊 now rolls 10..19, so **the name is the promise** and the roll
+    //  only decides the tail. The old 10..99 / 100..999 / 1000..9999 spanned a whole magnitude.
     public static final DeferredItem<Item> LIFESPAN_GU = ITEMS.register("lifespan_gu",
             () -> new LifespanGuItem(new Item.Properties(), 1, 9));
     public static final DeferredItem<Item> TENS_LIFESPAN_GU = ITEMS.register("tens_lifespan_gu",
-            () -> new LifespanGuItem(new Item.Properties(), 10, 99));
+            () -> new LifespanGuItem(new Item.Properties(), 10, 19));
     public static final DeferredItem<Item> HUNDREDS_LIFESPAN_GU = ITEMS.register("hundreds_lifespan_gu",
-            () -> new LifespanGuItem(new Item.Properties(), 100, 999));
+            () -> new LifespanGuItem(new Item.Properties(), 100, 199));
     public static final DeferredItem<Item> THOUSANDS_LIFESPAN_GU = ITEMS.register("thousands_lifespan_gu",
-            () -> new LifespanGuItem(new Item.Properties(), 1000, 9999));
+            () -> new LifespanGuItem(new Item.Properties(), 1000, 1999));
 
     //  Liquor Worm [酒虫], one per rank I..IV -- one class; the rank is all registration varies, and
     //  every number it needs falls out of that.

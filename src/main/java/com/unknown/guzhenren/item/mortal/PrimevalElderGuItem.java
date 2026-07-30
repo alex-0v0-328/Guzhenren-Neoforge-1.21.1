@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.item.mortal;
 
+import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.item.RefinableGuItem;
@@ -8,6 +9,8 @@ import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -17,28 +20,23 @@ import org.jetbrains.annotations.Nullable;
 public class PrimevalElderGuItem extends RefinableGuItem {
 
     private static final String FAILED_EMPTY = "guzhenren.item.failed.elder_gu_empty";
+    private static final String FAILED_NO_STONES = "guzhenren.item.failed.elder_gu_no_stones";
     private static final String TOOLTIP_STORED = "guzhenren.item.gu.stored_stones";
-    private static final String HUD_WITHDRAWING = "guzhenren.hud.withdrawing";
 
-    //  Columns -- capacity (stones it holds), then what ONE meal costs and how many days it buys.
-    //  ⚠ Both meal numbers are whole, so the vault never owes a fraction of a stone or of a day.
-    private static final long[] CAPACITY    = {1_000L, 10_000L, 100_000L, 1_000_000L, 100_000_000L};
-    private static final int[]  MEAL_STONES = {     1,       2,        4,          8,           16};
-    private static final int[]  MEAL_DAYS   = {     1,       2,        4,          6,            8};
+    //  ⚠ The capacity ladder breaks at Rank V on purpose -- 1e3/1e4/1e5/1e6 then 1e8, the user's own call.
+    private static final long[] CAPACITY = {1_000L, 10_000L, 100_000L, 1_000_000L, 100_000_000L};
 
-    //  A stone is three units. ⚠ UNITS_PER_HUNGER must agree with the meal columns above (1, 1, 1, 1.33
-    //  and 2 stones a day), or the aperture store's auto-feed would be a cheaper door into the same bar.
+    //  ⚠ A MEAL is 4^tier stones buying 2^tier days -- 1/1, 4/2, 16/4, 64/8, 256/16. Both whole, so the
+    //  vault never owes a fraction; the daily upkeep that falls out is 2^tier stones.
     private static final int STONE_UNITS = 3;
-    private static final int[] UNITS_PER_HUNGER = {3, 3, 3, 4, 6};
+    private static final int MEALS_HELD = 2;
 
-    private static final int BASE_REFINE_COST = 100;
-    private static final int BASE_REFINE_PER_USE = 50;
-    private static final int REFINE_LADDER = 4;
+    //  50 ×10 a rank is a flat 0.0625× the peak Ten-Extremes pool of its own rank, all five rungs.
+    private static final int BASE_REFINE_COST = 50;
+    private static final int REFINE_LADDER = 10;
 
     private static final int SLOW_CHARGE_TICKS = 100;
-    private static final int UNCAPPED_RANK_GAP = 1;
     private static final int WITHDRAW_STONES = 64;
-    private static final int WITHDRAW_TICKS = 10;
 
     public PrimevalElderGuItem(Properties properties, Rank rank) {
         super(properties, rank, GuPath.SPACE);
@@ -48,21 +46,21 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     @Override
     public int refineCost() {return scaled(BASE_REFINE_COST, REFINE_LADDER, tier());}
 
-    //  ⚠ This ladder MUST track refineCost's: left flat at 50, Rank V [五转] would be 512 three-second
-    //  holds. Both climb ×4, so every rank is two.  CLAUDE.md "Liquor Worm" for the same trap.
-    @Override
-    protected int refinePerUse() {return scaled(BASE_REFINE_PER_USE, REFINE_LADDER, tier());}
-
     //  Five seconds below its rank, not the usual nine -- a vault is meant to be opened early.
     @Override
     protected int slowChargeTicks() {return SLOW_CHARGE_TICKS;}
 
-    //  ⚠ ONE rank above already lifts the per-hold cap here, where every other Gu asks for two.
+    //  ⚠⚠ TWO MEALS deep, and the 饿 mark is one meal -- the same shape the Liquor Worm carries.
     @Override
-    protected int uncappedRankGap() {return UNCAPPED_RANK_GAP;}
+    protected int maxHunger() {return MEALS_HELD * mealDays();}
 
     @Override
-    protected int unitsPerHunger() {return UNITS_PER_HUNGER[tier()];}
+    protected int hungryThreshold() {return mealDays();}
+
+    //  Stones a DAY, in units. ⚠ Must agree with the meal columns, or the aperture store's auto-feed
+    //  would be a cheaper door into the same bar.
+    @Override
+    protected int unitsPerHunger() {return STONE_UNITS * scaled(1, 2, tier());}
 
     //  Every use IS one withdrawal -- there is nothing to count up to.
     @Override
@@ -71,8 +69,8 @@ public class PrimevalElderGuItem extends RefinableGuItem {
 
     //region the vault
     public long capacity() {return CAPACITY[tier()];}
-    private int mealStones() {return MEAL_STONES[tier()];}
-    private int mealDays() {return MEAL_DAYS[tier()];}
+    private int mealStones() {return scaled(1, 4, tier());}
+    private int mealDays() {return scaled(1, 2, tier());}
 
     public static long stored(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.STORED_STONES.get(), 0L);
@@ -90,67 +88,107 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     }
     //endregion
 
-    //region depositing -- the left click
-    //  ⚠ Left-click DEPOSITS here instead of feeding: the vault is what feeds this Gu, so a hand-feed
-    //  would be a second door into the same bar. Silent when it cannot, as every swing is.
+    //region depositing -- the plain right click
+    //  ⚠ Right-click DEPOSITS every stone he carries once this Gu is refined; while wild the same click
+    //  still refines. It is FREE -- the withdrawal is the "use", so the hunger point hangs off that one.
     @Override
-    protected boolean hasSwing(Player player, ItemStack stack) {
-        return refined(stack) && depositable(player, stack) > 0;
+    protected @Nullable Refusal gate(Player player, ItemStack stack) {
+        if (!refined(stack)) return super.gate(player, stack);
+        return depositable(player, stack) <= 0 ? new Refusal(FAILED_NO_STONES) : null;
     }
 
     @Override
-    protected int swingApply(ServerPlayer player, ItemStack stack) {
-        int stones = depositable(player, stack);
-        if (stones <= 0) return 0;
-
-        //  ⚠ Creative pays no stones, exactly as it pays no food -- see RefinableGuItem.eat.
-        if (!player.hasInfiniteMaterials()) player.getOffhandItem().shrink(stones);
-        setStored(stack, stored(stack) + stones);
+    protected int apply(ServerPlayer player, ItemStack stack) {
+        if (!refined(stack)) return super.apply(player, stack);
+        deposit(player, stack);
         return 0;
     }
 
-    //  What the offhand could put in right now: what it holds, or what still fits.
-    private int depositable(Player player, ItemStack stack) {
-        ItemStack stones = player.getOffhandItem();
-        if (!stones.is(ModItems.PRIMEVAL_STONE.get())) return 0;
-        return (int) Math.min(stones.getCount(), capacity() - stored(stack));
-    }
-    //endregion
-
-    //region withdrawing -- the right click
-    //  ⚠ An empty vault is refused: the withdrawal would hand back nothing and still cost a day of food.
-    @Override
-    protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
-        return stored(stack) <= 0 ? new Refusal(FAILED_EMPTY) : null;
-    }
-
-    //  ⚠ Half a second flat to withdraw. The rank buckets pace the REFINING, which is a one-off; a vault
-    //  that takes three seconds a stack to open is not a vault.
+    //  ⚠ Instant once refined: only the refining keeps the rank buckets. A vault that costs three seconds
+    //  a stack to open is not a vault.
     @Override
     protected int useDurationTicks(Player player, ItemStack stack) {
-        return refined(stack) ? WITHDRAW_TICKS : super.useDurationTicks(player, stack);
+        return refined(stack) ? 0 : super.useDurationTicks(player, stack);
     }
 
-    //  ⚠⚠ The vault pays for the withdrawal AT ONCE, not at the next day rollover -- at half a second a
-    //  hold, 18 uses would otherwise walk a stocked Gu to 0 in nine seconds and the 19th would kill it.
-    //  ⚠ Must run AFTER super, which stores its own RefinedGuState copy last; a topUp before it is lost.
+    //  Every stone in his inventory, hand included, up to what still fits.
+    private int depositable(Player player, ItemStack stack) {
+        long room = capacity() - stored(stack);
+        if (room <= 0) return 0;
+
+        int carried = 0;
+        Inventory inventory = player.getInventory();
+        for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
+            if (isStone(inventory.getItem(slot))) carried += inventory.getItem(slot).getCount();
+        }
+        return (int) Math.min(carried, room);
+    }
+
+    private void deposit(ServerPlayer player, ItemStack stack) {
+        int wanted = depositable(player, stack);
+        Inventory inventory = player.getInventory();
+
+        for (int slot = 0, taken = 0; slot < inventory.getContainerSize() && taken < wanted; slot++) {
+            ItemStack stones = inventory.getItem(slot);
+            if (!isStone(stones)) continue;
+
+            int move = Math.min(stones.getCount(), wanted - taken);
+            //  ⚠ Creative pays no stones, exactly as it pays no food -- see RefinableGuItem.eat.
+            if (!player.hasInfiniteMaterials()) stones.shrink(move);
+            taken += move;
+        }
+        setStored(stack, stored(stack) + wanted);
+    }
+
+    private static boolean isStone(ItemStack s) {return s.is(ModItems.PRIMEVAL_STONE.get());}
+    //endregion
+
+    //region withdrawing -- sneak + right click
+    //  ⚠⚠ The withdrawal is the FRAMEWORK's use, which is why the hunger point, the payout and the vault
+    //  top-up all hang off super.apply() and none of them off the deposit above.
+    //  ⚠ This Gu spends its sneak click on the WITHDRAWAL, so it never gets the base's sneak-feed.
+    //  Left-click still feeds it by hand, at the very rate the vault pays -- see unitsPerHunger.
     @Override
-    protected int apply(ServerPlayer player, ItemStack stack) {
+    protected boolean hasSneakUse(Player player, ItemStack stack) {return refined(stack);}
+
+    @Override
+    protected @Nullable Refusal sneakGate(Player player, ItemStack stack) {
+        if (!ApertureService.isAwakened(player)) return new Refusal(FAILED_UNAWAKENED);
+        //  A wild Gu holds nothing, so this one check refuses it too.
+        return payoutGate(player, stack);
+    }
+
+    //  ⚠⚠ topUp must run AFTER super, which stores its own RefinedGuState copy last; before it, lost.
+    @Override
+    protected int sneakApply(ServerPlayer player, ItemStack stack) {
         int spent = super.apply(player, stack);
         //  1 means it just died of being forced -- an empty vault, so there is nothing to refill from.
         if (spent == 0) topUp(stack);
         return spent;
     }
 
-    //  One stack out, or whatever is left when that is less. ⚠ Writes the vault only: apply() owns the
-    //  RefinedGuState and would clobber a hunger write made here.
+    //  ⚠ An empty vault is refused: it would hand back nothing and still cost a day of food.
+    //  ⚠ Reached through sneakGate, never through the framework's gate() -- that click deposits now.
+    @Override
+    protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
+        return stored(stack) <= 0 ? new Refusal(FAILED_EMPTY) : null;
+    }
+
+    //  One stack out: the offhand if it is free, else the inventory, else the ground.
+    //  ⚠ Writes the vault only -- apply() owns the RefinedGuState and would clobber a hunger write here.
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
         int taken = (int) Math.min(WITHDRAW_STONES, stored(stack));
         if (taken <= 0) return;
 
         setStored(stack, stored(stack) - taken);
-        player.getInventory().placeItemBackInInventory(new ItemStack(ModItems.PRIMEVAL_STONE.get(), taken));
+        ItemStack stones = new ItemStack(ModItems.PRIMEVAL_STONE.get(), taken);
+        if (player.getOffhandItem().isEmpty()) {
+            player.setItemInHand(InteractionHand.OFF_HAND, stones);
+            return;
+        }
+        //  ⚠ placeItemBackInInventory drops what does not fit, which is the third step of the rule.
+        player.getInventory().placeItemBackInInventory(stones);
     }
     //endregion
 
@@ -202,14 +240,6 @@ public class PrimevalElderGuItem extends RefinableGuItem {
         return refined(stack)
                 ? Component.translatable(TOOLTIP_STORED, stored(stack), capacity())
                 : super.progressLine(stack);
-    }
-
-    //  The charge bar over the hotbar reads the vault too, for the same reason.
-    @Override
-    public Component chargeCaption(ItemStack stack) {
-        return refined(stack)
-                ? Component.translatable(HUD_WITHDRAWING, stored(stack), capacity())
-                : super.chargeCaption(stack);
     }
     //endregion
 }
