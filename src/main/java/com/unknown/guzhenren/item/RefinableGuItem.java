@@ -98,6 +98,10 @@ public abstract class RefinableGuItem extends MortalGuItem {
     //  ⚠ Takes the stack, as gate() does: what a Gu carrying its own store can hand out depends on it.
     protected abstract @Nullable Refusal payoutGate(Player player, ItemStack stack);
 
+    //  Runs after the hunger write and BEFORE the hungry warning, on a use that did not kill the Gu.
+    //  ⚠ For a Gu with its own larder: refill the bar here, never after apply() returns.
+    protected void afterUse(ServerPlayer player, ItemStack stack) {}
+
     //  What the 36th use buys. Runs once per completed cycle.
     //  ⚠ It may write the stack's OWN components, never its RefinedGuState -- apply() holds a copy of that
     //  and stores it afterwards, so a hunger or use-count write here would be silently clobbered.
@@ -196,6 +200,9 @@ public abstract class RefinableGuItem extends MortalGuItem {
             exhausted(player, stack);
             return 1;
         }
+        //  ⚠⚠ A Gu that pays its own upkeep refills the bar HERE, BEFORE the warning -- otherwise it
+        //  announces hunger on a bar it is about to top back up. This is the same order decay() uses.
+        afterUse(player, stack);
         //  The warning has to land on the USE too -- the day tick alone would stay silent through a
         //  whole session of clicking it down from 9.
         if (hungry(stack)) announceHungry(player, stack);

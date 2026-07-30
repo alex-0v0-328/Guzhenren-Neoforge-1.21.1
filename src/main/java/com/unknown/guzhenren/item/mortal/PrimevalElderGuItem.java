@@ -97,10 +97,13 @@ public class PrimevalElderGuItem extends RefinableGuItem {
         return depositable(player, stack) <= 0 ? new Refusal(FAILED_NO_STONES) : null;
     }
 
+    //  ⚠ topUp after depositing, which is what 存入自动会减 means: fresh stones pay the bar down at once
+    //  rather than sitting in the vault while the Gu reads hungry.
     @Override
     protected int apply(ServerPlayer player, ItemStack stack) {
         if (!refined(stack)) return super.apply(player, stack);
         deposit(player, stack);
+        topUp(stack);
         return 0;
     }
 
@@ -158,14 +161,15 @@ public class PrimevalElderGuItem extends RefinableGuItem {
         return payoutGate(player, stack);
     }
 
-    //  ⚠⚠ topUp must run AFTER super, which stores its own RefinedGuState copy last; before it, lost.
     @Override
-    protected int sneakApply(ServerPlayer player, ItemStack stack) {
-        int spent = super.apply(player, stack);
-        //  1 means it just died of being forced -- an empty vault, so there is nothing to refill from.
-        if (spent == 0) topUp(stack);
-        return spent;
-    }
+    protected int sneakApply(ServerPlayer player, ItemStack stack) {return super.apply(player, stack);}
+
+    //  ⚠⚠ The vault pays for the withdrawal AT ONCE, and it must happen through THIS hook rather than
+    //  after super.apply() returns -- the hungry warning fires inside apply(), so a top-up any later
+    //  made every single withdrawal announce 「蛊饿了」 on a bar that was about to be full again.
+    //  ⚠ Never reached on the forced use that kills it: an empty vault has nothing to refill from.
+    @Override
+    protected void afterUse(ServerPlayer player, ItemStack stack) {topUp(stack);}
 
     //  ⚠ An empty vault is refused: it would hand back nothing and still cost a day of food.
     //  ⚠ Reached through sneakGate, never through the framework's gate() -- that click deposits now.
