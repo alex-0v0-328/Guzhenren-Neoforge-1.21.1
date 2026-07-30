@@ -48,7 +48,11 @@ public abstract class RefinableGuItem extends MortalGuItem {
     protected int refineMinEssence() {return 20;}
     protected int maxHunger() {return 18;}
     public int usesPerGrant() {return 36;}
-    protected int hungryThreshold() {return 2;}
+    //  ⚠⚠ ONE day of slack, FLAT for every Gu and every rank -- 「蛊饿了」 means "the next day rollover
+    //  kills it", nothing earlier. ⚠ It must not scale with the meal: tied to mealDays, a Rank V vault
+    //  warned 16 days out and repeated it daily. ⚠ 0 is unusable -- decay takes hunger 1 straight to
+    //  death, so the bar never rests at 0 in survival and the warning would never fire at all.
+    protected int hungryThreshold() {return 1;}
 
     //  What one use costs in hunger. ⚠ A Gu whose single use IS the whole meal bends this; it must still
     //  return at least 1, or the Gu could be driven forever and starvation would stop being its one end.

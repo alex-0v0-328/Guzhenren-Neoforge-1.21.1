@@ -54,9 +54,6 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     @Override
     protected int maxHunger() {return MEALS_HELD * mealDays();}
 
-    @Override
-    protected int hungryThreshold() {return mealDays();}
-
     //  Stones a DAY, in units. ⚠ Must agree with the meal columns, or the aperture store's auto-feed
     //  would be a cheaper door into the same bar.
     @Override

@@ -42,17 +42,15 @@ public class LiquorWormItem extends RefinableGuItem {
     @Override
     public int refineCost() {return scaled(BASE_REFINE_COST, 10, tier());}
 
-    //  How many days one meal covers -- 1/2/4/8. The bar holds TWO of them and the 饿 mark is one.
+    //  How many days one meal covers -- 1/2/4/8. The bar holds TWO of them.
     private int mealDays() {return scaled(1, 2, tier());}
 
-    //  ⚠⚠ TWO MEALS deep, not two days: fed today, hungry a meal later, dead a meal after that. At Rank I
-    //  that reads literally as 「第二天不喂第三天饿死」; higher up the same shape runs on a longer meal.
+    //  ⚠⚠ TWO MEALS deep, not two days. At Rank I that reads literally as 「第二天不喂第三天饿死」; higher
+    //  up the same shape runs on a longer meal.
+    //  ⚠ The 饿 mark does NOT follow the meal -- it is the base's flat 1, one day before death. Tied to
+    //  mealDays it warned a whole meal out (8 days at Rank IV) and repeated it every day.
     @Override
     protected int maxHunger() {return MEALS_HELD * mealDays();}
-
-    //  ⚠ One meal left, never the base's 2 -- 「蛊饿了」 has to mean "the last meal is running" at any rank.
-    @Override
-    protected int hungryThreshold() {return mealDays();}
 
     //  Bottles a DAY, ×2 a rank, so a meal costs 8/32/128/512. ⚠ The daily upkeep is what ladders now
     //  (it was deliberately flat until 2026-07-30) -- a higher rank really does drink more.
