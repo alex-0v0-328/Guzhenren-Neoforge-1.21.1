@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.item.mortal.liquor;
 
+import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
@@ -25,14 +26,15 @@ public class LiquorWormItem extends RefinableGuItem {
     private static final String FAILED_RANK = "guzhenren.item.failed.liquor_rank";
     private static final String FAILED_DISTILLING = "guzhenren.item.failed.liquor_distilling";
 
-    private static final String TOOLTIP_HUNGER = "guzhenren.item.gu.hunger_progress";
+    private static final String TOOLTIP_MEAL = "guzhenren.item.gu.meal_liquor";
 
     //  Rank I's numbers -- 1,000 is 1.25× a Rank I peak Ten-Extremes pool, flat across the ladder.
     private static final int BASE_REFINE_COST = 1000;
 
-    //  ⚠ A MEAL is the unit here: 8 × 2^tier bottles buying 2^tier days, so 8/32/128/512 for 1/2/4/8 days.
-    private static final int BASE_LIQUOR_PER_DAY = 8;
-    private static final int MEALS_HELD = 2;
+    //  ⚠⚠ ONE meal is 8 × 2^tier bottles and buys the SAME two days at every rank (2026-08-01) -- the
+    //  window is RefinableGuItem's, flat; only the price ladders. It replaced a per-day bar whose depth
+    //  laddered too, which made a Rank IV worm hold sixteen days of drink.
+    private static final int BASE_LIQUOR_PER_MEAL = 8;
 
     public LiquorWormItem(Properties properties, Rank rank) {
         super(properties, rank, GuPath.FOOD);
@@ -42,20 +44,14 @@ public class LiquorWormItem extends RefinableGuItem {
     @Override
     public int refineCost() {return scaled(BASE_REFINE_COST, 10, tier());}
 
-    //  How many days one meal covers -- 1/2/4/8. The bar holds TWO of them.
-    private int mealDays() {return scaled(1, 2, tier());}
-
-    //  ⚠⚠ TWO MEALS deep, not two days. At Rank I that reads literally as 「第二天不喂第三天饿死」; higher
-    //  up the same shape runs on a longer meal.
-    //  ⚠ The 饿 mark does NOT follow the meal -- it is the base's flat 1, one day before death. Tied to
-    //  mealDays it warned a whole meal out (8 days at Rank IV) and repeated it every day.
+    //  ⚠⚠ The timestamp clock, not the hunger bar: fed two days, warned at two and a half, dead at three,
+    //  the same at every rank. It drinks on a purpose, not on a daily nibble -- his words.
     @Override
-    protected int maxHunger() {return MEALS_HELD * mealDays();}
+    protected boolean usesFedClock() {return true;}
 
-    //  Bottles a DAY, ×2 a rank, so a meal costs 8/32/128/512. ⚠ The daily upkeep is what ladders now
-    //  (it was deliberately flat until 2026-07-30) -- a higher rank really does drink more.
+    //  8 / 16 / 32 / 64 bottles a meal.
     @Override
-    protected int unitsPerHunger() {return scaled(BASE_LIQUOR_PER_DAY, 2, tier());}
+    protected int mealItems() {return scaled(BASE_LIQUOR_PER_MEAL, 2, tier());}
 
     //  Every use pays out -- there is no counting up to a grant here, the drink IS the grant.
     @Override
@@ -83,15 +79,16 @@ public class LiquorWormItem extends RefinableGuItem {
     protected void payout(ServerPlayer player, ItemStack stack) {
         EssenceService.beginDistilling(player);
         player.addEffect(new MobEffectInstance(
-                ModEffects.LIQUOR_WORM, BodyService.TICKS_PER_DAY, tier()));
+                ModEffects.LIQUOR_WORM, Ticks.DAY, tier()));
     }
 
-    //  ⚠ 已用 0/1 says nothing when the drink IS the grant, so the refined half reads the feeding clock
-    //  instead -- the one number that moves. Wild still reads 炼化 320/1000 from the base.
+    //  ⚠⚠ What ONE meal costs, because that is the only feeding number a tooltip CAN show: reading the
+    //  clock needs the world time, and a tooltip is handed the stack alone. 「蛊饿了」 is the notice.
+    //  Wild still reads 炼化 320/1000 from the base.
     @Override
     protected MutableComponent progressLine(ItemStack stack) {
         return refined(stack)
-                ? Component.translatable(TOOLTIP_HUNGER, state(stack).hunger(), maxHunger())
+                ? Component.translatable(TOOLTIP_MEAL, mealItems())
                 : super.progressLine(stack);
     }
 }

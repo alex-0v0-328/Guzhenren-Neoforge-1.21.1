@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.item.material.qi;
 
+import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.registry.ModEffects;
@@ -11,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 public class EssenceQiItem extends QiMaterialItem {
 
     //  One minute at every rank; the rank buys the rate, not the time.
-    private static final int DURATION_TICKS = 1200;
+    private static final int DURATION_TICKS = Ticks.MINUTE;
 
     public EssenceQiItem(Properties properties, Rank rank) {
         super(properties, rank, MarkTag.QI_ESSENCE);

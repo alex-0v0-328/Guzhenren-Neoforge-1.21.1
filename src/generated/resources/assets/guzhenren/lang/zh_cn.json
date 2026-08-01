@@ -276,6 +276,7 @@
   "guzhenren.item.gu.hunger_progress": "饱食 %s/%s",
   "guzhenren.item.gu.hungry": "%s饿了",
   "guzhenren.item.gu.lifespan_gained": "寿元 +%s 年",
+  "guzhenren.item.gu.meal_liquor": "一餐 %s 瓶酒",
   "guzhenren.item.gu.refine_progress": "炼化 %s/%s",
   "guzhenren.item.gu.starved": "%s饿死了",
   "guzhenren.item.gu.stored_stones": "存石 %s/%s",

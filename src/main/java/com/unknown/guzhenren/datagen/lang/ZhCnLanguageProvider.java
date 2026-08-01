@@ -280,6 +280,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.refine_progress",           "炼化 %s/%s");
         add("guzhenren.item.gu.hunger_progress",           "饱食 %s/%s");
         add("guzhenren.item.gu.stored_stones",             "存石 %s/%s");
+        add("guzhenren.item.gu.meal_liquor",               "一餐 %s 瓶酒");
         add("guzhenren.item.gu.lifespan_gained",           "寿元 +%s 年");
         add("guzhenren.item.gu.hungry",                    "%s饿了");
         add("guzhenren.item.gu.starved",                   "%s饿死了");

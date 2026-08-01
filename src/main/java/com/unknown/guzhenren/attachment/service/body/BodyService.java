@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.attachment.service.body;
 
+import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
@@ -16,14 +17,12 @@ public final class BodyService {
 
     private BodyService() {}
 
-    //  The world clock lives here: a day is what lifespan is counted in. EssenceService borrows it to turn
-    //  a per-day regen rate into a per-tick one.
-    public static final int TICKS_PER_DAY = 24000;
-
     //  ---- read ----
     //  Overworld, never the player's own level -- the Nether and the End have a fixed day-time.
+    //  ⚠ TICKS_PER_DAY used to live here and moved to Ticks.DAY (2026-08-01) -- one home for every unit
+    //  of time, since items and events read them too. Do not declare a second 24000 anywhere.
     public static long dayIndex(MinecraftServer server) {
-        return server.overworld().getDayTime() / TICKS_PER_DAY;
+        return server.overworld().getDayTime() / Ticks.DAY;
     }
 
     public static BodyData get(Player p) {return p.getData(ModAttachments.BODY);}

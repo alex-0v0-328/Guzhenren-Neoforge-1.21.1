@@ -276,6 +276,7 @@
   "guzhenren.item.gu.hunger_progress": "Fed %s/%s",
   "guzhenren.item.gu.hungry": "Your %s is hungry",
   "guzhenren.item.gu.lifespan_gained": "Lifespan +%s years",
+  "guzhenren.item.gu.meal_liquor": "A meal is %s bottles",
   "guzhenren.item.gu.refine_progress": "Refined %s/%s",
   "guzhenren.item.gu.starved": "Your %s starved to death",
   "guzhenren.item.gu.stored_stones": "Stored %s/%s",

@@ -34,17 +34,12 @@ public final class ApertureStorageTick {
             ItemStack stack = next.get(i);
             if (!(stack.getItem() instanceof RefinableGuItem gu) || !gu.refined(stack)) continue;
 
-            if (gu.decay(player, stack, days)) {
-                next.set(i, ItemStack.EMPTY);
-                changed = true;
-                RefinableGuItem.starved(player, stack);
-                continue;
-            }
             changed = true;
-            if (gu.autoFeed(player, stack)) continue;
-
-            //  No food anywhere: it keeps sliding, and the warning is the only notice he gets.
-            if (gu.hungry(stack)) RefinableGuItem.announceHungry(player, stack);
+            //  ⚠ Only the container may empty its own slot, which is why tickKept reports rather than acts.
+            if (RefinableGuItem.tickKept(player, stack, days)) {
+                next.set(i, ItemStack.EMPTY);
+                RefinableGuItem.starved(player, stack);
+            }
         }
         if (changed) ApertureStorageService.set(player, aperture, next);
     }
@@ -52,15 +47,13 @@ public final class ApertureStorageTick {
     //  The Vital Gu obeys the identical rule -- binding buys no immunity, and starving it is what costs.
     private static void tickVital(ServerPlayer player, int aperture, long days) {
         ItemStack stack = ApertureStorageService.vital(player, aperture);
-        if (!(stack.getItem() instanceof RefinableGuItem gu) || !gu.refined(stack)) return;
+        if (!(stack.getItem() instanceof RefinableGuItem)) return;
 
-        if (gu.decay(player, stack, days)) {
+        if (RefinableGuItem.tickKept(player, stack, days)) {
             ApertureStorageService.setVital(player, aperture, ItemStack.EMPTY);
             RefinableGuItem.starved(player, stack);
             return;
         }
-        if (!gu.autoFeed(player, stack) && gu.hungry(stack)) RefinableGuItem.announceHungry(player, stack);
-
         //  ⚠ Written last, after every mutation -- the store loop can rely on the list aliasing its
         //  stacks, a single slot must not.
         ApertureStorageService.setVital(player, aperture, stack);

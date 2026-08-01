@@ -27,10 +27,10 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     //  ⚠ The capacity ladder breaks at Rank V on purpose -- 1e3/1e4/1e5/1e6 then 1e8, the user's own call.
     private static final long[] CAPACITY = {1_000L, 10_000L, 100_000L, 1_000_000L, 100_000_000L};
 
-    //  ⚠ A MEAL is 4^tier stones buying 2^tier days -- 1/1, 4/2, 16/4, 64/8, 256/16. Both whole, so the
-    //  vault never owes a fraction; the daily upkeep that falls out is 2^tier stones.
-    private static final int STONE_UNITS = 3;
-    private static final int MEALS_HELD = 2;
+    //  ⚠⚠ ONE meal is 2 × 2^tier stones and buys the SAME two days at every rank (2026-08-01): 2/4/8/16/32.
+    //  The window is RefinableGuItem's, flat; only the price ladders. That works out to the very upkeep
+    //  the old per-day ladder charged (1/2/4/8/16 a day), so a stocked vault lasts exactly as long.
+    private static final int BASE_STONES_PER_MEAL = 2;
 
     //  50 ×10 a rank is a flat 0.0625× the peak Ten-Extremes pool of its own rank, all five rungs.
     private static final int BASE_REFINE_COST = 50;
@@ -51,14 +51,13 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     @Override
     protected int slowChargeTicks() {return SLOW_CHARGE_TICKS;}
 
-    //  ⚠⚠ TWO MEALS deep, and the 饿 mark is one meal -- the same shape the Liquor Worm carries.
+    //  ⚠⚠ The timestamp clock, not the hunger bar -- the same one the Liquor Worm runs.
     @Override
-    protected int maxHunger() {return MEALS_HELD * mealDays();}
+    protected boolean usesFedClock() {return true;}
 
-    //  Stones a DAY, in units. ⚠ Must agree with the meal columns, or the aperture store's auto-feed
-    //  would be a cheaper door into the same bar.
+    //  2 / 4 / 8 / 16 / 32 stones a meal.
     @Override
-    protected int unitsPerHunger() {return STONE_UNITS * scaled(1, 2, tier());}
+    protected int mealItems() {return scaled(BASE_STONES_PER_MEAL, 2, tier());}
 
     //  Every use IS one withdrawal -- there is nothing to count up to.
     @Override
@@ -67,8 +66,6 @@ public class PrimevalElderGuItem extends RefinableGuItem {
 
     //region the vault
     public long capacity() {return CAPACITY[tier()];}
-    private int mealStones() {return scaled(1, 4, tier());}
-    private int mealDays() {return scaled(1, 2, tier());}
 
     public static long stored(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.STORED_STONES.get(), 0L);
@@ -79,10 +76,11 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     }
 
     //  ⚠ The stone itself, not a feed tag: what it eats and what it hands back must be the same thing,
-    //  and a withdrawal can only hand back one item. This rate is the auto-feed's, not the left click's.
+    //  and a withdrawal can only hand back one item.
+    //  ⚠ On the fed clock this is a PREDICATE, not a rate -- mealItems() is what a meal costs.
     @Override
     protected int feedUnits(ItemStack food) {
-        return food.is(ModItems.PRIMEVAL_STONE.get()) ? STONE_UNITS : 0;
+        return food.is(ModItems.PRIMEVAL_STONE.get()) ? 1 : 0;
     }
     //endregion
 
@@ -104,7 +102,8 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     protected int apply(ServerPlayer player, ItemStack stack) {
         if (!refined(stack)) return super.apply(player, stack);
         deposit(player, stack);
-        topUp(stack);
+        //  ⚠ 存入自动会减: fresh stones settle whatever the clock already owes, at once.
+        payOwnUpkeep(player, stack);
         return 0;
     }
 
@@ -167,36 +166,24 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     @Override
     protected int sneakApply(ServerPlayer player, ItemStack stack) {return drive(player, stack);}
 
-    //  ⚠⚠ The vault pays for the withdrawal AT ONCE, and it must happen through THIS hook rather than
-    //  after super.apply() returns -- the hungry warning fires inside apply(), so a top-up any later
-    //  made every single withdrawal announce 「蛊饿了」 on a bar that was about to be full again.
-    //  ⚠ Never reached on the forced use that kills it: an empty vault has nothing to refill from.
-    @Override
-    protected void afterUse(ServerPlayer player, ItemStack stack) {topUp(stack);}
+    //  ⚠ The vault settles on the heartbeat now (payOwnUpkeep), so a use needs no top-up of its own.
+    //  Depositing still pays at once -- that is what 存入自动会减 means, see apply().
 
-    //  ⚠ An empty vault is refused: it would hand back nothing and still cost a day of food.
+    //  ⚠ An empty vault is refused: it would hand back nothing and still cost a use.
     //  ⚠ Reached through sneakGate, never through the framework's gate() -- that click deposits now.
     @Override
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
         return stored(stack) <= 0 ? new Refusal(FAILED_EMPTY) : null;
     }
 
-    //  ⚠⚠ ONE formula, two callers -- topUp SPENDS what this answers and payout RESERVES it. A second
-    //  expression saying the same thing is what lets a withdrawal hand out the meal topUp is about to want.
-    private int mealsWanted(int hunger) {return (maxHunger() - hunger) / mealDays();}
-
-    //  ⚠ payout runs BEFORE apply() stores the new state, so the bar it has to cover sits one point lower.
-    private int upkeep(ItemStack stack) {
-        return mealsWanted(state(stack).hunger() - 1) > 0 ? mealStones() : 0;
-    }
-
     //  One stack out: the offhand if it is free, else the inventory, else the ground.
-    //  ⚠ Writes the vault only -- apply() owns the RefinedGuState and would clobber a hunger write here.
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
-        //  ⚠⚠ The Gu eats FIRST, exactly as decay() buys its meals before billing the days -- handing out
-        //  the very stone that covers THIS use is what left a just-emptied vault announcing 「蛊饿了」.
-        long spare = stored(stack) - upkeep(stack);
+        //  ⚠⚠ The Gu eats FIRST -- handing out the very stones that cover the meal it is about to owe
+        //  is what once left a just-emptied vault announcing 「蛊饿了」. A vault too poor for one meal
+        //  keeps nothing back: those last stones are his.
+        long owed = needsMeal(player, stack) ? mealItems() : 0L;
+        long spare = stored(stack) - owed;
         int taken = (int) Math.min(WITHDRAW_STONES, spare > 0 ? spare : stored(stack));
         if (taken <= 0) return;
 
@@ -211,43 +198,21 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     }
     //endregion
 
-    //region the day clock
-    //  ⚠ It eats out of its own vault, in whole meals, so a stocked Gu never starves however long its owner
-    //  was away. An EMPTY vault is what hands the bill back to the hunger bar, where 0 still kills it.
+    //region its own larder
+    //  ⚠⚠ It eats out of its own vault, so a stocked Gu never starves however long its owner was away --
+    //  and it does so WHEREVER it sits, since this runs on the heartbeat rather than on a feeding walk.
+    //  That is the only reason a Primeval Elder Gu [元老蛊] survives in a plain inventory slot, which
+    //  never auto-feeds. ⚠ An EMPTY vault hands the bill straight to the clock, where 3 days still kill.
+    //  ⚠ Catches up in whole meals: an absence of a week owes several, and paying one a second would
+    //  charge the same stones over a week of real time.
     @Override
-    public boolean decay(ServerPlayer player, ItemStack stack, long days) {
-        long unpaid = days - buyDays(stack, days);
-        boolean starved = unpaid > 0 && super.decay(player, stack, unpaid);
-        if (!starved) topUp(stack);
-        return starved;
-    }
-
-    //  Meals bought for an absence the bar alone cannot outlast -- it must end that span with a point left.
-    //  Whatever they cover beyond it is credited to the bar rather than lost.
-    private long buyDays(ItemStack stack, long days) {
-        long shortfall = days + 1 - state(stack).hunger();
-        if (shortfall <= 0) return 0;
-
-        long meals = Math.min((shortfall + mealDays() - 1) / mealDays(), stored(stack) / mealStones());
-        if (meals <= 0) return 0;
-
-        setStored(stack, stored(stack) - meals * mealStones());
-        long covered = meals * mealDays();
-        if (covered > days) addDays(stack, (int) Math.min(covered - days, maxHunger()));
-        return Math.min(covered, days);
-    }
-
-    //  Refills the bar one whole meal at a time while the vault can pay, which is what lands the upkeep on
-    //  his own cadence: 16 stones every 8 days at Rank V [五转], never a partial meal every day.
-    private void topUp(ItemStack stack) {
-        while (mealsWanted(state(stack).hunger()) > 0 && stored(stack) >= mealStones()) {
-            setStored(stack, stored(stack) - mealStones());
-            addDays(stack, mealDays());
+    protected void payOwnUpkeep(ServerPlayer player, ItemStack stack) {
+        while (needsMeal(player, stack) && stored(stack) >= mealItems()) {
+            setStored(stack, stored(stack) - mealItems());
+            //  ⚠ Advances by ONE window, never to "now" -- stamping now would silently forgive every
+            //  meal the absence owed and make a long trip free.
+            stack.set(ModDataComponents.FED_AT.get(), fedAt(stack) + FED_WINDOW_TICKS);
         }
-    }
-
-    private void addDays(ItemStack stack, int days) {
-        store(stack, state(stack).withHunger(state(stack).hunger() + days));
     }
     //endregion
 

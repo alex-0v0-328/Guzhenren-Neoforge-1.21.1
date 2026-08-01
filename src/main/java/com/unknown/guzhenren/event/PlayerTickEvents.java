@@ -6,6 +6,7 @@ import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.compat.customplayer.PartStorageTick;
 import com.unknown.guzhenren.effect.DeathQiEffect;
 import com.unknown.guzhenren.item.RefinableGuItem;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
@@ -33,15 +34,18 @@ public final class PlayerTickEvents {
 
         //  A Gu goes hungry on the same day rollover that ages its owner -- one clock, two readers:
         //  what he carries starves, what an aperture holds gets fed from his pack first.
+        //  ⚠⚠ The three walks run EVERY heartbeat, not only on a rollover: the fed clock [酒虫 · 元老蛊] is
+        //  a timestamp read to the second, while the hunger bar is billed and simply does nothing at
+        //  days == 0. ONE path, two clocks -- do not split them back into a rollover branch.
         long days = BodyService.tickAging(player);
-        if (days > 0L) {
-            RefinableGuItem.starveAll(player, days);
-            ApertureStorageTick.tickDay(player, days);
+        RefinableGuItem.starveAll(player, days);
+        ApertureStorageTick.tickDay(player, days);
+        //  A Gu installed into an arm or a leg is KEPT, not carried, so it feeds like a stored one.
+        PartStorageTick.tickDay(player, days);
 
-            //  ⚠ The tick wrote behind an open menu's back (it holds load()-time copies), so its next
-            //  save would resurrect what just starved. Lives here, not the service -- no menu/ import.
-            if (player.containerMenu instanceof ApertureStorageMenu menu) menu.reload();
-        }
+        //  ⚠ The tick wrote behind an open menu's back (it holds load()-time copies), so its next save
+        //  would resurrect what just starved. Lives here, not the service -- no menu/ import.
+        if (days > 0L && player.containerMenu instanceof ApertureStorageMenu menu) menu.reload();
 
         closeDistilling(player);
         tickDeathQi(player);

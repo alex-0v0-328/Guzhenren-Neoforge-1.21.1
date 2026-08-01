@@ -10,6 +10,7 @@ import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
+import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.HealthService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
@@ -29,10 +30,11 @@ public final class PlayerDataService {
     private PlayerDataService() {}
 
     //  First login ever, and nothing else -- vanilla gives no such signal, so BORN is the memory of it.
-    //  ⚠ The max-health modifier is transient and does not survive a logout, so it is re-hung every login.
+    //  ⚠ BOTH modifiers are transient and do not survive a logout, so they are re-hung every login.
     public static void onJoin(ServerPlayer player) {
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
         HealthService.refresh(player);
+        AttackService.refresh(player);
     }
 
     //  ⚠ Everything a player is dealt once, at birth. Brilliance is rolled HERE, not at awakening -- awaken must
@@ -57,7 +59,10 @@ public final class PlayerDataService {
             copy(from, to);
         }
         //  A clone is a fresh entity with bare attributes, whatever its data says the rank is.
-        if (to instanceof ServerPlayer server) HealthService.refresh(server);
+        if (to instanceof ServerPlayer server) {
+            HealthService.refresh(server);
+            AttackService.refresh(server);
+        }
 
         //  ⚠ resetAll flips sourceAwakened, which normally demands refreshCommands -- but vanilla's
         //  PlayerList.respawn already calls sendCommands on every respawn. Do not "fix" this.
@@ -129,6 +134,11 @@ public final class PlayerDataService {
                 BodyData.DEFAULT.withLastDayIndex(BodyService.get(player).lastDayIndex()));
 
         //  Back to mortal, so back to 20 -- the aperture was emptied above, not written through ApertureService.
-        if (player instanceof ServerPlayer server) HealthService.refresh(server);
+        //  ⚠ StrengthData went to DEFAULT above by setData, not through StrengthService, so attack needs
+        //  its own line here for exactly the same reason max health does.
+        if (player instanceof ServerPlayer server) {
+            HealthService.refresh(server);
+            AttackService.refresh(server);
+        }
     }
 }

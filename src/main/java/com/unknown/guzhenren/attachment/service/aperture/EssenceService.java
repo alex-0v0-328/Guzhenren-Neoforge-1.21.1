@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.attachment.service.aperture;
 
+import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
@@ -22,7 +23,9 @@ public final class EssenceService {
     public static final long BASE_REGEN_PER_DAY = 100L;
 
     //  Once a second, not once a tick: same result thanks to ESSENCE_CARRY, twenty times fewer writes.
-    public static final int REGEN_INTERVAL_TICKS = 20;
+    //  The heartbeat: once a real second. ⚠ PlayerTickEvents wakes on this, so anything it drives is
+    //  accurate to a second and no finer -- see Ticks for why 20 is a constant and not config.
+    public static final int REGEN_INTERVAL_TICKS = Ticks.SECOND;
 
     //  ---- derived, pure ----
     //  ⚠ A dead aperture draws in no ambient qi. The gate is the aperture's own state, not the body's.
@@ -32,7 +35,7 @@ public final class EssenceService {
                 * a.stage().getEssenceMultiplier();
     }
 
-    public static double regenPerTick(Aperture a) {return regenPerDay(a) / (double) BodyService.TICKS_PER_DAY;}
+    public static double regenPerTick(Aperture a) {return regenPerDay(a) / (double) Ticks.DAY;}
 
     //  ⚠ One distilled point pays for two ordinary ones. The single place that ratio is written down.
     public static final long DISTILLED_RATE = 2L;
