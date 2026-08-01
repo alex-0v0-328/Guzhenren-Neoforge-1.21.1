@@ -146,6 +146,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.life_state",      "肉身状态  %s");
         add("guzhenren.command.info.life_form",       "玩家形态  %s");
         add("guzhenren.command.info.race",            "种族      %s");
+        add("guzhenren.command.info.wisdom",          "智道造诣  %s");
         add("guzhenren.command.info.qi",              "玩家气道  %s");
         add("guzhenren.command.info.qi_total",        " 道痕 %s");
         add("guzhenren.command.info.qi_speck_total",  " 碎屑 %s");
@@ -176,6 +177,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.info.title",           "信息");
         add("guzhenren.screen.tab.aperture",         "空窍");
         add("guzhenren.screen.tab.body",             "肉身");
+        add("guzhenren.screen.tab.path",             "流派造诣");
         add("guzhenren.screen.tab.mind",             "脑海");
         add("guzhenren.screen.tab.storage",          "空窍存储");
         add("guzhenren.menu.aperture_storage",       "空窍存储");
@@ -191,6 +193,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.state",          "状态");
         add("guzhenren.screen.label.life_form",      "形态");
         add("guzhenren.screen.label.race",           "种族");
+        add("guzhenren.screen.label.wisdom",         "智道造诣");
         add("guzhenren.screen.label.soul",           "魂魄");
         add("guzhenren.screen.label.lifespan",       "寿元");
         add("guzhenren.screen.label.qi",             "气道造诣");
@@ -349,7 +352,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(HumanStrength.TEN_JUN, "十钧");
     }
 
-    //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie
+    //  Both are alive-or-dead. ⚠ The body's LifeState had a third constant until 化僵 was cut 2026-08-01
     private void addApertureState() {
         add(ApertureState.ALIVE, "生");
         add(ApertureState.DEAD,  "死");
@@ -409,7 +412,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
 
     private void addLifeState() {
         add(LifeState.ALIVE,  "生");
-        add(LifeState.ZOMBIE, "僵");
         add(LifeState.DEAD,   "死");
     }
 

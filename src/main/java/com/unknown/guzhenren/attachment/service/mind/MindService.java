@@ -22,7 +22,14 @@ public final class MindService {
     public static Brilliance brilliance(Player p) {return get(p).brilliance();}
 
     //  ---- write ----
-    public static void setCurrent(ServerPlayer p, WisdomType t, long v) {set(p, t, pool(p, t).withCurrent(v));}
+    //  ⚠⚠ THE door where the two shapes part (his 1.0.0 spec, 2026-08-01): 意 and 情 are HARD CAPS, so a
+    //  write above the cap is simply refused down to it and neither can ever be lethal. Only 念 is
+    //  burstable, and it is left unclamped so the buffer and the burst stay representable.
+    //  ⚠ Clamped HERE and not in MindPool: the record does not know which cell it is; WisdomType does.
+    public static void setCurrent(ServerPlayer p, WisdomType t, long v) {
+        MindPool pool = pool(p, t);
+        set(p, t, pool.withCurrent(t.isBurstable() ? v : Math.min(v, pool.max())));
+    }
     public static void addCurrent(ServerPlayer p, WisdomType t, long d) {setCurrent(p, t, current(p, t) + d);}
     public static void setMax(ServerPlayer p, WisdomType t, long v) {set(p, t, pool(p, t).withMax(v));}
     public static void addMax(ServerPlayer p, WisdomType t, long d) {setMax(p, t, max(p, t) + d);}

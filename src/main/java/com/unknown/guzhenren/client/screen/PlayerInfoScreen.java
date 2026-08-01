@@ -53,17 +53,19 @@ public final class PlayerInfoScreen extends Screen {
 
     //  ⚠ One accent per DOMAIN, never per value -- colour says "which of the three you are looking at",
     //  it never says a number is good or bad.  CLAUDE.md "Color".
-    private static final int[] ACCENT = {0xFF4FC3F7, 0xFFB388FF, 0xFFFFD54F, 0xFF81C784};
+    private static final int[] ACCENT =
+            {0xFF4FC3F7, 0xFFB388FF, 0xFFFF8A65, 0xFFFFD54F, 0xFF81C784};
 
     private static final String[] TAB_KEYS = {
             "guzhenren.screen.tab.aperture",
             "guzhenren.screen.tab.body",
+            "guzhenren.screen.tab.path",
             "guzhenren.screen.tab.mind",
             "guzhenren.screen.tab.storage",
     };
 
     //  The storage tab does not render rows -- it opens a container instead.
-    private static final int TAB_STORAGE = 3;
+    private static final int TAB_STORAGE = 4;
 
     //  The secondary-path picker: 30 paths plus a "clear" cell, a grid so it needs no scrolling.
     private static final int PICK_COLS = 4;
@@ -322,7 +324,8 @@ public final class PlayerInfoScreen extends Screen {
     private List<Row> rows(LocalPlayer player) {
         List<InfoModel.Row> model = switch (activeTab) {
             case 1 -> InfoModel.body(player);
-            case 2 -> InfoModel.mind(player);
+            case 2 -> InfoModel.pathAchievement(player);
+            case 3 -> InfoModel.mind(player);
             default -> InfoModel.aperture(player);
         };
 
@@ -371,6 +374,8 @@ public final class PlayerInfoScreen extends Screen {
                             e.amount()));
             case InfoModel.StrengthHeader e -> new Row(indent, label("strength"), e.empty() ? none() : null);
             case InfoModel.StrengthRow e -> new Row(indent, name(e.branch().getTranslationKey()), e.reading());
+            case InfoModel.WisdomHeader e -> new Row(indent, label("wisdom"),
+                    e.attainment() == GuAttainment.NONE ? none() : name(e.attainment().getTranslationKey()));
 
             case InfoModel.BrillianceRow e -> new Row(indent, label("brilliance"),
                     name(e.brilliance().getTranslationKey()).append(detail(Component.translatable(

@@ -37,6 +37,8 @@ public final class CmdInfo {
                         context -> print(context, InfoModel::aperture)))
                 .then(ModCommandSupport.withTargets(Commands.literal("body"),
                         context -> print(context, InfoModel::body)))
+                .then(ModCommandSupport.withTargets(Commands.literal("path"),
+                        context -> print(context, InfoModel::pathAchievement)))
                 .then(ModCommandSupport.withTargets(Commands.literal("mind"),
                         context -> print(context, InfoModel::mind)));
     }
@@ -83,6 +85,8 @@ public final class CmdInfo {
             case InfoModel.StrengthHeader e -> header("strength", e.empty());
             case InfoModel.StrengthRow e -> key("strength_entry",
                     enumName(e.branch().getTranslationKey()), e.reading());
+            case InfoModel.WisdomHeader e -> key("wisdom", e.attainment() == GuAttainment.NONE
+                    ? none() : enumName(e.attainment().getTranslationKey()));
 
             case InfoModel.BrillianceRow e -> key("brilliance", enumName(e.brilliance().getTranslationKey()))
                     .append(muted(key("brilliance_rate", e.brilliance().getThoughtsPerSecond())));

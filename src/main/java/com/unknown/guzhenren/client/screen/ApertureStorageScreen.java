@@ -37,11 +37,18 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     private static final int BUTTON_HOVER = 0x66FFFFFF;
     private static final int BUTTON_DEAD = 0x14FFFFFF;
 
+    //  Back to the G panel. ⚠ The title shifts right to make room -- the header strip is one row, and a
+    //  button overlapping the title is worse than a title that starts further in.
+    private static final int BACK_W = 16;
+    private static final String BACK_GLYPH = "<-";
+    private static final int TITLE_X_WITH_BACK = 26;
+
     public ApertureStorageScreen(ApertureStorageMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         this.imageWidth = 176;
         this.imageHeight = 222;
         this.inventoryLabelY = this.imageHeight - 94;
+        this.titleLabelX = TITLE_X_WITH_BACK;
     }
 
     @Override
@@ -105,6 +112,7 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
 
     //  `< 1 / 2 >` laid out right to left, all in absolute coordinates so nothing can overlap.
     private void renderPager(GuiGraphics g, int mouseX, int mouseY) {
+        renderBack(g, mouseX, mouseY);
         renderPageButton(g, mouseX, mouseY, prevX(), menu.pageIndex() > 0, "<");
         renderPageButton(g, mouseX, mouseY, nextX(), menu.pageIndex() + 1 < menu.pageCount(), ">");
 
@@ -121,7 +129,17 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
                 y + (PAGE_BUTTON_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
     }
 
+    private void renderBack(GuiGraphics g, int mouseX, int mouseY) {
+        int x = backX();
+        int y = pagerY();
+        boolean hover = inButton(mouseX, mouseY, x);
+        g.fill(x, y, x + BACK_W, y + PAGE_BUTTON_H, hover ? BUTTON_HOVER : BUTTON_IDLE);
+        g.drawString(font, BACK_GLYPH, x + (BACK_W - font.width(BACK_GLYPH)) / 2,
+                y + (PAGE_BUTTON_H - font.lineHeight) / 2 + 1, TEXT, false);
+    }
+
     private int pagerY() {return topPos + 3;}
+    private int backX() {return leftPos + 7;}
     private int nextX() {return leftPos + imageWidth - 8 - PAGE_BUTTON_W;}
     private int labelX() {return nextX() - PAGE_LABEL_W;}
     private int prevX() {return labelX() - PAGE_BUTTON_W;}
@@ -133,10 +151,19 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
         if (button == 0) {
+            if (inButton(mx, my, backX())) return clickBack();
             if (inButton(mx, my, prevX())) return clickPage(ApertureStorageMenu.BUTTON_PREV);
             if (inButton(mx, my, nextX())) return clickPage(ApertureStorageMenu.BUTTON_NEXT);
         }
         return super.mouseClicked(mx, my, button);
+    }
+
+    //  ⚠⚠ onClose() FIRST: it is what tells the server the container is done. Swapping the screen without
+    //  it leaves the menu open server-side, and the next slot click lands in a window he cannot see.
+    private boolean clickBack() {
+        onClose();
+        Minecraft.getInstance().setScreen(new PlayerInfoScreen());
+        return true;
     }
 
     //  ⚠ handleInventoryButtonClick is vanilla's own button packet -- this is why paging needs no payload.

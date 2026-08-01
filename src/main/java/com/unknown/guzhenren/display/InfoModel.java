@@ -75,6 +75,7 @@ public final class InfoModel {
     public record QiRow(MarkTag tag, long amount, boolean speck) implements Entry {}
     public record StrengthHeader(boolean empty) implements Entry {}
     public record StrengthRow(StrengthBranch branch, Component reading) implements Entry {}
+    public record WisdomHeader(GuAttainment attainment) implements Entry {}
     //endregion
 
     //region Mind
@@ -120,16 +121,20 @@ public final class InfoModel {
         SoulData soul = SoulService.get(player);
         List<Row> rows = new ArrayList<>();
 
-        //  Alive is the norm and says nothing; zombified or dead is the line worth a row.
         if (body.lifeState() != LifeState.ALIVE) rows.add(new Row(0, new BodyLife(body.lifeState())));
         rows.add(new Row(0, new Form(body.lifeForm())));
         rows.add(new Row(0, new RaceRow(body.race())));
         rows.add(new Row(0, new Soul(soul)));
         rows.add(new Row(0, new Lifespan(body)));
+        return rows;
+    }
 
-        paths(rows, player);
-        qi(rows, player);
+    public static List<Row> pathAchievement(Player player) {
+        List<Row> rows = new ArrayList<>();
         strength(rows, player);
+        wisdom(rows, player);
+        qi(rows, player);
+        paths(rows, player);
         return rows;
     }
 
@@ -190,6 +195,13 @@ public final class InfoModel {
         if (data.hasBranch(StrengthBranch.HUMAN)) {
             rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN, ModDisplayText.humanStrengthLine(data))));
         }
+    }
+
+    //  The Wisdom Path's [智道] own attainment, named beside 力道 and 气道 on the achievement tab.
+    //  ⚠ 智道's marks and specks stay in the path list below like any other path -- only its GRADE is
+    //  pulled out here. 善念/恶念 remain a 脑海 composition, never a 道痕.
+    private static void wisdom(List<Row> rows, Player player) {
+        rows.add(new Row(0, new WisdomHeader(PathService.attainment(player, GuPath.WISDOM))));
     }
 
     //  All three cells, always -- MindData is dense, and a missing row would read as a bug.

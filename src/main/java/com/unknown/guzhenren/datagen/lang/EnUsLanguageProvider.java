@@ -147,6 +147,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.life_state",      "Body:        %s");
         add("guzhenren.command.info.life_form",       "Life form:   %s");
         add("guzhenren.command.info.race",            "Race:        %s");
+        add("guzhenren.command.info.wisdom",          "Wisdom Path: %s");
         add("guzhenren.command.info.qi",              "Qi Path: %s");
         add("guzhenren.command.info.qi_total",        " Marks %s");
         add("guzhenren.command.info.qi_speck_total",  " Specks %s");
@@ -176,6 +177,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.info.title",           "Info");
         add("guzhenren.screen.tab.aperture",         "Aperture");
         add("guzhenren.screen.tab.body",             "Body");
+        add("guzhenren.screen.tab.path",             "Path Achv");
         add("guzhenren.screen.tab.mind",             "Mind");
         add("guzhenren.screen.tab.storage",          "Storage");
         add("guzhenren.menu.aperture_storage",       "Aperture Storage");
@@ -191,6 +193,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.state",          "State");
         add("guzhenren.screen.label.life_form",      "Form");
         add("guzhenren.screen.label.race",           "Race");
+        add("guzhenren.screen.label.wisdom",         "Wisdom Path");
         add("guzhenren.screen.label.soul",           "Soul");
         add("guzhenren.screen.label.lifespan",       "Lifespan");
         add("guzhenren.screen.label.qi",             "Qi Path");
@@ -349,7 +352,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(HumanStrength.TEN_JUN, "Ten Jun");
     }
 
-    //  An aperture is only alive or dead; the body's LifeState is the one with a third state, zombie
+    //  Both are alive-or-dead. ⚠ The body's LifeState had a third constant until 化僵 was cut 2026-08-01
     private void addApertureState() {
         add(ApertureState.ALIVE, "Alive");
         add(ApertureState.DEAD,  "Dead");
@@ -410,7 +413,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
 
     private void addLifeState() {
         add(LifeState.ALIVE,  "Alive");
-        add(LifeState.ZOMBIE, "Zombified");
         add(LifeState.DEAD,   "Dead");
     }
 
