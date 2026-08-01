@@ -12,9 +12,6 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-//  ⚠ The mod's ONE network registration, the documented exception to "no networking": a CLIENT INTENT,
-//  which attachment sync (server->client) cannot carry upstream. Two exist -- open storage, set secondary path.
-//  ⚠ Downstream player data may never be added here.  CLAUDE.md "Networking".
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModPayloads {
 
@@ -32,8 +29,6 @@ public final class ModPayloads {
                 ModPayloads::setSecondaryPath);
     }
 
-    //  ⚠ Never trust the wire: the secondary path is the player's own choice, but the index still has
-    //  to exist, and Aperture's ctor is what refuses one equal to the primary -- not this handler.
     private static void setSecondaryPath(SetSecondaryPathPayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
 
@@ -43,7 +38,6 @@ public final class ModPayloads {
         ApertureService.setSecondaryPath(player, aperture, payload.path());
     }
 
-    //  ⚠ Never trust the index off the wire: an unopened aperture has no storage to show.
     private static void openStorage(OpenApertureStoragePayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
 

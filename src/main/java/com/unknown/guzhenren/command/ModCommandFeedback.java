@@ -4,13 +4,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 
-//  Default / green success / red failure. [GZR] tag stays default; only the message is colored.
-//   CLAUDE.md "Color".
 public final class ModCommandFeedback {
 
     private ModCommandFeedback() {}
 
-    //  Once at the top of an info block; the detail lines under it need no tag of their own.
     public static void header(CommandSourceStack source) {
         source.sendSuccess(() -> Component.translatable("guzhenren.command.header"), false);
     }
@@ -23,13 +20,10 @@ public final class ModCommandFeedback {
         source.sendSuccess(() -> tagged(message, ChatFormatting.GREEN), false);
     }
 
-    //  Not sendFailure: it drops the tag and flags the whole command failed. A partial refusal is a
-    //  result, not a failure.
     public static void failure(CommandSourceStack source, Component message) {
         source.sendSuccess(() -> tagged(message, ChatFormatting.RED), false);
     }
 
-    //  Color the message argument, not the whole line -- the "[GZR] " literal in the key stays default.
     private static Component tagged(Component message, ChatFormatting color) {
         return Component.translatable("guzhenren.command.tagged", message.copy().withStyle(color));
     }

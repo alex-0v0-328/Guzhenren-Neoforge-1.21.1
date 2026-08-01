@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
 
-    //  talentPaths: the paths a Ten-Extremes physique is born holding.
     NONE(),
     VERDANT_GREAT_SUN(GuPath.SPACE),
     DESOLATE_ANCIENT_MOON(GuPath.TIME),
@@ -36,7 +35,6 @@ public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
 
     public List<GuPath> getTalentPaths() {return talentPaths;}
 
-    //  One at random: NONE and PURE_DREAM_REALITY_SEEKER excluded, the other ten even.
     public static ExtremePhysique randomTenExtreme() {
         List<ExtremePhysique> pool = new ArrayList<>();
         for (ExtremePhysique p : values()) {

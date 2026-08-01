@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 public enum GuAttainment implements StringRepresentable, EnumTranslatable {
 
-    //  NONE is the default: not yet a beginner, one below Ordinary.
     NONE(0),
     ORDINARY(1),
     QUASI_MASTER(2),
@@ -30,8 +29,6 @@ public enum GuAttainment implements StringRepresentable, EnumTranslatable {
 
     public int getLevel() {return level;}
 
-    //  Shift d grades, stopping at the edge. These run LOW to HIGH, so +1 really is ordinal + 1.
-    //  ⚠ The floor is NONE, not ORDINARY: "not yet a beginner" is a real attainment to fall back to.
     public GuAttainment shift(int d) {return values()[Math.clamp(ordinal() + d, 0, values().length - 1)];}
 
     @Override

@@ -12,8 +12,6 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.damagesource.DamageType;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 
-//  Writes data/guzhenren/damage_type/*.json at runData. Not a runtime class --  CLAUDE.md "Conventions".
-//  msgId builds the death key: "guzhenren.soul_collapse" -> "death.attack.guzhenren.soul_collapse".
 public class ModDamageTypeProvider extends DatapackBuiltinEntriesProvider {
 
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
@@ -23,7 +21,6 @@ public class ModDamageTypeProvider extends DatapackBuiltinEntriesProvider {
         super(output, registries, BUILDER, Set.of(Guzhenren.MOD_ID));
     }
 
-    //  Exhaustion 0: starving on top of dying of old age would just be noise.
     private static void damageTypes(BootstrapContext<DamageType> context) {
         context.register(ModDamageTypes.LIFESPAN_EXHAUSTED, new DamageType("guzhenren.lifespan_exhausted", 0.0F));
         context.register(ModDamageTypes.SOUL_COLLAPSE, new DamageType("guzhenren.soul_collapse", 0.0F));

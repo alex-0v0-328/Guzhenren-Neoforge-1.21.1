@@ -8,30 +8,23 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-//  The Strength Path [力道], both branches: which beast strengths a body took, and how many layers of
-//  each Human Jun strength. ⚠ Since 2026-08-01 it also drives ATTACK DAMAGE -- see AttackService.
 public final class StrengthService {
 
     private StrengthService() {}
 
-    //  ---- read ----
     public static StrengthData get(Player p) {return p.getData(ModAttachments.STRENGTH);}
     public static boolean has(Player p, BeastStrength b) {return get(p).has(b);}
     public static int humanStrength(Player p, HumanStrength k) {return get(p).humanStrengthCount(k);}
     public static boolean hasBranch(Player p, StrengthBranch b) {return get(p).hasBranch(b);}
 
-    //  ---- write ----
     public static void grant(ServerPlayer p, BeastStrength b) {store(p, get(p).with(b));}
     public static void revoke(ServerPlayer p, BeastStrength b) {store(p, get(p).without(b));}
     public static void clear(ServerPlayer p) {store(p, StrengthData.DEFAULT);}
-    //  ⚠ The ONE funnel every write passes, which is why the attack refresh hangs here and nowhere else --
-    //  the same reason HealthService.refresh hangs off ApertureService.store.
     private static void store(ServerPlayer p, StrengthData d) {
         p.setData(ModAttachments.STRENGTH, d);
         AttackService.refresh(p);
     }
 
-    //  Both run past 120 as one-liners, so they sit below the tight group rather than lose their names.
     public static void setHumanStrength(ServerPlayer p, HumanStrength k, int v) {
         store(p, get(p).withHumanStrength(k, v));
     }

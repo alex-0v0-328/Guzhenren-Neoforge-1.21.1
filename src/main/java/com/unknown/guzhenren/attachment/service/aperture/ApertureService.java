@@ -17,22 +17,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
-//  The aperture [空窍] system. Index defaults to PRIMARY -- a second aperture has a place to live, no
-//  mechanic yet.
-//  ⚠ Every write goes through set(): it enforces the physique invariant, and Aperture's ctor re-clamps.
 public final class ApertureService {
 
     private ApertureService() {}
 
     public static final int PRIMARY = ApertureData.PRIMARY;
 
-    //  What a Ten-Extremes [十绝] body is born holding, laid down at 开窍.
-    //  ⚠⚠ The two halves go to DIFFERENT places: the specks split evenly across the physique's OWN talent
-    //  paths (two paths → 2500 apiece), the marks are always 人气 on the Qi Path, whatever the physique.
     public static final long TALENT_SPECK_TOTAL = 5000L;
     public static final long TALENT_QI_HUMAN_MARK = 10L;
 
-    //  ---- read ----
     public static ApertureData get(Player p) {return p.getData(ModAttachments.APERTURE);}
     public static Aperture aperture(Player p) {return get(p).primary();}
     public static Aperture aperture(Player p, int i) {return get(p).get(i);}
@@ -41,84 +34,65 @@ public final class ApertureService {
     public static Rank rank(Player p) {return aperture(p).rank();}
     public static Stage stage(Player p) {return aperture(p).stage();}
 
-    //  ---- write, on the primary aperture [空窍] ----
     public static void setRank(ServerPlayer p, Rank v) {set(p, PRIMARY, aperture(p).withRank(v));}
     public static void setStage(ServerPlayer p, Stage v) {set(p, PRIMARY, aperture(p).withStage(v));}
     public static void setState(ServerPlayer p, ApertureState v) {set(p, PRIMARY, aperture(p).withState(v));}
     public static void addBaseEssence(ServerPlayer p, int d) {setBaseEssence(p, aperture(p).baseEssence() + d);}
 
-    //  No tier field: "set the tier" rolls a base inside its band. EXTREME hits 100; set() grants the physique.
     public static void setTalent(ServerPlayer p, Talent v) {setBaseEssence(p, Talent.randomPercent(v));}
 
-    //  ---- primary / secondary path ----
-    //  Primary is DERIVED from the Vital Gu, but stored, because ApertureStorage is not synced and this
-    //  record is -- storing the path IS the sync. ⚠ No-ops when unchanged, the HealthService.refresh
-    //  idiom: setVital runs on every menu click and every day tick, and each write pushes a packet.
     public static void setPrimaryPath(ServerPlayer p, int index, @Nullable GuPath v) {
         Aperture aperture = aperture(p, index);
         if (aperture.primaryPath() == v) return;
         set(p, index, aperture.withPrimaryPath(v));
     }
 
-    //  ⚠ The player's own choice, so it is NOT recomputed from anything. Aperture's ctor drops it when it
-    //  would equal the primary -- binding a Vital Gu of that same path is what makes it fire.
     public static void setSecondaryPath(ServerPlayer p, int index, @Nullable GuPath v) {
         Aperture aperture = aperture(p, index);
         if (aperture.secondaryPath() == v) return;
         set(p, index, aperture.withSecondaryPath(v));
     }
 
-    //  Positive delta = better. Each enum owns its direction and its edge; Talent's runs backwards.
     public static void shiftRank(ServerPlayer p, int d) {setRank(p, aperture(p).rank().shift(d));}
     public static void shiftStage(ServerPlayer p, int d) {setStage(p, aperture(p).stage().shift(d));}
     public static void shiftTalent(ServerPlayer p, int d) {setTalent(p, aperture(p).talent().shift(d));}
 
-    //  ⚠ A live aperture is never base 0 -- that value belongs to Aperture.NONE alone. Unawakened is an
-    //  empty list, and the way back to it is /gzr reset, not an essence base of zero.
     public static void setBaseEssence(ServerPlayer p, int v) {
         set(p, PRIMARY, aperture(p).withBaseEssence(Math.clamp(v, Aperture.MIN_BASE, Aperture.MAX_BASE)));
     }
 
-    //  Physique and aptitude tier are two views of one fact -- granting or revoking one moves the base.
     public static void setExtremePhysique(ServerPlayer player, ExtremePhysique physique) {
         Aperture aperture = aperture(player);
 
         if (physique == ExtremePhysique.NONE) {
-            //  Back to a rolled ordinary tier -- Talent.randomNormalTalent exists for exactly this.
             if (aperture.isExtreme()) {
                 aperture = aperture.withBaseEssence(Talent.randomPercent(Talent.randomNormalTalent()));
             }
             aperture = aperture.withExtremePhysique(ExtremePhysique.NONE);
         } else {
-            //  Holding a physique *is* the Ten-Extremes tier, and that tier is base 100 by definition.
             aperture = aperture.withBaseEssence(Aperture.MAX_BASE).withExtremePhysique(physique);
         }
 
         set(player, PRIMARY, aperture);
     }
 
-    //  Awakening [开窍]. Appends an aperture -- the caller is what refuses a full holder. See CmdAperture.
     public static void awaken(ServerPlayer player) {
         ExtremePhysique before = aperture(player).extremePhysique();
         store(player, get(player).opened(enforce(Aperture.opened())));
         reconcileTalentPaths(player, before, aperture(player).extremePhysique());
     }
 
-    //  Replaces an aperture that exists; an index nobody opened is a no-op, never a grow.
     public static void set(ServerPlayer player, int index, Aperture aperture) {
         ExtremePhysique before = index == PRIMARY ? aperture(player).extremePhysique() : null;
         store(player, get(player).with(index, enforce(aperture)));
         if (index == PRIMARY) reconcileTalentPaths(player, before, aperture(player).extremePhysique());
     }
 
-    //  ⚠ Every aperture write funnels through here -- which is why the rank-driven max health hangs off it.
-    //  Same cross-domain convention as reconcileTalentPaths: the trigger's service calls the target's.
     private static void store(ServerPlayer p, ApertureData data) {
         p.setData(ModAttachments.APERTURE, data);
         HealthService.refresh(p);
     }
 
-    //  The invariant Aperture cannot enforce alone (the fix rolls a die): a physique is held **iff** Extreme.
     private static Aperture enforce(Aperture aperture) {
         boolean extreme = aperture.isExtreme();
         boolean hasPhysique = aperture.extremePhysique() != ExtremePhysique.NONE;
@@ -132,26 +106,17 @@ public final class ApertureService {
         return aperture;
     }
 
-    //  A Ten-Extremes physique grants innate marks/specks; changing it revokes the old and lays the new.
-    //  Read the physique AFTER enforce -- enforce is what actually rolls or clears it. Read is why not derived.
-    //  Convention: a cross-domain "X grants Y" rule lives in the service that owns the trigger (physique is
-    //  the aperture's, so it lives here) and calls the target domain's service  CLAUDE.md.
-    //    TODO(refactor): if such grant rules reach 2-3, extract a coordinator; one rule does not earn it.
+    //    TODO(refactor): extract a coordinator once cross-domain grant rules reach 3; TWO exist today.
     private static void reconcileTalentPaths(ServerPlayer player, ExtremePhysique before, ExtremePhysique after) {
         if (before == after) return;
         grantTalentPaths(player, before, -1);
         grantTalentPaths(player, after, 1);
     }
 
-    //  ⚠ Every quantity here names its tag, so a revoke subtracts exactly what the physique laid down --
-    //  QI_HUMAN off the Qi Path, NATURAL off each talent path, each clamped at 0 by PathData.
     private static void grantTalentPaths(ServerPlayer player, ExtremePhysique physique, int sign) {
         List<GuPath> paths = physique.getTalentPaths();
-        //  Empty means NONE, the one physique that is not a Ten-Extremes body -- it is born with nothing.
         if (paths.isEmpty()) return;
 
-        //  ⚠ The marks do NOT follow the talent paths: 人气 is one of 升仙's three, and the head start on
-        //  it is what every Ten-Extremes body has in common.  CLAUDE.md "Invariants".
         PathService.addMark(player, GuPath.QI, MarkTag.QI_HUMAN, sign * TALENT_QI_HUMAN_MARK);
         long speck = sign * (TALENT_SPECK_TOTAL / paths.size());
         for (GuPath path : paths) PathService.addSpeck(player, path, MarkTag.NATURAL, speck);

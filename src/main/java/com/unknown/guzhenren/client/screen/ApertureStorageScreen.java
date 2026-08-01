@@ -8,18 +8,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-//  The aperture's Gu store. Same look as the info panel: no texture, 75% black, an accent line.
-//  ⚠ Paging goes through clickMenuButton -- vanilla's own channel, so this screen sends no payload.
 public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStorageMenu> {
 
     private static final int SLOT = 18;
     private static final int PAGE_BUTTON_W = 16;
     private static final int PAGE_BUTTON_H = 14;
-    //  Wide enough for "10 / 10" without the arrows shifting as the count grows.
     private static final int PAGE_LABEL_W = 40;
 
-    //  The Vital Gu annex hangs off the RIGHT edge, so the panel keeps its 222 height.  CLAUDE.md.
-    //  ⚠ Mirrors ApertureStorageMenu.VITAL_X -- the slot is registered there, the box is drawn here.
     private static final int VITAL_LEFT = 178;
     private static final int VITAL_RIGHT = 210;
     private static final int VITAL_BOTTOM = 44;
@@ -27,7 +22,6 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     private static final int VITAL_SLOT_Y = 22;
     private static final String VITAL_KEY = "guzhenren.menu.vital";
 
-    //  Storage green, matching the info panel's fourth tab.
     private static final int ACCENT = 0xFF81C784;
     private static final int PANEL_FILL = 0xBF000000;
     private static final int BORDER = 0x66FFFFFF;
@@ -37,8 +31,6 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     private static final int BUTTON_HOVER = 0x66FFFFFF;
     private static final int BUTTON_DEAD = 0x14FFFFFF;
 
-    //  Back to the G panel. ⚠ The title shifts right to make room -- the header strip is one row, and a
-    //  button overlapping the title is worse than a title that starts further in.
     private static final int BACK_W = 16;
     private static final String BACK_GLYPH = "<-";
     private static final int TITLE_X_WITH_BACK = 26;
@@ -57,7 +49,6 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
         int y = topPos;
         g.fill(x, y, x + imageWidth, y + imageHeight, PANEL_FILL);
         g.renderOutline(x, y, imageWidth, imageHeight, BORDER);
-        //  The accent bar under the title separates header from content.
         g.fill(x + 7, y + 15, x + imageWidth - 7, y + 16, ACCENT);
 
         for (int row = 0; row < ApertureStorageMenu.ROWS; row++) {
@@ -81,8 +72,6 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
         renderVital(g, x, y);
     }
 
-    //  Its own little panel, same three fills as the main one, and its accent bar sits on the same
-    //  line -- that alignment is what makes it read as part of the same window.
     private void renderVital(GuiGraphics g, int x, int y) {
         g.fill(x + VITAL_LEFT, y, x + VITAL_RIGHT, y + VITAL_BOTTOM, PANEL_FILL);
         g.renderOutline(x + VITAL_LEFT, y, VITAL_RIGHT - VITAL_LEFT, VITAL_BOTTOM, BORDER);
@@ -95,8 +84,6 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
                 x + VITAL_SLOT_X + 16, y + VITAL_SLOT_Y + 16, SLOT_FILL);
     }
 
-    //  ⚠ Only the two static labels live here. The pager is drawn in render() instead: renderLabels'
-    //  matrix is already translated to leftPos/topPos, and mixing the two once misplaced the page number.
     @Override
     protected void renderLabels(@NotNull GuiGraphics g, int mouseX, int mouseY) {
         g.drawString(font, title, titleLabelX, titleLabelY, ACCENT, false);
@@ -110,7 +97,6 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
         renderTooltip(g, mouseX, mouseY);
     }
 
-    //  `< 1 / 2 >` laid out right to left, all in absolute coordinates so nothing can overlap.
     private void renderPager(GuiGraphics g, int mouseX, int mouseY) {
         renderBack(g, mouseX, mouseY);
         renderPageButton(g, mouseX, mouseY, prevX(), menu.pageIndex() > 0, "<");
@@ -158,15 +144,12 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
         return super.mouseClicked(mx, my, button);
     }
 
-    //  ⚠⚠ onClose() FIRST: it is what tells the server the container is done. Swapping the screen without
-    //  it leaves the menu open server-side, and the next slot click lands in a window he cannot see.
     private boolean clickBack() {
         onClose();
         Minecraft.getInstance().setScreen(new PlayerInfoScreen());
         return true;
     }
 
-    //  ⚠ handleInventoryButtonClick is vanilla's own button packet -- this is why paging needs no payload.
     private boolean clickPage(int id) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.gameMode == null) return false;

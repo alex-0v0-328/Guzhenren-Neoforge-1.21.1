@@ -13,7 +13,6 @@ public enum LifeForm implements StringRepresentable, EnumTranslatable {
     public static final Codec<LifeForm> CODEC = StringRepresentable.fromEnum(LifeForm::values);
     private static final String KEY_PREFIX = "guzhenren.enum.body.life_form.";
 
-    //  Which one a rank belongs to is marked on Rank itself (Rank.getLifeForm()).
 
     @Override
     public @NotNull String getSerializedName() {return name().toLowerCase();}

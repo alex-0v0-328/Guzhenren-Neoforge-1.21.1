@@ -9,8 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 public enum Rank implements StringRepresentable, EnumTranslatable {
 
-    //  Columns -- rankBase (maxEssence = baseEssence * stage.mult * rankBase), maxHealth (HP cap, stage-free),
-    //  lifeForm (mortal/immortal), essenceColor (essence [真元] colour, which the stage shades).
     NONE (      0L,  20, LifeForm.MORTAL,   EssenceColor.NONE),
     ONE  (      1L,  20, LifeForm.MORTAL,   EssenceColor.GREEN_COPPER),
     TWO  (     10L,  40, LifeForm.MORTAL,   EssenceColor.RED_STEEL),
@@ -18,9 +16,6 @@ public enum Rank implements StringRepresentable, EnumTranslatable {
     FOUR (  1_000L,  80, LifeForm.MORTAL,   EssenceColor.YELLOW_GOLDEN),
     FIVE ( 10_000L, 100, LifeForm.MORTAL,   EssenceColor.PURPLE_CRYSTAL),
 
-    //  The immortal ranks leave rankBase and maxHealth at 0 ON PURPOSE, not undecided: a Gu Immortal
-    //  does not run on essence, and gets its own system later.
-    //  ⚠ A maxHealth of 0 reads "leave HP alone", not "zero HP"  HealthService.
     SIX  (      0L,   0, LifeForm.IMMORTAL, EssenceColor.GREEN_GRAPE),
     SEVEN(      0L,   0, LifeForm.IMMORTAL, EssenceColor.RED_DATE),
     EIGHT(      0L,   0, LifeForm.IMMORTAL, EssenceColor.WHITE_LITCHI),
@@ -29,8 +24,6 @@ public enum Rank implements StringRepresentable, EnumTranslatable {
     public static final Codec<Rank> CODEC = StringRepresentable.fromEnum(Rank::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.rank.";
 
-    //  Settable range: Rank I..V. NONE sits below it -- awaken / reset own that.
-    //  ⚠ Rank VI..IX sit above it: their rankBase is a deliberate 0, so setting one zeroes the cap.
     public static final Rank LOWEST = ONE;
     public static final Rank HIGHEST = FIVE;
 
@@ -51,7 +44,6 @@ public enum Rank implements StringRepresentable, EnumTranslatable {
     public LifeForm getLifeForm() {return lifeForm;}
     public EssenceColor getEssenceColor() {return essenceColor;}
 
-    //  Shift d ranks, stopping at the edge -- Rank V never spills into VI, which is another system.
     public Rank shift(int d) {return values()[Math.clamp(ordinal() + d, LOWEST.ordinal(), HIGHEST.ordinal())];}
     public static Rank[] settable() {return Arrays.copyOfRange(values(), LOWEST.ordinal(), HIGHEST.ordinal() + 1);}
 

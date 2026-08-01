@@ -19,8 +19,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 
-//  Shared by every Cmd*: optional [targets], the awakening gate, the per-target apply.
-//   CLAUDE.md "The awakening gate".
 public final class ModCommandSupport {
 
     private ModCommandSupport() {}
@@ -35,13 +33,10 @@ public final class ModCommandSupport {
     public static final Predicate<ServerPlayer> ANYONE = player -> true;
     public static final Predicate<ServerPlayer> AWAKENED = ApertureService::isAwakened;
 
-    //  Presentation only -- requires() resolves before [targets] is parsed, so it sees only the caller.
     public static boolean sourceAwakened(CommandSourceStack source) {
         return !(source.getEntity() instanceof ServerPlayer player) || ApertureService.isAwakened(player);
     }
 
-    //  awaken / reset flip a requires() gate, so that player's tree must be resent or the branches
-    //  lag a relog. Any leaf that changes what a requires() predicate returns has to call this.
     public static void refreshCommands(ServerPlayer player) {
         MinecraftServer server = player.getServer();
         if (server != null) server.getCommands().sendCommands(player);
@@ -49,14 +44,12 @@ public final class ModCommandSupport {
 
     //region node builders
 
-    //  Executor on both the bare node and node-plus-targets -- Brigadier has no optional-arg spelling.
     public static ArgumentBuilder<CommandSourceStack, ?> withTargets(
             ArgumentBuilder<CommandSourceStack, ?> node, Command<CommandSourceStack> executor) {
         return node.executes(executor)
                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players()).executes(executor));
     }
 
-    //  `<literal> <long> [targets]`, ungated -- soul, lifespan, wisdom: every mortal has those.
     public static ArgumentBuilder<CommandSourceStack, ?> longNode(String literal, LongOperation operation) {
         return longNode(literal, operation, ANYONE, null);
     }
@@ -71,7 +64,6 @@ public final class ModCommandSupport {
                 }));
     }
 
-    //  `<literal> set <enum> [targets]`.
     public static <E extends Enum<E> & StringRepresentable> ArgumentBuilder<CommandSourceStack, ?> enumSetNode(
             String literal, E[] values, EnumOperation<E> operation,
             Predicate<ServerPlayer> allowed, String refusedKey) {
@@ -95,7 +87,6 @@ public final class ModCommandSupport {
         return applyIf(context, AWAKENED, FAILED_UNAWAKENED, operation);
     }
 
-    //  Runs on every allowed target, names the rest in one red line. A refusal is not an error.
     public static int applyIf(CommandContext<CommandSourceStack> context, Predicate<ServerPlayer> allowed,
                               String refusedKey, PlayerOperation operation) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
@@ -120,7 +111,6 @@ public final class ModCommandSupport {
         return updated;
     }
 
-    //  No targets means "me". getPlayerOrException is what refuses the console politely.
     public static Collection<ServerPlayer> targets(CommandContext<CommandSourceStack> context)
             throws CommandSyntaxException {
         boolean explicit = context.getNodes().stream()

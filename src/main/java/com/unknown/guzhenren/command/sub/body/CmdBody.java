@@ -10,8 +10,6 @@ import com.unknown.guzhenren.custom.enums.body.Race;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-//  /gzr body -- lifestate, lifeform, soul, lifespan/age, plus path (CmdPath), which now carries qi as tags.
-//  Ungated throughout: a mortal has soul, ages, dies and can be zombified without an aperture.
 public final class CmdBody {
 
     private CmdBody() {}
@@ -22,7 +20,6 @@ public final class CmdBody {
                         BodyService::setLifeState, ModCommandSupport.ANYONE, null))
                 .then(ModCommandSupport.enumSetNode("lifeform", LifeForm.values(),
                         BodyService::setLifeForm, ModCommandSupport.ANYONE, null))
-                //  ⚠ A single setter, so `set` alone -- Race is not graded, there is no up/down.
                 .then(ModCommandSupport.enumSetNode("race", Race.values(),
                         BodyService::setRace, ModCommandSupport.ANYONE, null))
                 .then(soul())
@@ -40,7 +37,6 @@ public final class CmdBody {
                         context -> ModCommandSupport.apply(context, SoulService::refill)));
     }
 
-    //  A raw count: set / add / sub, and `sub n` is `add -n`. No up/down -- those belong to graded enums.
     private static ArgumentBuilder<CommandSourceStack, ?> counter(
             String literal, ModCommandSupport.LongOperation set, ModCommandSupport.LongOperation add) {
         return Commands.literal(literal)

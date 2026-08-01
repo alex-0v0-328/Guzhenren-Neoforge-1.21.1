@@ -12,8 +12,6 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
-//  Enum arguments as a plain word plus suggestions.
-//  Not NeoForge's EnumArgument -- that is a registered argument type; a word needs no registration.
 public final class ModEnumArgument {
 
     private ModEnumArgument() {}

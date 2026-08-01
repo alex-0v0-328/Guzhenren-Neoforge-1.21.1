@@ -23,8 +23,6 @@ import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
-//  Every table is column-aligned -- seeing at a glance which key carries which phrase IS this file's
-//  whole value, and a hard wrap destroys it.
 public class EnUsLanguageProvider extends LanguageProvider {
     public EnUsLanguageProvider(PackOutput output) {
         super(output, Guzhenren.MOD_ID, "en_us");
@@ -40,13 +38,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addDeathMessages();
     }
 
-    //  Every enum here is EnumTranslatable, so the constant IS the key -- short enough to align,
-    //  which is exactly what that interface is for.
     private void add(EnumTranslatable key, String value) {add(key.getTranslationKey(), value);}
 
     //region DISPLAY
-    //  The values, shared by the HUD and /guzhenren info (see ModDisplayText); each caller adds its label.
-    //  realm joins directly in Chinese (一转巅峰) but needs a space here -- the separator lives in the key
     private void addDisplayKeys() {
         add("guzhenren.display.realm",                        "%s %s");
         add("guzhenren.display.gu_line",                      "%s %s %s");
@@ -122,8 +116,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //endregion
 
     //region COMMAND
-    //  Three feedback classes: info default / success green / failure red, all tagged [GZR]
-    //  (see ModCommandFeedback)
     private void addCommandKeys() {
         add("guzhenren.command.header",               "[GZR]");
         add("guzhenren.command.tagged",               "[GZR] %s");
@@ -163,13 +155,11 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.mind",            "Mind Ocean:");
         add("guzhenren.command.info.mind_entry",      "  %s  %s / %s");
 
-        //  Derived detail for the operator, dimmed at the end of a line: aptitude base / soul title.
         add("guzhenren.command.info.detail",          " [%s]");
     }
     //endregion
 
     //region SCREEN
-    //  The G-key info panel (see client/screen/PlayerInfoScreen) plus its keybind
     private void addScreenKeys() {
         add("key.categories.guzhenren",              "Guzhenren");
         add("key.guzhenren.open_info",               "Open Info Panel");
@@ -207,8 +197,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //endregion
 
     //region ITEM
-    //  A refusal here addresses "you", so the command's keys don't fit -- those name a target.
-    //  Nothing is said on success: the essence bar is the one that speaks.
     private void addItemKeys() {
         add("item.guzhenren.hope_gu",                      "Hope Gu");
         add("item.guzhenren.copper_relics_gu",             "Green Copper Relics Gu");
@@ -300,7 +288,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //endregion
 
     //region DEATH
-    //  The key is decided by the DamageType's msgId: msgId "guzhenren.xxx" -> "death.attack.guzhenren.xxx"
     private void addDeathMessages() {
         add("death.attack.guzhenren.lifespan_exhausted",   "%1$s ran out of lifespan");
         add("death.attack.guzhenren.soul_collapse",        "%1$s suffered soul collapse");
@@ -331,20 +318,17 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addHumanStrength();
     }
 
-    //  Beast strengths: taken by consuming a beast Gu, one kind once ever. Two boars today
     private void addBeastStrength() {
         add(BeastStrength.WHITE_BOAR, "White Boar");
         add(BeastStrength.BLACK_BOAR, "Black Boar");
     }
 
-    //  The Strength Path's three branches. Titles today; effects come later, and ENVIRONMENT has no data
     private void addStrengthBranch() {
         add(StrengthBranch.HUMAN,       "Human Jun Strength Branch");
         add(StrengthBranch.BEASTS,      "Beast Strength Phantom Branch");
         add(StrengthBranch.ENVIRONMENT, "Atmospheric Heaven and Earth Branch");
     }
 
-    //  The Human Jun branch's kinds -- Jin, Ten Jin, Jun (=100 Jin), Ten Jun.
     private void addHumanStrength() {
         add(HumanStrength.JIN,     "Jin");
         add(HumanStrength.TEN_JIN, "Ten Jin");
@@ -352,7 +336,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(HumanStrength.TEN_JUN, "Ten Jun");
     }
 
-    //  Both are alive-or-dead. ⚠ The body's LifeState had a third constant until 化僵 was cut 2026-08-01
     private void addApertureState() {
         add(ApertureState.ALIVE, "Alive");
         add(ApertureState.DEAD,  "Dead");
@@ -372,7 +355,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
     }
 
     private void addStage() {
-        //  Deliberately blank: nothing is shown while unawakened
         add(Stage.NONE,   "");
         add(Stage.INIT,   "Initial");
         add(Stage.MIDDLE, "Middle");
@@ -380,7 +362,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(Stage.PEAK,   "Peak");
     }
 
-    //  The grades 甲乙丙丁 are the classic Chinese ordinals, so they land on A/B/C/D, not I..IV.
     private void addTalent() {
         add(Talent.EXTREME, "Ten-Extremes Aptitude");
         add(Talent.FIRST,   "Grade-A Aptitude");
@@ -395,7 +376,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(LifeForm.IMMORTAL, "Immortal");
     }
 
-    //  ⚠ Everyone is born Human; the eleven below are only ever made. Each is a Master of one path.
     private void addRace() {
         add(Race.HUMAN,       "Human");
         add(Race.HAIRY_MEN,   "Hairy Men");
@@ -416,8 +396,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(LifeState.DEAD,   "Dead");
     }
 
-    //  Essence colors, one per rank; the shade within a rank is computed by EssenceColor.shade from the
-    //  stage, so it needs no text of its own
     private void addEssenceColor() {
         add(EssenceColor.NONE,           "None");
         add(EssenceColor.GREEN_COPPER,   "Green Copper");
@@ -432,7 +410,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
     }
 
     private void addTenExtreme() {
-        //  Deliberately blank: nothing is shown for a player without an extreme physique
         add(ExtremePhysique.NONE,                               "");
         add(ExtremePhysique.VERDANT_GREAT_SUN,                  "Verdant Great Sun");
         add(ExtremePhysique.DESOLATE_ANCIENT_MOON,              "Desolate Ancient Moon");
@@ -447,8 +424,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(ExtremePhysique.PURE_DREAM_REALITY_SEEKER,          "Pure Dream Reality Seeker");
     }
 
-    //  Where a mark or speck came from. NATURAL is universal and does nothing; the rest name their path's
-    //  own sources, and the two Strength ones reuse their branch's wording rather than invent a second.
     private void addMarkTag() {
         add(MarkTag.NATURAL,         "Natural");
         add(MarkTag.RACE,            "Race");
@@ -515,7 +490,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(GuAttainment.SUPREME_GRANDMASTER,       "Supreme Grandmaster");
     }
 
-    //  Soul tiers: looked up from maxSoul (soul = men × 100), never stored on their own
     private void addSoulTier() {
         add(SoulTier.ONE,              "One-Person Soul");
         add(SoulTier.TEN,              "Ten-Person Soul");
@@ -528,14 +502,12 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(SoulTier.HUNDRED_MILLION,  "Hundred-Million-Person Soul");
     }
 
-    //  The three cells; initial capacities 30000 / 5 / 2, and overflowing them shatters the Mind Ocean
     private void addWisdomType() {
         add(WisdomType.THOUGHTS, "Thoughts");
         add(WisdomType.WILLS,    "Wills");
         add(WisdomType.EMOTIONS, "Emotions");
     }
 
-    //  Brilliance: the natural thought regen rate (1 / 4 / 16 / 64 / 256 a second), rolled at birth
     private void addBrilliance() {
         add(Brilliance.ORDINARY,    "Ordinary Brilliance");
         add(Brilliance.DECENT,      "Decent Brilliance");

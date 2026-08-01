@@ -8,10 +8,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-//  "Open my aperture's storage." One of the mod's two payloads, and it carries no player data --
-//  just which aperture. Everything inside the container then rides vanilla's own slot channel.
-//  ⚠ Client intents only, and there are two. Player data syncs through attachments -- CLAUDE.md
-//  "Networking"; the sibling is SetSecondaryPathPayload.
 public record OpenApertureStoragePayload(int aperture) implements CustomPacketPayload {
 
     public static final Type<OpenApertureStoragePayload> TYPE = new Type<>(

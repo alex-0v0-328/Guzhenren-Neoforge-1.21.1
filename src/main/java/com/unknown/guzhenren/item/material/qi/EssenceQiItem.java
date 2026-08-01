@@ -7,11 +7,8 @@ import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-//  Essence Qi [元气]: essence regenerates faster for a minute. The percentages live on EssenceQiEffect,
-//  which EssenceService.regenStep reads -- nothing here knows them.
 public class EssenceQiItem extends QiMaterialItem {
 
-    //  One minute at every rank; the rank buys the rate, not the time.
     private static final int DURATION_TICKS = Ticks.MINUTE;
 
     public EssenceQiItem(Properties properties, Rank rank) {

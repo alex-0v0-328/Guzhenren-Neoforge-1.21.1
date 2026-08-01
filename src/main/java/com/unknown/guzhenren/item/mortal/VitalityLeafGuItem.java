@@ -11,16 +11,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-//  Vitality Leaf Gu [生机叶蛊]: one click, 64 health over 32 seconds, and the leaf is gone.
-//  ⚠ No refining and no feeding, deliberately -- a recovery item earns none of that machinery.
 public class VitalityLeafGuItem extends MortalGuItem {
 
     private static final String FAILED_VITALITY_ACTIVE = "guzhenren.item.failed.vitality_active";
 
-    //  One second. The refusal is what actually stops the second leaf; this only stops a double click.
     private static final int USE_COOLDOWN_TICKS = 20;
 
-    //  Rank I, Wood Path. Neither reusable nor feedable -- a leaf is spent the moment it works.
     public VitalityLeafGuItem(Properties properties) {
         super(properties, Rank.ONE, GuPath.WOOD, false, false);
     }
@@ -30,7 +26,6 @@ public class VitalityLeafGuItem extends MortalGuItem {
     @Override
     protected int cooldownTicks(ItemStack stack) {return USE_COOLDOWN_TICKS;}
 
-    //  ⚠ A second leaf would restart the first and waste what is left of it -- refuse while it runs.
     @Override
     protected @Nullable Refusal gate(Player player, ItemStack stack) {
         return player.hasEffect(ModEffects.VITALITY_LEAF) ? new Refusal(FAILED_VITALITY_ACTIVE) : null;

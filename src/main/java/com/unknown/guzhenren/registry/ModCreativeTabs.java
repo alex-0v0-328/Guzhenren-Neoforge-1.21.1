@@ -12,8 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-//  One tab per branch of the item tree: Mortal Gu [凡蛊] and Gu Material [蛊材].
-//  Contents are derived from ModItems by class -- a new item joins its tab with no line here.
 public final class ModCreativeTabs {
 
     private ModCreativeTabs() {}
@@ -35,7 +33,6 @@ public final class ModCreativeTabs {
                     .displayItems((parameters, output) -> accept(output, GuMaterialItem.class))
                     .build());
 
-    //  Every registered item of this branch, in registration order (DeferredRegister keeps insertion order).
     private static void accept(CreativeModeTab.Output output, Class<? extends Item> branch) {
         for (var entry : ModItems.ITEMS.getEntries()) {
             Item item = entry.get();

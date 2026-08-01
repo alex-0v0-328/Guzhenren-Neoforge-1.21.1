@@ -6,9 +6,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  Per-stack state of any refinable Gu: how far refined, how far toward the next payout, how fed.
-//  ⚠ The limits are NOT here -- they belong to the item (RefinableGuItem), which clamps on write.
-//  This record only guarantees nothing goes negative.
 public record RefinedGuState(int refineProgress, int useCount, int hunger) {
 
     public static final RefinedGuState WILD = new RefinedGuState(0, 0, 0);

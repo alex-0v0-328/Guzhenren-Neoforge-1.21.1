@@ -7,8 +7,6 @@ import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-//  /gzr mind brilliance set <v> | up | down, plus wisdom (CmdWisdom).
-//  Ungated: thought is not cultivation -- a mortal has a Mind Ocean too.
 public final class CmdMind {
 
     private CmdMind() {}
@@ -19,7 +17,6 @@ public final class CmdMind {
                 .then(CmdWisdom.node());
     }
 
-    //  Brilliance is the thought regen rate -- a graded enum, so set / up / down.  CLAUDE.md "Commands".
     private static ArgumentBuilder<CommandSourceStack, ?> brilliance() {
         return ModCommandSupport.enumSetNode("brilliance", Brilliance.values(), MindService::setBrilliance,
                         ModCommandSupport.ANYONE, null)

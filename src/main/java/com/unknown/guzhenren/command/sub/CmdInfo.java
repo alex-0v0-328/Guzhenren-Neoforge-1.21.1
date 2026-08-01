@@ -20,10 +20,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr info [aperture|body|mind] -- bare `info` is `info aperture` on yourself. Phrases: ModDisplayText.
-//  ⚠ [targets] hangs off the sections, not bare `info` -- a bare word arg there would be ambiguous.
-//  ⚠ WHICH rows exist is InfoModel's; this file only turns each into a chat line. Every key bakes in its
-//  own label and its own indent, which is why the panel cannot share them --  CLAUDE.md "Info panel".
 public final class CmdInfo {
 
     private CmdInfo() {}
@@ -43,7 +39,6 @@ public final class CmdInfo {
                         context -> print(context, InfoModel::mind)));
     }
 
-    //  One shape for all three sections: a tagged header per target, then a line per row.
     private static int print(CommandContext<CommandSourceStack> context,
                              Function<ServerPlayer, List<InfoModel.Row>> view) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
@@ -57,8 +52,6 @@ public final class CmdInfo {
         return Command.SINGLE_SUCCESS;
     }
 
-    //  ⚠ Exhaustive over a sealed Entry: a new row cannot be added to InfoModel without this failing to
-    //  compile. That is what replaced the old "must not drift" comment in two files.
     private static Component line(InfoModel.Entry entry) {
         return switch (entry) {
             case InfoModel.ApertureIndex e -> key("aperture_index", e.number());
@@ -102,7 +95,6 @@ public final class CmdInfo {
         return key("talent", talent);
     }
 
-    //  Attainment, or [NONE] while it is still none -- never a bare none. Each total omitted while 0.
     private static MutableComponent qiHeader(InfoModel.QiHeader e) {
         Component value = e.attainment() == GuAttainment.NONE
                 ? none()
@@ -113,7 +105,6 @@ public final class CmdInfo {
         return header;
     }
 
-    //  Marks always; specks only when he has some -- most mortals sit at one denomination, not both.
     private static MutableComponent pathLine(GuPath path, PathEntry entry) {
         MutableComponent line = key("path_entry", enumName(path.getTranslationKey()),
                 enumName(entry.attainment().getTranslationKey()), entry.mark());
@@ -121,7 +112,6 @@ public final class CmdInfo {
         return line;
     }
 
-    //  ⚠ An empty section reads inline on its own header, never as a separate line.
     private static MutableComponent header(String id, boolean empty) {
         MutableComponent line = key(id);
         return empty ? line.append("  ").append(none()) : line;
@@ -131,8 +121,6 @@ public final class CmdInfo {
     private static MutableComponent enumName(String key) {return Component.translatable(key);}
     private static MutableComponent none() {return Component.translatable("guzhenren.display.none");}
 
-    //  " [Eighty Nine]" / " [One-Person Soul]": derived detail for operators. The one place gray is not a
-    //  feedback class. ⚠ Same [...] shape as the panel and chat -- do not reinvent it per surface.
     private static MutableComponent muted(Object value) {
         return Component.translatable(PREFIX + "detail", value).withStyle(ChatFormatting.DARK_GRAY);
     }

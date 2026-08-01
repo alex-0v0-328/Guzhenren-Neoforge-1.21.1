@@ -16,13 +16,6 @@ import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  One mortal aperture [凡窍]: what a cultivator *is*, plus the essence pool that hangs off it.
-//  A player holds 0..2 of them.
-//  ⚠ The cap is derived here, so currentEssence is clamped structurally -- no writer can exceed it.
-//  ⚠ Both paths are NULLABLE -- the data model's only nulls. GuPath has no NONE, and "has not chosen"
-//  is a real state.  CLAUDE.md "Primary and secondary path".
-//  ⚠ distilledEssence [精炼真元] is a SECOND pool, not a discount on the first: a Liquor Worm empties the
-//  ordinary one and redirects regen here, where every point spends as two.
 public record Aperture(
         Rank rank,
         Stage stage,
@@ -35,15 +28,12 @@ public record Aperture(
         long distilledEssence
 ) {
 
-    //  Aptitude base: 20..100. Only NONE is 0 -- a real aperture never is. See ApertureService.
     public static final int MIN_BASE = 20;
     public static final int MAX_BASE = 100;
 
-    //  The read fallback for "no aperture there". Never stored: unawakened is an empty list, not this.
     public static final Aperture NONE = new Aperture(
             Rank.NONE, Stage.NONE, 0, ExtremePhysique.NONE, 0L, ApertureState.ALIVE, null, null, 0L);
 
-    //  All optional: a field added later must not invalidate old saves.
     public static final Codec<Aperture> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Rank.CODEC.optionalFieldOf("rank", Rank.NONE).forGetter(Aperture::rank),
             Stage.CODEC.optionalFieldOf("stage", Stage.NONE).forGetter(Aperture::stage),
@@ -66,8 +56,6 @@ public record Aperture(
     private static final StreamCodec<ByteBuf, ApertureState> STATE = ModStreamCodecs.ofEnum(ApertureState.class);
     private static final StreamCodec<ByteBuf, GuPath> PATH = ModStreamCodecs.ofNullableEnum(GuPath.class);
 
-    //  ⚠ Hand-written, and it has to be: StreamCodec.composite stops at SIX components and this record
-    //  has eight. Field order here must match decode's -- there is no compiler check on that.
     public static final StreamCodec<ByteBuf, Aperture> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public @NotNull Aperture decode(@NotNull ByteBuf buf) {
@@ -97,20 +85,13 @@ public record Aperture(
         }
     };
 
-    //  ⚠ 1..19 is a hole, not a value: no talent tier there, but a live essence cap. Snap out of it.
     public Aperture {
         baseEssence = baseEssence <= 0 ? 0 : Math.clamp(baseEssence, MIN_BASE, MAX_BASE);
         currentEssence = Math.clamp(currentEssence, 0L, maxEssence(rank, stage, baseEssence));
-        //  ⚠ The distilled pool shares the ordinary cap -- regen is simply redirected into it, so the
-        //  ceiling regen stops at must be the same one. It is NOT halved for the 1:2 spend rate.
         distilledEssence = Math.clamp(distilledEssence, 0L, maxEssence(rank, stage, baseEssence));
-        //  ⚠ The secondary path can never equal the primary -- enforced here, so the pair is
-        //  unrepresentable rather than merely refused. Binding a Vital Gu of it is what fires this.
         if (secondaryPath != null && secondaryPath == primaryPath) secondaryPath = null;
     }
 
-    //  Awakening [开窍]: Rank I Initial + a rolled tier + its physique, and a full pool.
-    //  ⚠ No paths: the primary comes from a Vital Gu, the secondary from the player. Awakening grants neither.
     public static Aperture opened() {
         Talent talent = Talent.randomTalent();
         ExtremePhysique physique = talent == Talent.EXTREME
@@ -122,8 +103,6 @@ public record Aperture(
         return new Aperture(Rank.ONE, Stage.INIT, base, physique, max, ApertureState.ALIVE, null, null, 0L);
     }
 
-    //  ---- derived, never stored;  CLAUDE.md ----
-    //  ⚠ Rank.SIX..NINE have rankBase == 0, so an immortal caps at 0. Deliberate -- do not "fix" it.
     public static long maxEssence(Rank rank, Stage stage, int base) {
         return Math.max(0L, (long) base * stage.getEssenceMultiplier() * rank.getRankBase());
     }
@@ -134,7 +113,6 @@ public record Aperture(
     public boolean isAlive() {return state == ApertureState.ALIVE;}
     public Aperture refilled() {return withCurrentEssence(maxEssence());}
 
-    //  ---- withers ----  nine components: each one is a block, and the tail wraps
     public Aperture withRank(Rank v) {
         return new Aperture(v, stage, baseEssence, extremePhysique, currentEssence, state,
                 primaryPath, secondaryPath, distilledEssence);

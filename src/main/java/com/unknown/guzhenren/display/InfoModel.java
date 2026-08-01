@@ -31,17 +31,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
-//  WHICH rows an info view has, in what order, decided once and rendered twice: /gzr info and the G panel.
-//  ⚠ Structure only, not text -- the command bakes label+indent into each key ('Essence:     %s / %s'),
-//  the panel puts label and value in separate columns. Formatting stays per-surface.  CLAUDE.md "Info panel".
-//  ⚠⚠ Entry is SEALED so both switches are exhaustive: a new row is a compile error until both surfaces
-//  handle it. That guarantee replaced the "must not drift" comments the two used to carry.  CLAUDE.md.
 public final class InfoModel {
 
     private InfoModel() {}
 
-    //  Entries that sit under a header are indented by the panel. ⚠ The command ignores this: its own
-    //  keys already begin with two spaces.
     public static final int INDENT = 10;
 
     public record Row(int indent, Entry entry) {}
@@ -53,10 +46,7 @@ public final class InfoModel {
     public record Realm(Aperture aperture) implements Entry {}
     public record Talent(Aperture aperture, boolean awakened) implements Entry {}
     public record Essence(Aperture aperture) implements Entry {}
-    //  ⚠ Only while the pool is non-empty -- outside a Liquor Worm [酒虫] it is always 0, and a row that
-    //  reads 0 every day of a cultivator's life teaches nothing.
     public record Distilled(Aperture aperture) implements Entry {}
-    //  ⚠ One record for both: only the label differs, and the panel hangs its picker off the secondary.
     public record PathChoice(boolean primary, @Nullable GuPath path) implements Entry {}
     public record ApertureLife(ApertureState state) implements Entry {}
     //endregion
@@ -70,8 +60,6 @@ public final class InfoModel {
     public record PathsHeader(boolean empty) implements Entry {}
     public record PathRow(GuPath path, PathEntry entry) implements Entry {}
     public record QiHeader(GuAttainment attainment, long totalMark, long totalSpeck) implements Entry {}
-    //  One tag's amount, on the Qi Path. ⚠ speck says WHICH map it came from -- the Qi Path shows both,
-    //  marks (天地人自然气) then specks (剑生元力死气), 无TAG last.
     public record QiRow(MarkTag tag, long amount, boolean speck) implements Entry {}
     public record StrengthHeader(boolean empty) implements Entry {}
     public record StrengthRow(StrengthBranch branch, Component reading) implements Entry {}
@@ -80,13 +68,10 @@ public final class InfoModel {
 
     //region Mind
     public record BrillianceRow(Brilliance brilliance) implements Entry {}
-    //  ⚠ Command only: on the panel the tab name is already this header.
     public record MindHeader() implements Entry {}
     public record MindRow(WisdomType type, MindPool pool) implements Entry {}
     //endregion
 
-    //  A cultivator's apertures. ⚠ One aperture reads bare; two get numbered and indented, or the blocks
-    //  read as one contradictory cultivator.
     public static List<Row> aperture(Player player) {
         ApertureData data = ApertureService.get(player);
         List<Row> rows = new ArrayList<>();
@@ -102,8 +87,6 @@ public final class InfoModel {
         return rows;
     }
 
-    //  ⚠ An unawakened cap is 0, and a 0/0 line only asks the player to keep looking at it -- so essence
-    //  and both paths appear only once he has an aperture. Realm and aptitude still read mortal.
     private static void apertureBlock(List<Row> rows, Aperture aperture, boolean awakened, int indent) {
         rows.add(new Row(indent, new Realm(aperture)));
         rows.add(new Row(indent, new Talent(aperture, awakened)));
@@ -138,8 +121,6 @@ public final class InfoModel {
         return rows;
     }
 
-    //  Every visible path except the Qi Path -- that one is its own section, so it is never listed twice.
-    //  ⚠ An empty section reads on its own header, never as a separate line.
     private static void paths(List<Row> rows, Player player) {
         List<Map.Entry<GuPath, PathEntry>> paths = PathService.visibleEntries(player).entrySet().stream()
                 .filter(e -> e.getKey() != GuPath.QI).toList();
@@ -150,8 +131,6 @@ public final class InfoModel {
         }
     }
 
-    //  ⚠ The Qi Path is the one path shown broken down by tag: its header carries both totals, then a row
-    //  per tag with a mark, then a row per tag with a speck. Only the tags he has -- PathEntry is sparse.
     private static void qi(List<Row> rows, Player player) {
         rows.add(new Row(0, new QiHeader(PathService.attainment(player, GuPath.QI),
                 PathService.mark(player, GuPath.QI), PathService.speck(player, GuPath.QI))));
@@ -166,8 +145,6 @@ public final class InfoModel {
         }
     }
 
-    //  Every tag the Qi Path can carry: its own in enum order, then NATURAL last -- 无TAG reads bottom,
-    //  matching how a mark or speck with no source lands there. Built once.
     private static final List<MarkTag> QI_TAGS = qiTags();
 
     private static List<MarkTag> qiTags() {
@@ -179,33 +156,23 @@ public final class InfoModel {
         return tags;
     }
 
-    //  The Strength Path's branches: a beast-strengths row, and the Human Jun branch combined onto one.
-    //  ⚠ The Strength Path also stays in the path list above -- that row is its specks, these are the
-    //  grades those uses bought. Two different facts.
     private static void strength(List<Row> rows, Player player) {
         StrengthData data = StrengthService.get(player);
         rows.add(new Row(0, new StrengthHeader(data.isEmpty())));
         if (data.isEmpty()) return;
 
-        //  One row for the whole beast branch too -- a bracket a family, empty ones omitted.
         if (data.hasBranch(StrengthBranch.BEASTS)) {
             rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.BEASTS, ModDisplayText.beastStrengthLine(data))));
         }
-        //  The whole Human Jun branch on ONE row -- the 钧 family then the 斤 family, empty ones omitted.
         if (data.hasBranch(StrengthBranch.HUMAN)) {
             rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN, ModDisplayText.humanStrengthLine(data))));
         }
     }
 
-    //  The Wisdom Path's [智道] own attainment, named beside 力道 and 气道 on the achievement tab.
-    //  ⚠ 智道's marks and specks stay in the path list below like any other path -- only its GRADE is
-    //  pulled out here. 善念/恶念 remain a 脑海 composition, never a 道痕.
     private static void wisdom(List<Row> rows, Player player) {
         rows.add(new Row(0, new WisdomHeader(PathService.attainment(player, GuPath.WISDOM))));
     }
 
-    //  All three cells, always -- MindData is dense, and a missing row would read as a bug.
-    //  ⚠ The cells are NOT indented on the panel; the command's own key supplies its two spaces.
     public static List<Row> mind(Player player) {
         MindData mind = MindService.get(player);
         List<Row> rows = new ArrayList<>();

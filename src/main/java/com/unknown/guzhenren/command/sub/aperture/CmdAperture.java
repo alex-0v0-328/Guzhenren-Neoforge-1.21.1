@@ -18,8 +18,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.util.StringRepresentable;
 
-//  /gzr aperture -- lifestate, rank/stage/talent, physique, essence. No `max` leaf: the cap is derived.
-//  ⚠ Gated as ONE branch, which only works because `awaken` is at the root.  CLAUDE.md.
 public final class CmdAperture {
 
     private CmdAperture() {}
@@ -40,7 +38,6 @@ public final class CmdAperture {
                 .then(essence());
     }
 
-    //  `extreme` is one kind of physique among future others, so the kind gets its own node.
     private static ArgumentBuilder<CommandSourceStack, ?> physique() {
         return Commands.literal("physique")
                 .then(ModCommandSupport.enumSetNode("extreme", ExtremePhysique.values(),
@@ -58,8 +55,6 @@ public final class CmdAperture {
                         .then(currentNode("set", EssenceService::set))
                         .then(currentNode("add", EssenceService::add))
                         .then(currentNode("sub", (p, v) -> EssenceService.add(p, -v))))
-                //  ⚠ No refill: the distilled pool [精炼真元] is not filled, it is EARNED by drinking.
-                //  Its own cap is the ordinary one, so refill would just duplicate the leaf above.
                 .then(Commands.literal("distilled")
                         .then(currentNode("set", EssenceService::setDistilled))
                         .then(currentNode("add", EssenceService::addDistilled))
@@ -70,8 +65,6 @@ public final class CmdAperture {
 
     //region builders
 
-    //  The branch's requires() is presentation only -- it cannot see [targets]. applyOnAwakened, on every
-    //  leaf below, is what actually protects the data.
     private static <E extends Enum<E> & StringRepresentable> ArgumentBuilder<CommandSourceStack, ?> graded(
             String literal, E[] settable, EnumOperation<E> set, IntOperation shift) {
         return Commands.literal(literal)

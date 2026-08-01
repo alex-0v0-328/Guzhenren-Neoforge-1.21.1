@@ -16,13 +16,10 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr body path <p> -- marks and specks are counts per source tag, attainment is graded.
-//  ⚠ Both totals derive from the tags, so there is nothing to set on a total. See MarkTag.
 public final class CmdPath {
 
     private CmdPath() {}
 
-    //  ⚠ Each nested enum needs its OWN argument name, or the count that follows collides with it.
     private static final String ARG_PATH = "path";
     private static final String ARG_TAG = "tag";
 
@@ -34,8 +31,6 @@ public final class CmdPath {
                         .then(attainment()));
     }
 
-    //  ⚠ The tag argument takes any word: Brigadier cannot narrow one argument by a sibling's value, so
-    //  a tag that does not belong to this path is refused in the handler rather than hidden from the tree.
     private static ArgumentBuilder<CommandSourceStack, ?> tagged(
             String literal, TagOperation set, TagOperation add) {
         return Commands.literal(literal).then(ModEnumArgument.arg(ARG_TAG, MarkTag.values())
@@ -76,7 +71,6 @@ public final class CmdPath {
                 }));
     }
 
-    //  Not a per-target refusal: the pair of arguments is what is wrong, whoever the targets are.
     private static int refuseTag(CommandContext<CommandSourceStack> context, MarkTag tag, GuPath path) {
         ModCommandFeedback.failure(context.getSource(), Component.translatable(
                 ModCommandSupport.FAILED_TAG_PATH,

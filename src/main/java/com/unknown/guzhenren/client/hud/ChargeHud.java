@@ -12,10 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-//  The bar a charged Gu use draws over the hotbar, with the running total above it. It rides vanilla's
-//  own held-item-name baseline, so armour and a mount's health push it up instead of hiding it.
-//  ⚠ Purely client-side and purely derived: the hold lives in vanilla's own useItemRemainingTicks, and
-//  the totals ride the stack's synced component. Nothing here is state.  CLAUDE.md "HUD".
 public final class ChargeHud implements LayeredDraw.Layer {
 
     public static final ChargeHud INSTANCE = new ChargeHud();
@@ -23,19 +19,15 @@ public final class ChargeHud implements LayeredDraw.Layer {
     private ChargeHud() {}
 
 
-    //  Hotbar is 182 wide, so the bar lines up with it. The HEIGHT is not fixed -- see barTop.
     private static final int BAR_WIDTH = 182;
     private static final int BAR_HEIGHT = 5;
     private static final int TEXT_GAP = 3;
 
-    //  Clearance over the held-item name, which sits at vanilla's own baseline.
     private static final int NAME_GAP = 4;
 
-    //  Vanilla's floor for that baseline, and the lift it applies where nothing can hurt you.
     private static final int MIN_SHIFT = 59;
     private static final int CREATIVE_LIFT = 14;
 
-    //  Essence blue, the same hue the HUD's essence bar uses -- this bar is spending exactly that.
     private static final int FILL = 0xFF4FC3F7;
     private static final int TRACK = 0xB0202020;
     private static final int BORDER = 0xC0000000;
@@ -54,7 +46,6 @@ public final class ChargeHud implements LayeredDraw.Layer {
         int total = stack.getUseDuration(player);
         if (total <= 0) return;
 
-        //  getUseItemRemainingTicks counts DOWN, so the fraction is what has already elapsed.
         float progress = 1.0F - player.getUseItemRemainingTicks() / (float) total;
 
         int x = (minecraft.getWindow().getGuiScaledWidth() - BAR_WIDTH) / 2;
@@ -72,15 +63,10 @@ public final class ChargeHud implements LayeredDraw.Layer {
                 y - TEXT_GAP - font.lineHeight, TEXT_COLOR, true);
     }
 
-    //  Sits just above the held-item name, on vanilla's own baseline -- so armour, absorption and a
-    //  mount's health push it up exactly as they push that name up.
-    //  ⚠ This is why the layer is registered above AIR_LEVEL and not HOTBAR: leftHeight/rightHeight are
-    //  reset at the top of every frame and only reach their final value once the status stack has drawn.
     private static int barTop(Minecraft minecraft) {
         Gui gui = minecraft.gui;
         int shift = Math.max(Math.max(gui.leftHeight, gui.rightHeight), MIN_SHIFT);
         int baseline = minecraft.getWindow().getGuiScaledHeight() - shift;
-        //  Vanilla lifts the same line in creative, where there is no health row under it.
         if (minecraft.gameMode != null && !minecraft.gameMode.canHurtPlayer()) baseline += CREATIVE_LIFT;
         return baseline - NAME_GAP - BAR_HEIGHT;
     }

@@ -8,8 +8,6 @@ import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-//  /gzr mind wisdom thoughts|wills|emotions current|max set|add|sub <long> | refill (to the cap, never over).
-//  ⚠ One literal per cell, never an enum arg -- a word arg is ambiguous with any literal sibling.
 public final class CmdWisdom {
 
     private CmdWisdom() {}
@@ -22,7 +20,6 @@ public final class CmdWisdom {
         return wisdom;
     }
 
-    //  The type is closed over, so every leaf is a plain long node -- no re-read off the context.
     private static ArgumentBuilder<CommandSourceStack, ?> cell(WisdomType type) {
         return Commands.literal(type.getSerializedName())
                 .then(Commands.literal("current")

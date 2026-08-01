@@ -11,9 +11,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
-//  The body [肉身]: life state, life form, lifespan and age.
-//  Soul, path and qi are the body's too, but keep their own attachments.
-//  lastDayIndex = last overworld day billed; makes aging idempotent and relog-safe.
 public record BodyData(
         LifeState lifeState,
         LifeForm lifeForm,
@@ -46,9 +43,6 @@ public record BodyData(
     private static final StreamCodec<ByteBuf, LifeForm> FORM = ModStreamCodecs.ofEnum(LifeForm.class);
     private static final StreamCodec<ByteBuf, Race> RACE = ModStreamCodecs.ofEnum(Race.class);
 
-    //  lastDayIndex is server bookkeeping, but two bytes -- not worth a partial codec. So is the debt.
-    //  ⚠⚠ Hand-written since race landed: SEVEN components, and StreamCodec.composite stops at six --
-    //  the same wall Aperture hit. Encode and decode order must match BY HAND; nothing checks it.
     public static final StreamCodec<ByteBuf, BodyData> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public @NotNull BodyData decode(@NotNull ByteBuf buf) {
@@ -82,8 +76,6 @@ public record BodyData(
     public boolean isExhausted() {return lifespan <= 0L;}
     public boolean isAlive() {return lifeState == LifeState.ALIVE;}
 
-    //  ---- withers ----
-    //  ⚠ Seven components run past 120 as one-liners, so these are blocks -- names stay spelled out.
     public BodyData withLifeState(LifeState v) {
         return new BodyData(v, lifeForm, race, age, lifespan, lastDayIndex, deathQiLifespanLost);
     }
@@ -103,13 +95,10 @@ public record BodyData(
         return new BodyData(lifeState, lifeForm, race, age, lifespan, v, deathQiLifespanLost);
     }
 
-    //  How much lifespan Death Qi [死气] has taken so far. ⚠ Stored on the body, NOT on the effect:
-    //  1.21.1's MobEffect has no expiry hook, and milk / effect clear / death would lose the tally.
     public BodyData withDeathQiLifespanLost(long v) {
         return new BodyData(lifeState, lifeForm, race, age, lifespan, lastDayIndex, v);
     }
 
-    //  One day billed: a year older, a year less to live. Age and lifespan move as one.
     public BodyData aged(long days, long today) {
         return new BodyData(
                 lifeState, lifeForm, race, age + days, lifespan - days, today, deathQiLifespanLost);

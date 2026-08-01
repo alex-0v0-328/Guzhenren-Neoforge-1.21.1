@@ -10,15 +10,11 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  "I picked this secondary path." The SECOND and last payload, a client intent carrying no player data.
-//  The info panel is a plain Screen -- no container, not even clickMenuButton, so it needs its own.
-//  ⚠ Two upstream triggers is the whole ceiling.  CLAUDE.md "Networking".
 public record SetSecondaryPathPayload(int aperture, @Nullable GuPath path) implements CustomPacketPayload {
 
     public static final Type<SetSecondaryPathPayload> TYPE = new Type<>(
             ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "set_secondary_path"));
 
-    //  ⚠ Nullable on the wire: clearing it is a real choice, and GuPath has no NONE to spell that with.
     public static final StreamCodec<ByteBuf, SetSecondaryPathPayload> STREAM_CODEC = StreamCodec.composite(
             net.minecraft.network.codec.ByteBufCodecs.VAR_INT, SetSecondaryPathPayload::aperture,
             ModStreamCodecs.ofNullableEnum(GuPath.class), SetSecondaryPathPayload::path,

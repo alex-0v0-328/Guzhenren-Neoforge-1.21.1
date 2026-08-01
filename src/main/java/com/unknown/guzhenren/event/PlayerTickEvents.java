@@ -17,8 +17,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-//  The heartbeat: aging, essence and thought regen, lethal checks.
-//  Sleep recovery is an edge, not a level -- see PlayerDataEvents.onWakeUp.
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerTickEvents {
 
@@ -29,22 +27,13 @@ public final class PlayerTickEvents {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player.isRemoved() || player.isDeadOrDying()) return;
 
-        //  Per-second, not per-tick: aging only needs a day boundary, regen carries its own remainder.
         if (player.tickCount % EssenceService.REGEN_INTERVAL_TICKS != 0) return;
 
-        //  A Gu goes hungry on the same day rollover that ages its owner -- one clock, two readers:
-        //  what he carries starves, what an aperture holds gets fed from his pack first.
-        //  ⚠⚠ The three walks run EVERY heartbeat, not only on a rollover: the fed clock [酒虫 · 元老蛊] is
-        //  a timestamp read to the second, while the hunger bar is billed and simply does nothing at
-        //  days == 0. ONE path, two clocks -- do not split them back into a rollover branch.
         long days = BodyService.tickAging(player);
         RefinableGuItem.starveAll(player, days);
         ApertureStorageTick.tickDay(player, days);
-        //  A Gu installed into an arm or a leg is KEPT, not carried, so it feeds like a stored one.
         PartStorageTick.tickDay(player, days);
 
-        //  ⚠ The tick wrote behind an open menu's back (it holds load()-time copies), so its next save
-        //  would resurrect what just starved. Lives here, not the service -- no menu/ import.
         if (days > 0L && player.containerMenu instanceof ApertureStorageMenu menu) menu.reload();
 
         closeDistilling(player);
@@ -54,35 +43,24 @@ public final class PlayerTickEvents {
         checkLethalState(player);
     }
 
-    //  Death Qi [死气]: lifespan bleeds, health falls to one heart, and essence regen is choked over in
-    //  EssenceService.isChoked. ⚠ Runs BEFORE checkLethalState, so the tick that empties lifespan kills
-    //  on the same tick rather than a second later -- and the debt is what a Life Qi cure refunds from.
     private static void tickDeathQi(ServerPlayer player) {
         if (!player.hasEffect(ModEffects.DEATH_QI)) return;
 
-        //  ⚠ This method only ever runs on a heartbeat, so the year interval must be a MULTIPLE of it:
-        //  120 = 6 x 20 lands exactly, which is why ten years a minute needs no carry the way regen does.
         if (player.tickCount % DeathQiEffect.YEAR_INTERVAL_TICKS == 0) {
             BodyService.drainByDeathQi(player, DeathQiEffect.YEARS_PER_INTERVAL);
         }
-        //  Never past one heart: Death Qi takes the lifespan, and the lifespan is what kills.
         if (player.getHealth() > DeathQiEffect.HEALTH_FLOOR) {
             player.setHealth(Math.max(DeathQiEffect.HEALTH_FLOOR,
                     player.getHealth() - DeathQiEffect.HEALTH_PER_HEARTBEAT));
         }
     }
 
-    //  Phase 3's close: whatever he never spent pays back at 1:2, and the distilled pool [精炼真元] empties.
-    //  ⚠⚠ A LEVEL, not an edge: 1.21.1's MobEffect has no expiry hook. Reading it also catches milk,
-    //  /effect clear and death -- none of which would fire one.  CLAUDE.md "Liquor Worm".
-    //  ⚠ Runs BEFORE regenStep, so the tick the effect ends on already regenerates into the ordinary pool.
     private static void closeDistilling(ServerPlayer player) {
         if (EssenceService.distilledEssence(player) > 0L && !EssenceService.isDistilling(player)) {
             EssenceService.endDistilling(player);
         }
     }
 
-    //  Lifespan gone, soul collapsed, or Mind Ocean burst. onRespawn stops the death loop.
     private static void checkLethalState(ServerPlayer player) {
         if (player.isCreative() || player.isSpectator()) return;
 

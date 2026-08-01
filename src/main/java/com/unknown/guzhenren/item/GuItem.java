@@ -21,8 +21,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//  What every Gu [蛊虫] item is: a rank, a path, one tooltip line, and the shape of its two clicks.
-//  ⚠ Each template gates on both sides but writes only through a ServerPlayer; a subclass never re-implements that.
 public abstract class GuItem extends Item {
 
     public static final int COOLDOWN_TICKS = 2;
@@ -36,69 +34,42 @@ public abstract class GuItem extends Item {
         this.path = path;
     }
 
-    //  Gu [蛊虫] or Gu Material [蛊材] -- the tooltip's last word. The class says which; nothing else may.
     protected abstract String kindKey();
     public Rank rank() {return rank;}
     public GuPath path() {return path;}
 
-    //  Why a use was refused: a red action-bar message. args feed the key's placeholders.
     public record Refusal(String key, Object... args) {}
 
     //region Vital Gu
-    //  ⚠ Written once, by the aperture's Vital Gu slot, and NEVER cleared -- taking it back out does not
-    //  unbind it. The owner is stored so a Gu handed to someone else still bills its loss to him.
     public static @Nullable UUID owner(ItemStack s) {return s.get(ModDataComponents.VITAL_OWNER.get());}
     public static boolean isVital(ItemStack s) {return s.has(ModDataComponents.VITAL_OWNER.get());}
     public static boolean isVitalOf(ItemStack s, Player p) {return p.getUUID().equals(owner(s));}
     public static void bind(ItemStack s, Player p) {s.set(ModDataComponents.VITAL_OWNER.get(), p.getUUID());}
     //endregion
 
-    //  A plain Gu/material just sits in the inventory -- right-click passes through, as vanilla does.
-    //  A usable Gu overrides hasUse() -> true and fills in gate() + apply().
+    //region the hooks a leaf fills
     protected boolean hasUse() {return false;}
-
-    //  Both sides compute the gate (reads work client-side); null means it may be used.
     protected @Nullable Refusal gate(Player player, ItemStack stack) {return null;}
-
-    //  Server only, once the gate passed: do the write, return how many stacks to spend (0 = reusable).
     protected int apply(ServerPlayer player, ItemStack stack) {return 0;}
-
-    //  0 = the click applies at once, which is what every Gu but a refinable one does. Above 0, the
-    //  click starts vanilla's hold instead and finishUsingItem is what applies it.
     protected int useDurationTicks(Player player, ItemStack stack) {return 0;}
-
-    //  Sneak + right-click: a SECOND right-click action, not a variant of the first. A Gu that wants one
-    //  fills these three; use() routes to them and the ordinary hooks are never consulted.
-    //  ⚠⚠ It MAY charge (2026-07-31). The old objection was that vanilla's hold carries no flag saying
-    //  which action began it -- isSneakUse re-reads that, and every charged meaning shares one duration.
-    //  ⚠⚠ Takes the stack, and answering FALSE falls through to the ordinary click -- which is what
-    //  keeps a crouching player able to do the plain thing (refine, for one).
     protected boolean hasSneakUse(Player player, ItemStack stack) {return false;}
     protected @Nullable Refusal sneakGate(Player player, ItemStack stack) {return null;}
     protected int sneakApply(ServerPlayer player, ItemStack stack) {return 0;}
-
-    //  What ChargeHud writes over the bar while the hold runs. null draws the bar alone.
-    //  ⚠ public because the HUD lives in client/, and it reads this off the item it is drawing for.
     public @Nullable Component chargeCaption(ItemStack stack) {return null;}
+    //endregion
 
     @Override
     public final @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
                                                                  @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         boolean sneak = isSneakUse(player, stack);
-        //  ⚠⚠ DELEGATE, never pass: Item.use is what starts eating, so pass here made every edible Gu
-        //  material silently inedible. All four hooks below: not owning the click means fully transparent.
         if (!sneak && !hasUse()) return super.use(level, player, hand);
 
         Refusal refusal = sneak ? sneakGate(player, stack) : gate(player, stack);
         if (refusal != null) {
             if (player instanceof ServerPlayer server) refuse(server, refusal.key(), refusal.args());
-            //  ⚠ consume, not fail: FAIL does not consumesAction(), so Minecraft.startUseItem would fall
-            //  through and use the OTHER hand -- a refused Gu would eat the food held for it.
             return InteractionResultHolder.consume(stack);
         }
-        //  A charged use only STARTS here; letting go early simply applies nothing. ⚠ EITHER action may
-        //  charge: useDurationTicks answers for the click as a whole, sneak included.
         if (useDurationTicks(player, stack) > 0) {
             player.startUsingItem(hand);
             return InteractionResultHolder.consume(stack);
@@ -109,17 +80,12 @@ public abstract class GuItem extends Item {
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
-    //  The charged use landed. ⚠ Re-gates: four seconds is long enough for the essence to run dry or
-    //  the Gu to go hungry, and the gate that passed on the click is stale by now.
     @Override
     public final @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level level,
                                                     @NotNull LivingEntity entity) {
-        //  ⚠ Transparent when the template is not driving -- this is where vanilla calls entity.eat().
         if (!hasUse()) return super.finishUsingItem(stack, level, entity);
         if (!(entity instanceof Player player)) return stack;
 
-        //  ⚠⚠ Which action this hold was is RE-READ, exactly as the gate is. One decision function, so
-        //  the click that started the hold and the one that lands it can never mean different things.
         boolean sneak = isSneakUse(player, stack);
         Refusal refusal = sneak ? sneakGate(player, stack) : gate(player, stack);
         if (refusal != null) {
@@ -132,29 +98,20 @@ public abstract class GuItem extends Item {
         return stack;
     }
 
-    //  Which of the two right-click actions this click is. ⚠ The ONE place it is decided -- use() and
-    //  finishUsingItem() both read it, and a second copy is how a hold's start and its landing drift.
     private boolean isSneakUse(Player player, ItemStack stack) {
         return player.isShiftKeyDown() && hasSneakUse(player, stack);
     }
 
     @Override
     public final int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
-        //  ⚠ Transparent again: a food's eat time is vanilla's to decide, not ours.
         if (!hasUse()) return super.getUseDuration(stack, entity);
         return entity instanceof Player player ? useDurationTicks(player, stack) : 0;
     }
 
-    //  ⚠ NONE, not BOW: a Gu is not drawn like a weapon, and the hotbar bar is the whole feedback.
-    //  The movement slowdown vanilla applies while using still lands, which suits a four-second channel.
     @Override
     public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
         return hasUse() ? UseAnim.NONE : super.getUseAnimation(stack);
     }
-
-    //  ⚠⚠ NO left-click template, deliberately (2026-07-30): a Gu answers the right click and nothing
-    //  else. `hasSwing`/`swingApply`/`onEntitySwing` were deleted -- feeding lives on 蹲+右键 now, and
-    //  left-click stays what vanilla makes it, mining and fighting. **Do not bring the swing back.**
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
@@ -162,34 +119,24 @@ public abstract class GuItem extends Item {
         tooltip.add(ModDisplayText.guLine(rank, path, kindKey()).withStyle(ChatFormatting.GRAY));
     }
 
-    //  本命·黑豕蛊 once bound. ⚠ RefinableGuItem's Wild prefix wraps THIS, never the other way round.
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
         return isVital(stack) ? ModDisplayText.vital(super.getName(stack)) : super.getName(stack);
     }
 
-    //  The glint is the mark -- a bound Gu has to be findable in a full inventory at a glance.
     @Override
     public boolean isFoil(@NotNull ItemStack stack) {return isVital(stack) || super.isFoil(stack);}
 
-    //  Refused: red on the action bar, nothing spent. Same class as a command's red --  CLAUDE.md "Color".
     protected static void refuse(ServerPlayer player, String key, Object... args) {
         player.displayClientMessage(Component.translatable(key, args).withStyle(ChatFormatting.RED), true);
     }
 
-    //  ⚠ The ONE exception to "success says nothing": an outcome the player cannot otherwise read, which
-    //  today means a RANDOM one. Uncolored, because nothing was refused -- red is refusal's alone.
-    //  ⚠ Action bar, not chat, and the pair is deliberate: this answers a click he just made and is
-    //  looking at, while RefinableGuItem.announce interrupts someone busy with something else.
     protected static void inform(ServerPlayer player, String key, Object... args) {
         player.displayClientMessage(Component.translatable(key, args), true);
     }
 
-    //  Stack-sensitive: one Gu's actions can differ in weight -- a slow refine, a quick use.
     protected int cooldownTicks(ItemStack stack) {return COOLDOWN_TICKS;}
 
-    //  The cooldown always; the stack only by what the use ate -- 0 for a reusable one.
-    //  ⚠ Creative pays the cooldown, not the item.
     protected void spend(ServerPlayer player, ItemStack stack, int count) {
         player.getCooldowns().addCooldown(this, cooldownTicks(stack));
         if (count > 0 && !player.hasInfiniteMaterials()) stack.shrink(count);

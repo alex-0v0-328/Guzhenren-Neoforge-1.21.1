@@ -13,13 +13,10 @@ import java.util.Map;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-//  One path: attainment, plus its marks [道痕] and specks [碎屑] broken down by source tag.
-//  ⚠ Both totals are DERIVED sums, never stored -- a breakdown and a total can never fall out of step.
 public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<MarkTag, Long> specks) {
 
     public static final PathEntry DEFAULT = new PathEntry(GuAttainment.NONE, Map.of(), Map.of());
 
-    //  One immortal-scale mark is 10000 mortal-scale specks. Independent counts, never auto-converted.
     //     TODO(convert): mark <-> speck at 1:10000 -- no caller yet; it needs a Gu or item to trigger it.
     public static final long MARK_PER_SPECK = 10_000L;
 
@@ -38,7 +35,6 @@ public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<M
             PathEntry::new);
 
     public PathEntry {
-        //  EnumMap: stable ordinal order in NBT and on the wire. 0 is "never earned", so it is pruned.
         marks = normalized(marks);
         specks = normalized(specks);
     }
@@ -51,11 +47,8 @@ public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<M
     public PathEntry withMark(MarkTag t, long v) {return new PathEntry(attainment, set(marks, t, v), specks);}
     public PathEntry withSpeck(MarkTag t, long v) {return new PathEntry(attainment, marks, set(specks, t, v));}
 
-    //  Indistinguishable from "absent" -- that is what lets PathData stay sparse.
     public boolean isDefault() {return attainment == GuAttainment.NONE && marks.isEmpty() && specks.isEmpty();}
 
-    //  ⚠ PathEntry does not know which path it hangs under, so PathData calls this at the door. A tag on
-    //  the wrong path is dropped rather than refused -- the pair is then simply unrepresentable.
     public PathEntry retainingTagsFor(GuPath path) {
         Map<MarkTag, Long> keptMarks = fitting(marks, path);
         Map<MarkTag, Long> keptSpecks = fitting(specks, path);
@@ -68,7 +61,6 @@ public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<M
         return total;
     }
 
-    //  EnumMap(Class), never EnumMap(Map) -- the latter throws on an empty non-EnumMap, and these are.
     private static Map<MarkTag, Long> normalized(Map<MarkTag, Long> tags) {
         Map<MarkTag, Long> pruned = new EnumMap<>(MarkTag.class);
         tags.forEach((tag, value) -> {
@@ -84,7 +76,6 @@ public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<M
         return next;
     }
 
-    //  Returns the same instance when nothing is dropped, so retainingTagsFor can skip the copy.
     private static Map<MarkTag, Long> fitting(Map<MarkTag, Long> tags, GuPath path) {
         if (tags.keySet().stream().allMatch(tag -> tag.fitsOn(path))) return tags;
         Map<MarkTag, Long> kept = new EnumMap<>(MarkTag.class);

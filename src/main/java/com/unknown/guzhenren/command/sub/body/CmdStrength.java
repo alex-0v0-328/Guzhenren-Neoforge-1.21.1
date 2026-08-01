@@ -13,9 +13,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
-//  /gzr body strength -- the two branches take different verbs, because they are different shapes:
-//  the beast branch is set membership (grant/revoke/clear), the Human Jun branch a count (set/add/sub).
-//  ⚠ Every enum argument hangs under a literal, never beside one: a word argument swallows a sibling.
 public final class CmdStrength {
 
     private CmdStrength() {}
@@ -42,7 +39,6 @@ public final class CmdStrength {
                 }));
     }
 
-    //  A raw count, so set/add/sub -- StrengthData clamps it to nine per kind on the way in.
     private static ArgumentBuilder<CommandSourceStack, ?> humanStrength() {
         return Commands.literal("human")
                 .then(ModEnumArgument.arg(ARG_KIND, HumanStrength.values())
@@ -51,7 +47,6 @@ public final class CmdStrength {
                         .then(countNode("sub", (p, k, v) -> StrengthService.addHumanStrength(p, k, -v))));
     }
 
-    //  ⚠ The kind reads back under its OWN argument name -- ARG_VALUE is already taken by the count.
     private static ArgumentBuilder<CommandSourceStack, ?> countNode(String literal, HumanStrengthOperation operation) {
         return Commands.literal(literal).then(ModCommandSupport.withTargets(
                 Commands.argument(ModCommandSupport.ARG_VALUE, IntegerArgumentType.integer()),

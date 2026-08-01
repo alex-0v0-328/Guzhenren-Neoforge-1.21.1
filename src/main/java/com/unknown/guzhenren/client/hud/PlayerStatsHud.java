@@ -16,8 +16,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-//  The player-stats HUD, top-left corner. Layout and rationale: CLAUDE.md "HUD".
-//  Reads the same attachments the server holds; the primary aperture only, Mind Ocean deliberately absent.
 public final class PlayerStatsHud implements LayeredDraw.Layer {
 
     public static final PlayerStatsHud INSTANCE = new PlayerStatsHud();
@@ -31,16 +29,12 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
     private static final int BAR_HEIGHT = 11;
     private static final int TEXT_HEIGHT = 9;
 
-    //  GROUP_GAP sets the lifespan line apart: it is not a spendable pool.
     private static final int ROW_GAP = 2;
     private static final int GROUP_GAP = 7;
 
-    //  Fixed hues, NOT EssenceColor's per-rank palette --  CLAUDE.md "HUD".
     private static final int ESSENCE_FILL = 0xFF4FC3F7;
     private static final int SOUL_FILL = 0xFFB388FF;
 
-    //  ⚠ Deliberately the SAME hue family as essence, several shades down: distilled essence [精炼真元] is
-    //  that essence concentrated, so it reads as a relative of the bar above, not a stranger. Identity.
     private static final int DISTILLED_FILL = 0xFF1565C0;
     private static final int BAR_TRACK = 0xB0202020;
     private static final int BAR_BORDER = 0xC0000000;
@@ -52,7 +46,6 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         LocalPlayer player = minecraft.player;
         if (player == null || minecraft.options.hideGui) return;
 
-        //  A spectator has no cultivation, and F3 owns this same corner.
         if (player.isSpectator() || minecraft.getDebugOverlay().showDebugScreen()) return;
 
         Font font = minecraft.font;
@@ -64,13 +57,10 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         line(graphics, font, y, ModDisplayText.realmAndTalent(aperture));
         y += TEXT_HEIGHT + ROW_GAP;
 
-        //  Hidden until the aperture opens -- its appearing is the feedback that awakening worked.
         if (ApertureService.isAwakened(player)) {
             bar(graphics, font, y, aperture.currentEssence(), aperture.maxEssence(), ESSENCE_FILL);
             y += BAR_HEIGHT + ROW_GAP;
 
-            //  ⚠ Only while it holds something. Outside a Liquor Worm this pool is 0 for a cultivator's
-            //  whole life, and a permanent empty bar would push every row below it down for nothing.
             if (aperture.distilledEssence() > 0L) {
                 bar(graphics, font, y, aperture.distilledEssence(), aperture.maxEssence(), DISTILLED_FILL);
                 y += BAR_HEIGHT + ROW_GAP;
@@ -87,7 +77,6 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         graphics.drawString(font, text, LEFT, y, TEXT_COLOR, true);
     }
 
-    //  Raw value over the fill, not a percentage. A max of 0 is legal and reads 0/0.
     private static void bar(GuiGraphics graphics, Font font, int y, long current, long max, int fill) {
         int right = LEFT + BAR_WIDTH;
         graphics.fill(LEFT, y, right, y + BAR_HEIGHT, BAR_BORDER);

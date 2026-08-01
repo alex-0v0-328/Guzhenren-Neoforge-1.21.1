@@ -23,8 +23,6 @@ import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
-//  Every table is column-aligned -- seeing at a glance which key carries which phrase IS this file's
-//  whole value, and a hard wrap destroys it.
 public class ZhCnLanguageProvider extends LanguageProvider {
     public ZhCnLanguageProvider(PackOutput output) {
         super(output, Guzhenren.MOD_ID, "zh_cn");
@@ -40,12 +38,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addDeathMessages();
     }
 
-    //  Every enum here is EnumTranslatable, so the constant IS the key -- short enough to align,
-    //  which is exactly what that interface is for.
     private void add(EnumTranslatable key, String value) {add(key.getTranslationKey(), value);}
 
     //region DISPLAY
-    //  The values, shared by the HUD and /guzhenren info (see ModDisplayText); each caller adds its label
     private void addDisplayKeys() {
         add("guzhenren.display.realm",                        "%s%s");
         add("guzhenren.display.gu_line",                      "%s%s%s");
@@ -121,8 +116,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     //endregion
 
     //region COMMAND
-    //  Three feedback classes: info default / success green / failure red, all tagged [GZR]
-    //  (see ModCommandFeedback)
     private void addCommandKeys() {
         add("guzhenren.command.header",               "[GZR]");
         add("guzhenren.command.tagged",               "[GZR] %s");
@@ -162,14 +155,11 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.mind",            "脑海");
         add("guzhenren.command.info.mind_entry",      "  %s  %s / %s");
 
-        //  Derived detail for operators, gray at the end of a line: aptitude base / soul tier
         add("guzhenren.command.info.detail",          " [%s]");
     }
     //endregion
 
     //region SCREEN
-    //  The G-key info panel (see client/screen/PlayerInfoScreen) and its keybind. Labels stay terse;
-    //  the values come from the enums' own keys
     private void addScreenKeys() {
         add("key.categories.guzhenren",              "蛊真人");
         add("key.guzhenren.open_info",               "打开信息面板");
@@ -207,8 +197,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     //endregion
 
     //region ITEM
-    //  A failure here addresses "you", so the command's keys don't fit -- those name a target.
-    //  Nothing is said on success: the essence bar is the one that speaks
     private void addItemKeys() {
         add("item.guzhenren.hope_gu",                      "希望蛊");
         add("item.guzhenren.copper_relics_gu",             "青铜舍利蛊");
@@ -300,7 +288,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     //endregion
 
     //region DEATH
-    //  The key is decided by the DamageType's msgId: msgId "guzhenren.xxx" -> "death.attack.guzhenren.xxx"
     private void addDeathMessages() {
         add("death.attack.guzhenren.lifespan_exhausted",   "%1$s 寿元耗尽而亡");
         add("death.attack.guzhenren.soul_collapse",        "%1$s 魂魄衰竭而亡");
@@ -331,20 +318,17 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addHumanStrength();
     }
 
-    //  Beast strengths: taken by consuming a beast Gu, one kind once ever. Two boars today
     private void addBeastStrength() {
         add(BeastStrength.WHITE_BOAR, "白豕");
         add(BeastStrength.BLACK_BOAR, "黑豕");
     }
 
-    //  The Strength Path's three branches. Titles today; effects come later, and ENVIRONMENT has no data
     private void addStrengthBranch() {
         add(StrengthBranch.HUMAN,       "人力钧力流");
         add(StrengthBranch.BEASTS,      "兽力虚影流");
         add(StrengthBranch.ENVIRONMENT, "气象天地流");
     }
 
-    //  The Human Jun branch's kinds -- Jin, Ten Jin, Jun (=100 Jin), Ten Jun.
     private void addHumanStrength() {
         add(HumanStrength.JIN,     "斤");
         add(HumanStrength.TEN_JIN, "十斤");
@@ -352,7 +336,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(HumanStrength.TEN_JUN, "十钧");
     }
 
-    //  Both are alive-or-dead. ⚠ The body's LifeState had a third constant until 化僵 was cut 2026-08-01
     private void addApertureState() {
         add(ApertureState.ALIVE, "生");
         add(ApertureState.DEAD,  "死");
@@ -372,7 +355,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     }
 
     private void addStage() {
-        //  Deliberately blank: nothing is shown while unawakened
         add(Stage.NONE,   "");
         add(Stage.INIT,   "初阶");
         add(Stage.MIDDLE, "中阶");
@@ -394,7 +376,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(LifeForm.IMMORTAL, "仙");
     }
 
-    //  ⚠ Everyone is born 人族; the eleven below are only ever made. Each is a 大师 of one path.
     private void addRace() {
         add(Race.HUMAN,       "人族");
         add(Race.HAIRY_MEN,   "毛民");
@@ -415,8 +396,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(LifeState.DEAD,   "死");
     }
 
-    //  Essence colors, one per rank; the shade within a rank is computed by EssenceColor.shade from the
-    //  stage, so it needs no text of its own
     private void addEssenceColor() {
         add(EssenceColor.NONE,           "无");
         add(EssenceColor.GREEN_COPPER,   "青铜色");
@@ -431,7 +410,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     }
 
     private void addTenExtreme() {
-        //  Deliberately blank: nothing is shown for a player without an extreme physique
         add(ExtremePhysique.NONE,                               "");
         add(ExtremePhysique.VERDANT_GREAT_SUN,                  "太日阳莽体");
         add(ExtremePhysique.DESOLATE_ANCIENT_MOON,              "古月阴荒体");
@@ -446,8 +424,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(ExtremePhysique.PURE_DREAM_REALITY_SEEKER,          "纯梦求真体");
     }
 
-    //  Where a mark or speck came from. NATURAL is universal and does nothing; the rest name their path's
-    //  own sources, and the two Strength ones reuse their branch's wording rather than invent a second.
     private void addMarkTag() {
         add(MarkTag.NATURAL,         "自然");
         add(MarkTag.RACE,            "种族");
@@ -514,7 +490,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(GuAttainment.SUPREME_GRANDMASTER,       "无上大宗师");
     }
 
-    //  Soul tiers: looked up from maxSoul (soul = men × 100), never stored on their own
     private void addSoulTier() {
         add(SoulTier.ONE,              "一人魂");
         add(SoulTier.TEN,              "十人魂");
@@ -527,14 +502,12 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(SoulTier.HUNDRED_MILLION,  "亿人魂");
     }
 
-    //  The three cells; initial capacities 30000 / 5 / 2, and overflowing them shatters the Mind Ocean
     private void addWisdomType() {
         add(WisdomType.THOUGHTS, "念");
         add(WisdomType.WILLS,    "意");
         add(WisdomType.EMOTIONS, "情");
     }
 
-    //  Brilliance: the natural thought regen rate (1 / 4 / 16 / 64 / 256 a second), rolled at birth
     private void addBrilliance() {
         add(Brilliance.ORDINARY,    "才情普通");
         add(Brilliance.DECENT,      "才情尚可");
