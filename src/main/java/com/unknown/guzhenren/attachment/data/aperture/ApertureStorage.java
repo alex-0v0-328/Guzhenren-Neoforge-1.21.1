@@ -18,19 +18,12 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
     //  ⚠ OPTIONAL_CODEC, not CODEC: an interior empty is a real hole that must survive, or items would
     //  jump slots the moment a gap is saved. ⚠ No STREAM_CODEC on purpose -- see the header. That is
     //  also what keeps this off RegistryFriendlyByteBuf, which every other codec in this mod avoids.
-    private static final Codec<ApertureStorage> RECORD_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<ApertureStorage> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemStack.OPTIONAL_CODEC.listOf().listOf().optionalFieldOf("by_aperture", List.of())
                     .forGetter(ApertureStorage::byAperture),
             ItemStack.OPTIONAL_CODEC.listOf().optionalFieldOf("vital", List.of())
                     .forGetter(ApertureStorage::vital)
     ).apply(instance, ApertureStorage::new));
-
-    //    TODO(migration): the pre-Vital-Gu shape was a bare list. Drop this alternative -- and the field
-    //  order it forces -- once no world older than 2026-07-21 has to be opened again.
-    private static final Codec<ApertureStorage> LEGACY_CODEC = ItemStack.OPTIONAL_CODEC.listOf().listOf()
-            .xmap(items -> new ApertureStorage(items, List.of()), ApertureStorage::byAperture);
-
-    public static final Codec<ApertureStorage> CODEC = Codec.withAlternative(RECORD_CODEC, LEGACY_CODEC);
 
     public ApertureStorage {
         //  Only TRAILING empties are trimmed, at both levels -- holes in the middle are slot positions.

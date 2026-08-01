@@ -14,6 +14,11 @@ public enum MarkTag implements StringRepresentable, EnumTranslatable {
     //  else. That is a definition, not a TODO -- it is exactly what the old QiType.NATURAL always meant.
     NATURAL        (null),
 
+    //  What a Variant Human [异人] is born owing to its talent path. ⚠ Universal like NATURAL, because the
+    //  path is the RACE's to name -- but its OWN tag, so changing race revokes exactly the ten it laid
+    //  down instead of eating marks the player earned on that path himself.
+    RACE           (null),
+
     //  Qi Path [气道]. Heaven, Earth and Human are the threshold for ascension, which is why they came
     //  first. ⚠ The five below arrived with the qi materials and complete the namespace -- see ModItems.
     QI_HEAVEN      (GuPath.QI),

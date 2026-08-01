@@ -10,6 +10,7 @@ import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
+import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
@@ -145,6 +146,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.lifespan",        "Lifespan:    %s");
         add("guzhenren.command.info.life_state",      "Body:        %s");
         add("guzhenren.command.info.life_form",       "Life form:   %s");
+        add("guzhenren.command.info.race",            "Race:        %s");
         add("guzhenren.command.info.qi",              "Qi Path: %s");
         add("guzhenren.command.info.qi_total",        " Marks %s");
         add("guzhenren.command.info.qi_speck_total",  " Specks %s");
@@ -188,6 +190,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.distilled",      "Distilled");
         add("guzhenren.screen.label.state",          "State");
         add("guzhenren.screen.label.life_form",      "Form");
+        add("guzhenren.screen.label.race",           "Race");
         add("guzhenren.screen.label.soul",           "Soul");
         add("guzhenren.screen.label.lifespan",       "Lifespan");
         add("guzhenren.screen.label.qi",             "Qi Path");
@@ -270,6 +273,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.liquor_rank",           "Only a cultivator at %s can drive this worm");
         add("guzhenren.item.failed.liquor_distilling",     "You are already distilling");
         add("guzhenren.item.failed.elder_gu_empty",        "This Gu holds no Primeval Stones");
+        add("guzhenren.item.failed.elder_gu_full",         "This Gu is full of Primeval Stones");
         add("guzhenren.item.failed.elder_gu_no_stones",    "You carry no Primeval Stones to store");
 
         add("guzhenren.item.gu.uses",                      "Used %s/%s");
@@ -310,6 +314,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addEssenceColor();
         addTenExtreme();
         addLifeForm();
+        addRace();
         addLifeState();
         addSoulTier();
         addMarkTag();
@@ -386,6 +391,22 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(LifeForm.IMMORTAL, "Immortal");
     }
 
+    //  ⚠ Everyone is born Human; the eleven below are only ever made. Each is a Master of one path.
+    private void addRace() {
+        add(Race.HUMAN,       "Human");
+        add(Race.HAIRY_MEN,   "Hairy Men");
+        add(Race.EGGMEN,      "Eggmen");
+        add(Race.ROCKMEN,     "Rockmen");
+        add(Race.FEATHERMEN,  "Feathermen");
+        add(Race.INKMEN,      "Inkmen");
+        add(Race.MINIMEN,     "Minimen");
+        add(Race.MERMEN,      "Mermen");
+        add(Race.BEASTMEN,    "Beastmen");
+        add(Race.DRAGONMEN,   "Dragonmen");
+        add(Race.MUSHROOMMEN, "Mushroommen");
+        add(Race.SNOWMEN,     "Snowmen");
+    }
+
     private void addLifeState() {
         add(LifeState.ALIVE,  "Alive");
         add(LifeState.ZOMBIE, "Zombified");
@@ -427,6 +448,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //  own sources, and the two Strength ones reuse their branch's wording rather than invent a second.
     private void addMarkTag() {
         add(MarkTag.NATURAL,         "Natural");
+        add(MarkTag.RACE,            "Race");
         add(MarkTag.QI_HEAVEN,       "Heaven Qi");
         add(MarkTag.QI_EARTH,        "Earth Qi");
         add(MarkTag.QI_HUMAN,        "Human Qi");
@@ -454,14 +476,17 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(GuPath.EARTH,          "Earth Path");
         add(GuPath.ICE_SNOW,       "Ice-Snow Path");
         add(GuPath.LIGHTNING,      "Lightning Path");
+        add(GuPath.CLOUD,          "Cloud Path");
         add(GuPath.QI,             "Qi Path");
         add(GuPath.SOUND,          "Sound Path");
         add(GuPath.LIGHT,          "Light Path");
         add(GuPath.DARK,           "Dark Path");
+        add(GuPath.POISON,         "Poison Path");
         add(GuPath.STRENGTH,       "Strength Path");
         add(GuPath.DREAM,          "Dream Path");
         add(GuPath.REFINEMENT,     "Refinement Path");
         add(GuPath.WISDOM,         "Wisdom Path");
+        add(GuPath.INFORMATION,    "Information Path");
         add(GuPath.THEFT,          "Theft Path");
         add(GuPath.LUCK,           "Luck Path");
         add(GuPath.KILLING,        "Killing Path");

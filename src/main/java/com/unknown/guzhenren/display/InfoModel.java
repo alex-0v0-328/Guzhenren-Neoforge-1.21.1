@@ -17,6 +17,7 @@ import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
+import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
@@ -63,6 +64,7 @@ public final class InfoModel {
     //region Body
     public record BodyLife(LifeState state) implements Entry {}
     public record Form(LifeForm form) implements Entry {}
+    public record RaceRow(Race race) implements Entry {}
     public record Soul(SoulData soul) implements Entry {}
     public record Lifespan(BodyData body) implements Entry {}
     public record PathsHeader(boolean empty) implements Entry {}
@@ -121,6 +123,7 @@ public final class InfoModel {
         //  Alive is the norm and says nothing; zombified or dead is the line worth a row.
         if (body.lifeState() != LifeState.ALIVE) rows.add(new Row(0, new BodyLife(body.lifeState())));
         rows.add(new Row(0, new Form(body.lifeForm())));
+        rows.add(new Row(0, new RaceRow(body.race())));
         rows.add(new Row(0, new Soul(soul)));
         rows.add(new Row(0, new Lifespan(body)));
 

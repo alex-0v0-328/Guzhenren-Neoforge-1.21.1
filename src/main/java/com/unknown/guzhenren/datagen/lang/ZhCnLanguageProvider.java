@@ -10,6 +10,7 @@ import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
+import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
@@ -144,6 +145,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.lifespan",        "玩家寿元  %s");
         add("guzhenren.command.info.life_state",      "肉身状态  %s");
         add("guzhenren.command.info.life_form",       "玩家形态  %s");
+        add("guzhenren.command.info.race",            "种族      %s");
         add("guzhenren.command.info.qi",              "玩家气道  %s");
         add("guzhenren.command.info.qi_total",        " 道痕 %s");
         add("guzhenren.command.info.qi_speck_total",  " 碎屑 %s");
@@ -188,6 +190,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.distilled",      "精炼真元");
         add("guzhenren.screen.label.state",          "状态");
         add("guzhenren.screen.label.life_form",      "形态");
+        add("guzhenren.screen.label.race",           "种族");
         add("guzhenren.screen.label.soul",           "魂魄");
         add("guzhenren.screen.label.lifespan",       "寿元");
         add("guzhenren.screen.label.qi",             "气道造诣");
@@ -270,6 +273,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.liquor_rank",           "唯%s修士方可催动此蛊");
         add("guzhenren.item.failed.liquor_distilling",     "精炼未止");
         add("guzhenren.item.failed.elder_gu_empty",        "蛊中无元石");
+        add("guzhenren.item.failed.elder_gu_full",         "蛊中元石已满");
         add("guzhenren.item.failed.elder_gu_no_stones",    "身上无元石可存");
 
         add("guzhenren.item.gu.uses",                      "已用 %s/%s");
@@ -310,6 +314,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addEssenceColor();
         addTenExtreme();
         addLifeForm();
+        addRace();
         addLifeState();
         addSoulTier();
         addMarkTag();
@@ -385,6 +390,22 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(LifeForm.IMMORTAL, "仙");
     }
 
+    //  ⚠ Everyone is born 人族; the eleven below are only ever made. Each is a 大师 of one path.
+    private void addRace() {
+        add(Race.HUMAN,       "人族");
+        add(Race.HAIRY_MEN,   "毛民");
+        add(Race.EGGMEN,      "蛋人");
+        add(Race.ROCKMEN,     "石人");
+        add(Race.FEATHERMEN,  "羽民");
+        add(Race.INKMEN,      "墨人");
+        add(Race.MINIMEN,     "小人");
+        add(Race.MERMEN,      "鲛人");
+        add(Race.BEASTMEN,    "兽人");
+        add(Race.DRAGONMEN,   "龙人");
+        add(Race.MUSHROOMMEN, "菇人");
+        add(Race.SNOWMEN,     "雪人");
+    }
+
     private void addLifeState() {
         add(LifeState.ALIVE,  "生");
         add(LifeState.ZOMBIE, "僵");
@@ -426,6 +447,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     //  own sources, and the two Strength ones reuse their branch's wording rather than invent a second.
     private void addMarkTag() {
         add(MarkTag.NATURAL,         "自然");
+        add(MarkTag.RACE,            "种族");
         add(MarkTag.QI_HEAVEN,       "天气");
         add(MarkTag.QI_EARTH,        "地气");
         add(MarkTag.QI_HUMAN,        "人气");
@@ -453,14 +475,17 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(GuPath.EARTH,          "土道");
         add(GuPath.ICE_SNOW,       "冰雪道");
         add(GuPath.LIGHTNING,      "雷道");
+        add(GuPath.CLOUD,          "云道");
         add(GuPath.QI,             "气道");
         add(GuPath.SOUND,          "音道");
         add(GuPath.LIGHT,          "光道");
         add(GuPath.DARK,           "暗道");
+        add(GuPath.POISON,         "毒道");
         add(GuPath.STRENGTH,       "力道");
         add(GuPath.DREAM,          "梦道");
         add(GuPath.REFINEMENT,     "炼道");
         add(GuPath.WISDOM,         "智道");
+        add(GuPath.INFORMATION,    "信道");
         add(GuPath.THEFT,          "偷道");
         add(GuPath.LUCK,           "运道");
         add(GuPath.KILLING,        "杀道");

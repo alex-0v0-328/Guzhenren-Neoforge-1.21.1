@@ -3,6 +3,9 @@ package com.unknown.guzhenren.attachment.service.body;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
+import com.unknown.guzhenren.custom.enums.body.Race;
+import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +29,7 @@ public final class BodyService {
     public static BodyData get(Player p) {return p.getData(ModAttachments.BODY);}
     public static LifeState lifeState(Player p) {return get(p).lifeState();}
     public static LifeForm lifeForm(Player p) {return get(p).lifeForm();}
+    public static Race race(Player p) {return get(p).race();}
 
     //  ---- write ----
     public static void setLifeState(ServerPlayer p, LifeState v) {store(p, get(p).withLifeState(v));}
@@ -35,6 +39,40 @@ public final class BodyService {
     public static void setLifespan(ServerPlayer p, long v) {store(p, get(p).withLifespan(v));}
     public static void addLifespan(ServerPlayer p, long d) {setLifespan(p, get(p).lifespan() + d);}
     private static void store(ServerPlayer p, BodyData data) {p.setData(ModAttachments.BODY, data);}
+
+    //region Race [种族]
+    //  ⚠ Everyone is BORN Race.HUMAN [人族] -- onBirth says nothing about race, because HUMAN is simply
+    //  the default. Becoming a Variant Human [异人] happens here and nowhere else, by command or item.
+    //  ⚠ Intra-domain, not cross-domain: race sits on BodyData and the marks on PathData, both 肉身.
+    public static void setRace(ServerPlayer player, Race race) {
+        Race current = race(player);
+        if (current == race) return;
+
+        revokeTalent(player, current);
+        store(player, get(player).withRace(race));
+        grantTalent(player, race);
+    }
+
+    //  Ten marks on its talent path, and Master [大师] in it.
+    private static void grantTalent(ServerPlayer player, Race race) {
+        GuPath path = race.talentPath();
+        if (path == null) return;
+
+        PathService.setMark(player, path, MarkTag.RACE, Race.TALENT_MARKS);
+        //  ⚠⚠ RAISES only, never lowers -- an attainment is a GRADE, so there is no way to tell what the
+        //  race gave from what he earned. That asymmetry is why revokeTalent does not touch it at all.
+        if (PathService.attainment(player, path).ordinal() < Race.TALENT_ATTAINMENT.ordinal()) {
+            PathService.setAttainment(player, path, Race.TALENT_ATTAINMENT);
+        }
+    }
+
+    //  ⚠ Zeroes the RACE tag alone, which is EXACTLY what was laid down -- marks he earned himself on the
+    //  same path sit under their own tags and are untouched. That is what the tag exists for.
+    private static void revokeTalent(ServerPlayer player, Race race) {
+        GuPath path = race.talentPath();
+        if (path != null) PathService.setMark(player, path, MarkTag.RACE, 0L);
+    }
+    //endregion
 
     //region Death Qi [死气] debt
     //  ⚠ One write, two facts: lifespan drops and the tally rises together, or a cure could refund

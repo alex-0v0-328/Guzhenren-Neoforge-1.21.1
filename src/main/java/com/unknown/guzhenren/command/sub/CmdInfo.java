@@ -71,6 +71,7 @@ public final class CmdInfo {
 
             case InfoModel.BodyLife e -> key("life_state", enumName(e.state().getTranslationKey()));
             case InfoModel.Form e -> key("life_form", enumName(e.form().getTranslationKey()));
+            case InfoModel.RaceRow e -> key("race", enumName(e.race().getTranslationKey()));
             case InfoModel.Soul e -> key("soul", e.soul().currentSoul(), e.soul().maxSoul())
                     .append(muted(enumName(e.soul().tier().getTranslationKey())));
             case InfoModel.Lifespan e -> key("lifespan", ModDisplayText.lifespan(e.body()));

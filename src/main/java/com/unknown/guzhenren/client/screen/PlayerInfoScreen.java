@@ -358,6 +358,7 @@ public final class PlayerInfoScreen extends Screen {
 
             case InfoModel.BodyLife e -> new Row(indent, label("state"), name(e.state().getTranslationKey()));
             case InfoModel.Form e -> new Row(indent, label("life_form"), name(e.form().getTranslationKey()));
+            case InfoModel.RaceRow e -> new Row(indent, label("race"), name(e.race().getTranslationKey()));
             case InfoModel.Soul e -> new Row(indent, label("soul"),
                     Component.literal(ModDisplayText.pool(e.soul().currentSoul(), e.soul().maxSoul()))
                             .append(detail(name(e.soul().tier().getTranslationKey()))));

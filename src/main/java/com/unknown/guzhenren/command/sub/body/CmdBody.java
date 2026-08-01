@@ -6,6 +6,7 @@ import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
+import com.unknown.guzhenren.custom.enums.body.Race;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
@@ -21,6 +22,9 @@ public final class CmdBody {
                         BodyService::setLifeState, ModCommandSupport.ANYONE, null))
                 .then(ModCommandSupport.enumSetNode("lifeform", LifeForm.values(),
                         BodyService::setLifeForm, ModCommandSupport.ANYONE, null))
+                //  ⚠ A single setter, so `set` alone -- Race is not graded, there is no up/down.
+                .then(ModCommandSupport.enumSetNode("race", Race.values(),
+                        BodyService::setRace, ModCommandSupport.ANYONE, null))
                 .then(soul())
                 .then(counter("lifespan", BodyService::setLifespan, BodyService::addLifespan))
                 .then(counter("age", BodyService::setAge, BodyService::addAge))

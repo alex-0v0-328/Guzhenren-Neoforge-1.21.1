@@ -10,7 +10,6 @@ import io.netty.buffer.ByteBuf;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Optional;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
@@ -26,16 +25,11 @@ public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<M
 
     private static final Codec<Map<MarkTag, Long>> TAGS = Codec.unboundedMap(MarkTag.CODEC, Codec.LONG);
 
-    //  ⚠ The legacy arms are read-only: the pre-tag shape was two flat longs, and they fold into NATURAL,
-    //  which is precisely what that tag means. Encoding an empty Optional omits them, so new saves stay clean.
-    //     TODO(migration): drop the two legacy fields once no pre-2026-07-24 world matters.
     public static final Codec<PathEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             GuAttainment.CODEC.optionalFieldOf("attainment", GuAttainment.NONE).forGetter(PathEntry::attainment),
             TAGS.optionalFieldOf("marks", Map.of()).forGetter(PathEntry::marks),
-            TAGS.optionalFieldOf("specks", Map.of()).forGetter(PathEntry::specks),
-            Codec.LONG.optionalFieldOf("mark").forGetter(entry -> Optional.empty()),
-            Codec.LONG.optionalFieldOf("speck").forGetter(entry -> Optional.empty())
-    ).apply(instance, PathEntry::merged));
+            TAGS.optionalFieldOf("specks", Map.of()).forGetter(PathEntry::specks)
+    ).apply(instance, PathEntry::new));
 
     public static final StreamCodec<ByteBuf, PathEntry> STREAM_CODEC = StreamCodec.composite(
             ModStreamCodecs.ofEnum(GuAttainment.class), PathEntry::attainment,
@@ -68,11 +62,6 @@ public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<M
         return keptMarks == marks && keptSpecks == specks ? this : new PathEntry(attainment, keptMarks, keptSpecks);
     }
 
-    private static PathEntry merged(GuAttainment attainment, Map<MarkTag, Long> marks, Map<MarkTag, Long> specks,
-                                    Optional<Long> legacyMark, Optional<Long> legacySpeck) {
-        return new PathEntry(attainment, plus(marks, legacyMark), plus(specks, legacySpeck));
-    }
-
     private static long sum(Map<MarkTag, Long> tags) {
         long total = 0L;
         for (long value : tags.values()) total += value;
@@ -92,15 +81,6 @@ public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<M
         Map<MarkTag, Long> next = new EnumMap<>(MarkTag.class);
         next.putAll(tags);
         next.put(tag, Math.max(0L, value));
-        return next;
-    }
-
-    private static Map<MarkTag, Long> plus(Map<MarkTag, Long> tags, Optional<Long> legacy) {
-        long extra = legacy.orElse(0L);
-        if (extra <= 0L) return tags;
-        Map<MarkTag, Long> next = new EnumMap<>(MarkTag.class);
-        next.putAll(tags);
-        next.merge(MarkTag.NATURAL, extra, Long::sum);
         return next;
     }
 

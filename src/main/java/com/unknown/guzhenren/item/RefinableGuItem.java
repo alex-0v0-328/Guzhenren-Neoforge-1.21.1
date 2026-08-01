@@ -58,7 +58,8 @@ public abstract class RefinableGuItem extends MortalGuItem {
     //  return at least 1, or the Gu could be driven forever and starvation would stop being its one end.
     protected int hungerPerUse(ItemStack stack) {return 1;}
 
-    //  ⚠ 0 pending final balance -- the hook stays, apply() skips the speck write at 0.
+    //  ⚠⚠ 0 is the ANSWER for a Gu whose use does not cultivate -- marks and specks are the player's own
+    //  progress, so only a Gu that strengthens or alters him pays them. Not a placeholder.
     protected long speckPerUse() {return 0L;}
 
     //  炼化中 320 / 640 while wild, 使用中 12 / 36 once it answers to him -- the same two numbers the
@@ -102,9 +103,12 @@ public abstract class RefinableGuItem extends MortalGuItem {
     //  ⚠ Takes the stack, as gate() does: what a Gu carrying its own store can hand out depends on it.
     protected abstract @Nullable Refusal payoutGate(Player player, ItemStack stack);
 
-    //  Runs after the hunger write and BEFORE the hungry warning, on a use that did not kill the Gu.
-    //  ⚠ For a Gu with its own larder: refill the bar here, never after apply() returns.
-    protected void afterUse(ServerPlayer player, ItemStack stack) {}
+    //  Refill the bar from whatever larder this Gu has, after the hunger write and BEFORE the hungry
+    //  warning. ⚠⚠ Never after apply() returns -- the warning fires inside, so a later top-up makes
+    //  every single use announce 「蛊饿了」 on a bar about to be full again.
+    //  ⚠ The base's larder is the OTHER HAND: 蹲+右键+食物 must end on a FULL bar, so the point the use
+    //  just spent is paid by the same food. A plain use holds no food, so this is a no-op there.
+    protected void afterUse(ServerPlayer player, ItemStack stack) {eat(player, stack);}
 
     //  What the 36th use buys. Runs once per completed cycle.
     //  ⚠ It may write the stack's OWN components, never its RefinedGuState -- apply() holds a copy of that
@@ -147,6 +151,9 @@ public abstract class RefinableGuItem extends MortalGuItem {
     //  Rank I cultivator refining a Rank IV worm finally stands BELOW one. It is live -- do not prune it.
     @Override
     protected int useDurationTicks(Player player, ItemStack stack) {
+        //  ⚠⚠ Feeding is not driving, so the pure-feed click is INSTANT. Every click that uses the Gu
+        //  charges, and all of them for the same length -- which is what lets the sneak action charge.
+        if (holdingFood(player, stack) && !player.isShiftKeyDown()) return 0;
         int gap = rankGap(player);
         if (gap > 0) return fastChargeTicks();
         return gap == 0 ? chargeTicks() : slowChargeTicks();
@@ -158,17 +165,23 @@ public abstract class RefinableGuItem extends MortalGuItem {
         return ApertureService.rank(player).ordinal() - rank().ordinal();
     }
 
+    //  What refuses BOTH clicks. ⚠ A mortal drives no Gu at all, refined or not -- an aperture is what
+    //  pushes one; and below 20 essence a wild Gu is refused outright rather than refined by trickle.
+    private @Nullable Refusal common(Player player, ItemStack stack) {
+        if (!ApertureService.isAwakened(player)) return new Refusal(FAILED_UNAWAKENED);
+        return !refined(stack) && EssenceService.spendable(player) < refineMinEssence()
+                ? new Refusal(FAILED_REFINE_ESSENCE)
+                : null;
+    }
+
     @Override
     protected @Nullable Refusal gate(Player player, ItemStack stack) {
-        //  ⚠ A mortal drives no Gu at all, refined or not -- an aperture is what pushes one.
-        if (!ApertureService.isAwakened(player)) return new Refusal(FAILED_UNAWAKENED);
+        Refusal refusal = common(player, stack);
+        if (refusal != null || !refined(stack)) return refusal;
 
-        if (!refined(stack)) {
-            //  ⚠ A floor, not a cost: below 20 essence he is refused outright rather than trickling.
-            return EssenceService.spendable(player) < refineMinEssence()
-                    ? new Refusal(FAILED_REFINE_ESSENCE)
-                    : null;
-        }
+        //  ⚠ With food in hand this click only FEEDS, so a payout he cannot receive must not stop him.
+        //  ⚠ A full bar is NOT refused: every gesture already has an outcome, so nothing needs saying.
+        if (holdingFood(player, stack)) return null;
         //  ⚠ Hunger is NOT a refusal any more: an empty Gu may always be forced, and dies of it.
         //  See apply() and CLAUDE.md "The refinable Gu".
         return payoutGate(player, stack);
@@ -180,9 +193,20 @@ public abstract class RefinableGuItem extends MortalGuItem {
             refineStep(player, stack);
             return 0;
         }
+        //  ⚠⚠ Food in the other hand makes the plain click a FEED and nothing else (2026-07-31, his
+        //  spec). Crouching is what says "use it anyway" -- one click used to do both.
+        if (holdingFood(player, stack)) {
+            eat(player, stack);
+            return 0;
+        }
+        return drive(player, stack);
+    }
 
-        eat(player, stack);
-        //  ⚠ Read AFTER eating: food in the other hand still rescues a Gu that was about to be forced.
+    //  The use itself, shared by the plain click and the crouching feed-and-use.
+    //  ⚠ A leaf that spends its sneak click on something else calls THIS, never super.apply -- that one
+    //  now feeds when its own food is in the other hand (元老蛊 and 元石 are exactly that pair).
+    protected int drive(ServerPlayer player, ItemStack stack) {
+        //  ⚠ Read after any feeding: food in the other hand still rescues a Gu about to be forced.
         boolean forced = state(stack).hunger() <= 0;
 
         RefinedGuState state = state(stack);
@@ -213,23 +237,31 @@ public abstract class RefinableGuItem extends MortalGuItem {
         return 0;
     }
 
-    //  ⚠⚠ 蹲+右键 is the ONLY way to feed by hand -- the left-click template is gone (2026-07-30), so a
-    //  Gu answers the right click and nothing else. The plain right click still feeds before it uses.
+    //  ⚠⚠ 蹲+右键 with food is FEED-THEN-USE (2026-07-31): the plain click having become a pure feed,
+    //  crouching is now the gesture that says "use it anyway". A full bar simply gives eat() nothing.
     //  ⚠⚠ Answering false is what lets a CROUCHING player still refine and still use: with no food in
     //  the other hand, sneak+right-click is simply the ordinary right-click.
     @Override
-    protected boolean hasSneakUse(Player player, ItemStack stack) {return canEat(player, stack);}
+    protected boolean hasSneakUse(Player player, ItemStack stack) {return holdingFood(player, stack);}
+
+    //  ⚠ Reached only with food in hand, and it USES the Gu -- so a full bar is fine here, unlike gate().
+    @Override
+    protected @Nullable Refusal sneakGate(Player player, ItemStack stack) {
+        Refusal refusal = common(player, stack);
+        return refusal != null ? refusal : payoutGate(player, stack);
+    }
 
     @Override
     protected int sneakApply(ServerPlayer player, ItemStack stack) {
         eat(player, stack);
-        return 0;
+        return drive(player, stack);
     }
 
-    //  Whether it can eat RIGHT NOW. ⚠ Not `feedable()`, which is the boolean axis saying whether this
-    //  kind of Gu is fed at all -- two different questions, and one name for both read as neither.
-    private boolean canEat(Player player, ItemStack stack) {
-        return refined(stack) && feed(player, stack).hunger() > 0;
+    //  Whether the other hand holds this Gu's food AT ALL. ⚠⚠ NOT "can it eat right now": a full bar is
+    //  still food, and collapsing the two is what made a crouching feed silently use the Gu instead.
+    //  ⚠ Not `feedable()` either, which is the boolean axis saying whether this kind is fed at all.
+    private boolean holdingFood(Player player, ItemStack stack) {
+        return refined(stack) && feedUnits(player.getOffhandItem()) > 0;
     }
     //endregion
 

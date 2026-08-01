@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class PrimevalElderGuItem extends RefinableGuItem {
 
     private static final String FAILED_EMPTY = "guzhenren.item.failed.elder_gu_empty";
+    private static final String FAILED_FULL = "guzhenren.item.failed.elder_gu_full";
     private static final String FAILED_NO_STONES = "guzhenren.item.failed.elder_gu_no_stones";
     private static final String TOOLTIP_STORED = "guzhenren.item.gu.stored_stones";
 
@@ -91,6 +92,9 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     @Override
     protected @Nullable Refusal gate(Player player, ItemStack stack) {
         if (!refined(stack)) return super.gate(player, stack);
+        //  ⚠ Asked FIRST: depositable() answers 0 for both reasons, and one message for two refusals told
+        //  a player carrying a thousand stones that he carried none.
+        if (stored(stack) >= capacity()) return new Refusal(FAILED_FULL);
         return depositable(player, stack) <= 0 ? new Refusal(FAILED_NO_STONES) : null;
     }
 
@@ -158,8 +162,10 @@ public class PrimevalElderGuItem extends RefinableGuItem {
         return payoutGate(player, stack);
     }
 
+    //  ⚠⚠ drive(), NOT super.apply() -- the base's plain click feeds when its own food is in the other
+    //  hand, and 元石 is exactly that, so super.apply would turn every withdrawal into a feed.
     @Override
-    protected int sneakApply(ServerPlayer player, ItemStack stack) {return super.apply(player, stack);}
+    protected int sneakApply(ServerPlayer player, ItemStack stack) {return drive(player, stack);}
 
     //  ⚠⚠ The vault pays for the withdrawal AT ONCE, and it must happen through THIS hook rather than
     //  after super.apply() returns -- the hungry warning fires inside apply(), so a top-up any later
@@ -175,11 +181,23 @@ public class PrimevalElderGuItem extends RefinableGuItem {
         return stored(stack) <= 0 ? new Refusal(FAILED_EMPTY) : null;
     }
 
+    //  ⚠⚠ ONE formula, two callers -- topUp SPENDS what this answers and payout RESERVES it. A second
+    //  expression saying the same thing is what lets a withdrawal hand out the meal topUp is about to want.
+    private int mealsWanted(int hunger) {return (maxHunger() - hunger) / mealDays();}
+
+    //  ⚠ payout runs BEFORE apply() stores the new state, so the bar it has to cover sits one point lower.
+    private int upkeep(ItemStack stack) {
+        return mealsWanted(state(stack).hunger() - 1) > 0 ? mealStones() : 0;
+    }
+
     //  One stack out: the offhand if it is free, else the inventory, else the ground.
     //  ⚠ Writes the vault only -- apply() owns the RefinedGuState and would clobber a hunger write here.
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
-        int taken = (int) Math.min(WITHDRAW_STONES, stored(stack));
+        //  ⚠⚠ The Gu eats FIRST, exactly as decay() buys its meals before billing the days -- handing out
+        //  the very stone that covers THIS use is what left a just-emptied vault announcing 「蛊饿了」.
+        long spare = stored(stack) - upkeep(stack);
+        int taken = (int) Math.min(WITHDRAW_STONES, spare > 0 ? spare : stored(stack));
         if (taken <= 0) return;
 
         setStored(stack, stored(stack) - taken);
@@ -222,7 +240,7 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     //  Refills the bar one whole meal at a time while the vault can pay, which is what lands the upkeep on
     //  his own cadence: 16 stones every 8 days at Rank V [五转], never a partial meal every day.
     private void topUp(ItemStack stack) {
-        while (maxHunger() - state(stack).hunger() >= mealDays() && stored(stack) >= mealStones()) {
+        while (mealsWanted(state(stack).hunger()) > 0 && stored(stack) >= mealStones()) {
             setStored(stack, stored(stack) - mealStones());
             addDays(stack, mealDays());
         }

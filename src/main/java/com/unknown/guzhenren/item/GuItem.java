@@ -69,8 +69,8 @@ public abstract class GuItem extends Item {
 
     //  Sneak + right-click: a SECOND right-click action, not a variant of the first. A Gu that wants one
     //  fills these three; use() routes to them and the ordinary hooks are never consulted.
-    //  ⚠ INSTANT by design -- vanilla's hold carries no flag saying which of the two started it, so
-    //  finishUsingItem would have to guess. Give this a charge only once that is solved.
+    //  ⚠⚠ It MAY charge (2026-07-31). The old objection was that vanilla's hold carries no flag saying
+    //  which action began it -- isSneakUse re-reads that, and every charged meaning shares one duration.
     //  ⚠⚠ Takes the stack, and answering FALSE falls through to the ordinary click -- which is what
     //  keeps a crouching player able to do the plain thing (refine, for one).
     protected boolean hasSneakUse(Player player, ItemStack stack) {return false;}
@@ -85,7 +85,7 @@ public abstract class GuItem extends Item {
     public final @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
                                                                  @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        boolean sneak = player.isShiftKeyDown() && hasSneakUse(player, stack);
+        boolean sneak = isSneakUse(player, stack);
         //  ⚠⚠ DELEGATE, never pass: Item.use is what starts eating, so pass here made every edible Gu
         //  material silently inedible. All four hooks below: not owning the click means fully transparent.
         if (!sneak && !hasUse()) return super.use(level, player, hand);
@@ -97,9 +97,9 @@ public abstract class GuItem extends Item {
             //  through and use the OTHER hand -- a refused Gu would eat the food held for it.
             return InteractionResultHolder.consume(stack);
         }
-        //  A charged use only STARTS here; letting go early simply applies nothing. ⚠ Never the sneak
-        //  action -- see hasSneakUse.
-        if (!sneak && useDurationTicks(player, stack) > 0) {
+        //  A charged use only STARTS here; letting go early simply applies nothing. ⚠ EITHER action may
+        //  charge: useDurationTicks answers for the click as a whole, sneak included.
+        if (useDurationTicks(player, stack) > 0) {
             player.startUsingItem(hand);
             return InteractionResultHolder.consume(stack);
         }
@@ -118,13 +118,24 @@ public abstract class GuItem extends Item {
         if (!hasUse()) return super.finishUsingItem(stack, level, entity);
         if (!(entity instanceof Player player)) return stack;
 
-        Refusal refusal = gate(player, stack);
+        //  ⚠⚠ Which action this hold was is RE-READ, exactly as the gate is. One decision function, so
+        //  the click that started the hold and the one that lands it can never mean different things.
+        boolean sneak = isSneakUse(player, stack);
+        Refusal refusal = sneak ? sneakGate(player, stack) : gate(player, stack);
         if (refusal != null) {
             if (player instanceof ServerPlayer server) refuse(server, refusal.key(), refusal.args());
             return stack;
         }
-        if (player instanceof ServerPlayer server) spend(server, stack, apply(server, stack));
+        if (player instanceof ServerPlayer server) {
+            spend(server, stack, sneak ? sneakApply(server, stack) : apply(server, stack));
+        }
         return stack;
+    }
+
+    //  Which of the two right-click actions this click is. ⚠ The ONE place it is decided -- use() and
+    //  finishUsingItem() both read it, and a second copy is how a hold's start and its landing drift.
+    private boolean isSneakUse(Player player, ItemStack stack) {
+        return player.isShiftKeyDown() && hasSneakUse(player, stack);
     }
 
     @Override
