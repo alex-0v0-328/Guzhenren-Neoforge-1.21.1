@@ -206,6 +206,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("item.guzhenren.crystal_relics_gu",            "紫晶舍利蛊");
         add("item.guzhenren.white_boar_gu",                "白豕蛊");
         add("item.guzhenren.black_boar_gu",                "黑豕蛊");
+        add("item.guzhenren.flower_boar_gu",               "花豕蛊");
         add("item.guzhenren.jin_strength_gu",              "斤力蛊");
         add("item.guzhenren.tens_jin_strength_gu",         "十斤之力蛊");
         add("item.guzhenren.jun_strength_gu",              "钧力蛊");
@@ -266,6 +267,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.elder_gu_empty",        "蛊中无元石");
         add("guzhenren.item.failed.elder_gu_full",         "蛊中元石已满");
         add("guzhenren.item.failed.elder_gu_no_stones",    "身上无元石可存");
+        add("guzhenren.item.failed.flower_boar_cooldown",  "此蛊尚需 %s 秒");
 
         add("guzhenren.item.gu.uses",                      "已用 %s/%s");
         add("guzhenren.item.gu.refine_progress",           "炼化 %s/%s");
@@ -284,6 +286,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.life_qi",                    "生气");
         add("effect.guzhenren.essence_qi",                 "元气");
         add("effect.guzhenren.death_qi",                   "死气");
+        add("effect.guzhenren.flower_boar_gu",             "花豕蛊");
     }
     //endregion
 

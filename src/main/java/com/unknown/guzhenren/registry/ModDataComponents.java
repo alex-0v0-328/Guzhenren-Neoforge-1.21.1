@@ -49,6 +49,11 @@ public final class ModDataComponents {
                     .persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    public static final Supplier<DataComponentType<Long>> FLOWER_BOAR_USED_AT =
+            DATA_COMPONENTS.registerComponentType("flower_boar_used_at", builder -> builder
+                    .persistent(Codec.LONG)
+                    .networkSynchronized(ByteBufCodecs.VAR_LONG));
+
     public static void register(IEventBus modEventBus) {
         DATA_COMPONENTS.register(modEventBus);
     }

@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 public enum BeastStrength implements StringRepresentable, EnumTranslatable {
 
-    WHITE_BOAR(MarkTag.STRENGTH_BOAR,  1, 2.0D),
-    BLACK_BOAR(MarkTag.STRENGTH_BOAR,  1, 2.0D);
+    WHITE_BOAR(MarkTag.STRENGTH_BOAR,  1, 1.5D),
+    BLACK_BOAR(MarkTag.STRENGTH_BOAR,  1, 1.5D);
 
     public static final Codec<BeastStrength> CODEC = StringRepresentable.fromEnum(BeastStrength::values);
     private static final String KEY_PREFIX = "guzhenren.enum.strength.beast_strength.";

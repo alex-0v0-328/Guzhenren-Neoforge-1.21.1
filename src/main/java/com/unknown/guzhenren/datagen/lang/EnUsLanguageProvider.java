@@ -206,6 +206,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("item.guzhenren.crystal_relics_gu",            "Purple Crystal Relics Gu");
         add("item.guzhenren.white_boar_gu",                "White Boar Gu");
         add("item.guzhenren.black_boar_gu",                "Black Boar Gu");
+        add("item.guzhenren.flower_boar_gu",               "Flower Boar Gu");
         add("item.guzhenren.jin_strength_gu",              "Jin Strength Gu");
         add("item.guzhenren.tens_jin_strength_gu",         "Tens Jin Strength Gu");
         add("item.guzhenren.jun_strength_gu",              "Jun Strength Gu");
@@ -266,6 +267,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.elder_gu_empty",        "This Gu holds no Primeval Stones");
         add("guzhenren.item.failed.elder_gu_full",         "This Gu is full of Primeval Stones");
         add("guzhenren.item.failed.elder_gu_no_stones",    "You carry no Primeval Stones to store");
+        add("guzhenren.item.failed.flower_boar_cooldown",  "This Gu needs another %s seconds");
 
         add("guzhenren.item.gu.uses",                      "Used %s/%s");
         add("guzhenren.item.gu.refine_progress",           "Refined %s/%s");
@@ -284,6 +286,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.life_qi",                    "Life Qi");
         add("effect.guzhenren.essence_qi",                 "Essence Qi");
         add("effect.guzhenren.death_qi",                   "Death Qi");
+        add("effect.guzhenren.flower_boar_gu",             "Flower Boar Gu");
     }
     //endregion
 

@@ -7,10 +7,10 @@ import org.jetbrains.annotations.NotNull;
 
 public enum HumanStrength implements StringRepresentable, EnumTranslatable {
 
-    JIN    (  1,  9,  3,    1.0D),
-    TEN_JIN( 10,  9,  3,   10.0D),
-    JUN    ( 30, 30, 10,  100.0D),
-    TEN_JUN(300, 30, 10, 1000.0D);
+    JIN    (  1,  9,  3,  0.25D),
+    TEN_JIN( 10,  9,  3,   2.5D),
+    JUN    ( 30, 30, 10,   7.5D),
+    TEN_JUN(300, 30, 10,  75.0D);
 
     public static final Codec<HumanStrength> CODEC = StringRepresentable.fromEnum(HumanStrength::values);
     private static final String KEY_PREFIX = "guzhenren.enum.strength.human_strength.";

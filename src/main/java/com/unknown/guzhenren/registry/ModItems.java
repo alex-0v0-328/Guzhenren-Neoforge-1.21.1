@@ -16,6 +16,7 @@ import com.unknown.guzhenren.item.mortal.HopeGuItem;
 import com.unknown.guzhenren.item.mortal.LifespanGuItem;
 import com.unknown.guzhenren.item.mortal.PrimevalElderGuItem;
 import com.unknown.guzhenren.item.mortal.liquor.LiquorWormItem;
+import com.unknown.guzhenren.item.mortal.strength.FlowerBoarGuItem;
 import com.unknown.guzhenren.item.mortal.strength.HumanStrengthGuItem;
 import com.unknown.guzhenren.item.mortal.RelicsGuItem;
 import com.unknown.guzhenren.item.mortal.VitalityLeafGuItem;
@@ -54,6 +55,8 @@ public final class ModItems {
             () -> new BoarGuItem(new Item.Properties().stacksTo(1), BeastStrength.WHITE_BOAR));
     public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
             () -> new BoarGuItem(new Item.Properties().stacksTo(1), BeastStrength.BLACK_BOAR));
+    public static final DeferredItem<Item> FLOWER_BOAR_GU = ITEMS.register("flower_boar_gu",
+            () -> new FlowerBoarGuItem(new Item.Properties().stacksTo(1)));
 
     public static final DeferredItem<Item> JIN_STRENGTH_GU = ITEMS.register("jin_strength_gu",
             () -> new HumanStrengthGuItem(new Item.Properties().stacksTo(1), Rank.ONE, HumanStrength.JIN));
