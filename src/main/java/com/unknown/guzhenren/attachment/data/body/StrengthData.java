@@ -74,7 +74,7 @@ public record StrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Integer
         return switch (branch) {
             case BEASTS -> !beasts.isEmpty();
             case HUMAN -> !humanStrength.isEmpty();
-            case ENVIRONMENT -> false;
+            case ENVIRONMENT, OLDER_ANTIQUITY -> false;
         };
     }
 

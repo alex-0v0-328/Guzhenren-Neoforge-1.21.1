@@ -37,6 +37,12 @@ public class BoarGuItem extends RefinableGuItem {
     protected int feedUnits(ItemStack food) {return food.is(ModItemTags.BOAR_FEED) ? PORK_UNITS : 0;}
 
     @Override
+    protected int useDurationTicks(Player player, ItemStack stack) {
+        int base = super.useDurationTicks(player, stack);
+        return base > 0 && refined(stack) ? PHYSIQUE_USE_TICKS : base;
+    }
+
+    @Override
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
         return StrengthService.has(player, beast)
                 ? new Refusal(FAILED_STRENGTH_HELD, Component.translatable(beast.getTranslationKey()))

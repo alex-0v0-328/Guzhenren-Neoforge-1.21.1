@@ -11,6 +11,7 @@ import com.unknown.guzhenren.item.material.qi.DeathQiItem;
 import com.unknown.guzhenren.item.material.qi.EssenceQiItem;
 import com.unknown.guzhenren.item.material.qi.LifeQiItem;
 import com.unknown.guzhenren.item.material.qi.QiMaterialItem;
+import com.unknown.guzhenren.item.mortal.strength.AllOutEffortGuItem;
 import com.unknown.guzhenren.item.mortal.strength.BoarGuItem;
 import com.unknown.guzhenren.item.mortal.HopeGuItem;
 import com.unknown.guzhenren.item.mortal.LifespanGuItem;
@@ -66,6 +67,13 @@ public final class ModItems {
             () -> new HumanStrengthGuItem(new Item.Properties().stacksTo(1), Rank.THREE, HumanStrength.JUN));
     public static final DeferredItem<Item> TENS_JUN_STRENGTH_GU = ITEMS.register("tens_jun_strength_gu",
             () -> new HumanStrengthGuItem(new Item.Properties().stacksTo(1), Rank.FOUR, HumanStrength.TEN_JUN));
+
+    public static final DeferredItem<Item> ALL_OUT_EFFORT_GU_3 = ITEMS.register("all_out_effort_gu_3",
+            () -> new AllOutEffortGuItem(new Item.Properties().stacksTo(1), Rank.THREE));
+    public static final DeferredItem<Item> ALL_OUT_EFFORT_GU_4 = ITEMS.register("all_out_effort_gu_4",
+            () -> new AllOutEffortGuItem(new Item.Properties().stacksTo(1), Rank.FOUR));
+    public static final DeferredItem<Item> ALL_OUT_EFFORT_GU_5 = ITEMS.register("all_out_effort_gu_5",
+            () -> new AllOutEffortGuItem(new Item.Properties().stacksTo(1), Rank.FIVE));
 
     public static final DeferredItem<Item> VITALITY_LEAF_GU = ITEMS.register("vitality_leaf_gu",
             () -> new VitalityLeafGuItem(new Item.Properties()));

@@ -27,11 +27,7 @@ public final class AttackService {
         for (BeastStrength beast : BeastStrength.values()) {
             if (data.has(beast)) total += beast.getAttackBonus();
         }
-        for (HumanStrength kind : HumanStrength.values()) {
-            int steps = data.humanStrengthCount(kind) / kind.getLayersPerStep();
-            total += steps * kind.getAttackBonus();
-        }
-        return total;
+        return total + StrengthService.usableJin(player) * HumanStrength.ATTACK_PER_JIN;
     }
 
     public static void refresh(ServerPlayer player) {

@@ -9,6 +9,7 @@ import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.data.mind.MindPool;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
+import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
@@ -63,6 +64,8 @@ public final class InfoModel {
     public record QiRow(MarkTag tag, long amount, boolean speck) implements Entry {}
     public record StrengthHeader(boolean empty) implements Entry {}
     public record StrengthRow(StrengthBranch branch, Component reading) implements Entry {}
+    public record CapacityRow(int usable, int total) implements Entry {}
+    public record AttackRow(double bonus) implements Entry {}
     public record WisdomHeader(GuAttainment attainment) implements Entry {}
     //endregion
 
@@ -102,6 +105,7 @@ public final class InfoModel {
     public static List<Row> body(Player player) {
         BodyData body = BodyService.get(player);
         SoulData soul = SoulService.get(player);
+        StrengthData strength = StrengthService.get(player);
         List<Row> rows = new ArrayList<>();
 
         if (body.lifeState() != LifeState.ALIVE) rows.add(new Row(0, new BodyLife(body.lifeState())));
@@ -109,6 +113,12 @@ public final class InfoModel {
         rows.add(new Row(0, new RaceRow(body.race())));
         rows.add(new Row(0, new Soul(soul)));
         rows.add(new Row(0, new Lifespan(body)));
+        if (strength.isEmpty()) return rows;
+
+        if (strength.hasBranch(StrengthBranch.HUMAN)) {
+            rows.add(new Row(0, new CapacityRow(StrengthService.usableJin(player), strength.totalJin())));
+        }
+        rows.add(new Row(0, new AttackRow(AttackService.bonus(player))));
         return rows;
     }
 

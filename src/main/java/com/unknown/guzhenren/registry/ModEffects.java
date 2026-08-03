@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.registry;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.effect.AllOutEffortEffect;
 import com.unknown.guzhenren.effect.DeathQiEffect;
 import com.unknown.guzhenren.effect.EssenceQiEffect;
 import com.unknown.guzhenren.effect.FlowerBoarGuEffect;
@@ -29,7 +30,7 @@ public final class ModEffects {
     private static final int ESSENCE_QI_COLOR = 0x4FC3F7;
     private static final int DEATH_QI_COLOR = 0x4A3A52;
 
-    private static final int FLOWER_BOAR_GU_COLOR = 0xFF8A65;
+    private static final int STRENGTH_COLOR = 0xFF8A65;
 
     public static final DeferredHolder<MobEffect, VitalityLeafEffect> VITALITY_LEAF = MOB_EFFECTS.register(
             "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, VITALITY_COLOR));
@@ -47,7 +48,10 @@ public final class ModEffects {
             "death_qi", () -> new DeathQiEffect(MobEffectCategory.HARMFUL, DEATH_QI_COLOR));
 
     public static final DeferredHolder<MobEffect, FlowerBoarGuEffect> FLOWER_BOAR_GU = MOB_EFFECTS.register(
-            "flower_boar_gu", () -> new FlowerBoarGuEffect(MobEffectCategory.BENEFICIAL, FLOWER_BOAR_GU_COLOR));
+            "flower_boar_gu", () -> new FlowerBoarGuEffect(MobEffectCategory.BENEFICIAL, STRENGTH_COLOR));
+
+    public static final DeferredHolder<MobEffect, AllOutEffortEffect> ALL_OUT_EFFORT = MOB_EFFECTS.register(
+            "all_out_effort", () -> new AllOutEffortEffect(MobEffectCategory.BENEFICIAL, STRENGTH_COLOR));
 
     public static void register(IEventBus modEventBus) {
         MOB_EFFECTS.register(modEventBus);

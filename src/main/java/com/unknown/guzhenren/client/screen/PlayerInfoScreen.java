@@ -327,6 +327,10 @@ public final class PlayerInfoScreen extends Screen {
                             e.amount()));
             case InfoModel.StrengthHeader e -> new Row(indent, label("strength"), e.empty() ? none() : null);
             case InfoModel.StrengthRow e -> new Row(indent, name(e.branch().getTranslationKey()), e.reading());
+            case InfoModel.CapacityRow e -> new Row(indent, label("capacity"),
+                    Component.translatable("guzhenren.screen.capacity", e.usable(), e.total()));
+            case InfoModel.AttackRow e -> new Row(indent, label("attack"),
+                    Component.literal(ModDisplayText.attackBonus(e.bonus())));
             case InfoModel.WisdomHeader e -> new Row(indent, label("wisdom"),
                     e.attainment() == GuAttainment.NONE ? none() : name(e.attainment().getTranslationKey()));
 

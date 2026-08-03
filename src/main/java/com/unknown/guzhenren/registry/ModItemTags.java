@@ -19,6 +19,8 @@ public final class ModItemTags {
 
     public static final TagKey<Item> LIQUOR_FEED = key("liquor_feed");
 
+    public static final TagKey<Item> ALL_OUT_FEED = key("all_out_feed");
+
     private static TagKey<Item> key(String name) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, name));
     }

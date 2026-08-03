@@ -15,6 +15,7 @@ import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -64,10 +65,52 @@ public abstract class RefinableGuItem extends MortalGuItem {
         return value;
     }
 
+    public static final int PHYSIQUE_USE_TICKS = Ticks.SECOND;
+
     protected int chargeTicks() {return 60;}
     protected int fastChargeTicks() {return 20;}
     protected int slowChargeTicks() {return 180;}
     protected int unitsPerHunger() {return 4;}
+    protected int useCooldownTicks() {return 0;}
+    //endregion
+
+    //region the long cooldown -- vanilla draws the sweep, the stack's stamp is the truth
+    private static final String FAILED_COOLDOWN = "guzhenren.item.failed.gu_cooldown";
+
+    private static long gameTime(ServerPlayer player) {return player.server.overworld().getGameTime();}
+
+    private int cooldownLeft(Player player, ItemStack stack, Long stamp, int window) {
+        MinecraftServer server = player.getServer();
+        if (stamp == null || server == null || window <= 0) return 0;
+
+        long elapsed = server.overworld().getGameTime() - stamp;
+        return elapsed < 0L || elapsed >= window ? 0 : (int) (window - elapsed);
+    }
+
+    private int useCooldownLeft(Player player, ItemStack stack) {
+        return cooldownLeft(player, stack, stack.get(ModDataComponents.USED_AT.get()), useCooldownTicks());
+    }
+
+    private int refineCooldownLeft(Player player, ItemStack stack) {
+        return cooldownLeft(player, stack, stack.get(ModDataComponents.REFINED_AT.get()),
+                REFINE_DONE_COOLDOWN_TICKS);
+    }
+
+    private @Nullable Refusal cooldownRefusal(Player player, ItemStack stack) {
+        int left = useCooldownLeft(player, stack);
+        if (left <= 0) return null;
+
+        if (player instanceof ServerPlayer server) server.getCooldowns().addCooldown(this, left);
+        long seconds = (left + Ticks.SECOND - 1) / Ticks.SECOND;
+        return new Refusal(FAILED_COOLDOWN, Component.literal(String.valueOf(seconds)));
+    }
+
+    @Override
+    protected void spend(ServerPlayer player, ItemStack stack, int count) {
+        super.spend(player, stack, count);
+        int left = Math.max(useCooldownLeft(player, stack), refineCooldownLeft(player, stack));
+        if (left > 0) player.getCooldowns().addCooldown(this, left);
+    }
     //endregion
 
     //region the fed clock -- Liquor Worm [酒虫] and Primeval Elder Gu [元老蛊] only
@@ -161,8 +204,11 @@ public abstract class RefinableGuItem extends MortalGuItem {
     protected boolean hasUse() {return true;}
 
     @Override
+    protected boolean feedsFromOffhand() {return true;}
+
+    @Override
     protected int useDurationTicks(Player player, ItemStack stack) {
-        if (holdingFood(player, stack) && !player.isShiftKeyDown()) return 0;
+        if (holdingFood(player, stack) && !crouching(player)) return 0;
         int gap = rankGap(player);
         if (gap > 0) return fastChargeTicks();
         return gap == 0 ? chargeTicks() : slowChargeTicks();
@@ -185,7 +231,8 @@ public abstract class RefinableGuItem extends MortalGuItem {
         if (refusal != null || !refined(stack)) return refusal;
 
         if (holdingFood(player, stack)) return null;
-        return payoutGate(player, stack);
+        Refusal cooling = cooldownRefusal(player, stack);
+        return cooling != null ? cooling : payoutGate(player, stack);
     }
 
     @Override
@@ -212,6 +259,7 @@ public abstract class RefinableGuItem extends MortalGuItem {
         if (state.useCount() >= usesPerGrant()) {
             payout(player, stack);
             state = state.withUses(0);
+            if (useCooldownTicks() > 0) stack.set(ModDataComponents.USED_AT.get(), gameTime(player));
         }
         store(stack, state);
 
@@ -235,7 +283,10 @@ public abstract class RefinableGuItem extends MortalGuItem {
     @Override
     protected @Nullable Refusal sneakGate(Player player, ItemStack stack) {
         Refusal refusal = common(player, stack);
-        return refusal != null ? refusal : payoutGate(player, stack);
+        if (refusal != null) return refusal;
+
+        Refusal cooling = cooldownRefusal(player, stack);
+        return cooling != null ? cooling : payoutGate(player, stack);
     }
 
     @Override
@@ -294,6 +345,8 @@ public abstract class RefinableGuItem extends MortalGuItem {
     //endregion
 
     //region refining
+    public static final int REFINE_DONE_COOLDOWN_TICKS = Ticks.SECOND;
+
     private void refineStep(ServerPlayer player, ItemStack stack) {
         RefinedGuState state = state(stack);
         int remaining = refineCost() - state.refineProgress();
@@ -305,8 +358,10 @@ public abstract class RefinableGuItem extends MortalGuItem {
 
         boolean done = next >= refineCost();
         store(stack, done ? new RefinedGuState(refineCost(), 0, maxHunger()) : state.withRefine(next));
+        if (!done) return;
 
-        if (done && usesFedClock()) stampFed(player, stack);
+        if (usesFedClock()) stampFed(player, stack);
+        stack.set(ModDataComponents.REFINED_AT.get(), gameTime(player));
     }
     //endregion
 
@@ -369,14 +424,14 @@ public abstract class RefinableGuItem extends MortalGuItem {
             return false;
         }
         if (gu.usesFedClock()) gu.refreshFedBar(player, stack);
-        if (gu.hungry(player, stack)) gu.warnHungry(player, stack);
+        if (gu.hungry(player, stack)) gu.warnHungry(player, stack, days);
         return false;
     }
 
-    private void warnHungry(ServerPlayer player, ItemStack stack) {
+    private void warnHungry(ServerPlayer player, ItemStack stack, long days) {
         if (usesFedClock()) {
             warnOnceFed(player, stack);
-        } else {
+        } else if (days > 0L) {
             announce(player, stack, MSG_HUNGRY);
         }
     }

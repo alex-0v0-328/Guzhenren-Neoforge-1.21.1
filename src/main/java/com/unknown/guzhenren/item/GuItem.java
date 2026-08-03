@@ -56,7 +56,15 @@ public abstract class GuItem extends Item {
     protected @Nullable Refusal sneakGate(Player player, ItemStack stack) {return null;}
     protected int sneakApply(ServerPlayer player, ItemStack stack) {return 0;}
     public @Nullable Component chargeCaption(ItemStack stack) {return null;}
+    protected boolean feedsFromOffhand() {return false;}
     //endregion
+
+    private InteractionResultHolder<ItemStack> refused(ServerPlayer player, Refusal refusal, ItemStack stack) {
+        if (player != null) refuse(player, refusal.key(), refusal.args());
+        return feedsFromOffhand()
+                ? InteractionResultHolder.consume(stack)
+                : InteractionResultHolder.fail(stack);
+    }
 
     @Override
     public final @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
@@ -67,8 +75,7 @@ public abstract class GuItem extends Item {
 
         Refusal refusal = sneak ? sneakGate(player, stack) : gate(player, stack);
         if (refusal != null) {
-            if (player instanceof ServerPlayer server) refuse(server, refusal.key(), refusal.args());
-            return InteractionResultHolder.consume(stack);
+            return refused(player instanceof ServerPlayer server ? server : null, refusal, stack);
         }
         if (useDurationTicks(player, stack) > 0) {
             player.startUsingItem(hand);
@@ -98,8 +105,10 @@ public abstract class GuItem extends Item {
         return stack;
     }
 
+    public static boolean crouching(Player player) {return player.isCrouching();}
+
     private boolean isSneakUse(Player player, ItemStack stack) {
-        return player.isShiftKeyDown() && hasSneakUse(player, stack);
+        return crouching(player) && hasSneakUse(player, stack);
     }
 
     @Override

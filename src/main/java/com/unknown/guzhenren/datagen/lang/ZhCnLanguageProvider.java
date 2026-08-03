@@ -150,6 +150,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.path_speck",      " 碎屑 %s");
         add("guzhenren.command.info.strength",        "力道造诣");
         add("guzhenren.command.info.strength_entry",  "  %s  %s");
+        add("guzhenren.command.info.capacity",        "肉身承受  %s / %s斤");
+        add("guzhenren.command.info.attack",          "肉身攻击  %s");
         add("guzhenren.command.info.brilliance",      "才情  %s");
         add("guzhenren.command.info.brilliance_rate", "%s个念头每秒");
         add("guzhenren.command.info.mind",            "脑海");
@@ -189,6 +191,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.qi",             "气道造诣");
         add("guzhenren.screen.label.paths",          "流派造诣");
         add("guzhenren.screen.label.strength",       "力道造诣");
+        add("guzhenren.screen.label.capacity",       "承受");
+        add("guzhenren.screen.label.attack",         "攻击力");
+        add("guzhenren.screen.capacity",             "%s / %s斤");
         add("guzhenren.screen.label.brilliance",     "才情");
         add("guzhenren.screen.path_value",           "%s 道痕 %s");
         add("guzhenren.screen.qi_mark",              "道痕 %s");
@@ -207,6 +212,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("item.guzhenren.white_boar_gu",                "白豕蛊");
         add("item.guzhenren.black_boar_gu",                "黑豕蛊");
         add("item.guzhenren.flower_boar_gu",               "花豕蛊");
+        add("item.guzhenren.all_out_effort_gu_3",          "三转全力以赴蛊");
+        add("item.guzhenren.all_out_effort_gu_4",          "四转全力以赴蛊");
+        add("item.guzhenren.all_out_effort_gu_5",          "五转全力以赴蛊");
         add("item.guzhenren.jin_strength_gu",              "斤力蛊");
         add("item.guzhenren.tens_jin_strength_gu",         "十斤之力蛊");
         add("item.guzhenren.jun_strength_gu",              "钧力蛊");
@@ -267,7 +275,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.elder_gu_empty",        "蛊中无元石");
         add("guzhenren.item.failed.elder_gu_full",         "蛊中元石已满");
         add("guzhenren.item.failed.elder_gu_no_stones",    "身上无元石可存");
-        add("guzhenren.item.failed.flower_boar_cooldown",  "此蛊尚需 %s 秒");
+        add("guzhenren.item.failed.gu_cooldown",           "此蛊尚需 %s 秒");
+        add("guzhenren.item.failed.all_out_active",        "全力未歇");
 
         add("guzhenren.item.gu.uses",                      "已用 %s/%s");
         add("guzhenren.item.gu.refine_progress",           "炼化 %s/%s");
@@ -287,6 +296,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.essence_qi",                 "元气");
         add("effect.guzhenren.death_qi",                   "死气");
         add("effect.guzhenren.flower_boar_gu",             "花豕蛊");
+        add("effect.guzhenren.all_out_effort",             "全力以赴");
     }
     //endregion
 
@@ -327,9 +337,10 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     }
 
     private void addStrengthBranch() {
-        add(StrengthBranch.HUMAN,       "人力钧力流");
-        add(StrengthBranch.BEASTS,      "兽力虚影流");
-        add(StrengthBranch.ENVIRONMENT, "气象天地流");
+        add(StrengthBranch.HUMAN,           "人力钧力流");
+        add(StrengthBranch.BEASTS,          "兽力虚影流");
+        add(StrengthBranch.ENVIRONMENT,     "气象天地流");
+        add(StrengthBranch.OLDER_ANTIQUITY, "上古力道");
     }
 
     private void addHumanStrength() {

@@ -3,6 +3,7 @@ package com.unknown.guzhenren.event;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageTick;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
+import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
@@ -38,6 +39,7 @@ public final class PlayerTickEvents {
 
         closeDistilling(player);
         tickDeathQi(player);
+        AttackService.refresh(player);
         EssenceService.regenStep(player);
         MindService.regenStep(player);
         checkLethalState(player);

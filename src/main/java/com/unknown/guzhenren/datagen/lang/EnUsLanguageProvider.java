@@ -150,6 +150,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.path_speck",      " Specks %s");
         add("guzhenren.command.info.strength",        "Strength Path:");
         add("guzhenren.command.info.strength_entry",  "  %s  %s");
+        add("guzhenren.command.info.capacity",        "Bearing:     %s / %s jin");
+        add("guzhenren.command.info.attack",          "Attack:      %s");
         add("guzhenren.command.info.brilliance",      "Brilliance:  %s");
         add("guzhenren.command.info.brilliance_rate", "%s thoughts/s");
         add("guzhenren.command.info.mind",            "Mind Ocean:");
@@ -189,6 +191,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.qi",             "Qi Path");
         add("guzhenren.screen.label.paths",          "Paths");
         add("guzhenren.screen.label.strength",       "Strength Path");
+        add("guzhenren.screen.label.capacity",       "Bearing");
+        add("guzhenren.screen.label.attack",         "Attack");
+        add("guzhenren.screen.capacity",             "%s / %s jin");
         add("guzhenren.screen.label.brilliance",     "Brilliance");
         add("guzhenren.screen.path_value",           "%s Marks %s");
         add("guzhenren.screen.qi_mark",              "Marks %s");
@@ -207,6 +212,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("item.guzhenren.white_boar_gu",                "White Boar Gu");
         add("item.guzhenren.black_boar_gu",                "Black Boar Gu");
         add("item.guzhenren.flower_boar_gu",               "Flower Boar Gu");
+        add("item.guzhenren.all_out_effort_gu_3",          "All-Out Effort Gu III");
+        add("item.guzhenren.all_out_effort_gu_4",          "All-Out Effort Gu IV");
+        add("item.guzhenren.all_out_effort_gu_5",          "All-Out Effort Gu V");
         add("item.guzhenren.jin_strength_gu",              "Jin Strength Gu");
         add("item.guzhenren.tens_jin_strength_gu",         "Tens Jin Strength Gu");
         add("item.guzhenren.jun_strength_gu",              "Jun Strength Gu");
@@ -267,7 +275,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.elder_gu_empty",        "This Gu holds no Primeval Stones");
         add("guzhenren.item.failed.elder_gu_full",         "This Gu is full of Primeval Stones");
         add("guzhenren.item.failed.elder_gu_no_stones",    "You carry no Primeval Stones to store");
-        add("guzhenren.item.failed.flower_boar_cooldown",  "This Gu needs another %s seconds");
+        add("guzhenren.item.failed.gu_cooldown",           "This Gu needs another %s seconds");
+        add("guzhenren.item.failed.all_out_active",        "The all-out effort has not yet passed");
 
         add("guzhenren.item.gu.uses",                      "Used %s/%s");
         add("guzhenren.item.gu.refine_progress",           "Refined %s/%s");
@@ -287,6 +296,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.essence_qi",                 "Essence Qi");
         add("effect.guzhenren.death_qi",                   "Death Qi");
         add("effect.guzhenren.flower_boar_gu",             "Flower Boar Gu");
+        add("effect.guzhenren.all_out_effort",             "All-Out Effort");
     }
     //endregion
 
@@ -327,9 +337,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
     }
 
     private void addStrengthBranch() {
-        add(StrengthBranch.HUMAN,       "Human Jun Strength Branch");
-        add(StrengthBranch.BEASTS,      "Beast Strength Phantom Branch");
-        add(StrengthBranch.ENVIRONMENT, "Atmospheric Heaven and Earth Branch");
+        add(StrengthBranch.HUMAN,           "Human Jun Strength Branch");
+        add(StrengthBranch.BEASTS,          "Beast Strength Phantom Branch");
+        add(StrengthBranch.ENVIRONMENT,     "Atmospheric Heaven and Earth Branch");
+        add(StrengthBranch.OLDER_ANTIQUITY, "Older Antiquity");
     }
 
     private void addHumanStrength() {

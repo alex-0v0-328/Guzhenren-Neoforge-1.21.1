@@ -9,7 +9,8 @@ public enum StrengthBranch implements StringRepresentable, EnumTranslatable {
 
     HUMAN,
     BEASTS,
-    ENVIRONMENT;
+    ENVIRONMENT,
+    OLDER_ANTIQUITY;
 
     public static final Codec<StrengthBranch> CODEC = StringRepresentable.fromEnum(StrengthBranch::values);
     private static final String KEY_PREFIX = "guzhenren.enum.strength.strength_branch.";

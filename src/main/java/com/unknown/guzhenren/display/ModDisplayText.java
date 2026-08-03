@@ -58,6 +58,8 @@ public final class ModDisplayText {
 
     public static String pool(long current, long max) {return current + "/" + max;}
 
+    public static String attackBonus(double bonus) {return "+" + bonus;}
+
     public static MutableComponent beastStrengthLine(StrengthData data) {
         MutableComponent line = Component.empty();
         data.beastReadings().forEach((family, reading) -> line.append(beastReading(family, reading)));

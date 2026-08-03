@@ -60,6 +60,12 @@ public class HumanStrengthGuItem extends RefinableGuItem {
     }
 
     @Override
+    protected int useDurationTicks(Player player, ItemStack stack) {
+        int base = super.useDurationTicks(player, stack);
+        return base > 0 && refined(stack) ? PHYSIQUE_USE_TICKS : base;
+    }
+
+    @Override
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
         return StrengthService.humanStrength(player, kind) >= kind.getMaxLayers()
                 ? new Refusal(FAILED_LAYERS_FULL, Component.literal(String.valueOf(kind.getMaxLayers())))
