@@ -9,7 +9,7 @@ import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.compat.customplayer.PartStorageTick;
 import com.unknown.guzhenren.effect.DeathQiEffect;
-import com.unknown.guzhenren.item.RefinableGuItem;
+import com.unknown.guzhenren.item.TendedGuItem;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import com.unknown.guzhenren.registry.ModDamageTypes;
 import com.unknown.guzhenren.registry.ModEffects;
@@ -31,7 +31,7 @@ public final class PlayerTickEvents {
         if (player.tickCount % EssenceService.REGEN_INTERVAL_TICKS != 0) return;
 
         long days = BodyService.tickAging(player);
-        RefinableGuItem.starveAll(player, days);
+        TendedGuItem.starveAll(player, days);
         ApertureStorageTick.tickDay(player, days);
         PartStorageTick.tickDay(player, days);
 

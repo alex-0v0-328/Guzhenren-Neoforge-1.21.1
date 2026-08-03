@@ -108,10 +108,20 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.strength.jun_reading",         "[Strength of %s Jun]");
 
         add("guzhenren.hud.lifespan",                         "Lifespan %s");
-        add("guzhenren.hud.refining",                         "Refining  %s / %s");
+        add("guzhenren.display.tenth.2",                      "20%%");
+        add("guzhenren.display.tenth.3",                      "30%%");
+        add("guzhenren.display.tenth.4",                      "40%%");
+        add("guzhenren.display.tenth.5",                      "50%%");
+        add("guzhenren.display.tenth.6",                      "60%%");
+        add("guzhenren.display.tenth.7",                      "70%%");
+        add("guzhenren.display.tenth.8",                      "80%%");
+        add("guzhenren.display.tenth.9",                      "90%%");
+        add("guzhenren.display.tenth.10",                     "100%%");
+
+        add("guzhenren.hud.refining",                         "Refine %s/%s");
         add("guzhenren.hud.refining_plain",                   "Refining");
         add("guzhenren.hud.using_plain",                      "Using");
-        add("guzhenren.hud.using",                            "Using  %s / %s");
+        add("guzhenren.hud.using",                            "Use %s/%s");
     }
     //endregion
 
@@ -270,6 +280,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.human_strength_full",   "This strength is already at %s layers");
         add("guzhenren.item.failed.vitality_active",       "Vitality Leaf is still working");
         add("guzhenren.item.failed.refine_essence",        "NOT enough essence to refine");
+        add("guzhenren.item.failed.essence",               "NOT enough essence");
         add("guzhenren.item.failed.liquor_rank",           "Only a cultivator at %s can drive this worm");
         add("guzhenren.item.failed.liquor_distilling",     "You are already distilling");
         add("guzhenren.item.failed.elder_gu_empty",        "This Gu holds no Primeval Stones");
@@ -278,8 +289,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.gu_cooldown",           "This Gu needs another %s seconds");
         add("guzhenren.item.failed.all_out_active",        "The all-out effort has not yet passed");
 
-        add("guzhenren.item.gu.uses",                      "Used %s/%s");
+        add("guzhenren.item.gu.invested",                  "Invested %s/%s");
         add("guzhenren.item.gu.refine_progress",           "Refined %s/%s");
+        add("guzhenren.item.gu.refine_cost",               "Refine %s");
         add("guzhenren.item.gu.hunger_progress",           "Fed %s/%s");
         add("guzhenren.item.gu.stored_stones",             "Stored %s/%s");
         add("guzhenren.item.gu.meal_liquor",               "A meal is %s bottles");

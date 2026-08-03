@@ -25,6 +25,8 @@ public abstract class GuItem extends Item {
 
     public static final int COOLDOWN_TICKS = 2;
 
+    public static final int CHARGE_COLOR_DEFAULT = 0xFF4FC3F7;
+
     private final Rank rank;
     private final GuPath path;
 
@@ -37,6 +39,8 @@ public abstract class GuItem extends Item {
     protected abstract String kindKey();
     public Rank rank() {return rank;}
     public GuPath path() {return path;}
+
+    protected int tier() {return rank.ordinal() - Rank.ONE.ordinal();}
 
     public record Refusal(String key, Object... args) {}
 
@@ -55,7 +59,9 @@ public abstract class GuItem extends Item {
     protected boolean hasSneakUse(Player player, ItemStack stack) {return false;}
     protected @Nullable Refusal sneakGate(Player player, ItemStack stack) {return null;}
     protected int sneakApply(ServerPlayer player, ItemStack stack) {return 0;}
-    public @Nullable Component chargeCaption(ItemStack stack) {return null;}
+    public @Nullable Component chargeCaption(ItemStack stack, int remainingTicks) {return null;}
+    public @Nullable Float chargeFraction(ItemStack stack, int remainingTicks) {return null;}
+    public int chargeColor(ItemStack stack, int remainingTicks) {return CHARGE_COLOR_DEFAULT;}
     protected boolean feedsFromOffhand() {return false;}
     //endregion
 

@@ -3,7 +3,7 @@ package com.unknown.guzhenren.menu;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService;
 import com.unknown.guzhenren.item.GuItem;
 import com.unknown.guzhenren.item.MortalGuItem;
-import com.unknown.guzhenren.item.RefinableGuItem;
+import com.unknown.guzhenren.item.TendedGuItem;
 import com.unknown.guzhenren.registry.ModMenus;
 import java.util.ArrayList;
 import java.util.List;
@@ -188,8 +188,7 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
-            if (!(stack.getItem() instanceof MortalGuItem gu) || !gu.reusable()) return false;
-            if (gu instanceof RefinableGuItem refinable && !refinable.refined(stack)) return false;
+            if (!(stack.getItem() instanceof TendedGuItem gu) || !gu.refined(stack)) return false;
             return !GuItem.isVital(stack) || GuItem.isVitalOf(stack, player);
         }
 

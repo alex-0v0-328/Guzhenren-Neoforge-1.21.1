@@ -28,7 +28,6 @@ public final class ChargeHud implements LayeredDraw.Layer {
     private static final int MIN_SHIFT = 59;
     private static final int CREATIVE_LIFT = 14;
 
-    private static final int FILL = 0xFF4FC3F7;
     private static final int TRACK = 0xB0202020;
     private static final int BORDER = 0xC0000000;
     private static final int TEXT_COLOR = 0xFFFFFFFF;
@@ -46,16 +45,19 @@ public final class ChargeHud implements LayeredDraw.Layer {
         int total = stack.getUseDuration(player);
         if (total <= 0) return;
 
-        float progress = 1.0F - player.getUseItemRemainingTicks() / (float) total;
+        int remaining = player.getUseItemRemainingTicks();
+        Float own = gu.chargeFraction(stack, remaining);
+        float progress = own != null ? own : 1.0F - remaining / (float) total;
 
         int x = (minecraft.getWindow().getGuiScaledWidth() - BAR_WIDTH) / 2;
         int y = barTop(minecraft);
 
         graphics.fill(x - 1, y - 1, x + BAR_WIDTH + 1, y + BAR_HEIGHT + 1, BORDER);
         graphics.fill(x, y, x + BAR_WIDTH, y + BAR_HEIGHT, TRACK);
-        graphics.fill(x, y, x + Math.round(BAR_WIDTH * Math.clamp(progress, 0.0F, 1.0F)), y + BAR_HEIGHT, FILL);
+        graphics.fill(x, y, x + Math.round(BAR_WIDTH * Math.clamp(progress, 0.0F, 1.0F)), y + BAR_HEIGHT,
+                gu.chargeColor(stack, remaining));
 
-        Component label = gu.chargeCaption(stack);
+        Component label = gu.chargeCaption(stack, remaining);
         if (label == null) return;
 
         Font font = minecraft.font;

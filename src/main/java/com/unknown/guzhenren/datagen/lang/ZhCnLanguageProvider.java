@@ -108,8 +108,18 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.strength.jun_reading",         "[%s钧之力]");
 
         add("guzhenren.hud.lifespan",                         "寿元 %s");
-        add("guzhenren.hud.refining",                         "炼化中  %s / %s");
-        add("guzhenren.hud.using",                            "使用中  %s / %s");
+        add("guzhenren.display.tenth.2",                      "二成");
+        add("guzhenren.display.tenth.3",                      "三成");
+        add("guzhenren.display.tenth.4",                      "四成");
+        add("guzhenren.display.tenth.5",                      "五成");
+        add("guzhenren.display.tenth.6",                      "六成");
+        add("guzhenren.display.tenth.7",                      "七成");
+        add("guzhenren.display.tenth.8",                      "八成");
+        add("guzhenren.display.tenth.9",                      "九成");
+        add("guzhenren.display.tenth.10",                     "十成十");
+
+        add("guzhenren.hud.refining",                         "炼化 %s/%s");
+        add("guzhenren.hud.using",                            "使用 %s/%s");
         add("guzhenren.hud.refining_plain",                   "炼化中");
         add("guzhenren.hud.using_plain",                      "使用中");
     }
@@ -270,6 +280,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.human_strength_full",   "此力已满%s层");
         add("guzhenren.item.failed.vitality_active",       "生机叶效果未散");
         add("guzhenren.item.failed.refine_essence",        "真元不足无法炼化");
+        add("guzhenren.item.failed.essence",               "真元不足");
         add("guzhenren.item.failed.liquor_rank",           "唯%s修士方可催动此蛊");
         add("guzhenren.item.failed.liquor_distilling",     "精炼未止");
         add("guzhenren.item.failed.elder_gu_empty",        "蛊中无元石");
@@ -278,8 +289,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.gu_cooldown",           "此蛊尚需 %s 秒");
         add("guzhenren.item.failed.all_out_active",        "全力未歇");
 
-        add("guzhenren.item.gu.uses",                      "已用 %s/%s");
+        add("guzhenren.item.gu.invested",                  "已投入 %s/%s");
         add("guzhenren.item.gu.refine_progress",           "炼化 %s/%s");
+        add("guzhenren.item.gu.refine_cost",               "炼化 %s");
         add("guzhenren.item.gu.hunger_progress",           "饱食 %s/%s");
         add("guzhenren.item.gu.stored_stones",             "存石 %s/%s");
         add("guzhenren.item.gu.meal_liquor",               "一餐 %s 瓶酒");

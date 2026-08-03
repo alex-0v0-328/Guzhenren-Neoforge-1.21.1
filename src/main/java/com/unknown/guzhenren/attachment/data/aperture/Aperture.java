@@ -92,15 +92,15 @@ public record Aperture(
         if (secondaryPath != null && secondaryPath == primaryPath) secondaryPath = null;
     }
 
-    public static Aperture opened() {
-        Talent talent = Talent.randomTalent();
-        ExtremePhysique physique = talent == Talent.EXTREME
+    public static Aperture opened() {return openedAt(Talent.randomPercent(Talent.randomTalent()));}
+
+    public static Aperture openedAt(int baseEssence) {
+        ExtremePhysique physique = Talent.fromPercent(baseEssence) == Talent.EXTREME
                 ? ExtremePhysique.randomTenExtreme()
                 : ExtremePhysique.NONE;
 
-        int base = Talent.randomPercent(talent);
-        long max = maxEssence(Rank.ONE, Stage.INIT, base);
-        return new Aperture(Rank.ONE, Stage.INIT, base, physique, max, ApertureState.ALIVE, null, null, 0L);
+        long max = maxEssence(Rank.ONE, Stage.INIT, baseEssence);
+        return new Aperture(Rank.ONE, Stage.INIT, baseEssence, physique, max, ApertureState.ALIVE, null, null, 0L);
     }
 
     public static long maxEssence(Rank rank, Stage stage, int base) {

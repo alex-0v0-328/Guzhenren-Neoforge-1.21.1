@@ -76,9 +76,15 @@ public final class ApertureService {
         set(player, PRIMARY, aperture);
     }
 
-    public static void awaken(ServerPlayer player) {
+    public static void awaken(ServerPlayer player) {open(player, Aperture.opened());}
+
+    public static void awaken(ServerPlayer player, int baseEssence) {
+        open(player, Aperture.openedAt(baseEssence));
+    }
+
+    private static void open(ServerPlayer player, Aperture aperture) {
         ExtremePhysique before = aperture(player).extremePhysique();
-        store(player, get(player).opened(enforce(Aperture.opened())));
+        store(player, get(player).opened(enforce(aperture)));
         reconcileTalentPaths(player, before, aperture(player).extremePhysique());
     }
 

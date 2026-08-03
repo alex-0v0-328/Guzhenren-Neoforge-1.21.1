@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.attachment.service.aperture;
 
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
-import com.unknown.guzhenren.item.RefinableGuItem;
+import com.unknown.guzhenren.item.TendedGuItem;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,12 +27,12 @@ public final class ApertureStorageTick {
 
         for (int i = 0; i < next.size(); i++) {
             ItemStack stack = next.get(i);
-            if (!(stack.getItem() instanceof RefinableGuItem gu) || !gu.refined(stack)) continue;
+            if (!(stack.getItem() instanceof TendedGuItem gu) || !gu.refined(stack)) continue;
 
             changed = true;
-            if (RefinableGuItem.tickKept(player, stack, days)) {
+            if (TendedGuItem.tickInContainer(player, stack, days)) {
                 next.set(i, ItemStack.EMPTY);
-                RefinableGuItem.starved(player, stack);
+                TendedGuItem.starved(player, stack);
             }
         }
         if (changed) ApertureStorageService.set(player, aperture, next);
@@ -40,11 +40,11 @@ public final class ApertureStorageTick {
 
     private static void tickVital(ServerPlayer player, int aperture, long days) {
         ItemStack stack = ApertureStorageService.vital(player, aperture);
-        if (!(stack.getItem() instanceof RefinableGuItem)) return;
+        if (!(stack.getItem() instanceof TendedGuItem)) return;
 
-        if (RefinableGuItem.tickKept(player, stack, days)) {
+        if (TendedGuItem.tickInContainer(player, stack, days)) {
             ApertureStorageService.setVital(player, aperture, ItemStack.EMPTY);
-            RefinableGuItem.starved(player, stack);
+            TendedGuItem.starved(player, stack);
             return;
         }
         ApertureStorageService.setVital(player, aperture, stack);

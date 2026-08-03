@@ -1,9 +1,8 @@
 package com.unknown.guzhenren.item.mortal;
 
-import com.unknown.guzhenren.custom.enums.aperture.Rank;
-import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.effect.VitalityLeafEffect;
-import com.unknown.guzhenren.item.MortalGuItem;
+import com.unknown.guzhenren.item.GuSpec;
+import com.unknown.guzhenren.item.OneShotGuItem;
 import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -11,28 +10,26 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class VitalityLeafGuItem extends MortalGuItem {
+public class VitalityLeafGuItem extends OneShotGuItem {
 
     private static final String FAILED_VITALITY_ACTIVE = "guzhenren.item.failed.vitality_active";
 
     private static final int USE_COOLDOWN_TICKS = 20;
 
-    public VitalityLeafGuItem(Properties properties) {
-        super(properties, Rank.ONE, GuPath.WOOD, false, false);
+    public VitalityLeafGuItem(Properties properties, GuSpec spec) {
+        super(properties, spec);
     }
 
-    @Override
-    protected boolean hasUse() {return true;}
     @Override
     protected int cooldownTicks(ItemStack stack) {return USE_COOLDOWN_TICKS;}
 
     @Override
-    protected @Nullable Refusal gate(Player player, ItemStack stack) {
+    protected @Nullable Refusal useGate(Player player, ItemStack stack) {
         return player.hasEffect(ModEffects.VITALITY_LEAF) ? new Refusal(FAILED_VITALITY_ACTIVE) : null;
     }
 
     @Override
-    protected int apply(ServerPlayer player, ItemStack stack) {
+    protected int useApply(ServerPlayer player, ItemStack stack) {
         player.addEffect(new MobEffectInstance(ModEffects.VITALITY_LEAF, VitalityLeafEffect.DURATION_TICKS));
         return 1;
     }

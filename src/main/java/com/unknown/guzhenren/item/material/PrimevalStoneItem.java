@@ -22,6 +22,8 @@ public class PrimevalStoneItem extends GuMaterialItem {
         this.essence = essence;
     }
 
+    public long essence() {return essence;}
+
     @Override
     protected boolean hasUse() {return true;}
 

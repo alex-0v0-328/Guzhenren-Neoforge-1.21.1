@@ -34,7 +34,6 @@ public class QiMaterialItem extends GuMaterialItem {
 
     public MarkTag tag() {return tag;}
 
-    protected int tier() {return rank().ordinal() - Rank.ONE.ordinal();}
     protected long specks() {return SPECKS[tier()];}
 
     @Override
@@ -48,7 +47,7 @@ public class QiMaterialItem extends GuMaterialItem {
     }
 
     @Override
-    public @Nullable Component chargeCaption(ItemStack stack) {
+    public @Nullable Component chargeCaption(ItemStack stack, int remainingTicks) {
         return Component.translatable(CHARGE_CAPTION);
     }
 

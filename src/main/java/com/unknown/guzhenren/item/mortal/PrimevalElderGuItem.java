@@ -1,9 +1,8 @@
 package com.unknown.guzhenren.item.mortal;
 
-import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.custom.enums.aperture.Rank;
-import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.item.RefinableGuItem;
+import com.unknown.guzhenren.item.GuClock;
+import com.unknown.guzhenren.item.GuSpec;
+import com.unknown.guzhenren.item.TendedGuItem;
 import com.unknown.guzhenren.registry.ModDataComponents;
 import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.network.chat.Component;
@@ -15,81 +14,65 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class PrimevalElderGuItem extends RefinableGuItem {
+public class PrimevalElderGuItem extends TendedGuItem {
 
     private static final String FAILED_EMPTY = "guzhenren.item.failed.elder_gu_empty";
     private static final String FAILED_FULL = "guzhenren.item.failed.elder_gu_full";
     private static final String FAILED_NO_STONES = "guzhenren.item.failed.elder_gu_no_stones";
     private static final String TOOLTIP_STORED = "guzhenren.item.gu.stored_stones";
 
-    private static final long[] CAPACITY = {1_000L, 10_000L, 100_000L, 1_000_000L, 100_000_000L};
-    private static final int BASE_STONES_PER_MEAL = 2;
-    private static final int BASE_REFINE_COST = 50;
-    private static final int REFINE_LADDER = 10;
-    private static final int SLOW_CHARGE_TICKS = 100;
     private static final int WITHDRAW_STONES = 64;
+    private static final long DEPOSIT_IS_FREE = 0L;
 
-    public PrimevalElderGuItem(Properties properties, Rank rank) {
-        super(properties, rank, GuPath.SPACE);
+    private final long capacity;
+
+    public PrimevalElderGuItem(Properties properties, long capacity, GuSpec spec) {
+        super(properties, spec);
+        this.capacity = capacity;
     }
 
-    //region the numbers this Gu bends
-    @Override
-    public int refineCost() {return scaled(BASE_REFINE_COST, REFINE_LADDER, tier());}
-
-    @Override
-    protected int slowChargeTicks() {return SLOW_CHARGE_TICKS;}
-
-    @Override
-    protected boolean usesFedClock() {return true;}
-
-    @Override
-    protected int mealItems() {return scaled(BASE_STONES_PER_MEAL, 2, tier());}
-
-    @Override
-    public int usesPerGrant() {return 1;}
-    //endregion
-
     //region the vault
-    public long capacity() {return CAPACITY[tier()];}
+    public long capacity() {return capacity;}
 
     public static long stored(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.STORED_STONES.get(), 0L);
     }
 
     private void setStored(ItemStack stack, long v) {
-        stack.set(ModDataComponents.STORED_STONES.get(), Math.clamp(v, 0L, capacity()));
+        stack.set(ModDataComponents.STORED_STONES.get(), Math.clamp(v, 0L, capacity));
     }
 
     @Override
-    protected int feedUnits(ItemStack food) {
-        return food.is(ModItems.PRIMEVAL_STONE.get()) ? 1 : 0;
-    }
+    protected int feedUnits(ItemStack food) {return isStone(food) ? 1 : 0;}
+
+    @Override
+    protected boolean holdingFood(Player player, ItemStack stack) {return false;}
+
+    private static boolean isStone(ItemStack s) {return s.is(ModItems.PRIMEVAL_STONE.get());}
     //endregion
 
-    //region depositing -- the plain right click
+    //region depositing -- the plain right click, free and instant
     @Override
-    protected @Nullable Refusal gate(Player player, ItemStack stack) {
-        if (!refined(stack)) return super.gate(player, stack);
-        if (stored(stack) >= capacity()) return new Refusal(FAILED_FULL);
+    protected long useThreshold(ItemStack stack) {return DEPOSIT_IS_FREE;}
+
+    @Override
+    protected @Nullable Refusal useGate(Player player, ItemStack stack) {
+        if (stored(stack) >= capacity) return new Refusal(FAILED_FULL);
         return depositable(player, stack) <= 0 ? new Refusal(FAILED_NO_STONES) : null;
     }
 
     @Override
-    protected int apply(ServerPlayer player, ItemStack stack) {
-        if (!refined(stack)) return super.apply(player, stack);
+    protected int useApply(ServerPlayer player, ItemStack stack) {
         deposit(player, stack);
         payOwnUpkeep(player, stack);
         return 0;
     }
 
     @Override
-    protected int useDurationTicks(Player player, ItemStack stack) {
-        return refined(stack) ? 0 : super.useDurationTicks(player, stack);
-    }
+    protected int useChargeTicks(Player player, ItemStack stack) {return 0;}
 
     private int depositable(Player player, ItemStack stack) {
-        long room = capacity() - stored(stack);
+        long room = capacity - stored(stack);
         if (room <= 0) return 0;
 
         int carried = 0;
@@ -114,18 +97,16 @@ public class PrimevalElderGuItem extends RefinableGuItem {
         }
         setStored(stack, stored(stack) + wanted);
     }
-
-    private static boolean isStone(ItemStack s) {return s.is(ModItems.PRIMEVAL_STONE.get());}
     //endregion
 
-    //region withdrawing -- sneak + right click
+    //region withdrawing -- sneak + right click, which is this Gu's use
     @Override
     protected boolean hasSneakUse(Player player, ItemStack stack) {return refined(stack);}
 
     @Override
     protected @Nullable Refusal sneakGate(Player player, ItemStack stack) {
-        if (!ApertureService.isAwakened(player)) return new Refusal(FAILED_UNAWAKENED);
-        return payoutGate(player, stack);
+        Refusal poor = essenceGate(player, spec.essencePerRound(), FAILED_ESSENCE);
+        return poor != null ? poor : payoutGate(player, stack);
     }
 
     @Override
@@ -138,8 +119,8 @@ public class PrimevalElderGuItem extends RefinableGuItem {
 
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
-        long owed = needsMeal(player, stack) ? mealItems() : 0L;
-        long spare = stored(stack) - owed;
+        long heldBackForItsOwnMeal = owesAMeal(player, stack) ? spec.mealItems() : 0L;
+        long spare = stored(stack) - heldBackForItsOwnMeal;
         int taken = (int) Math.min(WITHDRAW_STONES, spare > 0 ? spare : stored(stack));
         if (taken <= 0) return;
 
@@ -153,22 +134,25 @@ public class PrimevalElderGuItem extends RefinableGuItem {
     }
     //endregion
 
-    //region its own larder
+    //region its own larder -- runs on the heartbeat, chasing arrears one whole meal at a time
+    private boolean owesAMeal(ServerPlayer player, ItemStack stack) {
+        return refined(stack) && clock instanceof GuClock.FedClock fed && fed.needsMeal(player, stack);
+    }
+
     @Override
     protected void payOwnUpkeep(ServerPlayer player, ItemStack stack) {
-        while (needsMeal(player, stack) && stored(stack) >= mealItems()) {
-            setStored(stack, stored(stack) - mealItems());
-            stack.set(ModDataComponents.FED_AT.get(), fedAt(stack) + FED_WINDOW_TICKS);
+        while (owesAMeal(player, stack) && stored(stack) >= spec.mealItems()) {
+            setStored(stack, stored(stack) - spec.mealItems());
+            stack.set(ModDataComponents.FED_AT.get(),
+                    GuClock.FedClock.fedAt(stack) + GuClock.FedClock.WINDOW_TICKS);
         }
     }
     //endregion
 
-    //region display
     @Override
-    protected MutableComponent progressLine(ItemStack stack) {
+    protected @Nullable MutableComponent progressLine(ItemStack stack) {
         return refined(stack)
-                ? Component.translatable(TOOLTIP_STORED, stored(stack), capacity())
+                ? Component.translatable(TOOLTIP_STORED, stored(stack), capacity)
                 : super.progressLine(stack);
     }
-    //endregion
 }
