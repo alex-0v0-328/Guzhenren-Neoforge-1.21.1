@@ -115,7 +115,7 @@ public final class ModItems {
             () -> new HumanStrengthGuItem(tended(), HumanStrength.JUN, GuSpec.of(Rank.THREE, GuPath.STRENGTH)
                     .refine(100_000)
                     .channel(72_000)
-                    .speckEvery(720, MarkTag.STRENGTH_HUMAN)
+                    .speckEvery(2_400, MarkTag.STRENGTH_HUMAN)
                     .hungerBar(36, 9).hungerEvery(4_000)
                     .feed(ModItemTags.JIN_FEED_SMELTED, 1)
                     .dense(ModItemTags.JIN_FEED_SMELTED_DENSE, 9)));
@@ -123,7 +123,7 @@ public final class ModItems {
             () -> new HumanStrengthGuItem(tended(), HumanStrength.TEN_JUN, GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
                     .refine(1_000_000)
                     .channel(720_000)
-                    .speckEvery(720, MarkTag.STRENGTH_HUMAN)
+                    .speckEvery(2_400, MarkTag.STRENGTH_HUMAN)
                     .hungerBar(36, 27).hungerEvery(40_000)
                     .feed(ModItemTags.JIN_FEED_SMELTED, 1)
                     .dense(ModItemTags.JIN_FEED_SMELTED_DENSE, 9)));

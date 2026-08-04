@@ -281,6 +281,7 @@
   "guzhenren.item.failed.essence": "NOT enough essence",
   "guzhenren.item.failed.essence_full": "Essence is already FULL",
   "guzhenren.item.failed.gu_cooldown": "This Gu needs another %s seconds",
+  "guzhenren.item.failed.gu_starving": "This Gu is too hungry - feed it first",
   "guzhenren.item.failed.human_strength_full": "This strength is already at %s layers",
   "guzhenren.item.failed.liquor_distilling": "You are already distilling",
   "guzhenren.item.failed.liquor_rank": "Only a cultivator at %s can drive this worm",

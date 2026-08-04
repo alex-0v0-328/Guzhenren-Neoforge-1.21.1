@@ -22,21 +22,19 @@ public final class ModEffects {
     public static final DeferredRegister<MobEffect> MOB_EFFECTS =
             DeferredRegister.create(Registries.MOB_EFFECT, Guzhenren.MOD_ID);
 
-    private static final int VITALITY_COLOR = 0x4CAF50;
-
-    private static final int LIQUOR_COLOR = 0x1565C0;
-
-    private static final int LIFE_QI_COLOR = 0x4CAF50;
-    private static final int ESSENCE_QI_COLOR = 0x4FC3F7;
-    private static final int DEATH_QI_COLOR = 0x4A3A52;
-
-    private static final int STRENGTH_COLOR = 0xFF8A65;
+    private static final int VITALITY_LEAF_COLOR  = 0x4CAF50;
+    private static final int LIQUOR_WORM_COLOR    = 0x1565C0;
+    private static final int LIFE_QI_COLOR        = 0x4CAF50;
+    private static final int ESSENCE_QI_COLOR     = 0x4FC3F7;
+    private static final int DEATH_QI_COLOR       = 0x800000;
+    private static final int FLOWER_BOAR_GU_COLOR = 0xF06292;
+    private static final int ALL_OUT_EFFORT_COLOR = 0xFF8A65;
 
     public static final DeferredHolder<MobEffect, VitalityLeafEffect> VITALITY_LEAF = MOB_EFFECTS.register(
-            "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, VITALITY_COLOR));
+            "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, VITALITY_LEAF_COLOR));
 
     public static final DeferredHolder<MobEffect, LiquorWormEffect> LIQUOR_WORM = MOB_EFFECTS.register(
-            "liquor_worm", () -> new LiquorWormEffect(MobEffectCategory.BENEFICIAL, LIQUOR_COLOR));
+            "liquor_worm", () -> new LiquorWormEffect(MobEffectCategory.BENEFICIAL, LIQUOR_WORM_COLOR));
 
     public static final DeferredHolder<MobEffect, LifeQiEffect> LIFE_QI = MOB_EFFECTS.register(
             "life_qi", () -> new LifeQiEffect(MobEffectCategory.BENEFICIAL, LIFE_QI_COLOR));
@@ -48,10 +46,10 @@ public final class ModEffects {
             "death_qi", () -> new DeathQiEffect(MobEffectCategory.HARMFUL, DEATH_QI_COLOR));
 
     public static final DeferredHolder<MobEffect, FlowerBoarGuEffect> FLOWER_BOAR_GU = MOB_EFFECTS.register(
-            "flower_boar_gu", () -> new FlowerBoarGuEffect(MobEffectCategory.BENEFICIAL, STRENGTH_COLOR));
+            "flower_boar_gu", () -> new FlowerBoarGuEffect(MobEffectCategory.BENEFICIAL, FLOWER_BOAR_GU_COLOR));
 
     public static final DeferredHolder<MobEffect, AllOutEffortEffect> ALL_OUT_EFFORT = MOB_EFFECTS.register(
-            "all_out_effort", () -> new AllOutEffortEffect(MobEffectCategory.BENEFICIAL, STRENGTH_COLOR));
+            "all_out_effort", () -> new AllOutEffortEffect(MobEffectCategory.BENEFICIAL, ALL_OUT_EFFORT_COLOR));
 
     public static void register(IEventBus modEventBus) {
         MOB_EFFECTS.register(modEventBus);

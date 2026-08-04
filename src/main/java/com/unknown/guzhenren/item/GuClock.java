@@ -17,7 +17,7 @@ public sealed interface GuClock {
 
     boolean eat(TendedGuItem gu, ServerPlayer player, ItemStack stack, ItemStack food);
 
-    int affordable(ItemStack stack);
+    int stepAllowance(ItemStack stack);
 
     void pour(ItemStack stack, int from, int to);
 
@@ -82,7 +82,9 @@ public sealed interface GuClock {
         }
 
         @Override
-        public int affordable(ItemStack stack) {return hunger(stack) * essencePerHunger;}
+        public int stepAllowance(ItemStack stack) {
+            return hunger(stack) > CHANNEL_HUNGER_FLOOR ? essencePerHunger : 0;
+        }
 
         @Override
         public void pour(ItemStack stack, int from, int to) {
@@ -173,7 +175,7 @@ public sealed interface GuClock {
         }
 
         @Override
-        public int affordable(ItemStack stack) {return Integer.MAX_VALUE;}
+        public int stepAllowance(ItemStack stack) {return Integer.MAX_VALUE;}
 
         @Override
         public void pour(ItemStack stack, int from, int to) {}
@@ -195,7 +197,7 @@ public sealed interface GuClock {
         @Override public boolean tick(ServerPlayer player, ItemStack stack, long days) {return false;}
         @Override public boolean hungry(ServerPlayer player, ItemStack stack) {return false;}
         @Override public void warn(ServerPlayer player, ItemStack stack, long days) {}
-        @Override public int affordable(ItemStack stack) {return Integer.MAX_VALUE;}
+        @Override public int stepAllowance(ItemStack stack) {return Integer.MAX_VALUE;}
         @Override public void pour(ItemStack stack, int from, int to) {}
         @Override public boolean spendOnce(ItemStack stack) {return false;}
         @Override public boolean barVisible(ItemStack stack) {return false;}
@@ -207,4 +209,5 @@ public sealed interface GuClock {
     //endregion
 
     int HUNGRY_THRESHOLD = 1;
+    int CHANNEL_HUNGER_FLOOR = HUNGRY_THRESHOLD + 1;
 }

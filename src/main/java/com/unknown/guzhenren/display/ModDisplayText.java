@@ -74,11 +74,14 @@ public final class ModDisplayText {
 
     public static MutableComponent humanStrengthLine(StrengthData data) {
         MutableComponent line = Component.empty();
-        int total = data.totalJin();
-        if (total > 0) line.append(Component.translatable("guzhenren.display.strength.jin_total", total));
         appendFamily(line, "guzhenren.display.strength.jun_reading", data.junReading());
         appendFamily(line, "guzhenren.display.strength.jin_reading", data.jinReading());
         return line;
+    }
+
+    public static MutableComponent strengthLabel(MutableComponent branchName, int totalJin) {
+        if (totalJin <= 0) return branchName;
+        return branchName.append(Component.translatable("guzhenren.display.strength.jin_total", totalJin));
     }
 
     private static void appendFamily(MutableComponent line, String readingKey, int reading) {

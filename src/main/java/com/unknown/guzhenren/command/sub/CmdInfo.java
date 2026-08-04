@@ -77,7 +77,8 @@ public final class CmdInfo {
                     enumName(e.tag().getTranslationKey()), e.amount());
             case InfoModel.StrengthHeader e -> header("strength", e.empty());
             case InfoModel.StrengthRow e -> key("strength_entry",
-                    enumName(e.branch().getTranslationKey()), e.reading());
+                    ModDisplayText.strengthLabel(enumName(e.branch().getTranslationKey()), e.totalJin()),
+                    e.reading());
             case InfoModel.CapacityRow e -> key("capacity", e.usable(), e.total());
             case InfoModel.AttackRow e -> key("attack", ModDisplayText.attackBonus(e.bonus()));
             case InfoModel.WisdomHeader e -> key("wisdom", e.attainment() == GuAttainment.NONE

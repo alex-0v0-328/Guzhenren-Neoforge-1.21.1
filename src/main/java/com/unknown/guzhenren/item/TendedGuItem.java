@@ -28,6 +28,7 @@ public abstract class TendedGuItem extends MortalGuItem {
     private static final String TOOLTIP_INVESTED = "guzhenren.item.gu.invested";
     private static final String TOOLTIP_HUNGER = "guzhenren.item.gu.hunger_progress";
     private static final String CAPTION_CHANNELING = "guzhenren.hud.using";
+    private static final String FAILED_STARVING = "guzhenren.item.failed.gu_starving";
     private static final String MSG_HUNGRY = "guzhenren.item.gu.hungry";
     private static final String MSG_STARVED = "guzhenren.item.gu.starved";
     private static final String MSG_EXHAUSTED = "guzhenren.item.gu.exhausted";
@@ -84,8 +85,7 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     //region channeling [灌注] -- Human Jun [人力钧力流] and the boars
     private static final int CHANNEL_MAX_TICKS = 72_000;
-    private static final int CHANNEL_STEP_TICKS = 5;
-    private static final int CHANNEL_STEPS = Ticks.SECOND / CHANNEL_STEP_TICKS;
+    private static final int CHANNEL_STEP_TICKS = 1;
 
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack,
@@ -94,10 +94,10 @@ public abstract class TendedGuItem extends MortalGuItem {
 
         int elapsed = CHANNEL_MAX_TICKS - remaining;
         if (elapsed < 0 || elapsed % CHANNEL_STEP_TICKS != 0) return;
-        if (elapsed == 0 && crouching(player) && holdingFood(player, stack)) eat(player, stack);
 
+        if (holdingFood(player, stack)) eat(player, stack);
         drawFromOffhandStones(player);
-        int take = stepAmount(player, stack, (elapsed % Ticks.SECOND) / CHANNEL_STEP_TICKS);
+        int take = stepAmount(player, stack);
         if (take <= 0 || !EssenceService.consume(player, take)) {
             player.stopUsingItem();
             return;
@@ -114,16 +114,15 @@ public abstract class TendedGuItem extends MortalGuItem {
         if (!player.hasInfiniteMaterials()) offhand.shrink(1);
     }
 
-    private int stepAmount(ServerPlayer player, ItemStack stack, int stepIndex) {
+    private int stepAmount(ServerPlayer player, ItemStack stack) {
         long pool = EssenceService.spendable(player);
         if (pool < ESSENCE_FLOOR) return 0;
 
         int round = spec.essencePerRound();
-        int poolShareThisStep = (int) (pool / (CHANNEL_STEPS + 1 - stepIndex));
         int leftInThisRound = round - state(stack).investedEssence() % round;
-        int mostTheBarCanCarry = clock.affordable(stack);
+        int mostTheBarWillSpare = clock.stepAllowance(stack);
 
-        return Math.min(Math.min(poolShareThisStep, leftInThisRound), mostTheBarCanCarry);
+        return (int) Math.min(pool, Math.min(leftInThisRound, mostTheBarWillSpare));
     }
 
     private void pour(ServerPlayer player, ItemStack stack, int amount) {
@@ -139,8 +138,6 @@ public abstract class TendedGuItem extends MortalGuItem {
             store(stack, state(stack).withInvested(0));
             if (payoutGate(player, stack) != null) player.stopUsingItem();
         }
-        if (clock.hungry(player, stack)) announceHungry(player, stack);
-        if (clock.affordable(stack) <= 0) player.stopUsingItem();
     }
 
     private void paySpecksCrossed(ServerPlayer player, int pouredBefore, int pouredAfter) {
@@ -204,6 +201,8 @@ public abstract class TendedGuItem extends MortalGuItem {
         }
         Refusal poor = essenceGate(player, useThreshold(stack), FAILED_ESSENCE);
         if (poor != null) return poor;
+
+        if (spec.channels() && clock.stepAllowance(stack) <= 0) return new Refusal(FAILED_STARVING);
 
         Refusal cooling = cooldownRefusal(player, stack);
         return cooling != null ? cooling : useGate(player, stack);

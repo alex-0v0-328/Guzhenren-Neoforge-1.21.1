@@ -288,6 +288,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.elder_gu_no_stones",    "身上无元石可存");
         add("guzhenren.item.failed.gu_cooldown",           "此蛊尚需 %s 秒");
         add("guzhenren.item.failed.all_out_active",        "全力未歇");
+        add("guzhenren.item.failed.gu_starving",           "蛊已太饿 需先喂食");
 
         add("guzhenren.item.gu.invested",                  "已投入 %s/%s");
         add("guzhenren.item.gu.refine_progress",           "炼化 %s/%s");

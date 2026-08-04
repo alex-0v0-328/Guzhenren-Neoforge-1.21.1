@@ -281,6 +281,7 @@
   "guzhenren.item.failed.essence": "真元不足",
   "guzhenren.item.failed.essence_full": "真元已满",
   "guzhenren.item.failed.gu_cooldown": "此蛊尚需 %s 秒",
+  "guzhenren.item.failed.gu_starving": "蛊已太饿 需先喂食",
   "guzhenren.item.failed.human_strength_full": "此力已满%s层",
   "guzhenren.item.failed.liquor_distilling": "精炼未止",
   "guzhenren.item.failed.liquor_rank": "唯%s修士方可催动此蛊",

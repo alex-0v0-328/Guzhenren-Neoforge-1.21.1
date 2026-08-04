@@ -63,7 +63,7 @@ public final class InfoModel {
     public record QiHeader(GuAttainment attainment, long totalMark, long totalSpeck) implements Entry {}
     public record QiRow(MarkTag tag, long amount, boolean speck) implements Entry {}
     public record StrengthHeader(boolean empty) implements Entry {}
-    public record StrengthRow(StrengthBranch branch, Component reading) implements Entry {}
+    public record StrengthRow(StrengthBranch branch, int totalJin, Component reading) implements Entry {}
     public record CapacityRow(int usable, int total) implements Entry {}
     public record AttackRow(double bonus) implements Entry {}
     public record WisdomHeader(GuAttainment attainment) implements Entry {}
@@ -172,10 +172,12 @@ public final class InfoModel {
         if (data.isEmpty()) return;
 
         if (data.hasBranch(StrengthBranch.BEASTS)) {
-            rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.BEASTS, ModDisplayText.beastStrengthLine(data))));
+            rows.add(new Row(INDENT,
+                    new StrengthRow(StrengthBranch.BEASTS, 0, ModDisplayText.beastStrengthLine(data))));
         }
         if (data.hasBranch(StrengthBranch.HUMAN)) {
-            rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN, ModDisplayText.humanStrengthLine(data))));
+            rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN, data.totalJin(),
+                    ModDisplayText.humanStrengthLine(data))));
         }
     }
 
