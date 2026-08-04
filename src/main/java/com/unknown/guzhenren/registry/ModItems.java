@@ -43,7 +43,7 @@ public final class ModItems {
 
     //region 一次性蛊虫 -- refining IS the use; one charged press pays, lands and spends
     public static final DeferredItem<Item> HOPE_GU = ITEMS.register("hope_gu",
-            () -> new HopeGuItem(oneShot(), GuSpec.of(Rank.ONE, GuPath.HUMAN)));
+            () -> new HopeGuItem(oneShot().stacksTo(1), GuSpec.of(Rank.ONE, GuPath.HUMAN)));
 
     public static final DeferredItem<Item> VITALITY_LEAF_GU = ITEMS.register("vitality_leaf_gu",
             () -> new VitalityLeafGuItem(oneShot(), GuSpec.of(Rank.ONE, GuPath.WOOD)));

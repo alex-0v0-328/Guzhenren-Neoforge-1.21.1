@@ -48,6 +48,7 @@ public class HopeGuItem extends MortalGuItem {
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack,
                           int remaining) {
         if (remaining != RITUAL_TICKS || !(entity instanceof ServerPlayer)) return;
+        if (rolledBase(stack) > 0) return;
 
         stack.set(ModDataComponents.AWAKEN_BASE.get(), Talent.randomPercent(Talent.randomTalent()));
     }
@@ -55,6 +56,7 @@ public class HopeGuItem extends MortalGuItem {
     @Override
     protected final int apply(ServerPlayer player, ItemStack stack) {
         ApertureService.awaken(player, rolledBase(stack));
+        stack.remove(ModDataComponents.AWAKEN_BASE.get());
         ModCommandSupport.refreshCommands(player);
         return 1;
     }
