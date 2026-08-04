@@ -17,6 +17,7 @@ import com.unknown.guzhenren.item.material.qi.DeathQiItem;
 import com.unknown.guzhenren.item.material.qi.EssenceQiItem;
 import com.unknown.guzhenren.item.material.qi.LifeQiItem;
 import com.unknown.guzhenren.item.material.qi.QiMaterialItem;
+import com.unknown.guzhenren.item.material.qi.StrengthQiItem;
 import com.unknown.guzhenren.item.mortal.BuffGuItem;
 import com.unknown.guzhenren.item.mortal.HopeGuItem;
 import com.unknown.guzhenren.item.mortal.LifespanGuItem;
@@ -234,11 +235,16 @@ public final class ModItems {
     public static final DeferredItem<Item> SWORD_QI_4 = qiMaterial("sword_qi_4", Rank.FOUR, MarkTag.QI_SWORD);
     public static final DeferredItem<Item> SWORD_QI_5 = qiMaterial("sword_qi_5", Rank.FIVE, MarkTag.QI_SWORD);
 
-    public static final DeferredItem<Item> STRENGTH_QI_1 = qiMaterial("strength_qi_1", Rank.ONE, MarkTag.QI_STRENGTH);
-    public static final DeferredItem<Item> STRENGTH_QI_2 = qiMaterial("strength_qi_2", Rank.TWO, MarkTag.QI_STRENGTH);
-    public static final DeferredItem<Item> STRENGTH_QI_3 = qiMaterial("strength_qi_3", Rank.THREE, MarkTag.QI_STRENGTH);
-    public static final DeferredItem<Item> STRENGTH_QI_4 = qiMaterial("strength_qi_4", Rank.FOUR, MarkTag.QI_STRENGTH);
-    public static final DeferredItem<Item> STRENGTH_QI_5 = qiMaterial("strength_qi_5", Rank.FIVE, MarkTag.QI_STRENGTH);
+    public static final DeferredItem<Item> STRENGTH_QI_1 = ITEMS.register("strength_qi_1",
+            () -> new StrengthQiItem(qiProperties(), Rank.ONE));
+    public static final DeferredItem<Item> STRENGTH_QI_2 = ITEMS.register("strength_qi_2",
+            () -> new StrengthQiItem(qiProperties(), Rank.TWO));
+    public static final DeferredItem<Item> STRENGTH_QI_3 = ITEMS.register("strength_qi_3",
+            () -> new StrengthQiItem(qiProperties(), Rank.THREE));
+    public static final DeferredItem<Item> STRENGTH_QI_4 = ITEMS.register("strength_qi_4",
+            () -> new StrengthQiItem(qiProperties(), Rank.FOUR));
+    public static final DeferredItem<Item> STRENGTH_QI_5 = ITEMS.register("strength_qi_5",
+            () -> new StrengthQiItem(qiProperties(), Rank.FIVE));
 
     public static final DeferredItem<Item> LIFE_QI_1 = ITEMS.register("life_qi_1",
             () -> new LifeQiItem(qiProperties(), Rank.ONE));

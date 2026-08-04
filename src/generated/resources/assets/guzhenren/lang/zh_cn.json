@@ -11,6 +11,7 @@
   "effect.guzhenren.flower_boar_gu": "花豕蛊",
   "effect.guzhenren.life_qi": "生气",
   "effect.guzhenren.liquor_worm": "酒虫",
+  "effect.guzhenren.strength_qi": "力气",
   "effect.guzhenren.vitality_leaf": "生机叶",
   "guzhenren.command.failed.awakened": "%s 已开窍 —— 要重掷请先 /guzhenren reset",
   "guzhenren.command.failed.tag_path": "%s 不是 %s 的来源 —— 通用来源是 natural",

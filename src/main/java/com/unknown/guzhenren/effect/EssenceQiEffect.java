@@ -8,7 +8,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
 
 public class EssenceQiEffect extends MobEffect {
 
-    private static final double[] REGEN_BONUS = {0.10, 0.15, 0.20, 0.30, 0.50};
+    private static final double[] REGEN_BONUS = {0.20, 0.40, 0.60, 0.80, 1.00};
 
     public EssenceQiEffect(MobEffectCategory category, int color) {
         super(category, color);

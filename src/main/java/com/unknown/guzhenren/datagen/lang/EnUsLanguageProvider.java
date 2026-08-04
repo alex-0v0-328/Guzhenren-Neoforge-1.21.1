@@ -312,6 +312,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.life_qi",                    "Life Qi");
         add("effect.guzhenren.essence_qi",                 "Essence Qi");
         add("effect.guzhenren.death_qi",                   "Death Qi");
+        add("effect.guzhenren.strength_qi",                "Strength Qi");
         add("effect.guzhenren.flower_boar_gu",             "Flower Boar Gu");
         add("effect.guzhenren.dragonpill_cricket_gu",      "Dragonpill Cricket Gu");
         add("effect.guzhenren.brute_force_longhorn_beetle_gu", "Brute Force Longhorn Beetle Gu");

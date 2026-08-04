@@ -312,6 +312,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.life_qi",                    "生气");
         add("effect.guzhenren.essence_qi",                 "元气");
         add("effect.guzhenren.death_qi",                   "死气");
+        add("effect.guzhenren.strength_qi",                "力气");
         add("effect.guzhenren.flower_boar_gu",             "花豕蛊");
         add("effect.guzhenren.dragonpill_cricket_gu",      "龙丸蛐蛐蛊");
         add("effect.guzhenren.brute_force_longhorn_beetle_gu", "蛮力天牛蛊");

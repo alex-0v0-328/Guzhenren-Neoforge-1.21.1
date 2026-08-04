@@ -11,6 +11,7 @@
   "effect.guzhenren.flower_boar_gu": "Flower Boar Gu",
   "effect.guzhenren.life_qi": "Life Qi",
   "effect.guzhenren.liquor_worm": "Liquor Worm",
+  "effect.guzhenren.strength_qi": "Strength Qi",
   "effect.guzhenren.vitality_leaf": "Vitality Leaf",
   "guzhenren.command.failed.awakened": "%s has already awakened -- run /guzhenren reset first to re-roll",
   "guzhenren.command.failed.tag_path": "%s is not a source on the %s -- the universal source is natural",
