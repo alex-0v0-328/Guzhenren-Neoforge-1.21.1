@@ -1,20 +1,24 @@
-package com.unknown.guzhenren.item.mortal.strength;
+package com.unknown.guzhenren.item.mortal;
 
-import com.unknown.guzhenren.effect.FlowerBoarGuEffect;
 import com.unknown.guzhenren.item.GuSpec;
 import com.unknown.guzhenren.item.TendedGuItem;
-import com.unknown.guzhenren.registry.ModEffects;
-import net.minecraft.network.chat.Component;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class FlowerBoarGuItem extends TendedGuItem {
+public class BuffGuItem extends TendedGuItem {
 
-    public FlowerBoarGuItem(Properties properties, GuSpec spec) {
+    private final Holder<MobEffect> buff;
+    private final int durationTicks;
+
+    public BuffGuItem(Properties properties, Holder<MobEffect> buff, int durationTicks, GuSpec spec) {
         super(properties, spec);
+        this.buff = buff;
+        this.durationTicks = durationTicks;
     }
 
     @Override
@@ -25,6 +29,6 @@ public class FlowerBoarGuItem extends TendedGuItem {
 
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
-        player.addEffect(new MobEffectInstance(ModEffects.FLOWER_BOAR_GU, FlowerBoarGuEffect.DURATION_TICKS));
+        player.addEffect(new MobEffectInstance(buff, durationTicks));
     }
 }

@@ -10,13 +10,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class BoarGuItem extends TendedGuItem {
+public class BeastStrengthGuItem extends TendedGuItem {
 
     private static final String FAILED_STRENGTH_HELD = "guzhenren.item.failed.beast_strength_held";
 
     private final BeastStrength beast;
 
-    public BoarGuItem(Properties properties, BeastStrength beast, GuSpec spec) {
+    public BeastStrengthGuItem(Properties properties, BeastStrength beast, GuSpec spec) {
         super(properties, spec);
         this.beast = beast;
     }

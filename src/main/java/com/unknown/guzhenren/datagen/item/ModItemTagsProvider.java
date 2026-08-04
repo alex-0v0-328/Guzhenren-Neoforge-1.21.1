@@ -25,6 +25,9 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         tag(ModItemTags.BOAR_FEED).add(Items.PORKCHOP);
+        tag(ModItemTags.BEAR_FEED).add(Items.HONEY_BOTTLE);
+        tag(ModItemTags.BEEF_FEED).add(Items.BEEF);
+        tag(ModItemTags.RABBIT_FEED).add(Items.RABBIT);
 
         tag(ModItemTags.JIN_FEED).add(Items.RAW_IRON);
         tag(ModItemTags.JIN_FEED_DENSE).add(Items.RAW_IRON_BLOCK);

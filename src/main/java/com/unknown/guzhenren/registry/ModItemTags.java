@@ -11,6 +11,9 @@ public final class ModItemTags {
     private ModItemTags() {}
 
     public static final TagKey<Item> BOAR_FEED = key("boar_feed");
+    public static final TagKey<Item> BEAR_FEED = key("bear_feed");
+    public static final TagKey<Item> BEEF_FEED = key("beef_feed");
+    public static final TagKey<Item> RABBIT_FEED = key("rabbit_feed");
 
     public static final TagKey<Item> JIN_FEED = key("jin_feed");
     public static final TagKey<Item> JIN_FEED_DENSE = key("jin_feed_dense");

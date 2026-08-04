@@ -73,6 +73,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.vital",                        "本命·%s");
         add("guzhenren.display.strength.beast_reading",       "[%s%s之力]");
         add("guzhenren.display.strength.beast.strength_boar", "猪");
+        add("guzhenren.display.strength.beast.strength_bear", "熊");
         add("guzhenren.display.strength.beast_number.1",      "一");
         add("guzhenren.display.strength.beast_number.2",      "两");
         add("guzhenren.display.strength.beast_number.10",     "十");
@@ -222,6 +223,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("item.guzhenren.white_boar_gu",                "白豕蛊");
         add("item.guzhenren.black_boar_gu",                "黑豕蛊");
         add("item.guzhenren.flower_boar_gu",               "花豕蛊");
+        add("item.guzhenren.bear_strength_gu",             "熊力蛊");
+        add("item.guzhenren.dragonpill_cricket_gu",        "龙丸蛐蛐蛊");
+        add("item.guzhenren.brute_force_longhorn_beetle_gu", "蛮力天牛蛊");
         add("item.guzhenren.all_out_effort_gu_3",          "三转全力以赴蛊");
         add("item.guzhenren.all_out_effort_gu_4",          "四转全力以赴蛊");
         add("item.guzhenren.all_out_effort_gu_5",          "五转全力以赴蛊");
@@ -309,6 +313,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.essence_qi",                 "元气");
         add("effect.guzhenren.death_qi",                   "死气");
         add("effect.guzhenren.flower_boar_gu",             "花豕蛊");
+        add("effect.guzhenren.dragonpill_cricket_gu",      "龙丸蛐蛐蛊");
+        add("effect.guzhenren.brute_force_longhorn_beetle_gu", "蛮力天牛蛊");
         add("effect.guzhenren.all_out_effort",             "全力以赴");
     }
     //endregion
@@ -347,6 +353,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     private void addBeastStrength() {
         add(BeastStrength.WHITE_BOAR, "白豕");
         add(BeastStrength.BLACK_BOAR, "黑豕");
+        add(BeastStrength.BEAR,       "熊");
     }
 
     private void addStrengthBranch() {
@@ -465,6 +472,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(MarkTag.QI_STRENGTH,     "力气");
         add(MarkTag.STRENGTH_BEASTS, "兽力虚影流");
         add(MarkTag.STRENGTH_BOAR,   "豕力");
+        add(MarkTag.STRENGTH_BEAR,   "熊力");
         add(MarkTag.STRENGTH_HUMAN,  "人力钧力流");
     }
 

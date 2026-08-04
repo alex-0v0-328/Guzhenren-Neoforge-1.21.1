@@ -73,6 +73,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.vital",                        "Vital %s");
         add("guzhenren.display.strength.beast_reading",       "[Strength of %s %s]");
         add("guzhenren.display.strength.beast.strength_boar", "Boar");
+        add("guzhenren.display.strength.beast.strength_bear", "Bear");
         add("guzhenren.display.strength.beast_number.1",      "One");
         add("guzhenren.display.strength.beast_number.2",      "Two");
         add("guzhenren.display.strength.beast_number.10",     "Ten");
@@ -222,6 +223,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("item.guzhenren.white_boar_gu",                "White Boar Gu");
         add("item.guzhenren.black_boar_gu",                "Black Boar Gu");
         add("item.guzhenren.flower_boar_gu",               "Flower Boar Gu");
+        add("item.guzhenren.bear_strength_gu",             "Bear Strength Gu");
+        add("item.guzhenren.dragonpill_cricket_gu",        "Dragonpill Cricket Gu");
+        add("item.guzhenren.brute_force_longhorn_beetle_gu", "Brute Force Longhorn Beetle Gu");
         add("item.guzhenren.all_out_effort_gu_3",          "All-Out Effort Gu III");
         add("item.guzhenren.all_out_effort_gu_4",          "All-Out Effort Gu IV");
         add("item.guzhenren.all_out_effort_gu_5",          "All-Out Effort Gu V");
@@ -309,6 +313,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.essence_qi",                 "Essence Qi");
         add("effect.guzhenren.death_qi",                   "Death Qi");
         add("effect.guzhenren.flower_boar_gu",             "Flower Boar Gu");
+        add("effect.guzhenren.dragonpill_cricket_gu",      "Dragonpill Cricket Gu");
+        add("effect.guzhenren.brute_force_longhorn_beetle_gu", "Brute Force Longhorn Beetle Gu");
         add("effect.guzhenren.all_out_effort",             "All-Out Effort");
     }
     //endregion
@@ -347,6 +353,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
     private void addBeastStrength() {
         add(BeastStrength.WHITE_BOAR, "White Boar");
         add(BeastStrength.BLACK_BOAR, "Black Boar");
+        add(BeastStrength.BEAR,       "Bear");
     }
 
     private void addStrengthBranch() {
@@ -465,6 +472,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(MarkTag.QI_STRENGTH,     "Strength Qi");
         add(MarkTag.STRENGTH_BEASTS, "Beast Strength Phantom Branch");
         add(MarkTag.STRENGTH_BOAR,   "Boar Strength");
+        add(MarkTag.STRENGTH_BEAR,   "Bear Strength");
         add(MarkTag.STRENGTH_HUMAN,  "Human Jun Strength Branch");
     }
 

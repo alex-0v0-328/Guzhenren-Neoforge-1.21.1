@@ -1,7 +1,10 @@
 package com.unknown.guzhenren.effect;
 
+import com.unknown.guzhenren.client.GradedEffectIcon;
+import java.util.function.Consumer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 import net.minecraft.world.entity.LivingEntity;
 
 public class LifeQiEffect extends MobEffect {
@@ -21,5 +24,10 @@ public class LifeQiEffect extends MobEffect {
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         entity.heal(1.0F);
         return true;
+    }
+
+    @Override
+    public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
+        consumer.accept(new GradedEffectIcon("life_qi", 1, 5));
     }
 }

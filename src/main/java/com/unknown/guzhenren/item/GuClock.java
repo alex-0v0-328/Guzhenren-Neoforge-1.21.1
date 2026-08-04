@@ -77,10 +77,19 @@ public sealed interface GuClock {
             if (gained <= 0) return false;
 
             if (!player.hasInfiniteMaterials()) {
-                food.shrink((gained * unitsPerHunger + units - 1) / units);
+                int eaten = (gained * unitsPerHunger + units - 1) / units;
+                returnEmptyContainers(player, food, eaten);
+                food.shrink(eaten);
             }
             setHunger(stack, hunger(stack) + gained);
             return true;
+        }
+
+        private static void returnEmptyContainers(ServerPlayer player, ItemStack food, int eaten) {
+            if (!food.getItem().hasCraftingRemainingItem()) return;
+
+            ItemStack empties = new ItemStack(food.getItem().getCraftingRemainingItem(), eaten);
+            if (!player.getInventory().add(empties)) player.drop(empties, false);
         }
 
         @Override

@@ -25,6 +25,7 @@ public enum MarkTag implements StringRepresentable, EnumTranslatable {
     //  TODO(互斥): 兼修 penalty -- 1+1 should land near 1.5, not 2.  CLAUDE.md "Pending".
     STRENGTH_BEASTS(GuPath.STRENGTH),
     STRENGTH_BOAR  (GuPath.STRENGTH),
+    STRENGTH_BEAR  (GuPath.STRENGTH),
     STRENGTH_HUMAN (GuPath.STRENGTH);
 
     public static final Codec<MarkTag> CODEC = StringRepresentable.fromEnum(MarkTag::values);
@@ -37,7 +38,12 @@ public enum MarkTag implements StringRepresentable, EnumTranslatable {
     public boolean fitsOn(GuPath path) {return owner == null || owner == path;}
     public @Nullable GuPath owner() {return owner;}
 
-    public @Nullable MarkTag parent() {return this == STRENGTH_BOAR ? STRENGTH_BEASTS : null;}
+    public @Nullable MarkTag parent() {
+        return switch (this) {
+            case STRENGTH_BOAR, STRENGTH_BEAR -> STRENGTH_BEASTS;
+            default -> null;
+        };
+    }
 
     @Override
     public @NotNull String getSerializedName() {return name().toLowerCase();}

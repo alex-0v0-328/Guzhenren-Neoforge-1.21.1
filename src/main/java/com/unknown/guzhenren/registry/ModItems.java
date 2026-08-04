@@ -7,6 +7,9 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
+import com.unknown.guzhenren.effect.BruteForceLonghornBeetleGuEffect;
+import com.unknown.guzhenren.effect.DragonpillCricketGuEffect;
+import com.unknown.guzhenren.effect.FlowerBoarGuEffect;
 import com.unknown.guzhenren.item.GuSpec;
 import com.unknown.guzhenren.item.material.LiquorItem;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
@@ -14,6 +17,7 @@ import com.unknown.guzhenren.item.material.qi.DeathQiItem;
 import com.unknown.guzhenren.item.material.qi.EssenceQiItem;
 import com.unknown.guzhenren.item.material.qi.LifeQiItem;
 import com.unknown.guzhenren.item.material.qi.QiMaterialItem;
+import com.unknown.guzhenren.item.mortal.BuffGuItem;
 import com.unknown.guzhenren.item.mortal.HopeGuItem;
 import com.unknown.guzhenren.item.mortal.LifespanGuItem;
 import com.unknown.guzhenren.item.mortal.PrimevalElderGuItem;
@@ -21,8 +25,7 @@ import com.unknown.guzhenren.item.mortal.RelicsGuItem;
 import com.unknown.guzhenren.item.mortal.VitalityLeafGuItem;
 import com.unknown.guzhenren.item.mortal.liquor.LiquorWormItem;
 import com.unknown.guzhenren.item.mortal.strength.AllOutEffortGuItem;
-import com.unknown.guzhenren.item.mortal.strength.BoarGuItem;
-import com.unknown.guzhenren.item.mortal.strength.FlowerBoarGuItem;
+import com.unknown.guzhenren.item.mortal.strength.BeastStrengthGuItem;
 import com.unknown.guzhenren.item.mortal.strength.HumanStrengthGuItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
@@ -71,27 +74,56 @@ public final class ModItems {
 
     //region 兽力虚影流 -- one round of 3,600 buys a beast's strength, held once ever
     public static final DeferredItem<Item> WHITE_BOAR_GU = ITEMS.register("white_boar_gu",
-            () -> new BoarGuItem(tended(), BeastStrength.WHITE_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+            () -> new BeastStrengthGuItem(tended(), BeastStrength.WHITE_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                     .refine(1_000)
                     .channel(3_600)
                     .speckEvery(600, BeastStrength.WHITE_BOAR.getMarkTag())
                     .hungerBar(18, 3).hungerEvery(100)
                     .feed(ModItemTags.BOAR_FEED, 1)));
     public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
-            () -> new BoarGuItem(tended(), BeastStrength.BLACK_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+            () -> new BeastStrengthGuItem(tended(), BeastStrength.BLACK_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                     .refine(1_000)
                     .channel(3_600)
                     .speckEvery(600, BeastStrength.BLACK_BOAR.getMarkTag())
                     .hungerBar(18, 3).hungerEvery(100)
                     .feed(ModItemTags.BOAR_FEED, 1)));
-
-    public static final DeferredItem<Item> FLOWER_BOAR_GU = ITEMS.register("flower_boar_gu",
-            () -> new FlowerBoarGuItem(tended(), GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+    public static final DeferredItem<Item> BEAR_STRENGTH_GU = ITEMS.register("bear_strength_gu",
+            () -> new BeastStrengthGuItem(tended(), BeastStrength.BEAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                     .refine(1_000)
-                    .costPerUse(20)
-                    .hungerBar(9, 3).hungerPerUse(3)
-                    .feed(ModItemTags.BOAR_FEED, 1)
-                    .cooldown(2 * Ticks.MINUTE)));
+                    .channel(3_600)
+                    .speckEvery(600, BeastStrength.BEAR.getMarkTag())
+                    .hungerBar(18, 3).hungerEvery(100)
+                    .feed(ModItemTags.BEAR_FEED, 1)));
+    //endregion
+
+    //region 一转力道即时增益 -- one class, the effect and its length given at registration
+    public static final DeferredItem<Item> FLOWER_BOAR_GU = ITEMS.register("flower_boar_gu",
+            () -> new BuffGuItem(tended(), ModEffects.FLOWER_BOAR_GU, FlowerBoarGuEffect.DURATION_TICKS,
+                    GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+                            .refine(1_000)
+                            .costPerUse(20)
+                            .hungerBar(9, 3).hungerPerUse(3)
+                            .feed(ModItemTags.BOAR_FEED, 1)
+                            .cooldown(2 * Ticks.MINUTE)));
+    public static final DeferredItem<Item> DRAGONPILL_CRICKET_GU = ITEMS.register("dragonpill_cricket_gu",
+            () -> new BuffGuItem(tended(), ModEffects.DRAGONPILL_CRICKET_GU,
+                    DragonpillCricketGuEffect.DURATION_TICKS,
+                    GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+                            .refine(1_000)
+                            .costPerUse(20)
+                            .hungerBar(8, 4).hungerPerUse(1)
+                            .feed(ModItemTags.RABBIT_FEED, 1)
+                            .cooldown(Ticks.MINUTE)));
+    public static final DeferredItem<Item> BRUTE_FORCE_LONGHORN_BEETLE_GU =
+            ITEMS.register("brute_force_longhorn_beetle_gu",
+                    () -> new BuffGuItem(tended(), ModEffects.BRUTE_FORCE_LONGHORN_BEETLE_GU,
+                            BruteForceLonghornBeetleGuEffect.DURATION_TICKS,
+                            GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+                                    .refine(1_000)
+                                    .costPerUse(20)
+                                    .hungerBar(8, 4).hungerPerUse(1)
+                                    .feed(ModItemTags.BEEF_FEED, 1)
+                                    .cooldown(Ticks.MINUTE)));
     //endregion
 
     //region 人力钧力流 -- one class, the kind at registration; one round is one layer
