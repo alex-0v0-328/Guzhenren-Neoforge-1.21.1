@@ -10,9 +10,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public class FlowerBoarGuEffect extends MobEffect {
 
-    public static final int DURATION_TICKS = 10 * Ticks.SECOND;
+    public static final int DURATION_TICKS = 60 * Ticks.SECOND;
 
-    public static final double ATTACK_BONUS = 4.0D;
+    public static final double ATTACK_BONUS = 5.0D;
 
     private static final ResourceLocation MODIFIER_ID =
             ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "flower_boar_attack_damage");

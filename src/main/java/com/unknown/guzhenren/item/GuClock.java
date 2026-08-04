@@ -17,7 +17,9 @@ public sealed interface GuClock {
 
     boolean eat(TendedGuItem gu, ServerPlayer player, ItemStack stack, ItemStack food);
 
-    int stepAllowance(ItemStack stack);
+    int spareAboveFloor(ItemStack stack);
+
+    int essencePerHungerPoint();
 
     void pour(ItemStack stack, int from, int to);
 
@@ -82,9 +84,12 @@ public sealed interface GuClock {
         }
 
         @Override
-        public int stepAllowance(ItemStack stack) {
-            return hunger(stack) > CHANNEL_HUNGER_FLOOR ? essencePerHunger : 0;
+        public int spareAboveFloor(ItemStack stack) {
+            return Math.max(0, hunger(stack) - CHANNEL_HUNGER_FLOOR) * essencePerHunger;
         }
+
+        @Override
+        public int essencePerHungerPoint() {return essencePerHunger;}
 
         @Override
         public void pour(ItemStack stack, int from, int to) {
@@ -175,7 +180,10 @@ public sealed interface GuClock {
         }
 
         @Override
-        public int stepAllowance(ItemStack stack) {return Integer.MAX_VALUE;}
+        public int spareAboveFloor(ItemStack stack) {return Integer.MAX_VALUE;}
+
+        @Override
+        public int essencePerHungerPoint() {return Integer.MAX_VALUE;}
 
         @Override
         public void pour(ItemStack stack, int from, int to) {}
@@ -197,7 +205,8 @@ public sealed interface GuClock {
         @Override public boolean tick(ServerPlayer player, ItemStack stack, long days) {return false;}
         @Override public boolean hungry(ServerPlayer player, ItemStack stack) {return false;}
         @Override public void warn(ServerPlayer player, ItemStack stack, long days) {}
-        @Override public int stepAllowance(ItemStack stack) {return Integer.MAX_VALUE;}
+        @Override public int spareAboveFloor(ItemStack stack) {return Integer.MAX_VALUE;}
+        @Override public int essencePerHungerPoint() {return Integer.MAX_VALUE;}
         @Override public void pour(ItemStack stack, int from, int to) {}
         @Override public boolean spendOnce(ItemStack stack) {return false;}
         @Override public boolean barVisible(ItemStack stack) {return false;}

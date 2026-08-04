@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class FlowerBoarGuItem extends TendedGuItem {
 
-
     public FlowerBoarGuItem(Properties properties, GuSpec spec) {
         super(properties, spec);
     }
@@ -28,5 +27,4 @@ public class FlowerBoarGuItem extends TendedGuItem {
     protected void payout(ServerPlayer player, ItemStack stack) {
         player.addEffect(new MobEffectInstance(ModEffects.FLOWER_BOAR_GU, FlowerBoarGuEffect.DURATION_TICKS));
     }
-
 }
