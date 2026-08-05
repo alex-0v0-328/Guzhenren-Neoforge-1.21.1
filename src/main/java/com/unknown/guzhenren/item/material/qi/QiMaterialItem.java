@@ -1,6 +1,5 @@
 package com.unknown.guzhenren.item.material.qi;
 
-import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
@@ -24,10 +23,6 @@ public class QiMaterialItem extends GuMaterialItem {
     private static final String CHARGE_CAPTION = "guzhenren.hud.refining_plain";
     private static final String FAILED_ESSENCE = "guzhenren.item.failed.essence";
 
-    private static final int CHARGE_SAME_RANK = 40;
-    private static final int CHARGE_ABOVE = 2;
-    private static final int CHARGE_BELOW = 100;
-
     private static final long[] SPECKS = {1L, 4L, 16L, 64L, 256L};
     private static final long[] ESSENCE_COST = {50L, 500L, 5_000L, 50_000L, 500_000L};
 
@@ -47,11 +42,7 @@ public class QiMaterialItem extends GuMaterialItem {
     protected boolean hasUse() {return true;}
 
     @Override
-    protected int useDurationTicks(Player player, ItemStack stack) {
-        int gap = ApertureService.rank(player).ordinal() - rank().ordinal();
-        if (gap > 0) return CHARGE_ABOVE;
-        return gap == 0 ? CHARGE_SAME_RANK : CHARGE_BELOW;
-    }
+    protected int useDurationTicks(Player player, ItemStack stack) {return useChargeByGap(player);}
 
     @Override
     protected @Nullable Refusal gate(Player player, ItemStack stack) {

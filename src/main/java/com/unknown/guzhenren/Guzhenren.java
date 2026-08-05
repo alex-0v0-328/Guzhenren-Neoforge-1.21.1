@@ -7,6 +7,7 @@ import com.unknown.guzhenren.registry.ModDataComponents;
 import com.unknown.guzhenren.registry.ModEffects;
 import com.unknown.guzhenren.registry.ModItems;
 import com.unknown.guzhenren.registry.ModMenus;
+import com.unknown.guzhenren.registry.ModRecipes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -25,5 +26,6 @@ public class Guzhenren {
         ModItems.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
         ModMenus.register(modEventBus);
+        ModRecipes.register(modEventBus);
     }
 }

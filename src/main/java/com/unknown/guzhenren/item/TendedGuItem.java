@@ -2,7 +2,6 @@ package com.unknown.guzhenren.item;
 
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.PlayerDataService;
-import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.display.ModDisplayText;
@@ -32,6 +31,7 @@ public abstract class TendedGuItem extends MortalGuItem {
     private static final String MSG_HUNGRY = "guzhenren.item.gu.hungry";
     private static final String MSG_STARVED = "guzhenren.item.gu.starved";
     private static final String MSG_EXHAUSTED = "guzhenren.item.gu.exhausted";
+    private static final String MSG_RUINED = "guzhenren.item.gu.ruined";
 
     private static final int ESSENCE_FLOOR = 20;
 
@@ -57,11 +57,63 @@ public abstract class TendedGuItem extends MortalGuItem {
         stack.set(ModDataComponents.REFINED_GU_STATE.get(), new RefinedGuState(s.refined(),
                 Math.min(s.refineProgress(), refineCost()),
                 Math.min(s.investedEssence(), spec.essencePerRound()),
-                s.hunger()));
+                s.hunger(),
+                Math.clamp(s.damageTaken(), 0, maxHealth())));
     }
 
     public boolean refined(ItemStack stack) {return state(stack).refined();}
     public boolean hungry(ServerPlayer p, ItemStack s) {return refined(s) && clock.hungry(p, s);}
+    //endregion
+
+    //region 蛊虫生命值 [Gu health] -- stored as damage TAKEN, so an untouched 野生 Gu reads as full
+    public static final int HEALTH_PER_RANK = 32;
+
+    public int maxHealth() {return HEALTH_PER_RANK * rank().ordinal();}
+    public int health(ItemStack stack) {return maxHealth() - state(stack).damageTaken();}
+
+    public boolean damageKills(ServerPlayer holder, ItemStack stack, int amount) {
+        if (amount <= 0) return false;
+
+        RefinedGuState s = state(stack);
+        int taken = Math.min(maxHealth(), s.damageTaken() + amount);
+        store(stack, s.withDamageTaken(taken));
+        if (taken < maxHealth() || isVital(stack)) return false;
+
+        ruined(holder, stack);
+        return true;
+    }
+
+    protected void heal(ItemStack stack, int amount) {
+        RefinedGuState s = state(stack);
+        if (amount <= 0 || !s.refined()) return;
+
+        store(stack, s.withDamageTaken(Math.max(0, s.damageTaken() - amount)));
+    }
+
+    private void healFrom(ServerPlayer player, ItemStack stack, ItemStack food) {
+        int units = feedUnits(food);
+        int hurt = state(stack).damageTaken();
+        if (units <= 0 || hurt <= 0) return;
+
+        int per = spec.unitsPerHealth();
+        int items = Math.min(food.getCount(), hurt * per / units);
+        int gained = items * units / per;
+        if (gained <= 0) return;
+
+        if (!player.hasInfiniteMaterials()) {
+            int eaten = (gained * per + units - 1) / units;
+            returnEmptyContainers(player, food, eaten);
+            food.shrink(eaten);
+        }
+        heal(stack, gained);
+    }
+
+    public static void returnEmptyContainers(ServerPlayer player, ItemStack food, int eaten) {
+        if (!food.getItem().hasCraftingRemainingItem()) return;
+
+        ItemStack empties = new ItemStack(food.getItem().getCraftingRemainingItem(), eaten);
+        if (!player.getInventory().add(empties)) player.drop(empties, false);
+    }
     //endregion
 
     //region refining [炼化] -- paid in instalments; what it buys is a lasting bond
@@ -77,7 +129,11 @@ public abstract class TendedGuItem extends MortalGuItem {
             store(stack, s.withRefine(next));
             return;
         }
-        store(stack, new RefinedGuState(true, refineCost(), 0, 0));
+        bornRefined(player, stack);
+    }
+
+    public void bornRefined(ServerPlayer player, ItemStack stack) {
+        store(stack, new RefinedGuState(true, refineCost(), 0, 0, state(stack).damageTaken()));
         clock.bind(player, stack);
         stack.set(ModDataComponents.REFINED_AT.get(), gameTime(player));
     }
@@ -255,14 +311,10 @@ public abstract class TendedGuItem extends MortalGuItem {
         return spec.channels() ? CHANNEL_MAX_TICKS : useChargeTicks(player, stack);
     }
 
-    protected int useChargeTicks(Player player, ItemStack stack) {return chargeTicksFor(player);}
-
-    private int rankGap(Player player) {return ApertureService.rank(player).ordinal() - rank().ordinal();}
+    protected int useChargeTicks(Player player, ItemStack stack) {return useChargeByGap(player);}
 
     private int chargeTicksFor(Player player) {
-        int gap = rankGap(player);
-        if (gap > 0) return spec.fastChargeTicks();
-        return gap == 0 ? spec.sameChargeTicks() : spec.slowChargeTicks();
+        return chargeByGap(player, spec.fastChargeTicks(), spec.sameChargeTicks(), spec.slowChargeTicks());
     }
 
     protected int drive(ServerPlayer player, ItemStack stack) {
@@ -303,7 +355,9 @@ public abstract class TendedGuItem extends MortalGuItem {
     }
 
     protected void eat(ServerPlayer player, ItemStack stack) {
-        clock.eat(this, player, stack, player.getOffhandItem());
+        ItemStack food = player.getOffhandItem();
+        healFrom(player, stack, food);
+        clock.eat(this, player, stack, food);
     }
     //endregion
 
@@ -420,5 +474,6 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     public static void starved(ServerPlayer holder, ItemStack s) {died(holder, s, MSG_STARVED);}
     public static void exhausted(ServerPlayer holder, ItemStack s) {died(holder, s, MSG_EXHAUSTED);}
+    public static void ruined(ServerPlayer holder, ItemStack s) {died(holder, s, MSG_RUINED);}
     //endregion
 }

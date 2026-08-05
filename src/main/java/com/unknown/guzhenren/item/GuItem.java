@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.item;
 
+import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.ModDisplayText;
@@ -43,6 +44,21 @@ public abstract class GuItem extends Item {
     protected int tier() {return rank.ordinal() - Rank.ONE.ordinal();}
 
     public record Refusal(String key, Object... args) {}
+
+    //region 蓄力 [charge] -- paced by the holder's rank against this item's own, never by the stage
+    public static final int USE_FAST_TICKS = 5;
+    public static final int USE_SAME_TICKS = 10;
+    public static final int USE_SLOW_TICKS = 20;
+
+    protected int rankGap(Player p) {return ApertureService.rank(p).ordinal() - rank.ordinal();}
+    protected int useChargeByGap(Player p) {return chargeByGap(p, USE_FAST_TICKS, USE_SAME_TICKS, USE_SLOW_TICKS);}
+
+    protected int chargeByGap(Player player, int fast, int same, int slow) {
+        int gap = rankGap(player);
+        if (gap > 0) return fast;
+        return gap == 0 ? same : slow;
+    }
+    //endregion
 
     //region Vital Gu
     public static @Nullable UUID owner(ItemStack s) {return s.get(ModDataComponents.VITAL_OWNER.get());}

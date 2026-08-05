@@ -5,6 +5,7 @@ import com.unknown.guzhenren.client.hud.ChargeHud;
 import com.unknown.guzhenren.client.hud.PlayerStatsHud;
 import com.unknown.guzhenren.client.screen.ApertureStorageScreen;
 import com.unknown.guzhenren.client.screen.PlayerInfoScreen;
+import com.unknown.guzhenren.client.screen.RefinementScreen;
 import com.unknown.guzhenren.registry.ModMenus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -42,6 +43,7 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void onRegisterScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.APERTURE_STORAGE_MENU.get(), ApertureStorageScreen::new);
+        event.register(ModMenus.REFINEMENT_MENU.get(), RefinementScreen::new);
     }
 
     @SubscribeEvent

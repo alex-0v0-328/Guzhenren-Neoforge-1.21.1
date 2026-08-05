@@ -10,6 +10,7 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.InfoModel;
 import com.unknown.guzhenren.display.ModDisplayText;
 import com.unknown.guzhenren.network.OpenApertureStoragePayload;
+import com.unknown.guzhenren.network.OpenRefinementPayload;
 import com.unknown.guzhenren.network.SetSecondaryPathPayload;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public final class PlayerInfoScreen extends Screen {
     private static final int TAB_TEXT_DEAD = 0xFF6A6A6A;
 
     private static final int[] ACCENT =
-            {0xFF4FC3F7, 0xFFB388FF, 0xFFFF8A65, 0xFFFFD54F, 0xFF81C784};
+            {0xFF4FC3F7, 0xFFB388FF, 0xFFFF8A65, 0xFFFFD54F, 0xFF81C784, 0xFFA1887F};
 
     private static final String[] TAB_KEYS = {
             "guzhenren.screen.tab.aperture",
@@ -55,9 +56,11 @@ public final class PlayerInfoScreen extends Screen {
             "guzhenren.screen.tab.path",
             "guzhenren.screen.tab.mind",
             "guzhenren.screen.tab.storage",
+            "guzhenren.screen.tab.refinement",
     };
 
     private static final int TAB_STORAGE = 4;
+    private static final int TAB_REFINEMENT = 5;
 
     private static final int PICK_COLS = 4;
     private static final int PICK_CELL_W = 84;
@@ -228,8 +231,10 @@ public final class PlayerInfoScreen extends Screen {
     }
 
     private boolean tabLive(int tab) {
+        if (tab != TAB_STORAGE && tab != TAB_REFINEMENT) return true;
+
         LocalPlayer player = Minecraft.getInstance().player;
-        return tab != TAB_STORAGE || (player != null && ApertureService.isAwakened(player));
+        return player != null && ApertureService.isAwakened(player);
     }
 
     private int tabLeft() {return leftPos + panelW - TAB_W - PAD;}
@@ -252,6 +257,8 @@ public final class PlayerInfoScreen extends Screen {
                 if (!inTab(mx, my, i) || !tabLive(i)) continue;
                 if (i == TAB_STORAGE) {
                     PacketDistributor.sendToServer(new OpenApertureStoragePayload(ApertureData.PRIMARY));
+                } else if (i == TAB_REFINEMENT) {
+                    PacketDistributor.sendToServer(OpenRefinementPayload.INSTANCE);
                 } else {
                     activeTab = i;
                     scrollRow = 0;

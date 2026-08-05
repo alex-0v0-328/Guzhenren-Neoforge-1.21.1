@@ -8,6 +8,7 @@ import com.unknown.guzhenren.datagen.item.ModItemModelProvider;
 import com.unknown.guzhenren.datagen.item.ModItemTagsProvider;
 import com.unknown.guzhenren.datagen.lang.EnUsLanguageProvider;
 import com.unknown.guzhenren.datagen.lang.ZhCnLanguageProvider;
+import com.unknown.guzhenren.datagen.recipe.ModRecipeProvider;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -44,5 +45,7 @@ public final class DataGenerators {
 
         generator.addProvider(event.includeServer(),
                 new ModCuriosProvider(packOutput, existingFileHelper, lookupProvider));
+
+        generator.addProvider(event.includeServer(), new ModRecipeProvider(packOutput, lookupProvider));
     }
 }

@@ -22,9 +22,6 @@ public class BuffGuItem extends TendedGuItem {
     }
 
     @Override
-    protected int useChargeTicks(Player player, ItemStack stack) {return 0;}
-
-    @Override
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {return null;}
 
     @Override

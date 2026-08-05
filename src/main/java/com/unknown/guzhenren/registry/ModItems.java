@@ -112,7 +112,7 @@ public final class ModItems {
                     GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                             .refine(1_000)
                             .costPerUse(20)
-                            .hungerBar(8, 4).hungerPerUse(1)
+                            .hungerBar(8, 3).hungerPerUse(1)
                             .feed(ModItemTags.RABBIT_FEED, 1)
                             .cooldown(Ticks.MINUTE)));
     public static final DeferredItem<Item> BRUTE_FORCE_LONGHORN_BEETLE_GU =
@@ -122,7 +122,7 @@ public final class ModItems {
                             GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                                     .refine(1_000)
                                     .costPerUse(20)
-                                    .hungerBar(8, 4).hungerPerUse(1)
+                                    .hungerBar(8, 3).hungerPerUse(1)
                                     .feed(ModItemTags.BEEF_FEED, 1)
                                     .cooldown(Ticks.MINUTE)));
     //endregion

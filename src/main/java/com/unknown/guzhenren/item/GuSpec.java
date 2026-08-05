@@ -127,6 +127,8 @@ public final class GuSpec {
     public MarkTag speckTag() {return speckTag;}
     public int mealItems() {return mealItems;}
     public int useCooldownTicks() {return useCooldownTicks;}
+
+    public int unitsPerHealth() {return unitsPerHunger;}
     public int fastChargeTicks() {return fastChargeTicks;}
     public int sameChargeTicks() {return sameChargeTicks;}
     public int slowChargeTicks() {return slowChargeTicks;}

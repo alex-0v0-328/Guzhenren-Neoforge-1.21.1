@@ -68,9 +68,6 @@ public class PrimevalElderGuItem extends TendedGuItem {
         return 0;
     }
 
-    @Override
-    protected int useChargeTicks(Player player, ItemStack stack) {return 0;}
-
     private int depositable(Player player, ItemStack stack) {
         long room = capacity - stored(stack);
         if (room <= 0) return 0;
@@ -146,6 +143,16 @@ public class PrimevalElderGuItem extends TendedGuItem {
             stack.set(ModDataComponents.FED_AT.get(),
                     GuClock.FedClock.fedAt(stack) + GuClock.FedClock.WINDOW_TICKS);
         }
+        heal(stack, drawStonesAboveItsOwnMeal(stack, state(stack).damageTaken()));
+    }
+
+    public int drawStonesAboveItsOwnMeal(ItemStack stack, int wanted) {
+        if (wanted <= 0) return 0;
+
+        long spare = stored(stack) - spec.mealItems();
+        int taken = (int) Math.min(wanted, Math.max(0L, spare));
+        if (taken > 0) setStored(stack, stored(stack) - taken);
+        return taken;
     }
     //endregion
 
