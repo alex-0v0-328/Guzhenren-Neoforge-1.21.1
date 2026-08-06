@@ -14,7 +14,7 @@ public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
     NONE                              (100),
     VERDANT_GREAT_SUN                 (100, GuPath.SPACE),
     DESOLATE_ANCIENT_MOON             (100, GuPath.TIME),
-    NORTHERN_DARK_ICE_SOUL            (100, GuPath.WATER, GuPath.ICE_SNOW),
+    NORTHERN_DARK_ICE_SOUL            (100, GuPath.ICE_SNOW, GuPath.SOUL),
     BOUNDLESS_FOREST_SAMSARA          (100, GuPath.WOOD),
     BLAZING_GLORY_LIGHTNING_BRILLIANCE(100, GuPath.FIRE, GuPath.LIGHTNING),
     MYRIAD_GOLD_WONDROUS_ESSENCE      (100, GuPath.METAL),
