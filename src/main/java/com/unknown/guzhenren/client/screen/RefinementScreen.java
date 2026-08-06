@@ -91,7 +91,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private void drawCell(GuiGraphics g, int x, int y, int fill) {g.fill(x, y, x + CELL, y + CELL, fill);}
     //endregion
 
-    //region the phase bar -- it empties over the 10s window, then over the 2s gap
+    //region the phase bar -- it empties over the 5s window, then over the 2s gap
     private void drawBar(GuiGraphics g, int x, int y) {
         int bx = x + RefinementMenu.BAR_X;
         int by = y + RefinementMenu.BAR_Y;

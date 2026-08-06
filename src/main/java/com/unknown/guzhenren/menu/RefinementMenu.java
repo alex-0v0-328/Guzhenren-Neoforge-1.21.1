@@ -339,7 +339,7 @@ public class RefinementMenu extends AbstractContainerMenu {
     }
     //endregion
 
-    //region 炼制 -- the button only STARTS it now; the outcome lands 46 seconds later
+    //region 炼制 -- the button only STARTS it now; the outcome lands 26 seconds later
     @Override
     public boolean clickMenuButton(@NotNull Player who, int id) {
         return id == BUTTON_CRAFT && who == player && begin();
