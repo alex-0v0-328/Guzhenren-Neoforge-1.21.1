@@ -212,6 +212,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.menu.refinement.pick.cost",   "%s essence a second");
         add("guzhenren.menu.refinement.pick.chance", "%s%%");
         add("guzhenren.menu.refinement.pick.success","Success  %s%%");
+        add("guzhenren.menu.refinement.stop",        "Stop");
+        add("guzhenren.menu.refinement.stopped",     "You broke off the refinement");
+        add("guzhenren.menu.refinement.pool",        "%s / %s");
+        add("guzhenren.menu.refinement.pick.soul",   "%s soul a second");
         add("guzhenren.screen.label.primary_path",   "Primary Path");
         add("guzhenren.screen.label.secondary_path", "Secondary Path");
         add("guzhenren.screen.pick.title",           "Choose a Secondary Path");
@@ -330,7 +334,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.refine_cost",               "Refine %s");
         add("guzhenren.item.gu.hunger_progress",           "Fed %s/%s");
         add("guzhenren.item.gu.stored_stones",             "Stored %s/%s");
-        add("guzhenren.item.gu.meal_liquor",               "A meal is %s bottles");
         add("guzhenren.item.gu.lifespan_gained",           "Lifespan +%s years");
         add("guzhenren.item.gu.hungry",                    "Your %s is hungry");
         add("guzhenren.item.gu.starved",                   "Your %s starved to death");

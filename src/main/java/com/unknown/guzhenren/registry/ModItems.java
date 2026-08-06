@@ -189,35 +189,39 @@ public final class ModItems {
     //region 酒虫 -- the fed clock; one meal, two days of silence, flat at every rank
     public static final DeferredItem<Item> LIQUOR_WORM = ITEMS.register("liquor_worm",
             () -> new LiquorWormItem(tended(), GuSpec.of(Rank.ONE, GuPath.FOOD)
-                    .refine(1_600).costPerUse(20).fedClock(8).feed(ModItemTags.LIQUOR_FEED, 1)));
+                    .refine(1_600).costPerUse(20)
+                    .hungerBar(8, 2).hungerPerUse(6).feed(ModItemTags.LIQUOR_FEED, 1)));
     public static final DeferredItem<Item> FOUR_FLAVORS_LIQUOR_WORM = ITEMS.register("four_flavors_liquor_worm",
             () -> new LiquorWormItem(tended(), GuSpec.of(Rank.TWO, GuPath.FOOD)
-                    .refine(16_000).costPerUse(200).fedClock(16).feed(ModItemTags.LIQUOR_FEED, 1)));
+                    .refine(16_000).costPerUse(200)
+                    .hungerBar(8, 4).hungerPerUse(6).feed(ModItemTags.LIQUOR_FEED, 1)));
     public static final DeferredItem<Item> SEVEN_FRAGRANCES_LIQUOR_WORM = ITEMS.register(
             "seven_fragrances_liquor_worm",
             () -> new LiquorWormItem(tended(), GuSpec.of(Rank.THREE, GuPath.FOOD)
-                    .refine(160_000).costPerUse(2_000).fedClock(32).feed(ModItemTags.LIQUOR_FEED, 1)));
+                    .refine(160_000).costPerUse(2_000)
+                    .hungerBar(8, 6).hungerPerUse(6).feed(ModItemTags.LIQUOR_FEED, 1)));
     public static final DeferredItem<Item> NINE_EYES_LIQUOR_WORM = ITEMS.register("nine_eyes_liquor_worm",
             () -> new LiquorWormItem(tended(), GuSpec.of(Rank.FOUR, GuPath.FOOD)
-                    .refine(1_600_000).costPerUse(20_000).fedClock(64).feed(ModItemTags.LIQUOR_FEED, 1)));
+                    .refine(1_600_000).costPerUse(20_000)
+                    .hungerBar(8, 8).hungerPerUse(6).feed(ModItemTags.LIQUOR_FEED, 1)));
     //endregion
 
-    //region 元老蛊 -- a vault for 元石 that pays its own upkeep; eats by item, not by tag
+    //region 元老蛊 -- a vault for 元石 that never needs feeding at all
     public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_1 = ITEMS.register("primeval_elder_gu_1",
             () -> new PrimevalElderGuItem(tended(), 1_000L, GuSpec.of(Rank.ONE, GuPath.SPACE)
-                    .refine(10).costPerUse(1).fedClock(2).charge(20, 60, 100)));
+                    .refine(10).costPerUse(1)));
     public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_2 = ITEMS.register("primeval_elder_gu_2",
             () -> new PrimevalElderGuItem(tended(), 10_000L, GuSpec.of(Rank.TWO, GuPath.SPACE)
-                    .refine(100).costPerUse(1).fedClock(4).charge(20, 60, 100)));
+                    .refine(100).costPerUse(1)));
     public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_3 = ITEMS.register("primeval_elder_gu_3",
             () -> new PrimevalElderGuItem(tended(), 100_000L, GuSpec.of(Rank.THREE, GuPath.SPACE)
-                    .refine(1_000).costPerUse(1).fedClock(8).charge(20, 60, 100)));
+                    .refine(1_000).costPerUse(1)));
     public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_4 = ITEMS.register("primeval_elder_gu_4",
             () -> new PrimevalElderGuItem(tended(), 1_000_000L, GuSpec.of(Rank.FOUR, GuPath.SPACE)
-                    .refine(10_000).costPerUse(1).fedClock(16).charge(20, 60, 100)));
+                    .refine(10_000).costPerUse(1)));
     public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_5 = ITEMS.register("primeval_elder_gu_5",
             () -> new PrimevalElderGuItem(tended(), 100_000_000L, GuSpec.of(Rank.FIVE, GuPath.SPACE)
-                    .refine(100_000).costPerUse(1).fedClock(32).charge(20, 60, 100)));
+                    .refine(100_000).costPerUse(1)));
     //endregion
 
     //region 蛊材 [Gu materials]

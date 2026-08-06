@@ -4,6 +4,7 @@ import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
+import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.item.GuItem;
 import com.unknown.guzhenren.item.MortalGuItem;
@@ -12,6 +13,7 @@ import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.item.mortal.PrimevalElderGuItem;
 import com.unknown.guzhenren.recipe.GuRecipe;
 import com.unknown.guzhenren.recipe.GuRecipeInput;
+import com.unknown.guzhenren.registry.ModItems;
 import com.unknown.guzhenren.registry.ModMenus;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -49,8 +51,8 @@ public class RefinementMenu extends AbstractContainerMenu {
     private static final int[] RING_COLS = {1, 2, 3,  0, 4,  0, 4,  0, 4,  1, 2, 3};
     private static final int[] RING_ROWS = {0, 0, 0,  1, 1,  2, 2,  3, 3,  4, 4, 4};
 
-    public static final int INPUT_X = 10;
-    public static final int INPUT_Y = 20;
+    public static final int INPUT_X = 18;
+    public static final int INPUT_Y = 28;
 
     public static int ringX(int index) {return INPUT_X + RING_COLS[index] * GRID_SLOT;}
     public static int ringY(int index) {return INPUT_Y + RING_ROWS[index] * GRID_SLOT;}
@@ -75,33 +77,39 @@ public class RefinementMenu extends AbstractContainerMenu {
     public static final int INVENTORY_START = OUTPUT_START + OUTPUT_SIZE;
 
     public static final int BUTTON_CRAFT = 0;
-    public static final int BUTTON_CLEAR_RECIPE = 1;
-    public static final int BUTTON_RECIPE_BASE = 2;
+    public static final int BUTTON_STOP = 1;
+    public static final int BUTTON_CLEAR_RECIPE = 2;
+    public static final int BUTTON_RECIPE_BASE = 3;
 
-    public static final int OUTPUT_X = 188;
-    public static final int OUTPUT_Y = 53;
-    public static final int STONE_X = 146;
-    public static final int STONE_Y = 45;
-    public static final int CRAFT_X = 132;
-    public static final int CRAFT_Y = 67;
-    public static final int CRAFT_W = 44;
+    public static final int OUTPUT_X = 210;
+    public static final int OUTPUT_Y = 60;
+    public static final int STONE_X = 158;
+    public static final int STONE_Y = 48;
+    public static final int CRAFT_X = 140;
+    public static final int CRAFT_Y = 76;
+    public static final int CRAFT_W = 52;
     public static final int CRAFT_H = 20;
-    public static final int BAR_X = 132;
-    public static final int BAR_Y = 93;
-    public static final int BAR_W = 44;
+    public static final int BAR_X = 140;
+    public static final int BAR_Y = 102;
+    public static final int BAR_W = 52;
     public static final int BAR_H = 6;
-    public static final int RECIPE_X = 132;
-    public static final int RECIPE_Y = 105;
-    public static final int RECIPE_W = 44;
+    public static final int RECIPE_X = 140;
+    public static final int RECIPE_Y = 114;
+    public static final int RECIPE_W = 52;
     public static final int RECIPE_H = 20;
-    public static final int LEGEND_Y = 134;
-    public static final int INVENTORY_X = 41;
-    public static final int INVENTORY_Y = 162;
-    public static final int HOTBAR_Y = 220;
+    public static final int LEGEND_Y = 142;
+    public static final int INVENTORY_X = 52;
+    public static final int INVENTORY_Y = 229;
+    public static final int HOTBAR_Y = 287;
 
     private static final int INVENTORY_COLS = 9;
     private static final int FAILURE_HEALTH_DIVISOR = 4;
     private static final int FULL_SUCCESS = 100;
+
+    private static final int OPENING_PERCENT = 40;
+    private static final int REFILL_BELOW_PERCENT = 50;
+    private static final int REFILL_UP_TO_PERCENT = 80;
+    private static final int CURRENT_PER_MAX_SOUL = 10;
 
     private static final int DATA_READY = 0;
     private static final int DATA_AFFORD = 1;
@@ -122,6 +130,7 @@ public class RefinementMenu extends AbstractContainerMenu {
     private static final String LOST_ESSENCE = "guzhenren.menu.refinement.lost_essence";
     private static final String LOST_ROLL = "guzhenren.menu.refinement.lost_roll";
     private static final String ELDER_SPENT = "guzhenren.menu.refinement.elder_spent";
+    private static final String STOPPED = "guzhenren.menu.refinement.stopped";
 
     private final Player player;
     private final SimpleContainer input = new SimpleContainer(INPUT_SIZE);
@@ -225,7 +234,11 @@ public class RefinementMenu extends AbstractContainerMenu {
     }
 
     private static boolean affords(Player who, GuRecipe recipe) {
-        return EssenceService.spendable(who) >= recipe.essenceToFinish();
+        return EssenceService.spendable(who) >= threshold(recipe);
+    }
+
+    private static long threshold(GuRecipe recipe) {
+        return recipe.essenceToFinish() * OPENING_PERCENT / 100L;
     }
     //endregion
 
@@ -291,8 +304,10 @@ public class RefinementMenu extends AbstractContainerMenu {
                 fail(server, LOST_ESSENCE);
                 return;
             }
+            burnSoul(server, recipe.soulPerSecond());
         }
         if (inWindow) gatherStones(server, recipe);
+        refillFromSupply(server);
 
         if (--phaseLeft > 0) {
             publishRun(recipe);
@@ -323,22 +338,60 @@ public class RefinementMenu extends AbstractContainerMenu {
         int wanted = recipe.stonesFor(stage) - stonesThisWindow;
         if (wanted <= 0) return;
 
+        stonesThisWindow += takeStones(wanted);
         ItemStack held = supply.getItem(0);
-        if (held.getItem() instanceof PrimevalStoneItem) {
-            int taken = Math.min(wanted, held.getCount());
-            held.shrink(taken);
-            stonesThisWindow += taken;
-            supply.setChanged();
-            return;
-        }
-        if (!(held.getItem() instanceof PrimevalElderGuItem vault)) return;
-
-        stonesThisWindow += vault.drawStonesAboveItsOwnMeal(held, wanted);
+        if (!(held.getItem() instanceof PrimevalElderGuItem)) return;
         if (stonesThisWindow >= recipe.stonesFor(stage)) return;
 
         say(server, ELDER_SPENT, ChatFormatting.RED);
         if (!server.getInventory().add(held.copy())) server.drop(held.copy(), false);
         supply.setItem(0, ItemStack.EMPTY);
+    }
+
+    private int takeStones(int wanted) {
+        if (wanted <= 0) return 0;
+
+        ItemStack held = supply.getItem(0);
+        if (held.getItem() instanceof PrimevalStoneItem) {
+            int taken = Math.min(wanted, held.getCount());
+            held.shrink(taken);
+            supply.setChanged();
+            return taken;
+        }
+        return held.getItem() instanceof PrimevalElderGuItem vault
+                ? vault.drawStones(held, wanted) : 0;
+    }
+    //endregion
+
+    //region 魂魄 [soul] -- current first, then maxSoul at a tenth the rate, which is what kills him
+    private static void burnSoul(ServerPlayer server, long amount) {
+        if (amount <= 0L || SoulService.consume(server, amount)) return;
+
+        long owed = amount - SoulService.get(server).currentSoul();
+        SoulService.setCurrent(server, 0L);
+
+        long fromMax = (owed + CURRENT_PER_MAX_SOUL - 1) / CURRENT_PER_MAX_SOUL;
+        SoulService.setMax(server, Math.max(0L, SoulService.get(server).maxSoul() - fromMax));
+    }
+    //endregion
+
+    //region 元石补给 [the stone top-up] -- only ever what the window did not want
+    private void refillFromSupply(ServerPlayer server) {
+        long max = EssenceService.maxEssence(server);
+        long current = EssenceService.currentEssence(server);
+        if (max <= 0L || current * 100L >= max * REFILL_BELOW_PERCENT) return;
+
+        long perStone = essencePerStone();
+        long missing = max * REFILL_UP_TO_PERCENT / 100L - current;
+        if (perStone <= 0L || missing <= 0L) return;
+
+        int wanted = (int) Math.min(Integer.MAX_VALUE, (missing + perStone - 1) / perStone);
+        int drawn = takeStones(wanted);
+        if (drawn > 0) EssenceService.add(server, drawn * perStone);
+    }
+
+    private static long essencePerStone() {
+        return ModItems.PRIMEVAL_STONE.get() instanceof PrimevalStoneItem stone ? stone.essence() : 0L;
     }
     //endregion
 
@@ -422,8 +475,18 @@ public class RefinementMenu extends AbstractContainerMenu {
     public boolean clickMenuButton(@NotNull Player who, int id) {
         if (who != player) return false;
         if (id == BUTTON_CRAFT) return begin();
+        if (id == BUTTON_STOP) return abort();
         if (id == BUTTON_CLEAR_RECIPE) return select(-1);
         return id >= BUTTON_RECIPE_BASE && select(id - BUTTON_RECIPE_BASE);
+    }
+
+    private boolean abort() {
+        if (!(player instanceof ServerPlayer server) || running == null) return false;
+
+        say(server, STOPPED, ChatFormatting.RED);
+        stop();
+        refresh();
+        return true;
     }
 
     private boolean begin() {

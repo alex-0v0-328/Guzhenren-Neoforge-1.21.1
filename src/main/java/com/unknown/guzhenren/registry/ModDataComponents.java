@@ -34,21 +34,6 @@ public final class ModDataComponents {
                     .persistent(Codec.LONG)
                     .networkSynchronized(ByteBufCodecs.VAR_LONG));
 
-    public static final Supplier<DataComponentType<Long>> FED_AT =
-            DATA_COMPONENTS.registerComponentType("fed_at", builder -> builder
-                    .persistent(Codec.LONG)
-                    .networkSynchronized(ByteBufCodecs.VAR_LONG));
-
-    public static final Supplier<DataComponentType<Long>> FED_WARNED =
-            DATA_COMPONENTS.registerComponentType("fed_warned", builder -> builder
-                    .persistent(Codec.LONG)
-                    .networkSynchronized(ByteBufCodecs.VAR_LONG));
-
-    public static final Supplier<DataComponentType<Integer>> FED_LEFT =
-            DATA_COMPONENTS.registerComponentType("fed_left", builder -> builder
-                    .persistent(Codec.INT)
-                    .networkSynchronized(ByteBufCodecs.VAR_INT));
-
     public static final Supplier<DataComponentType<Long>> REFINED_AT =
             DATA_COMPONENTS.registerComponentType("refined_at", builder -> builder
                     .persistent(Codec.LONG)

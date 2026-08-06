@@ -10,10 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 public final class GuSpec {
 
-    public static final int FAST_CHARGE_TICKS = 20;
-    public static final int SAME_CHARGE_TICKS = 60;
-    public static final int SLOW_CHARGE_TICKS = 180;
-
     private final Rank rank;
     private final GuPath path;
 
@@ -28,7 +24,6 @@ public final class GuSpec {
     private int unitsPerHunger = 1;
     private int essencePerHunger;
     private int hungerPerUse = 1;
-    private int mealItems;
 
     private @Nullable TagKey<Item> feedTag;
     private int feedUnits;
@@ -36,9 +31,6 @@ public final class GuSpec {
     private int denseUnits;
 
     private int useCooldownTicks;
-    private int fastChargeTicks = FAST_CHARGE_TICKS;
-    private int sameChargeTicks = SAME_CHARGE_TICKS;
-    private int slowChargeTicks = SLOW_CHARGE_TICKS;
 
     private GuSpec(Rank rank, GuPath path) {
         this.rank = rank;
@@ -87,11 +79,6 @@ public final class GuSpec {
         return this;
     }
 
-    public GuSpec fedClock(int mealItems) {
-        this.mealItems = mealItems;
-        return this;
-    }
-
     public GuSpec feed(TagKey<Item> tag, int units) {
         this.feedTag = tag;
         this.feedUnits = units;
@@ -108,13 +95,6 @@ public final class GuSpec {
         this.useCooldownTicks = ticks;
         return this;
     }
-
-    public GuSpec charge(int fast, int same, int slow) {
-        this.fastChargeTicks = fast;
-        this.sameChargeTicks = same;
-        this.slowChargeTicks = slow;
-        return this;
-    }
     //endregion
 
     //region what the base classes read
@@ -125,16 +105,11 @@ public final class GuSpec {
     public boolean channels() {return channels;}
     public int essencePerSpeck() {return essencePerSpeck;}
     public MarkTag speckTag() {return speckTag;}
-    public int mealItems() {return mealItems;}
     public int useCooldownTicks() {return useCooldownTicks;}
 
     public int unitsPerHealth() {return unitsPerHunger;}
-    public int fastChargeTicks() {return fastChargeTicks;}
-    public int sameChargeTicks() {return sameChargeTicks;}
-    public int slowChargeTicks() {return slowChargeTicks;}
 
     public GuClock buildClock() {
-        if (mealItems > 0) return new GuClock.FedClock(mealItems);
         if (maxHunger > 0) {
             return new GuClock.HungerBar(maxHunger, unitsPerHunger, essencePerHunger, hungerPerUse);
         }
@@ -151,7 +126,6 @@ public final class GuSpec {
     public void validate(String id) {
         if (refineCost < 0) throw fault(id, "refine cost is negative");
         if (essencePerRound < 0) throw fault(id, "essence per round is negative");
-        if (mealItems > 0 && maxHunger > 0) throw fault(id, "declares both a fed clock and a hunger bar");
 
         if (!channels) return;
 

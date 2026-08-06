@@ -1,6 +1,9 @@
 package com.unknown.guzhenren.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.unknown.guzhenren.attachment.data.body.SoulData;
+import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
+import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.menu.RefinementMenu;
 import com.unknown.guzhenren.recipe.GuRecipe;
 import com.unknown.guzhenren.recipe.GuRecipeInput;
@@ -11,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -46,8 +50,19 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int PICK_FILL = 0xF0000000;
     private static final int GHOST_OVERLAY = 0x1AFFFFFF;
     private static final float GHOST_ALPHA = 0.35F;
+    private static final int ESSENCE_FILL = 0xFF4FC3F7;
+    private static final int DISTILLED_FILL = 0xFF1565C0;
+    private static final int SOUL_FILL = 0xFFB388FF;
+
+    private static final int POOL_X = 18;
+    private static final int POOL_W = 230;
+    private static final int POOL_H = 5;
+    private static final int POOL_Y = 156;
+    private static final int POOL_STRIDE = 19;
 
     private static final String CRAFT_KEY = "guzhenren.menu.refinement.craft";
+    private static final String STOP_KEY = "guzhenren.menu.refinement.stop";
+    private static final String POOL_KEY = "guzhenren.menu.refinement.pool";
     private static final String LEGEND_KEY = "guzhenren.menu.refinement.rings";
     private static final String WINDOW_KEY = "guzhenren.menu.refinement.window";
     private static final String GAP_KEY = "guzhenren.menu.refinement.gap";
@@ -62,6 +77,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final String PICK_WINDOWS_KEY = "guzhenren.menu.refinement.pick.windows";
     private static final String PICK_STONES_KEY = "guzhenren.menu.refinement.pick.stones";
     private static final String PICK_COST_KEY = "guzhenren.menu.refinement.pick.cost";
+    private static final String PICK_SOUL_KEY = "guzhenren.menu.refinement.pick.soul";
     private static final String PICK_CHANCE_KEY = "guzhenren.menu.refinement.pick.chance";
     private static final String PICK_SUCCESS_KEY = "guzhenren.menu.refinement.pick.success";
 
@@ -76,16 +92,18 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int BACK_W = 16;
     private static final int BACK_H = 14;
     private static final String BACK_GLYPH = "<-";
-    private static final int TITLE_X_WITH_BACK = 26;
+    private static final int TITLE_X_WITH_BACK = 32;
+    private static final int MARGIN = 18;
+    private static final int HEADER_H = 20;
 
     private boolean picking;
     private int pickScroll;
 
     public RefinementScreen(RefinementMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
-        this.imageWidth = 242;
-        this.imageHeight = 244;
-        this.inventoryLabelY = this.imageHeight - 94;
+        this.imageWidth = 266;
+        this.imageHeight = 321;
+        this.inventoryLabelY = RefinementMenu.INVENTORY_Y - 11;
         this.inventoryLabelX = RefinementMenu.INVENTORY_X;
         this.titleLabelX = TITLE_X_WITH_BACK;
     }
@@ -96,7 +114,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         int y = topPos;
         g.fill(x, y, x + imageWidth, y + imageHeight, PANEL_FILL);
         g.renderOutline(x, y, imageWidth, imageHeight, BORDER);
-        g.fill(x + 9, y + 15, x + imageWidth - 9, y + 16, ACCENT);
+        g.fill(x + MARGIN, y + HEADER_H, x + imageWidth - MARGIN, y + HEADER_H + 1, ACCENT);
 
         drawInput(g, x, y);
         drawCell(g, x + RefinementMenu.STONE_X, y + RefinementMenu.STONE_Y, SLOT_FILL);
@@ -155,7 +173,39 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
                 statusColour(), false);
         g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, TEXT, false);
         renderGhosts(g);
+        renderPools(g);
     }
+
+    //region the pools -- all three ride the synced attachments, so none of them needs a packet
+    //   one unit is a right-aligned 现值/上限 over a full-width bar; 蒸馏真元 takes a unit only when it exists
+    private void renderPools(GuiGraphics g) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        long maxEssence = EssenceService.maxEssence(player);
+        int unit = 0;
+        drawPool(g, unit++, EssenceService.currentEssence(player), maxEssence, ESSENCE_FILL);
+
+        long distilled = EssenceService.distilledEssence(player);
+        if (distilled > 0L) drawPool(g, unit++, distilled, maxEssence, DISTILLED_FILL);
+
+        SoulData soul = SoulService.get(player);
+        drawPool(g, unit, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);
+    }
+
+    private void drawPool(GuiGraphics g, int unit, long value, long max, int fill) {
+        int y = POOL_Y + unit * POOL_STRIDE;
+        Component reading = Component.translatable(POOL_KEY, value, max);
+        g.drawString(font, reading, POOL_X + POOL_W - font.width(reading), y, LEGEND_TEXT, false);
+
+        int barY = y + font.lineHeight;
+        g.fill(POOL_X, barY, POOL_X + POOL_W, barY + POOL_H, BAR_TRACK);
+        if (max <= 0L || value <= 0L) return;
+
+        int filled = (int) Math.min(POOL_W, POOL_W * value / max);
+        g.fill(POOL_X, barY, POOL_X + filled, barY + POOL_H, fill);
+    }
+    //endregion
 
     //region the status line -- the ring legend until a 蛊方 is picked, then what that pick still wants
     private Component statusLine() {
@@ -250,22 +300,23 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     }
     //endregion
 
-    //region the 炼制 button -- three states, because "no recipe" and "cannot pay for it" are not one thing
+    //region the 炼制 button -- three states off the ritual, and 停止 while it runs
     private void renderCraft(GuiGraphics g, int mouseX, int mouseY) {
         int x = craftX();
         int y = craftY();
-        boolean live = clickable() && menu.affords();
-        boolean shortOfEssence = clickable() && !menu.affords();
+        boolean stopping = menu.running();
+        boolean live = stopping || (clickable() && menu.affords());
+        boolean shortOfEssence = !stopping && clickable() && !menu.affords();
         boolean hover = live && inCraft(mouseX, mouseY);
 
         g.fill(x, y, x + RefinementMenu.CRAFT_W, y + RefinementMenu.CRAFT_H,
                 live ? (hover ? BUTTON_HOVER : BUTTON_IDLE) : BUTTON_DEAD);
         if (live || shortOfEssence) {
             g.renderOutline(x, y, RefinementMenu.CRAFT_W, RefinementMenu.CRAFT_H,
-                    live ? ACCENT : SHORT_RED);
+                    stopping ? BAR_SHORT : live ? ACCENT : SHORT_RED);
         }
 
-        Component label = Component.translatable(CRAFT_KEY);
+        Component label = Component.translatable(stopping ? STOP_KEY : CRAFT_KEY);
         g.drawString(font, label, x + (RefinementMenu.CRAFT_W - font.width(label)) / 2,
                 y + (RefinementMenu.CRAFT_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
     }
@@ -370,6 +421,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         lines.add(Component.translatable(PICK_WINDOWS_KEY, recipe.windowCount(), recipe.totalSeconds()));
         lines.add(Component.translatable(PICK_STONES_KEY, stoneList(recipe)));
         lines.add(Component.translatable(PICK_COST_KEY, recipe.essencePerSecond()));
+        lines.add(Component.translatable(PICK_SOUL_KEY, recipe.soulPerSecond()));
         lines.add(Component.translatable(PICK_SUCCESS_KEY, recipe.baseSuccess()));
         return lines;
     }
@@ -437,8 +489,8 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
                 y + (BACK_H - font.lineHeight) / 2 + 1, TEXT, false);
     }
 
-    private int backX() {return leftPos + 7;}
-    private int backY() {return topPos + 3;}
+    private int backX() {return leftPos + 11;}
+    private int backY() {return topPos + 4;}
 
     private boolean inBack(double mx, double my) {
         return mx >= backX() && mx < backX() + BACK_W && my >= backY() && my < backY() + BACK_H;
@@ -450,6 +502,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         if (button == 0) {
             if (inBack(mx, my)) return clickBack();
             if (inRecipe(mx, my) && !menu.running()) return openPicker();
+            if (inCraft(mx, my) && menu.running()) return send(RefinementMenu.BUTTON_STOP);
             if (inCraft(mx, my) && clickable()) return send(RefinementMenu.BUTTON_CRAFT);
         }
         return super.mouseClicked(mx, my, button);

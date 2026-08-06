@@ -1,6 +1,5 @@
 package com.unknown.guzhenren.item;
 
-import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.registry.ModDataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -110,94 +109,6 @@ public sealed interface GuClock {
 
         @Override
         public float barFraction(ItemStack stack) {return hunger(stack) / (float) max;}
-    }
-    //endregion
-
-    //region 喂食时钟 -- Liquor Worm [酒虫] and Primeval Elder Gu [元老蛊]
-    record FedClock(int mealItems) implements GuClock {
-
-        public static final int WINDOW_TICKS = 2 * Ticks.DAY;
-        public static final int WARN_AFTER_TICKS = WINDOW_TICKS + Ticks.HALF_DAY;
-        public static final int DEATH_AFTER_TICKS = WINDOW_TICKS + Ticks.DAY;
-
-        public static final int BAR_UNIT_TICKS = 1000;
-        public static final int BAR_UNITS = DEATH_AFTER_TICKS / BAR_UNIT_TICKS;
-
-        public static long fedAt(ItemStack stack) {
-            return stack.getOrDefault(ModDataComponents.FED_AT.get(), 0L);
-        }
-
-        public static long now(ServerPlayer player) {return player.server.overworld().getDayTime();}
-
-        public static long age(ServerPlayer player, ItemStack stack) {
-            return Math.max(0L, now(player) - fedAt(stack));
-        }
-
-        public static int left(ItemStack stack) {
-            return stack.getOrDefault(ModDataComponents.FED_LEFT.get(), BAR_UNITS);
-        }
-
-        public boolean needsMeal(ServerPlayer player, ItemStack stack) {
-            return age(player, stack) >= WINDOW_TICKS;
-        }
-
-        @Override
-        public void bind(ServerPlayer player, ItemStack stack) {
-            stack.set(ModDataComponents.FED_AT.get(), now(player));
-            stack.set(ModDataComponents.FED_LEFT.get(), BAR_UNITS);
-        }
-
-        @Override
-        public boolean tick(ServerPlayer player, ItemStack stack, long days) {
-            if (age(player, stack) >= DEATH_AFTER_TICKS) return true;
-
-            long units = (DEATH_AFTER_TICKS - age(player, stack)) / BAR_UNIT_TICKS;
-            int clamped = (int) Math.clamp(units, 0L, BAR_UNITS);
-            if (clamped != left(stack)) stack.set(ModDataComponents.FED_LEFT.get(), clamped);
-            return false;
-        }
-
-        @Override
-        public boolean hungry(ServerPlayer player, ItemStack stack) {
-            return age(player, stack) >= WARN_AFTER_TICKS;
-        }
-
-        @Override
-        public void warn(ServerPlayer player, ItemStack stack, long days) {
-            long fed = fedAt(stack);
-            if (stack.getOrDefault(ModDataComponents.FED_WARNED.get(), Long.MIN_VALUE) == fed) return;
-
-            stack.set(ModDataComponents.FED_WARNED.get(), fed);
-            TendedGuItem.announceHungry(player, stack);
-        }
-
-        @Override
-        public boolean eat(TendedGuItem gu, ServerPlayer player, ItemStack stack, ItemStack food) {
-            if (mealItems <= 0 || !needsMeal(player, stack)) return false;
-            if (gu.feedUnits(food) <= 0 || food.getCount() < mealItems) return false;
-
-            if (!player.hasInfiniteMaterials()) food.shrink(mealItems);
-            bind(player, stack);
-            return true;
-        }
-
-        @Override
-        public int spareAboveFloor(ItemStack stack) {return Integer.MAX_VALUE;}
-
-        @Override
-        public int essencePerHungerPoint() {return Integer.MAX_VALUE;}
-
-        @Override
-        public void pour(ItemStack stack, int from, int to) {}
-
-        @Override
-        public boolean spendOnce(ItemStack stack) {return false;}
-
-        @Override
-        public boolean barVisible(ItemStack stack) {return left(stack) < BAR_UNITS;}
-
-        @Override
-        public float barFraction(ItemStack stack) {return left(stack) / (float) BAR_UNITS;}
     }
     //endregion
 

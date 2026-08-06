@@ -33,7 +33,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(@NotNull RecipeOutput output) {
-        refinement(output, ModItems.FOUR_FLAVORS_LIQUOR_WORM, 1L, 50, List.of(16, 16, 16, 16),
+        refinement(output, ModItems.FOUR_FLAVORS_LIQUOR_WORM, 1L, 1L, 50, List.of(16, 16, 16, 16),
                 Map.of('s', SizedIngredient.of(ModItems.SOUR_LIQUOR.get(), 1),
                        'b', SizedIngredient.of(ModItems.BITTER_LIQUOR.get(), 1),
                        'h', SizedIngredient.of(ModItems.SPICY_LIQUOR.get(), 1),
@@ -45,7 +45,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 ".....",
                 " .w. ");
 
-        refinement(output, ModItems.ALL_OUT_EFFORT_GU_4, 100L, 30, List.of(64, 64, 64, 64),
+        refinement(output, ModItems.ALL_OUT_EFFORT_GU_4, 100L, 100L, 30, List.of(64, 64, 64, 64),
                 Map.of('I', SizedIngredient.of(Items.IRON_BLOCK, 4),
                        'B', SizedIngredient.of(Items.GOLD_BLOCK, 2),
                        'A', SizedIngredient.of(ModItems.ALL_OUT_EFFORT_GU_3.get(), 1)),
@@ -58,7 +58,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     //region 蛊方 [Gu Recipe] patterns -- one row a grid row, ' ' a cut corner, '.' an empty cell
     private static void refinement(RecipeOutput output, ItemLike result, long essencePerSecond,
-                                   int baseSuccess, List<Integer> windows,
+                                   long soulPerSecond, int baseSuccess, List<Integer> windows,
                                    Map<Character, SizedIngredient> key, String... pattern) {
         Item item = result.asItem();
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(
@@ -68,7 +68,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
         read(id, key, pattern, ingredients, slots);
         output.accept(id, new GuRecipe(List.copyOf(ingredients), List.copyOf(slots),
-                List.of(new ItemStack(item)), essencePerSecond, windows, baseSuccess), null);
+                List.of(new ItemStack(item)), essencePerSecond, soulPerSecond, windows, baseSuccess), null);
     }
 
     private static void read(ResourceLocation id, Map<Character, SizedIngredient> key, String[] pattern,

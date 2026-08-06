@@ -1,6 +1,5 @@
 package com.unknown.guzhenren.item.mortal;
 
-import com.unknown.guzhenren.item.GuClock;
 import com.unknown.guzhenren.item.GuSpec;
 import com.unknown.guzhenren.item.TendedGuItem;
 import com.unknown.guzhenren.registry.ModDataComponents;
@@ -121,9 +120,7 @@ public class PrimevalElderGuItem extends TendedGuItem {
 
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
-        long heldBackForItsOwnMeal = owesAMeal(player, stack) ? spec.mealItems() : 0L;
-        long spare = stored(stack) - heldBackForItsOwnMeal;
-        int taken = (int) Math.min(WITHDRAW_STONES, spare > 0 ? spare : stored(stack));
+        int taken = (int) Math.min(WITHDRAW_STONES, stored(stack));
         if (taken <= 0) return;
 
         setStored(stack, stored(stack) - taken);
@@ -136,26 +133,14 @@ public class PrimevalElderGuItem extends TendedGuItem {
     }
     //endregion
 
-    //region its own larder -- runs on the heartbeat, chasing arrears one whole meal at a time
-    private boolean owesAMeal(ServerPlayer player, ItemStack stack) {
-        return refined(stack) && clock instanceof GuClock.FedClock fed && fed.needsMeal(player, stack);
-    }
-
+    //region its own vault -- it never eats, but a wound still costs stones, on the heartbeat
     @Override
     protected void payOwnUpkeep(ServerPlayer player, ItemStack stack) {
-        while (owesAMeal(player, stack) && stored(stack) >= spec.mealItems()) {
-            setStored(stack, stored(stack) - spec.mealItems());
-            stack.set(ModDataComponents.FED_AT.get(),
-                    GuClock.FedClock.fedAt(stack) + GuClock.FedClock.WINDOW_TICKS);
-        }
-        heal(stack, drawStonesAboveItsOwnMeal(stack, state(stack).damageTaken()));
+        if (refined(stack)) heal(stack, drawStones(stack, state(stack).damageTaken()));
     }
 
-    public int drawStonesAboveItsOwnMeal(ItemStack stack, int wanted) {
-        if (wanted <= 0) return 0;
-
-        long spare = stored(stack) - spec.mealItems();
-        int taken = (int) Math.min(wanted, Math.max(0L, spare));
+    public int drawStones(ItemStack stack, int wanted) {
+        int taken = (int) Math.min(Math.max(0, wanted), stored(stack));
         if (taken > 0) setStored(stack, stored(stack) - taken);
         return taken;
     }

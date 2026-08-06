@@ -7,6 +7,7 @@ import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.item.MortalGuItem;
 import com.unknown.guzhenren.registry.ModRecipes;
+import io.netty.buffer.ByteBuf;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.core.HolderLookup;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, List<ItemStack> results,
-                       long essencePerSecond, List<Integer> windows, int baseSuccess)
+                       long essencePerSecond, long soulPerSecond, List<Integer> windows, int baseSuccess)
         implements Recipe<GuRecipeInput> {
 
     public static final int WINDOW_TICKS = 5 * Ticks.SECOND;
@@ -48,6 +49,7 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
     public int stonesFor(int window) {return windows.get(window);}
     public int totalSeconds() {return totalTicks() / Ticks.SECOND;}
     public long essenceToFinish() {return essencePerSecond * totalSeconds();}
+    public long soulToFinish() {return soulPerSecond * totalSeconds();}
 
     public int totalTicks() {
         return windowCount() * WINDOW_TICKS + Math.max(0, windowCount() - 1) * GAP_TICKS;
@@ -177,18 +179,43 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
                 Codec.INT.listOf().fieldOf("slots").forGetter(GuRecipe::slots),
                 ItemStack.CODEC.listOf().fieldOf("results").forGetter(GuRecipe::results),
                 Codec.LONG.optionalFieldOf("essence_per_second", 0L).forGetter(GuRecipe::essencePerSecond),
+                Codec.LONG.optionalFieldOf("soul_per_second", 0L).forGetter(GuRecipe::soulPerSecond),
                 Codec.INT.listOf().optionalFieldOf("windows", List.of()).forGetter(GuRecipe::windows),
                 Codec.INT.optionalFieldOf("base_success", 100).forGetter(GuRecipe::baseSuccess)
         ).apply(i, GuRecipe::new));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, GuRecipe> STREAM_CODEC = StreamCodec.composite(
-                SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), GuRecipe::ingredients,
-                ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list()), GuRecipe::slots,
-                ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()), GuRecipe::results,
-                ByteBufCodecs.VAR_LONG, GuRecipe::essencePerSecond,
-                ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list()), GuRecipe::windows,
-                ByteBufCodecs.VAR_INT, GuRecipe::baseSuccess,
-                GuRecipe::new);
+        private static final StreamCodec<RegistryFriendlyByteBuf, List<SizedIngredient>> NEEDS =
+                SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list());
+        private static final StreamCodec<RegistryFriendlyByteBuf, List<ItemStack>> STACKS =
+                ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list());
+        private static final StreamCodec<ByteBuf, List<Integer>> INTS =
+                ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list());
+
+        private static final StreamCodec<RegistryFriendlyByteBuf, GuRecipe> STREAM_CODEC =
+                new StreamCodec<>() {
+                    @Override
+                    public @NotNull GuRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
+                        return new GuRecipe(
+                                NEEDS.decode(buf),
+                                INTS.decode(buf),
+                                STACKS.decode(buf),
+                                ByteBufCodecs.VAR_LONG.decode(buf),
+                                ByteBufCodecs.VAR_LONG.decode(buf),
+                                INTS.decode(buf),
+                                ByteBufCodecs.VAR_INT.decode(buf));
+                    }
+
+                    @Override
+                    public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull GuRecipe value) {
+                        NEEDS.encode(buf, value.ingredients());
+                        INTS.encode(buf, value.slots());
+                        STACKS.encode(buf, value.results());
+                        ByteBufCodecs.VAR_LONG.encode(buf, value.essencePerSecond());
+                        ByteBufCodecs.VAR_LONG.encode(buf, value.soulPerSecond());
+                        INTS.encode(buf, value.windows());
+                        ByteBufCodecs.VAR_INT.encode(buf, value.baseSuccess());
+                    }
+                };
 
         @Override
         public @NotNull MapCodec<GuRecipe> codec() {return CODEC;}

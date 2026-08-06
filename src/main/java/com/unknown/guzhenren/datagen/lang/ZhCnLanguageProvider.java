@@ -212,6 +212,10 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.menu.refinement.pick.cost",   "每秒真元 %s");
         add("guzhenren.menu.refinement.pick.chance", "%s%%");
         add("guzhenren.menu.refinement.pick.success","成功率  %s%%");
+        add("guzhenren.menu.refinement.stop",        "停止");
+        add("guzhenren.menu.refinement.stopped",     "你中断了炼制");
+        add("guzhenren.menu.refinement.pool",        "%s / %s");
+        add("guzhenren.menu.refinement.pick.soul",   "每秒魂魄 %s");
         add("guzhenren.screen.label.primary_path",   "主修流派");
         add("guzhenren.screen.label.secondary_path", "辅修流派");
         add("guzhenren.screen.pick.title",           "选择辅修流派");
@@ -330,7 +334,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.refine_cost",               "炼化 %s");
         add("guzhenren.item.gu.hunger_progress",           "饱食 %s/%s");
         add("guzhenren.item.gu.stored_stones",             "存石 %s/%s");
-        add("guzhenren.item.gu.meal_liquor",               "一餐 %s 瓶酒");
         add("guzhenren.item.gu.lifespan_gained",           "寿元 +%s 年");
         add("guzhenren.item.gu.hungry",                    "%s饿了");
         add("guzhenren.item.gu.starved",                   "%s饿死了");

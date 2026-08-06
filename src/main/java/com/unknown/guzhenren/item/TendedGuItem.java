@@ -123,11 +123,8 @@ public abstract class TendedGuItem extends MortalGuItem {
     //region refining [炼化] -- paid in instalments; what it buys is a lasting bond
     public static final int REFINE_DONE_COOLDOWN_TICKS = Ticks.SECOND;
 
-    private void refineStep(ServerPlayer player, ItemStack stack) {
+    private void refineStep(ServerPlayer player, ItemStack stack, int invest) {
         RefinedGuState s = state(stack);
-        int invest = (int) Math.min(refineCost() - s.refineProgress(), EssenceService.spendable(player));
-        if (invest > 0) EssenceService.consume(player, invest);
-
         int next = s.refineProgress() + invest;
         if (next < refineCost()) {
             store(stack, s.withRefine(next));
@@ -152,10 +149,16 @@ public abstract class TendedGuItem extends MortalGuItem {
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack,
                           int remaining) {
-        if (!spec.channels() || !refined(stack) || !(entity instanceof ServerPlayer player)) return;
+        if (!(entity instanceof ServerPlayer player)) return;
 
         int elapsed = CHANNEL_MAX_TICKS - remaining;
         if (elapsed < 0 || elapsed % stepTicks(player) != 0) return;
+
+        if (!refined(stack)) {
+            refineTick(player, stack, elapsed);
+            return;
+        }
+        if (!spec.channels()) return;
 
         if (holdingFood(player, stack)) eat(player, stack);
         drawFromOffhandStones(player);
@@ -167,6 +170,18 @@ public abstract class TendedGuItem extends MortalGuItem {
         pour(player, stack, take);
     }
 
+    private void refineTick(ServerPlayer player, ItemStack stack, int elapsed) {
+        drawFromOffhandStones(player);
+        int left = refineCost() - state(stack).refineProgress();
+        int take = (int) Math.min(left, poured(player, elapsed));
+        if (take <= 0 || !EssenceService.consume(player, take)) {
+            player.stopUsingItem();
+            return;
+        }
+        refineStep(player, stack, take);
+        if (refined(stack)) player.stopUsingItem();
+    }
+
     private boolean guPaced(Player player) {return rankGap(player) > 0;}
 
     private int stepTicks(Player player) {
@@ -176,10 +191,12 @@ public abstract class TendedGuItem extends MortalGuItem {
     private void drawFromOffhandStones(ServerPlayer player) {
         ItemStack offhand = player.getOffhandItem();
         if (!(offhand.getItem() instanceof PrimevalStoneItem stone)) return;
-        if (EssenceService.currentEssence(player) >= EssenceService.maxEssence(player)) return;
 
-        EssenceService.add(player, stone.essence());
-        if (!player.hasInfiniteMaterials()) offhand.shrink(1);
+        int used = stone.used(player, offhand);
+        if (used <= 0) return;
+
+        EssenceService.add(player, stone.essence() * used);
+        if (!player.hasInfiniteMaterials()) offhand.shrink(used);
     }
 
     private int stepAmount(ServerPlayer player, ItemStack stack, int elapsed) {
@@ -195,7 +212,16 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     private long mostThisStepMaySpend(ServerPlayer player, long pool, int elapsed) {
         if (guPaced(player)) return Math.min(pool, clock.essencePerHungerPoint());
+        return poolPacedStep(pool, elapsed);
+    }
 
+    private long poured(ServerPlayer player, int elapsed) {
+        long pool = EssenceService.spendable(player);
+        if (pool < ESSENCE_FLOOR) return 0L;
+        return guPaced(player) ? pool : poolPacedStep(pool, elapsed);
+    }
+
+    private static long poolPacedStep(long pool, int elapsed) {
         int stepIndex = (elapsed % Ticks.SECOND) / POOL_PACED_STEP_TICKS;
         return pool / (POOL_PACED_STEPS + 1 - stepIndex);
     }
@@ -292,10 +318,7 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     @Override
     protected final int apply(ServerPlayer player, ItemStack stack) {
-        if (!refined(stack)) {
-            refineStep(player, stack);
-            return 0;
-        }
+        if (!refined(stack)) return 0;
         if (holdingFood(player, stack) && !crouching(player)) {
             eat(player, stack);
             return 0;
@@ -310,16 +333,12 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     @Override
     protected final int useDurationTicks(Player player, ItemStack stack) {
-        if (!refined(stack)) return chargeTicksFor(player);
+        if (!refined(stack)) return CHANNEL_MAX_TICKS;
         if (holdingFood(player, stack) && !crouching(player)) return 0;
         return spec.channels() ? CHANNEL_MAX_TICKS : useChargeTicks(player, stack);
     }
 
     protected int useChargeTicks(Player player, ItemStack stack) {return useChargeByGap(player);}
-
-    private int chargeTicksFor(Player player) {
-        return chargeByGap(player, spec.fastChargeTicks(), spec.sameChargeTicks(), spec.slowChargeTicks());
-    }
 
     protected int drive(ServerPlayer player, ItemStack stack) {
         EssenceService.consume(player, spec.essencePerRound());
