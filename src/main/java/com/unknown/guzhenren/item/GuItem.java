@@ -129,7 +129,7 @@ public abstract class GuItem extends Item {
 
     public static boolean crouching(Player player) {return player.isCrouching();}
 
-    private boolean isSneakUse(Player player, ItemStack stack) {
+    protected boolean isSneakUse(Player player, ItemStack stack) {
         return crouching(player) && hasSneakUse(player, stack);
     }
 

@@ -7,7 +7,9 @@ import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.display.ModDisplayText;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.registry.ModDataComponents;
+import java.util.List;
 import java.util.UUID;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,6 +29,7 @@ public abstract class TendedGuItem extends MortalGuItem {
     private static final String TOOLTIP_REFINE = "guzhenren.item.gu.refine_progress";
     private static final String TOOLTIP_INVESTED = "guzhenren.item.gu.invested";
     private static final String TOOLTIP_HUNGER = "guzhenren.item.gu.hunger_progress";
+    private static final String TOOLTIP_HEALTH = "guzhenren.item.gu.health";
     private static final String CAPTION_CHANNELING = "guzhenren.hud.using";
     private static final String FAILED_STARVING = "guzhenren.item.failed.gu_starving";
     private static final String MSG_HUNGRY = "guzhenren.item.gu.hungry";
@@ -380,6 +384,16 @@ public abstract class TendedGuItem extends MortalGuItem {
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
         return refined(stack) ? super.getName(stack) : ModDisplayText.wild(super.getName(stack));
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
+                                @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
+        if (state(stack).damageTaken() <= 0) return;
+
+        tooltip.add(Component.translatable(TOOLTIP_HEALTH, health(stack), maxHealth())
+                .withStyle(ChatFormatting.GRAY));
     }
 
     @Override

@@ -226,6 +226,18 @@ public final class ModItems {
 
     public static final DeferredItem<Item> LIQUOR = ITEMS.register("liquor",
             () -> new LiquorItem(new Item.Properties()));
+
+    public static final DeferredItem<Item> SOUR_LIQUOR = ITEMS.register("sour_liquor",
+            () -> new LiquorItem(new Item.Properties()));
+
+    public static final DeferredItem<Item> SWEET_LIQUOR = ITEMS.register("sweet_liquor",
+            () -> new LiquorItem(new Item.Properties()));
+
+    public static final DeferredItem<Item> BITTER_LIQUOR = ITEMS.register("bitter_liquor",
+            () -> new LiquorItem(new Item.Properties()));
+
+    public static final DeferredItem<Item> SPICY_LIQUOR = ITEMS.register("spicy_liquor",
+            () -> new LiquorItem(new Item.Properties()));
     //endregion
 
     //region Qi Path [气道] materials -- 21, ranks I..V

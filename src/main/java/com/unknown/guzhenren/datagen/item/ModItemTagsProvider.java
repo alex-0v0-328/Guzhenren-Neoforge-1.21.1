@@ -34,7 +34,8 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         tag(ModItemTags.JIN_FEED_SMELTED).add(Items.IRON_INGOT);
         tag(ModItemTags.JIN_FEED_SMELTED_DENSE).add(Items.IRON_BLOCK);
 
-        tag(ModItemTags.LIQUOR_FEED).add(ModItems.LIQUOR.get());
+        tag(ModItemTags.LIQUOR_FEED).add(ModItems.LIQUOR.get(), ModItems.SOUR_LIQUOR.get(),
+                ModItems.SWEET_LIQUOR.get(), ModItems.BITTER_LIQUOR.get(), ModItems.SPICY_LIQUOR.get());
 
         tag(ModItemTags.ALL_OUT_FEED).add(Items.STONE);
     }

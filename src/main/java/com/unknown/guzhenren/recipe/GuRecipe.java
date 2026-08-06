@@ -7,6 +7,7 @@ import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.item.MortalGuItem;
 import com.unknown.guzhenren.registry.ModRecipes;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -16,6 +17,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -23,11 +26,18 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record GuRecipe(List<SizedIngredient> ingredients, List<ItemStack> results, long essencePerSecond,
-                       List<Integer> windows, int baseSuccess) implements Recipe<GuRecipeInput> {
+public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, List<ItemStack> results,
+                       long essencePerSecond, List<Integer> windows, int baseSuccess)
+        implements Recipe<GuRecipeInput> {
 
     public static final int WINDOW_TICKS = 5 * Ticks.SECOND;
     public static final int GAP_TICKS = 2 * Ticks.SECOND;
+
+    public GuRecipe {
+        if (ingredients.size() != slots.size()) {
+            throw new IllegalArgumentException("every ingredient owns exactly one cell of the grid");
+        }
+    }
 
     public record Shape(RefinementMode mode, int guInputs) {
         public boolean composite() {return guInputs >= 2;}
@@ -44,29 +54,47 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<ItemStack> result
     }
     //endregion
 
-    //region matching -- how much each slot owes, or null when this Gu Recipe [蛊方] does not fit
-    // TODO: the claim is greedy; a recipe whose ingredients overlap would need real bipartite matching
-    public int @Nullable [] claim(GuRecipeInput input) {
-        int size = input.size();
-        int[] left = new int[size];
-        int[] taken = new int[size];
-        for (int i = 0; i < size; i++) left[i] = input.getItem(i).getCount();
+    //region the Gu Recipe [蛊方] a player may attempt -- sorted, so an index means the same on both sides
+    public static List<RecipeHolder<GuRecipe>> known(RecipeManager recipes) {
+        return recipes.getAllRecipesFor(ModRecipes.REFINEMENT.get()).stream()
+                .sorted(Comparator.comparing(RecipeHolder::id))
+                .toList();
+    }
+    //endregion
 
-        for (SizedIngredient need : ingredients) {
-            int want = need.count();
-            for (int i = 0; i < size && want > 0; i++) {
-                if (left[i] <= 0 || !need.ingredient().test(input.getItem(i))) continue;
-                int take = Math.min(want, left[i]);
-                want -= take;
-                left[i] -= take;
-                taken[i] += take;
-            }
-            if (want > 0) return null;
+    //region matching -- SHAPED and EXACT: every cell holds what its own ingredient asks for, or nothing
+    public int @Nullable [] claim(GuRecipeInput input) {
+        int[] taken = new int[input.size()];
+
+        for (int n = 0; n < ingredients.size(); n++) {
+            int slot = slots.get(n);
+            if (slot < 0 || slot >= input.size()) return null;
+
+            SizedIngredient need = ingredients.get(n);
+            if (!need.ingredient().test(input.getItem(slot))) return null;
+
+            taken[slot] += need.count();
         }
-        for (int n : left) {
-            if (n > 0) return null;
+        for (int i = 0; i < input.size(); i++) {
+            if (input.getItem(i).getCount() != taken[i]) return null;
         }
         return taken;
+    }
+
+    public int[] shortfall(GuRecipeInput input) {
+        int[] missing = new int[ingredients.size()];
+
+        for (int n = 0; n < ingredients.size(); n++) {
+            SizedIngredient need = ingredients.get(n);
+            ItemStack held = held(input, slots.get(n));
+            int have = need.ingredient().test(held) ? held.getCount() : 0;
+            missing[n] = Math.max(0, need.count() - have);
+        }
+        return missing;
+    }
+
+    private static ItemStack held(GuRecipeInput input, int slot) {
+        return slot < 0 || slot >= input.size() ? ItemStack.EMPTY : input.getItem(slot);
     }
     //endregion
 
@@ -146,6 +174,7 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<ItemStack> result
 
         private static final MapCodec<GuRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                 SizedIngredient.FLAT_CODEC.listOf().fieldOf("ingredients").forGetter(GuRecipe::ingredients),
+                Codec.INT.listOf().fieldOf("slots").forGetter(GuRecipe::slots),
                 ItemStack.CODEC.listOf().fieldOf("results").forGetter(GuRecipe::results),
                 Codec.LONG.optionalFieldOf("essence_per_second", 0L).forGetter(GuRecipe::essencePerSecond),
                 Codec.INT.listOf().optionalFieldOf("windows", List.of()).forGetter(GuRecipe::windows),
@@ -154,6 +183,7 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<ItemStack> result
 
         private static final StreamCodec<RegistryFriendlyByteBuf, GuRecipe> STREAM_CODEC = StreamCodec.composite(
                 SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), GuRecipe::ingredients,
+                ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list()), GuRecipe::slots,
                 ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()), GuRecipe::results,
                 ByteBufCodecs.VAR_LONG, GuRecipe::essencePerSecond,
                 ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list()), GuRecipe::windows,

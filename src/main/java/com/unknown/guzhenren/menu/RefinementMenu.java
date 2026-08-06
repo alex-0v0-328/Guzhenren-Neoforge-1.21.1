@@ -13,7 +13,7 @@ import com.unknown.guzhenren.item.mortal.PrimevalElderGuItem;
 import com.unknown.guzhenren.recipe.GuRecipe;
 import com.unknown.guzhenren.recipe.GuRecipeInput;
 import com.unknown.guzhenren.registry.ModMenus;
-import com.unknown.guzhenren.registry.ModRecipes;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -28,6 +28,7 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,6 +56,14 @@ public class RefinementMenu extends AbstractContainerMenu {
     public static int ringY(int index) {return INPUT_Y + RING_ROWS[index] * GRID_SLOT;}
     public static int coreX(int col) {return INPUT_X + (col + 1) * GRID_SLOT;}
     public static int coreY(int row) {return INPUT_Y + (row + 1) * GRID_SLOT;}
+
+    public static int slotAt(int row, int col) {
+        for (int i = 0; i < RING_SIZE; i++) {
+            if (RING_ROWS[i] == row && RING_COLS[i] == col) return i;
+        }
+        if (row < 1 || row > CORE_ROWS || col < 1 || col > CORE_COLS) return -1;
+        return RING_SIZE + (row - 1) * CORE_COLS + (col - 1);
+    }
     //endregion
 
     public static final int OUTPUT_COLS = 2;
@@ -66,6 +75,8 @@ public class RefinementMenu extends AbstractContainerMenu {
     public static final int INVENTORY_START = OUTPUT_START + OUTPUT_SIZE;
 
     public static final int BUTTON_CRAFT = 0;
+    public static final int BUTTON_CLEAR_RECIPE = 1;
+    public static final int BUTTON_RECIPE_BASE = 2;
 
     public static final int OUTPUT_X = 188;
     public static final int OUTPUT_Y = 53;
@@ -79,6 +90,10 @@ public class RefinementMenu extends AbstractContainerMenu {
     public static final int BAR_Y = 93;
     public static final int BAR_W = 44;
     public static final int BAR_H = 6;
+    public static final int RECIPE_X = 132;
+    public static final int RECIPE_Y = 105;
+    public static final int RECIPE_W = 44;
+    public static final int RECIPE_H = 20;
     public static final int LEGEND_Y = 134;
     public static final int INVENTORY_X = 41;
     public static final int INVENTORY_Y = 162;
@@ -97,7 +112,8 @@ public class RefinementMenu extends AbstractContainerMenu {
     private static final int DATA_IN_WINDOW = 6;
     private static final int DATA_STONES_IN = 7;
     private static final int DATA_STONES_NEEDED = 8;
-    private static final int DATA_SIZE = 9;
+    private static final int DATA_SELECTED = 9;
+    private static final int DATA_SIZE = 10;
 
     private static final String FAILED_ESSENCE = "guzhenren.menu.refinement.essence";
     private static final String FAILED_ROOM = "guzhenren.menu.refinement.room";
@@ -114,6 +130,7 @@ public class RefinementMenu extends AbstractContainerMenu {
     private final ContainerData craftData = new SimpleContainerData(DATA_SIZE);
 
     private @Nullable GuRecipe pending;
+    private int selectedIndex = -1;
 
     private @Nullable GuRecipe running;
     private int @Nullable [] claimed;
@@ -165,19 +182,39 @@ public class RefinementMenu extends AbstractContainerMenu {
     public int phaseLeft() {return craftData.get(DATA_PHASE_LEFT);}
     public int stonesIn() {return craftData.get(DATA_STONES_IN);}
     public int stonesNeeded() {return craftData.get(DATA_STONES_NEEDED);}
+    public int selected() {return craftData.get(DATA_SELECTED) - 1;}
+    public GuRecipeInput grid() {return GuRecipeInput.of(input);}
     //endregion
 
-    //region the 蛊方 [Gu Recipe] behind the button
+    //region the 蛊方 [Gu Recipe] behind the button -- a selected one is the only one match() will consider
     private @Nullable GuRecipe match() {
         MinecraftServer server = player.getServer();
         if (server == null) return null;
 
         GuRecipeInput in = GuRecipeInput.of(input);
-        for (RecipeHolder<GuRecipe> held
-                : server.getRecipeManager().getAllRecipesFor(ModRecipes.REFINEMENT.get())) {
+        List<RecipeHolder<GuRecipe>> known = GuRecipe.known(server.getRecipeManager());
+        if (selectedIndex >= 0) {
+            if (selectedIndex >= known.size()) return null;
+
+            GuRecipe only = known.get(selectedIndex).value();
+            return only.claim(in) != null ? only : null;
+        }
+        for (RecipeHolder<GuRecipe> held : known) {
             if (held.value().claim(in) != null) return held.value();
         }
         return null;
+    }
+
+    private boolean select(int index) {
+        MinecraftServer server = player.getServer();
+        if (server == null || running != null) return false;
+
+        List<RecipeHolder<GuRecipe>> known = GuRecipe.known(server.getRecipeManager());
+        selectedIndex = index >= 0 && index < known.size() ? index : -1;
+        craftData.set(DATA_SELECTED, selectedIndex + 1);
+        if (selectedIndex >= 0) fill(known.get(selectedIndex).value());
+        refresh();
+        return true;
     }
 
     private void refresh() {
@@ -189,6 +226,47 @@ public class RefinementMenu extends AbstractContainerMenu {
 
     private static boolean affords(Player who, GuRecipe recipe) {
         return EssenceService.spendable(who) >= recipe.essenceToFinish();
+    }
+    //endregion
+
+    //region 自动填充 [auto-fill] -- picking a 蛊方 pulls what the bag can cover into the cells it names
+    private void fill(GuRecipe recipe) {
+        for (int n = 0; n < recipe.ingredients().size(); n++) {
+            int slot = recipe.slots().get(n);
+            if (slot < 0 || slot >= INPUT_SIZE) continue;
+
+            SizedIngredient need = recipe.ingredients().get(n);
+            ItemStack held = input.getItem(slot);
+            if (!held.isEmpty() && !need.ingredient().test(held)) continue;
+
+            int wanted = need.count() - held.getCount();
+            if (wanted > 0) draw(need, slot, wanted);
+        }
+    }
+
+    private void draw(SizedIngredient need, int slot, int wanted) {
+        Inventory inventory = player.getInventory();
+
+        for (int i = 0; i < inventory.getContainerSize() && wanted > 0; i++) {
+            ItemStack from = inventory.getItem(i);
+            if (from.isEmpty() || !need.ingredient().test(from)) continue;
+
+            ItemStack held = input.getItem(slot);
+            if (!held.isEmpty() && !ItemStack.isSameItemSameComponents(held, from)) continue;
+
+            int move = Math.min(Math.min(wanted, from.getCount()),
+                    from.getMaxStackSize() - held.getCount());
+            if (move <= 0) continue;
+
+            if (held.isEmpty()) {
+                input.setItem(slot, from.split(move));
+            } else {
+                held.grow(move);
+                from.shrink(move);
+                input.setChanged();
+            }
+            wanted -= move;
+        }
     }
     //endregion
 
@@ -342,7 +420,10 @@ public class RefinementMenu extends AbstractContainerMenu {
     //region 炼制 -- the button only STARTS it now; the outcome lands 26 seconds later
     @Override
     public boolean clickMenuButton(@NotNull Player who, int id) {
-        return id == BUTTON_CRAFT && who == player && begin();
+        if (who != player) return false;
+        if (id == BUTTON_CRAFT) return begin();
+        if (id == BUTTON_CLEAR_RECIPE) return select(-1);
+        return id >= BUTTON_RECIPE_BASE && select(id - BUTTON_RECIPE_BASE);
     }
 
     private boolean begin() {

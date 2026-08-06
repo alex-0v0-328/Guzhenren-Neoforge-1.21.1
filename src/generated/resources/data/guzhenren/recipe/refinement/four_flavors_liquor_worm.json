@@ -4,24 +4,28 @@
   "essence_per_second": 1,
   "ingredients": [
     {
-      "count": 2,
+      "count": 1,
+      "item": "guzhenren:sour_liquor"
+    },
+    {
+      "count": 1,
+      "item": "guzhenren:bitter_liquor"
+    },
+    {
+      "count": 1,
       "item": "guzhenren:liquor_worm"
     },
     {
       "count": 1,
-      "item": "guzhenren:liquor"
+      "item": "guzhenren:liquor_worm"
     },
     {
       "count": 1,
-      "item": "guzhenren:liquor"
+      "item": "guzhenren:spicy_liquor"
     },
     {
       "count": 1,
-      "item": "guzhenren:liquor"
-    },
-    {
-      "count": 1,
-      "item": "guzhenren:liquor"
+      "item": "guzhenren:sweet_liquor"
     }
   ],
   "results": [
@@ -29,6 +33,14 @@
       "count": 1,
       "id": "guzhenren:four_flavors_liquor_worm"
     }
+  ],
+  "slots": [
+    1,
+    5,
+    15,
+    17,
+    6,
+    10
   ],
   "windows": [
     16,

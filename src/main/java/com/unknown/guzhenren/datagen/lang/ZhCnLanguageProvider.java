@@ -199,6 +199,19 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.menu.refinement.lost_essence","真元耗尽，炼制失败");
         add("guzhenren.menu.refinement.lost_roll",   "炼制失败");
         add("guzhenren.menu.refinement.elder_spent", "元老蛊已耗尽，已退回背包");
+        add("guzhenren.menu.refinement.recipes",     "蛊方");
+        add("guzhenren.menu.refinement.selected",    "已选  %s");
+        add("guzhenren.menu.refinement.extra",       "格内有多余材料");
+        add("guzhenren.menu.refinement.pick.title",  "选择蛊方");
+        add("guzhenren.menu.refinement.pick.auto",   "凑齐哪张算哪张");
+        add("guzhenren.menu.refinement.pick.empty",  "尚不知晓任何蛊方");
+        add("guzhenren.menu.refinement.pick.needs",  "所需");
+        add("guzhenren.menu.refinement.pick.item",   "  %s × %s");
+        add("guzhenren.menu.refinement.pick.windows","%s 个窗口  ·  共 %s 秒");
+        add("guzhenren.menu.refinement.pick.stones", "每窗元石  %s");
+        add("guzhenren.menu.refinement.pick.cost",   "每秒真元 %s");
+        add("guzhenren.menu.refinement.pick.chance", "%s%%");
+        add("guzhenren.menu.refinement.pick.success","成功率  %s%%");
         add("guzhenren.screen.label.primary_path",   "主修流派");
         add("guzhenren.screen.label.secondary_path", "辅修流派");
         add("guzhenren.screen.pick.title",           "选择辅修流派");
@@ -263,6 +276,10 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.PRIMEVAL_ELDER_GU_5,              "五转元老蛊");
         addItem(ModItems.PRIMEVAL_STONE,                   "元石");
         addItem(ModItems.LIQUOR,                           "酒");
+        addItem(ModItems.SOUR_LIQUOR,                      "酸酒");
+        addItem(ModItems.SWEET_LIQUOR,                     "甜酒");
+        addItem(ModItems.BITTER_LIQUOR,                    "苦酒");
+        addItem(ModItems.SPICY_LIQUOR,                     "辣酒");
 
         addItem(ModItems.SWORD_QI_1,                       "一转剑气");
         addItem(ModItems.SWORD_QI_2,                       "二转剑气");
@@ -319,6 +336,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.starved",                   "%s饿死了");
         add("guzhenren.item.gu.exhausted",                 "%s被强行催动，力竭而亡！");
         add("guzhenren.item.gu.ruined",                    "%s在炼制中被炼废了！");
+        add("guzhenren.item.gu.health",                    "生命 %s / %s");
         add("guzhenren.item.gu.vital_lost",                "%s断绝，气血、魂魄与念头俱损！");
         add("guzhenren.item.death_qi_cured",               "生气化去死气 —— 回复 %s 年寿元");
 

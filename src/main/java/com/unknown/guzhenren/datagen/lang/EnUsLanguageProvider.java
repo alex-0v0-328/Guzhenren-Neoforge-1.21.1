@@ -199,6 +199,19 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.menu.refinement.lost_essence","Your essence ran dry — the refinement failed");
         add("guzhenren.menu.refinement.lost_roll",   "The refinement failed");
         add("guzhenren.menu.refinement.elder_spent", "The Primeval Elder Gu is spent, and is back in your bag");
+        add("guzhenren.menu.refinement.recipes",     "Recipes");
+        add("guzhenren.menu.refinement.selected",    "Chosen  %s");
+        add("guzhenren.menu.refinement.extra",       "The grid holds more than this recipe wants");
+        add("guzhenren.menu.refinement.pick.title",  "Choose a Gu Recipe");
+        add("guzhenren.menu.refinement.pick.auto",   "Any recipe that fits");
+        add("guzhenren.menu.refinement.pick.empty",  "You know no Gu Recipe");
+        add("guzhenren.menu.refinement.pick.needs",  "Needs");
+        add("guzhenren.menu.refinement.pick.item",   "  %s × %s");
+        add("guzhenren.menu.refinement.pick.windows","%s windows  ·  %ss");
+        add("guzhenren.menu.refinement.pick.stones", "Stones a window  %s");
+        add("guzhenren.menu.refinement.pick.cost",   "%s essence a second");
+        add("guzhenren.menu.refinement.pick.chance", "%s%%");
+        add("guzhenren.menu.refinement.pick.success","Success  %s%%");
         add("guzhenren.screen.label.primary_path",   "Primary Path");
         add("guzhenren.screen.label.secondary_path", "Secondary Path");
         add("guzhenren.screen.pick.title",           "Choose a Secondary Path");
@@ -263,6 +276,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.PRIMEVAL_ELDER_GU_5,              "Primeval Elder Gu V");
         addItem(ModItems.PRIMEVAL_STONE,                   "Primeval Stone");
         addItem(ModItems.LIQUOR,                           "Liquor");
+        addItem(ModItems.SOUR_LIQUOR,                      "Sour Liquor");
+        addItem(ModItems.SWEET_LIQUOR,                     "Sweet Liquor");
+        addItem(ModItems.BITTER_LIQUOR,                    "Bitter Liquor");
+        addItem(ModItems.SPICY_LIQUOR,                     "Spicy Liquor");
 
         addItem(ModItems.SWORD_QI_1,                       "Sword Qi I");
         addItem(ModItems.SWORD_QI_2,                       "Sword Qi II");
@@ -319,6 +336,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.starved",                   "Your %s starved to death");
         add("guzhenren.item.gu.exhausted",                 "Your %s was forced past its limit and died");
         add("guzhenren.item.gu.ruined",                    "Your %s was ruined in the refinement");
+        add("guzhenren.item.gu.health",                    "Health %s / %s");
         add("guzhenren.item.gu.vital_lost",                "Your %s is gone -- health, soul and mind all suffer!");
         add("guzhenren.item.death_qi_cured",               "Life Qi dispels the Death Qi -- %s years of lifespan restored");
 

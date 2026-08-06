@@ -110,6 +110,11 @@ public class PrimevalElderGuItem extends TendedGuItem {
     protected int sneakApply(ServerPlayer player, ItemStack stack) {return drive(player, stack);}
 
     @Override
+    protected int useChargeTicks(Player player, ItemStack stack) {
+        return isSneakUse(player, stack) ? super.useChargeTicks(player, stack) : 0;
+    }
+
+    @Override
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
         return stored(stack) <= 0 ? new Refusal(FAILED_EMPTY) : null;
     }
