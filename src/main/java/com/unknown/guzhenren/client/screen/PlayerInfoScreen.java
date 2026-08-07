@@ -33,6 +33,7 @@ public final class PlayerInfoScreen extends Screen {
     private static final int HEADER_H = 22;
     private static final int CONTENT_TOP = HEADER_H + 8;
     private static final int LINE_H = 12;
+    private static final int LABEL_INSET_DIVISOR = 4;
 
     private static final int TAB_W = 76;
     private static final int TAB_H = 20;
@@ -114,17 +115,18 @@ public final class PlayerInfoScreen extends Screen {
         int hidden = Math.max(0, rows.size() - visible);
         scrollRow = Mth.clamp(scrollRow, 0, hidden);
 
-        int valueRight = tabLeft() - PAD;
+        int valueRight = valueRight();
+        int rowLeft = contentLeft();
         int y = contentTop();
         clickableRowY = -1;
         for (int i = scrollRow; i < Math.min(rows.size(), scrollRow + visible); i++) {
             Row row = rows.get(i);
-            if (mouseY >= y - 1 && mouseY < y + LINE_H - 1 && mouseX >= leftPos && mouseX < tabLeft()) {
-                g.fill(leftPos + PAD - 2, y - 1, valueRight + 2, y + LINE_H - 1, ROW_HOVER);
+            if (mouseY >= y - 1 && mouseY < y + LINE_H - 1 && mouseX >= rowLeft - 2 && mouseX < valueRight + 2) {
+                g.fill(rowLeft - 2, y - 1, valueRight + 2, y + LINE_H - 1, ROW_HOVER);
             }
             if (row.clickable()) clickableRowY = y;
             int labelColor = row.value() == null ? accent : TEXT;
-            g.drawString(font, row.label(), leftPos + PAD + row.indent(), y, labelColor, false);
+            g.drawString(font, row.label(), rowLeft + row.indent(), y, labelColor, false);
             if (row.value() != null) {
                 g.drawString(font, row.value(), valueRight - font.width(row.value()), y, TEXT, false);
             }
@@ -137,6 +139,9 @@ public final class PlayerInfoScreen extends Screen {
     //region scrolling
     private int contentTop() {return topPos + CONTENT_TOP;}
     private int contentBottom() {return topPos + panelH - PAD;}
+    private int contentLeft() {return leftPos + PAD + rowSpan() / LABEL_INSET_DIVISOR;}
+    private int rowSpan() {return valueRight() - leftPos - PAD;}
+    private int valueRight() {return tabLeft() - PAD;}
     private int visibleRows() {return Math.max(0, (contentBottom() - contentTop()) / LINE_H);}
 
     private void renderScrollBar(GuiGraphics g, int total, int visible, int accent) {
@@ -249,7 +254,7 @@ public final class PlayerInfoScreen extends Screen {
         if (picking) return button != 0 || clickPicker(mx, my);
         if (button == 0) {
             if (clickableRowY >= 0 && my >= clickableRowY - 1 && my < clickableRowY + LINE_H - 1
-                    && mx >= leftPos && mx < tabLeft()) {
+                    && mx >= contentLeft() - 2 && mx < valueRight() + 2) {
                 picking = true;
                 return true;
             }

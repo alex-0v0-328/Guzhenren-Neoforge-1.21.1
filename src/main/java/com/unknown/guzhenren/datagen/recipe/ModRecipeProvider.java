@@ -45,7 +45,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 ".....",
                 " .w. ");
 
-        refinement(output, ModItems.ALL_OUT_EFFORT_GU_4, 100L, 100L, 30, List.of(64, 64, 64, 64),
+        refinement(output, ModItems.ALL_OUT_EFFORT_GU_4, 100L, 3L, 30, List.of(64, 64, 64, 64),
                 Map.of('I', SizedIngredient.of(Items.IRON_BLOCK, 4),
                        'B', SizedIngredient.of(Items.GOLD_BLOCK, 2),
                        'A', SizedIngredient.of(ModItems.ALL_OUT_EFFORT_GU_3.get(), 1)),
