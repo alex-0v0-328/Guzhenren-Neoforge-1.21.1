@@ -11,7 +11,8 @@ public abstract class OneShotGuItem extends MortalGuItem {
 
     private static final String TOOLTIP_REFINE_COST = "guzhenren.item.gu.refine_cost";
 
-    public static final int REFINE_TICKS = 5;
+    public static final int REFINE_TICKS = 20;
+    private static final int STEP_TICKS = 5;
 
     protected OneShotGuItem(Properties properties, GuSpec spec) {
         super(properties, spec);
@@ -36,7 +37,13 @@ public abstract class OneShotGuItem extends MortalGuItem {
 
     //region display
     @Override
-    public Component chargeCaption(ItemStack stack, int remainingTicks) {return refineCaption(0);}
+    public Component chargeCaption(ItemStack stack, int remainingTicks) {return refineCaptionPlain();}
+
+    @Override
+    public Float chargeFraction(ItemStack stack, int remainingTicks) {
+        int steps = Math.ceilDiv(REFINE_TICKS - remainingTicks, STEP_TICKS);
+        return steps * STEP_TICKS / (float) REFINE_TICKS;
+    }
 
     @Override
     protected @Nullable MutableComponent progressLine(ItemStack stack) {

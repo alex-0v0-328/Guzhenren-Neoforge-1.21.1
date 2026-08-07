@@ -5,6 +5,7 @@ import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
+import com.unknown.guzhenren.attachment.data.body.StaminaData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
@@ -13,6 +14,7 @@ import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.HealthService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
+import com.unknown.guzhenren.attachment.service.body.StaminaService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.ModAttachments;
@@ -32,6 +34,7 @@ public final class PlayerDataService {
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
         HealthService.refresh(player);
         AttackService.refresh(player);
+        StaminaService.refresh(player);
     }
 
     public static void onBirth(Player player) {
@@ -54,6 +57,7 @@ public final class PlayerDataService {
         if (to instanceof ServerPlayer server) {
             HealthService.refresh(server);
             AttackService.refresh(server);
+            StaminaService.refresh(server);
         }
     }
 
@@ -68,6 +72,7 @@ public final class PlayerDataService {
             MindService.empty(player);
         }
         BodyService.clearDeathQiDebt(player);
+        StaminaService.refill(player);
     }
 
     public static void onVitalGuLost(ServerPlayer owner, ItemStack stack) {
@@ -88,6 +93,7 @@ public final class PlayerDataService {
         to.setData(ModAttachments.APERTURE_STORAGE, from.getData(ModAttachments.APERTURE_STORAGE));
         to.setData(ModAttachments.BODY, from.getData(ModAttachments.BODY));
         to.setData(ModAttachments.SOUL, from.getData(ModAttachments.SOUL));
+        to.setData(ModAttachments.STAMINA, from.getData(ModAttachments.STAMINA));
         to.setData(ModAttachments.PATH, from.getData(ModAttachments.PATH));
         to.setData(ModAttachments.STRENGTH, from.getData(ModAttachments.STRENGTH));
         to.setData(ModAttachments.MIND, from.getData(ModAttachments.MIND));
@@ -98,6 +104,7 @@ public final class PlayerDataService {
         player.setData(ModAttachments.APERTURE, ApertureData.DEFAULT);
         player.setData(ModAttachments.APERTURE_STORAGE, ApertureStorage.DEFAULT);
         player.setData(ModAttachments.SOUL, SoulData.DEFAULT);
+        player.setData(ModAttachments.STAMINA, StaminaData.DEFAULT);
         player.setData(ModAttachments.PATH, PathData.DEFAULT);
         player.setData(ModAttachments.STRENGTH, StrengthData.DEFAULT);
         player.setData(ModAttachments.ESSENCE_CARRY, new float[ApertureData.MAX_APERTURES]);
@@ -109,6 +116,7 @@ public final class PlayerDataService {
         if (player instanceof ServerPlayer server) {
             HealthService.refresh(server);
             AttackService.refresh(server);
+            StaminaService.refill(server);
         }
     }
 }

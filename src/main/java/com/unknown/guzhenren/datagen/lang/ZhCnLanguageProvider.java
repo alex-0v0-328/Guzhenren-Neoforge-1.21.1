@@ -8,6 +8,7 @@ import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
+import com.unknown.guzhenren.custom.enums.aperture.Title;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.body.Race;
@@ -44,6 +45,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     //region DISPLAY
     private void addDisplayKeys() {
         add("guzhenren.display.realm",                        "%s%s");
+        add("guzhenren.display.realm_title",                  "%s%s");
         add("guzhenren.display.gu_line",                      "%s%s%s");
         add("guzhenren.display.gu",                           "蛊虫");
         add("guzhenren.display.gu_material",                  "蛊材");
@@ -147,6 +149,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.primary_path",    "主修流派  %s");
         add("guzhenren.command.info.secondary_path",  "辅修流派  %s");
         add("guzhenren.command.info.soul",            "玩家魂魄  %s / %s");
+        add("guzhenren.command.info.stamina",         "玩家耐力  %s / %s");
         add("guzhenren.command.info.lifespan",        "玩家寿元  %s");
         add("guzhenren.command.info.life_state",      "肉身状态  %s");
         add("guzhenren.command.info.life_form",       "玩家形态  %s");
@@ -229,6 +232,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.race",           "种族");
         add("guzhenren.screen.label.wisdom",         "智道造诣");
         add("guzhenren.screen.label.soul",           "魂魄");
+        add("guzhenren.screen.label.stamina",        "耐力");
         add("guzhenren.screen.label.lifespan",       "寿元");
         add("guzhenren.screen.label.qi",             "气道造诣");
         add("guzhenren.screen.label.paths",          "流派造诣");
@@ -367,6 +371,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
 
     //region ENUM
     private void addEnumKeys() {
+        addTitle();
         addRank();
         addStage();
         addTalent();
@@ -412,8 +417,14 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(ApertureState.DEAD,  "死");
     }
 
+    private void addTitle() {
+        add(Title.MORTAL,      "凡人");
+        add(Title.GU_MASTER,   "蛊师");
+        add(Title.GU_IMMORTAL, "蛊仙");
+    }
+
     private void addRank() {
-        add(Rank.NONE,  "凡人");
+        add(Rank.NONE,  "");
         add(Rank.ONE,   "一转");
         add(Rank.TWO,   "二转");
         add(Rank.THREE, "三转");

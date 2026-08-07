@@ -8,6 +8,7 @@ import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
+import com.unknown.guzhenren.custom.enums.aperture.Title;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.body.Race;
@@ -44,6 +45,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //region DISPLAY
     private void addDisplayKeys() {
         add("guzhenren.display.realm",                        "%s %s");
+        add("guzhenren.display.realm_title",                  "%s %s");
         add("guzhenren.display.gu_line",                      "%s %s %s");
         add("guzhenren.display.gu",                           "Gu");
         add("guzhenren.display.gu_material",                  "Gu Material");
@@ -147,6 +149,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.primary_path",    "Primary:     %s");
         add("guzhenren.command.info.secondary_path",  "Secondary:   %s");
         add("guzhenren.command.info.soul",            "Soul:        %s / %s");
+        add("guzhenren.command.info.stamina",         "Stamina:     %s / %s");
         add("guzhenren.command.info.lifespan",        "Lifespan:    %s");
         add("guzhenren.command.info.life_state",      "Body:        %s");
         add("guzhenren.command.info.life_form",       "Life form:   %s");
@@ -229,6 +232,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.race",           "Race");
         add("guzhenren.screen.label.wisdom",         "Wisdom Path");
         add("guzhenren.screen.label.soul",           "Soul");
+        add("guzhenren.screen.label.stamina",        "Stamina");
         add("guzhenren.screen.label.lifespan",       "Lifespan");
         add("guzhenren.screen.label.qi",             "Qi Path");
         add("guzhenren.screen.label.paths",          "Paths");
@@ -367,6 +371,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
 
     //region ENUM
     private void addEnumKeys() {
+        addTitle();
         addRank();
         addStage();
         addTalent();
@@ -412,8 +417,14 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(ApertureState.DEAD,  "Dead");
     }
 
+    private void addTitle() {
+        add(Title.MORTAL,      "Mortal");
+        add(Title.GU_MASTER,   "Gu Master");
+        add(Title.GU_IMMORTAL, "Gu Immortal");
+    }
+
     private void addRank() {
-        add(Rank.NONE,  "Mortal");
+        add(Rank.NONE,  "");
         add(Rank.ONE,   "Rank I");
         add(Rank.TWO,   "Rank II");
         add(Rank.THREE, "Rank III");

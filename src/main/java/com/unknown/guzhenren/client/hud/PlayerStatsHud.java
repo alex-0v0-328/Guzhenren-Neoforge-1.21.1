@@ -6,6 +6,7 @@ import com.unknown.guzhenren.attachment.data.body.SoulData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
+import com.unknown.guzhenren.attachment.service.body.StaminaService;
 import com.unknown.guzhenren.display.ModDisplayText;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -25,15 +26,16 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
     private static final int LEFT = 8;
     private static final int TOP = 8;
 
-    private static final int BAR_WIDTH = 120;
-    private static final int BAR_HEIGHT = 11;
+    private static final int BAR_WIDTH = 130;
+    private static final int BAR_HEIGHT = 9;
     private static final int TEXT_HEIGHT = 9;
 
     private static final int ROW_GAP = 2;
     private static final int GROUP_GAP = 7;
 
     private static final int ESSENCE_FILL = 0xFF4FC3F7;
-    private static final int SOUL_FILL = 0xFFB388FF;
+    private static final int SOUL_FILL = 0xFFD388FF;
+    private static final int STAMINA_FILL = 0xFF2E7D32;
 
     private static final int DISTILLED_FILL = 0xFF1565C0;
     private static final int BAR_TRACK = 0xB0202020;
@@ -67,6 +69,9 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
             }
         }
 
+        bar(graphics, font, y, StaminaService.current(player), StaminaService.max(player), STAMINA_FILL);
+        y += BAR_HEIGHT + ROW_GAP;
+
         bar(graphics, font, y, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);
         y += BAR_HEIGHT + GROUP_GAP;
 
@@ -89,6 +94,6 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         }
 
         String text = ModDisplayText.pool(current, max);
-        graphics.drawString(font, text, LEFT + (BAR_WIDTH - font.width(text)) / 2, y + 2, TEXT_COLOR, true);
+        graphics.drawString(font, text, LEFT + (BAR_WIDTH - font.width(text)) / 2, y + 1, TEXT_COLOR, true);
     }
 }

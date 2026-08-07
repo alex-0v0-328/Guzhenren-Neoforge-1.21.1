@@ -396,7 +396,8 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     @Override
     public @Nullable Float chargeFraction(ItemStack stack, int remainingTicks) {
-        if (!spec.channels() || !refined(stack)) return null;
+        if (!refined(stack)) return refineFraction(stack);
+        if (!spec.channels()) return null;
         return state(stack).investedEssence() / (float) spec.essencePerRound();
     }
 
@@ -443,7 +444,10 @@ public abstract class TendedGuItem extends MortalGuItem {
     }
 
     private float barFraction(ItemStack stack) {
-        if (refined(stack)) return clock.barFraction(stack);
+        return refined(stack) ? clock.barFraction(stack) : refineFraction(stack);
+    }
+
+    private float refineFraction(ItemStack stack) {
         return refineCost() <= 0 ? 0.0F : state(stack).refineProgress() / (float) refineCost();
     }
     //endregion

@@ -7,6 +7,7 @@ import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
+import com.unknown.guzhenren.attachment.data.body.StaminaData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import java.util.function.BiPredicate;
@@ -56,6 +57,12 @@ public final class ModAttachments {
             "soul_data", () -> AttachmentType.builder(() -> SoulData.DEFAULT)
                     .serialize(SoulData.CODEC)
                     .sync(OWNER_ONLY, SoulData.STREAM_CODEC)
+                    .build());
+
+    public static final Supplier<AttachmentType<StaminaData>> STAMINA = ATTACHMENT_TYPES.register(
+            "stamina_data", () -> AttachmentType.builder(() -> StaminaData.DEFAULT)
+                    .serialize(StaminaData.CODEC)
+                    .sync(OWNER_ONLY, StaminaData.STREAM_CODEC)
                     .build());
 
     public static final Supplier<AttachmentType<PathData>> PATH = ATTACHMENT_TYPES.register(

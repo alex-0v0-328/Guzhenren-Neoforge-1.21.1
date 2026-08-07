@@ -33,7 +33,7 @@ public final class PlayerInfoScreen extends Screen {
     private static final int HEADER_H = 22;
     private static final int CONTENT_TOP = HEADER_H + 8;
     private static final int LINE_H = 12;
-    private static final int LABEL_INSET_DIVISOR = 4;
+    private static final int CONTENT_INSET_DIVISOR = 12;
 
     private static final int TAB_W = 76;
     private static final int TAB_H = 20;
@@ -139,9 +139,11 @@ public final class PlayerInfoScreen extends Screen {
     //region scrolling
     private int contentTop() {return topPos + CONTENT_TOP;}
     private int contentBottom() {return topPos + panelH - PAD;}
-    private int contentLeft() {return leftPos + PAD + rowSpan() / LABEL_INSET_DIVISOR;}
-    private int rowSpan() {return valueRight() - leftPos - PAD;}
-    private int valueRight() {return tabLeft() - PAD;}
+    private int contentLeft() {return edgeLeft() + inset();}
+    private int valueRight() {return edgeRight() - inset();}
+    private int inset() {return (edgeRight() - edgeLeft()) / CONTENT_INSET_DIVISOR;}
+    private int edgeLeft() {return leftPos + PAD;}
+    private int edgeRight() {return tabLeft() - PAD;}
     private int visibleRows() {return Math.max(0, (contentBottom() - contentTop()) / LINE_H);}
 
     private void renderScrollBar(GuiGraphics g, int total, int visible, int accent) {
@@ -243,7 +245,7 @@ public final class PlayerInfoScreen extends Screen {
     }
 
     private int tabLeft() {return leftPos + panelW - TAB_W - PAD;}
-    private int tabTop(int i) {return topPos + PAD + i * (TAB_H + TAB_GAP);}
+    private int tabTop(int i) {return topPos + CONTENT_TOP + i * (TAB_H + TAB_GAP);}
 
     private boolean inTab(double mx, double my, int i) {
         return mx >= tabLeft() && mx < tabLeft() + TAB_W && my >= tabTop(i) && my < tabTop(i) + TAB_H;
@@ -311,7 +313,7 @@ public final class PlayerInfoScreen extends Screen {
         return switch (entry) {
             case InfoModel.ApertureIndex e -> new Row(indent,
                     Component.translatable("guzhenren.command.info.aperture_index", e.number()), null);
-            case InfoModel.Realm e -> new Row(indent, label("realm"), ModDisplayText.realm(e.aperture()));
+            case InfoModel.Realm e -> new Row(indent, label("realm"), ModDisplayText.realmTitle(e.aperture()));
             case InfoModel.Talent e -> new Row(indent, label("talent"), talent(e));
             case InfoModel.Essence e -> new Row(indent, label("essence"), Component.literal(
                     ModDisplayText.pool(e.aperture().currentEssence(), e.aperture().maxEssence())));
@@ -330,6 +332,8 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.Soul e -> new Row(indent, label("soul"),
                     Component.literal(ModDisplayText.pool(e.soul().currentSoul(), e.soul().maxSoul()))
                             .append(detail(name(e.soul().tier().getTranslationKey()))));
+            case InfoModel.Stamina e -> new Row(indent, label("stamina"),
+                    Component.literal(ModDisplayText.pool(e.current(), e.max())));
             case InfoModel.Lifespan e -> new Row(indent, label("lifespan"), ModDisplayText.lifespan(e.body()));
             case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
             case InfoModel.PathRow e -> new Row(indent, name(e.path().getTranslationKey()), pathValue(e.entry()));

@@ -9,13 +9,13 @@ import org.jetbrains.annotations.NotNull;
 
 public enum Talent implements StringRepresentable, EnumTranslatable {
 
-    EXTREME(100, 100, 10, 20),
-    FIRST(80, 99, 20, 8),
-    SECOND(60, 79, 30, 4),
-    THIRD(40, 59, 30, 2),
-    FOURTH(20, 39, 10, 1),
+    EXTREME(100, 100, 10, 20, 150, 10),
+    FIRST  ( 80,  99, 20,  8, 120,  5),
+    SECOND ( 60,  79, 30,  4, 120,  5),
+    THIRD  ( 40,  59, 30,  2, 110,  5),
+    FOURTH ( 20,  39, 10,  1, 110,  5),
 
-    NONE(0, 0, 0, 0);
+    NONE   (  0,   0,  0,  0, 100,  5);
 
     public static final Codec<Talent> CODEC = StringRepresentable.fromEnum(Talent::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.talent.";
@@ -27,18 +27,24 @@ public enum Talent implements StringRepresentable, EnumTranslatable {
     private final int maxPercent;
     private final int weight;
     private final int regenRate;
+    private final int staminaBase;
+    private final int staminaRegen;
 
-    Talent(int minPercent, int maxPercent, int weight, int regenRate) {
+    Talent(int minPercent, int maxPercent, int weight, int regenRate, int staminaBase, int staminaRegen) {
         this.minPercent = minPercent;
         this.maxPercent = maxPercent;
         this.weight = weight;
         this.regenRate = regenRate;
+        this.staminaBase = staminaBase;
+        this.staminaRegen = staminaRegen;
     }
 
     public int getMinPercent() {return minPercent;}
     public int getMaxPercent() {return maxPercent;}
     public int getWeight() {return weight;}
     public int getRegenRate() {return regenRate;}
+    public int getStaminaBase() {return staminaBase;}
+    public int getStaminaRegen() {return staminaRegen;}
 
     public Talent shift(int d) {return values()[Math.clamp(ordinal() - d, HIGHEST.ordinal(), LOWEST.ordinal())];}
     public static Talent[] settable() {return Arrays.copyOfRange(values(), HIGHEST.ordinal(), LOWEST.ordinal() + 1);}

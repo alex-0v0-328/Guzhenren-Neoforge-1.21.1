@@ -56,10 +56,12 @@ public abstract class MortalGuItem extends GuItem {
     //endregion
 
     //region display
+    protected final Component refineCaptionPlain() {return Component.translatable(CAPTION_REFINING_PLAIN);}
+
     protected final Component refineCaption(int invested) {
         return refineCost() > 0
                 ? Component.translatable(CAPTION_REFINING, invested, refineCost())
-                : Component.translatable(CAPTION_REFINING_PLAIN);
+                : refineCaptionPlain();
     }
 
     @Override

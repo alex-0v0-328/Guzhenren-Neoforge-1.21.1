@@ -55,7 +55,7 @@ public final class CmdInfo {
     private static Component line(InfoModel.Entry entry) {
         return switch (entry) {
             case InfoModel.ApertureIndex e -> key("aperture_index", e.number());
-            case InfoModel.Realm e -> key("realm", ModDisplayText.realm(e.aperture()));
+            case InfoModel.Realm e -> key("realm", ModDisplayText.realmTitle(e.aperture()));
             case InfoModel.Talent e -> talent(e);
             case InfoModel.Essence e -> key("essence", e.aperture().currentEssence(), e.aperture().maxEssence());
             case InfoModel.Distilled e -> key("distilled", e.aperture().distilledEssence(),
@@ -69,6 +69,7 @@ public final class CmdInfo {
             case InfoModel.RaceRow e -> key("race", enumName(e.race().getTranslationKey()));
             case InfoModel.Soul e -> key("soul", e.soul().currentSoul(), e.soul().maxSoul())
                     .append(muted(enumName(e.soul().tier().getTranslationKey())));
+            case InfoModel.Stamina e -> key("stamina", e.current(), e.max());
             case InfoModel.Lifespan e -> key("lifespan", ModDisplayText.lifespan(e.body()));
             case InfoModel.PathsHeader e -> header("paths", e.empty());
             case InfoModel.PathRow e -> pathLine(e.path(), e.entry());

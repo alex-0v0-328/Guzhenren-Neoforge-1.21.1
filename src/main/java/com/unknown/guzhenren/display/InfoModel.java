@@ -13,6 +13,7 @@ import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
+import com.unknown.guzhenren.attachment.service.body.StaminaService;
 import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
@@ -57,6 +58,7 @@ public final class InfoModel {
     public record Form(LifeForm form) implements Entry {}
     public record RaceRow(Race race) implements Entry {}
     public record Soul(SoulData soul) implements Entry {}
+    public record Stamina(long current, long max) implements Entry {}
     public record Lifespan(BodyData body) implements Entry {}
     public record PathsHeader(boolean empty) implements Entry {}
     public record PathRow(GuPath path, PathEntry entry) implements Entry {}
@@ -112,6 +114,7 @@ public final class InfoModel {
         rows.add(new Row(0, new Form(body.lifeForm())));
         rows.add(new Row(0, new RaceRow(body.race())));
         rows.add(new Row(0, new Soul(soul)));
+        rows.add(new Row(0, new Stamina(StaminaService.current(player), StaminaService.max(player))));
         rows.add(new Row(0, new Lifespan(body)));
         if (strength.isEmpty()) return rows;
 

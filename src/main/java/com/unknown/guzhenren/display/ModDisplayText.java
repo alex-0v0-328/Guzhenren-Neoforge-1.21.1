@@ -5,6 +5,7 @@ import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
+import com.unknown.guzhenren.custom.enums.aperture.Title;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import net.minecraft.network.chat.Component;
@@ -21,6 +22,13 @@ public final class ModDisplayText {
         return Component.translatable("guzhenren.display.realm",
                 Component.translatable(aperture.rank().getTranslationKey()),
                 Component.translatable(aperture.stage().getTranslationKey()));
+    }
+
+    public static MutableComponent realmTitle(Aperture aperture) {
+        MutableComponent title = Component.translatable(Title.fromRank(aperture.rank()).getTranslationKey());
+        if (aperture.rank() == Rank.NONE) return title;
+
+        return Component.translatable("guzhenren.display.realm_title", realm(aperture), title);
     }
 
     public static MutableComponent talent(Aperture aperture) {
@@ -54,7 +62,7 @@ public final class ModDisplayText {
         return Component.translatable("guzhenren.display.lifespan", body.lifespan(), body.age());
     }
 
-    public static MutableComponent realmAndTalent(Aperture a) {return realm(a).append(GAP).append(talent(a));}
+    public static MutableComponent realmAndTalent(Aperture a) {return realmTitle(a).append(GAP).append(talent(a));}
 
     public static String pool(long current, long max) {return current + "/" + max;}
 
