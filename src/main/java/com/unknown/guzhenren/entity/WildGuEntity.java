@@ -1,0 +1,41 @@
+package com.unknown.guzhenren.entity;
+
+import java.util.function.Supplier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+
+public abstract class WildGuEntity extends PathfinderMob {
+
+    private final Supplier<Item> caughtGu;
+
+    protected WildGuEntity(EntityType<? extends WildGuEntity> type, Level level, Supplier<Item> caughtGu) {
+        super(type, level);
+        this.caughtGu = caughtGu;
+    }
+
+    public Item caughtGu() {return caughtGu.get();}
+
+    //region catching -- a bare right click, ungated
+    //    ⚠⚠ Never gate this on 开窍 [awakening]: 希望蛊 [Hope Gu] is the only key to it, so a gate here
+    //    would make awakening unreachable forever.
+    @Override
+    protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+        if (!(player instanceof ServerPlayer server)) return InteractionResult.SUCCESS;
+
+        server.getInventory().placeItemBackInInventory(new ItemStack(caughtGu()));
+        discard();
+        return InteractionResult.CONSUME;
+    }
+    //endregion
+
+    @Override
+    protected boolean shouldDropLoot() {return false;}
+}

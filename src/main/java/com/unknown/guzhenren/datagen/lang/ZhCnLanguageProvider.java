@@ -38,6 +38,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addCommandKeys();
         addScreenKeys();
         addItemKeys();
+        addEntityKeys();
         addDeathMessages();
     }
 
@@ -355,6 +356,12 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.dragonpill_cricket_gu",      "龙丸蛐蛐蛊");
         add("effect.guzhenren.brute_force_longhorn_beetle_gu", "蛮力天牛蛊");
         add("effect.guzhenren.all_out_effort",             "全力以赴");
+    }
+    //endregion
+
+    //region ENTITY
+    private void addEntityKeys() {
+        add("entity.guzhenren.hope_gu_entity", "希望蛊");
     }
     //endregion
 

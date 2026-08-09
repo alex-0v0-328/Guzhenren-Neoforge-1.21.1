@@ -2,13 +2,13 @@ package com.unknown.guzhenren.datagen;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.datagen.curios.ModCuriosProvider;
-import com.unknown.guzhenren.datagen.damage.ModDamageTypeProvider;
 import com.unknown.guzhenren.datagen.damage.ModDamageTypeTagsProvider;
 import com.unknown.guzhenren.datagen.item.ModItemModelProvider;
 import com.unknown.guzhenren.datagen.item.ModItemTagsProvider;
 import com.unknown.guzhenren.datagen.lang.EnUsLanguageProvider;
 import com.unknown.guzhenren.datagen.lang.ZhCnLanguageProvider;
 import com.unknown.guzhenren.datagen.recipe.ModRecipeProvider;
+import com.unknown.guzhenren.datagen.world.ModBiomeTagsProvider;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -34,11 +34,11 @@ public final class DataGenerators {
 
         generator.addProvider(event.includeClient(), new ModItemModelProvider(packOutput, existingFileHelper));
 
-        ModDamageTypeProvider damageTypeProvider = generator.addProvider(event.includeServer(),
-                new ModDamageTypeProvider(packOutput, lookupProvider));
+        ModDatapackProvider datapackProvider = generator.addProvider(event.includeServer(),
+                new ModDatapackProvider(packOutput, lookupProvider));
 
         generator.addProvider(event.includeServer(), new ModDamageTypeTagsProvider(
-                packOutput, damageTypeProvider.getRegistryProvider(), existingFileHelper));
+                packOutput, datapackProvider.getRegistryProvider(), existingFileHelper));
 
         generator.addProvider(event.includeServer(),
                 new ModItemTagsProvider(packOutput, lookupProvider, existingFileHelper));
@@ -47,5 +47,8 @@ public final class DataGenerators {
                 new ModCuriosProvider(packOutput, existingFileHelper, lookupProvider));
 
         generator.addProvider(event.includeServer(), new ModRecipeProvider(packOutput, lookupProvider));
+
+        generator.addProvider(event.includeServer(),
+                new ModBiomeTagsProvider(packOutput, datapackProvider.getRegistryProvider(), existingFileHelper));
     }
 }

@@ -38,6 +38,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addCommandKeys();
         addScreenKeys();
         addItemKeys();
+        addEntityKeys();
         addDeathMessages();
     }
 
@@ -355,6 +356,12 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.dragonpill_cricket_gu",      "Dragonpill Cricket Gu");
         add("effect.guzhenren.brute_force_longhorn_beetle_gu", "Brute Force Longhorn Beetle Gu");
         add("effect.guzhenren.all_out_effort",             "All-Out Effort");
+    }
+    //endregion
+
+    //region ENTITY
+    private void addEntityKeys() {
+        add("entity.guzhenren.hope_gu_entity", "Hope Gu");
     }
     //endregion
 

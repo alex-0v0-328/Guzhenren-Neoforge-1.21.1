@@ -1,0 +1,100 @@
+package com.unknown.guzhenren.entity;
+
+import com.unknown.guzhenren.entity.ai.HoverNearPlayerGoal;
+import java.util.function.Supplier;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class FlyingGuEntity extends WildGuEntity {
+
+    public static final double DETECT_RANGE = 12.0;
+    public static final double HOVER_RANGE  =  2.0;
+
+    //    ⚠⚠ FOLLOW_RANGE is the PATHFINDER's search radius (PathNavigation.createPath passes it straight
+    //    through), NOT "how far it notices a player". DETECT_RANGE is that. Fusing the two starves wandering.
+    private static final double FOLLOW_RANGE   = 16.0;
+    private static final double MAX_HEALTH     =  1.0;
+    private static final double FLYING_SPEED   =  0.1;
+    private static final double MOVEMENT_SPEED =  0.1;
+    private static final double WANDER_SPEED   =  1.0;
+
+    //    ⚠ END_ROD lives 60..72 ticks, so ONE a tick already keeps about seventy alive at once -- a clump.
+    //    Raising this multiplies that steady state, not the brightness.
+    private static final int    MOTES_PER_TICK = 2;
+    private static final double MOTE_SPREAD    = 0.25;
+
+    private static final int TURN_RATE = 20;
+
+    private final ParticleOptions motes;
+
+    public FlyingGuEntity(EntityType<? extends FlyingGuEntity> type, Level level,
+                          Supplier<Item> caughtGu, ParticleOptions motes) {
+        super(type, level, caughtGu);
+        this.moveControl = new FlyingMoveControl(this, TURN_RATE, true);
+        this.motes = motes;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes()
+                .add(Attributes.MAX_HEALTH,     MAX_HEALTH)
+                .add(Attributes.FLYING_SPEED,   FLYING_SPEED)
+                .add(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED)
+                .add(Attributes.FOLLOW_RANGE,   FOLLOW_RANGE);
+    }
+
+    @Override
+    protected void registerGoals() {
+        goalSelector.addGoal(0, new HoverNearPlayerGoal(this));
+        goalSelector.addGoal(1, new WaterAvoidingRandomFlyingGoal(this, WANDER_SPEED));
+    }
+
+    //region who it flies toward -- the base wants anyone, a leaf narrows it
+    public boolean seeks(Player player) {return true;}
+
+    public @Nullable Player seekTarget() {
+        return level().getNearestPlayer(getX(), getY(), getZ(), DETECT_RANGE, this::wanted);
+    }
+
+    private boolean wanted(Entity entity) {
+        return entity instanceof Player player && !player.isSpectator() && seeks(player);
+    }
+    //endregion
+
+    @Override
+    protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
+        FlyingPathNavigation navigation = new FlyingPathNavigation(this, level);
+        navigation.setCanOpenDoors(false);
+        navigation.setCanFloat(true);
+        return navigation;
+    }
+
+    //    ⚠⚠ FlyingMoveControl only clears gravity WHILE it is moving the mob. HoverNearPlayerGoal stops the
+    //    navigation on purpose, which would hand gravity back and sink the mote. This override is what holds it up.
+    @Override
+    public boolean isNoGravity() {return true;}
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (level().isClientSide) spawnMotes();
+    }
+
+    private void spawnMotes() {
+        for (int i = 0; i < MOTES_PER_TICK; i++) {
+            level().addParticle(motes, getRandomX(MOTE_SPREAD), getRandomY(), getRandomZ(MOTE_SPREAD), 0.0, 0.0, 0.0);
+        }
+    }
+}

@@ -13,6 +13,7 @@
   "effect.guzhenren.liquor_worm": "酒虫",
   "effect.guzhenren.strength_qi": "力气",
   "effect.guzhenren.vitality_leaf": "生机叶",
+  "entity.guzhenren.hope_gu_entity": "希望蛊",
   "guzhenren.command.failed.awakened": "%s 已开窍 —— 要重掷请先 /guzhenren reset",
   "guzhenren.command.failed.tag_path": "%s 不是 %s 的来源 —— 通用来源是 natural",
   "guzhenren.command.failed.unawakened": "%s 尚未开窍 —— 修为相关的值只能由 /guzhenren awaken 建立",

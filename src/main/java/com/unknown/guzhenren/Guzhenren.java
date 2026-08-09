@@ -5,6 +5,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import com.unknown.guzhenren.registry.ModCreativeTabs;
 import com.unknown.guzhenren.registry.ModDataComponents;
 import com.unknown.guzhenren.registry.ModEffects;
+import com.unknown.guzhenren.registry.ModEntityTypes;
 import com.unknown.guzhenren.registry.ModItems;
 import com.unknown.guzhenren.registry.ModMenus;
 import com.unknown.guzhenren.registry.ModRecipes;
@@ -23,6 +24,7 @@ public class Guzhenren {
         ModAttachments.register(modEventBus);
         ModDataComponents.register(modEventBus);
         ModEffects.register(modEventBus);
+        ModEntityTypes.register(modEventBus);
         ModItems.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
         ModMenus.register(modEventBus);

@@ -1,0 +1,78 @@
+package com.unknown.guzhenren.entity.ai;
+
+import com.unknown.guzhenren.entity.FlyingGuEntity;
+import java.util.EnumSet;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+
+//    ⚠⚠ This goal drives deltaMovement itself and NEVER paths. A mote flies in a straight line, so the
+//    navigation's path cache, stuck detector and canUpdatePath gates would all be obstacles, not help.
+public class HoverNearPlayerGoal extends Goal {
+
+    //    ⚠ Walking is 4.3 blocks a second; below ~0.22 a tick the Gu can never close on a moving player.
+    private static final double APPROACH_SPEED = 0.25;
+    private static final double EASING = 0.25;
+
+    private static final double BOB_AMPLITUDE = 0.15;
+    private static final double BOB_FREQUENCY = 0.15;
+    private static final double HOVER_DRAG = 0.8;
+
+    private final FlyingGuEntity gu;
+    private @Nullable Player target;
+
+    public HoverNearPlayerGoal(FlyingGuEntity gu) {
+        this.gu = gu;
+        setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+    }
+
+    @Override
+    public boolean canUse() {
+        target = gu.seekTarget();
+        return target != null;
+    }
+
+    //    ⚠ `seeks` is re-asked every tick, so a player who awakens mid-approach is dropped at once.
+    @Override
+    public boolean canContinueToUse() {
+        return target != null && target.isAlive() && gu.seeks(target)
+                && gu.distanceToSqr(target) <= detectRangeSqr();
+    }
+
+    @Override
+    public void start() {gu.getNavigation().stop();}
+
+    @Override
+    public void stop() {target = null;}
+
+    @Override
+    public boolean requiresUpdateEveryTick() {return true;}
+
+    @Override
+    public void tick() {
+        if (target == null) return;
+        gu.getLookControl().setLookAt(target);
+
+        Vec3 toEye = target.getEyePosition().subtract(gu.position());
+        if (toEye.lengthSqr() > FlyingGuEntity.HOVER_RANGE * FlyingGuEntity.HOVER_RANGE) {
+            approach(toEye);
+            return;
+        }
+        bob();
+    }
+
+    private void approach(Vec3 toEye) {
+        Vec3 wanted = toEye.normalize().scale(APPROACH_SPEED);
+        gu.setDeltaMovement(gu.getDeltaMovement().add(wanted.subtract(gu.getDeltaMovement()).scale(EASING)));
+    }
+
+    //    A sine on the tick clock, never a random jitter -- jitter reads as stutter, a sine reads as alive.
+    private void bob() {
+        Vec3 movement = gu.getDeltaMovement();
+        double lift = Math.sin(gu.tickCount * BOB_FREQUENCY) * BOB_AMPLITUDE;
+        gu.setDeltaMovement(movement.x * HOVER_DRAG, lift, movement.z * HOVER_DRAG);
+    }
+
+    private double detectRangeSqr() {return FlyingGuEntity.DETECT_RANGE * FlyingGuEntity.DETECT_RANGE;}
+}
