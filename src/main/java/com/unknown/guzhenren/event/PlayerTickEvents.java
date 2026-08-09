@@ -10,7 +10,7 @@ import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.compat.customplayer.PartStorageTick;
 import com.unknown.guzhenren.effect.DeathQiEffect;
-import com.unknown.guzhenren.item.TendedGuItem;
+import com.unknown.guzhenren.item.gu.TendedGuItem;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import com.unknown.guzhenren.registry.ModDamageTypes;
 import com.unknown.guzhenren.registry.ModEffects;

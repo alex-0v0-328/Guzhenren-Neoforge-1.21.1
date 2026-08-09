@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.item;
+package com.unknown.guzhenren.item.gu;
 
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;

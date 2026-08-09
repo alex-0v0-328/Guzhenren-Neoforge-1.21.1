@@ -1,11 +1,11 @@
-package com.unknown.guzhenren.item.mortal;
+package com.unknown.guzhenren.item.gu.mortal;
 
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
-import com.unknown.guzhenren.item.GuSpec;
-import com.unknown.guzhenren.item.MortalGuItem;
+import com.unknown.guzhenren.item.gu.GuSpec;
+import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.registry.ModDataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

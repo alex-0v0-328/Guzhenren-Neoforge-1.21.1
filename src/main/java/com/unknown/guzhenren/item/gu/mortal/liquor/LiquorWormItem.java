@@ -1,10 +1,10 @@
-package com.unknown.guzhenren.item.mortal.liquor;
+package com.unknown.guzhenren.item.gu.mortal.liquor;
 
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
-import com.unknown.guzhenren.item.GuSpec;
-import com.unknown.guzhenren.item.TendedGuItem;
+import com.unknown.guzhenren.item.gu.GuSpec;
+import com.unknown.guzhenren.item.gu.TendedGuItem;
 import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

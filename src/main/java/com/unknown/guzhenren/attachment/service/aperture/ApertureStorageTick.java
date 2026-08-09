@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.attachment.service.aperture;
 
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
-import com.unknown.guzhenren.item.TendedGuItem;
+import com.unknown.guzhenren.item.gu.TendedGuItem;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;

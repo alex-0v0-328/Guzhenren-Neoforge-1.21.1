@@ -2,7 +2,7 @@ package com.unknown.guzhenren.registry;
 
 import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.item.RefinedGuState;
+import com.unknown.guzhenren.item.gu.RefinedGuState;
 import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.core.UUIDUtil;

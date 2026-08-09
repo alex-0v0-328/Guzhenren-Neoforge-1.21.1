@@ -1,9 +1,9 @@
-package com.unknown.guzhenren.item.mortal.strength;
+package com.unknown.guzhenren.item.gu.mortal.strength;
 
 import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
-import com.unknown.guzhenren.item.GuSpec;
-import com.unknown.guzhenren.item.TendedGuItem;
+import com.unknown.guzhenren.item.gu.GuSpec;
+import com.unknown.guzhenren.item.gu.TendedGuItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;

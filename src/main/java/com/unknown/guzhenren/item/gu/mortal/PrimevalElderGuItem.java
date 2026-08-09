@@ -1,7 +1,7 @@
-package com.unknown.guzhenren.item.mortal;
+package com.unknown.guzhenren.item.gu.mortal;
 
-import com.unknown.guzhenren.item.GuSpec;
-import com.unknown.guzhenren.item.TendedGuItem;
+import com.unknown.guzhenren.item.gu.GuSpec;
+import com.unknown.guzhenren.item.gu.TendedGuItem;
 import com.unknown.guzhenren.registry.ModDataComponents;
 import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.network.chat.Component;

@@ -1,7 +1,8 @@
-package com.unknown.guzhenren.item;
+package com.unknown.guzhenren.item.gu;
 
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
+import com.unknown.guzhenren.item.GuItem;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

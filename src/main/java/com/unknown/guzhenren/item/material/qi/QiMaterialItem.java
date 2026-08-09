@@ -5,7 +5,7 @@ import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
-import com.unknown.guzhenren.item.GuMaterialItem;
+import com.unknown.guzhenren.item.material.GuMaterialItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;

@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.item;
+package com.unknown.guzhenren.item.gu;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

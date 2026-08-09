@@ -1,8 +1,8 @@
 package com.unknown.guzhenren.registry;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.item.GuMaterialItem;
-import com.unknown.guzhenren.item.MortalGuItem;
+import com.unknown.guzhenren.item.material.GuMaterialItem;
+import com.unknown.guzhenren.item.gu.MortalGuItem;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;

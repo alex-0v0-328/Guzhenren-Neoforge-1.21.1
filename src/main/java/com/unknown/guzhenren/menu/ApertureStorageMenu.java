@@ -2,8 +2,8 @@ package com.unknown.guzhenren.menu;
 
 import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService;
 import com.unknown.guzhenren.item.GuItem;
-import com.unknown.guzhenren.item.MortalGuItem;
-import com.unknown.guzhenren.item.TendedGuItem;
+import com.unknown.guzhenren.item.gu.MortalGuItem;
+import com.unknown.guzhenren.item.gu.TendedGuItem;
 import com.unknown.guzhenren.registry.ModMenus;
 import java.util.ArrayList;
 import java.util.List;

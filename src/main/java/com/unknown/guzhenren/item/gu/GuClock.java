@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.item;
+package com.unknown.guzhenren.item.gu;
 
 import com.unknown.guzhenren.registry.ModDataComponents;
 import net.minecraft.server.level.ServerPlayer;

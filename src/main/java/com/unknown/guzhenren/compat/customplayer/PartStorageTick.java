@@ -3,7 +3,7 @@ package com.unknown.guzhenren.compat.customplayer;
 import com.unknown.customplayer.attachment.data.body.PartStorage;
 import com.unknown.customplayer.attachment.service.body.PartStorageService;
 import com.unknown.customplayer.custom.enums.body.BodyPart;
-import com.unknown.guzhenren.item.TendedGuItem;
+import com.unknown.guzhenren.item.gu.TendedGuItem;
 import java.util.Map;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;

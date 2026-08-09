@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.item;
+package com.unknown.guzhenren.item.gu;
 
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.PlayerDataService;
