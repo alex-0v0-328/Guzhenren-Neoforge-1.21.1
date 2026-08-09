@@ -24,10 +24,59 @@ public class ModBiomeTagsProvider extends TagsProvider<Biome> {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
+        //    ⚠⚠ Every overworld LAND biome, listed one by one rather than #is_overworld: that tag carries the
+        //    oceans, whose surface sits at sea level, so the spawn predicate cannot keep motes off the water.
         tag(ModBiomeTags.HOPE_GU_SPAWNS)
                 .add(Biomes.PLAINS)
                 .add(Biomes.SUNFLOWER_PLAINS)
                 .add(Biomes.MEADOW)
-                .add(Biomes.FLOWER_FOREST);
+                .add(Biomes.CHERRY_GROVE)
+                .add(Biomes.FLOWER_FOREST)
+
+                .add(Biomes.FOREST)
+                .add(Biomes.BIRCH_FOREST)
+                .add(Biomes.DARK_FOREST)
+                .add(Biomes.OLD_GROWTH_BIRCH_FOREST)
+                .add(Biomes.WINDSWEPT_FOREST)
+
+                .add(Biomes.TAIGA)
+                .add(Biomes.SNOWY_TAIGA)
+                .add(Biomes.OLD_GROWTH_PINE_TAIGA)
+                .add(Biomes.OLD_GROWTH_SPRUCE_TAIGA)
+                .add(Biomes.GROVE)
+
+                .add(Biomes.SAVANNA)
+                .add(Biomes.SAVANNA_PLATEAU)
+                .add(Biomes.WINDSWEPT_SAVANNA)
+
+                .add(Biomes.JUNGLE)
+                .add(Biomes.SPARSE_JUNGLE)
+                .add(Biomes.BAMBOO_JUNGLE)
+
+                .add(Biomes.DESERT)
+                .add(Biomes.BADLANDS)
+                .add(Biomes.WOODED_BADLANDS)
+                .add(Biomes.ERODED_BADLANDS)
+
+                .add(Biomes.SNOWY_PLAINS)
+                .add(Biomes.ICE_SPIKES)
+                .add(Biomes.SNOWY_SLOPES)
+                .add(Biomes.FROZEN_PEAKS)
+                .add(Biomes.JAGGED_PEAKS)
+                .add(Biomes.STONY_PEAKS)
+
+                .add(Biomes.WINDSWEPT_HILLS)
+                .add(Biomes.WINDSWEPT_GRAVELLY_HILLS)
+
+                .add(Biomes.SWAMP)
+                .add(Biomes.MANGROVE_SWAMP)
+
+                .add(Biomes.RIVER)
+                .add(Biomes.FROZEN_RIVER)
+                .add(Biomes.BEACH)
+                .add(Biomes.SNOWY_BEACH)
+                .add(Biomes.STONY_SHORE)
+
+                .add(Biomes.MUSHROOM_FIELDS);
     }
 }
