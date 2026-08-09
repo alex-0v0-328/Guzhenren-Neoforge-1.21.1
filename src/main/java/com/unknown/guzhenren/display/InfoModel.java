@@ -12,6 +12,7 @@ import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
+import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.body.StaminaService;
 import com.unknown.guzhenren.attachment.service.body.StrengthService;
@@ -22,7 +23,7 @@ import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.path.MarkTag;
+import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
@@ -63,7 +64,7 @@ public final class InfoModel {
     public record PathsHeader(boolean empty) implements Entry {}
     public record PathRow(GuPath path, PathEntry entry) implements Entry {}
     public record QiHeader(GuAttainment attainment, long totalMark, long totalSpeck) implements Entry {}
-    public record QiRow(MarkTag tag, long amount, boolean speck) implements Entry {}
+    public record QiRow(QiKind kind, long amount) implements Entry {}
     public record StrengthHeader(boolean empty) implements Entry {}
     public record StrengthRow(StrengthBranch branch, int totalJin, Component reading) implements Entry {}
     public record CapacityRow(int usable, int total) implements Entry {}
@@ -148,25 +149,10 @@ public final class InfoModel {
         rows.add(new Row(0, new QiHeader(PathService.attainment(player, GuPath.QI),
                 PathService.mark(player, GuPath.QI), PathService.speck(player, GuPath.QI))));
 
-        for (MarkTag tag : QI_TAGS) {
-            long mark = PathService.mark(player, GuPath.QI, tag);
-            if (mark > 0L) rows.add(new Row(INDENT, new QiRow(tag, mark, false)));
+        for (QiKind kind : QiKind.values()) {
+            long amount = QiService.current(player, kind);
+            if (amount > 0L) rows.add(new Row(INDENT, new QiRow(kind, amount)));
         }
-        for (MarkTag tag : QI_TAGS) {
-            long speck = PathService.speck(player, GuPath.QI, tag);
-            if (speck > 0L) rows.add(new Row(INDENT, new QiRow(tag, speck, true)));
-        }
-    }
-
-    private static final List<MarkTag> QI_TAGS = qiTags();
-
-    private static List<MarkTag> qiTags() {
-        List<MarkTag> tags = new ArrayList<>();
-        for (MarkTag tag : MarkTag.values()) {
-            if (tag.owner() == GuPath.QI) tags.add(tag);
-        }
-        tags.add(MarkTag.NATURAL);
-        return tags;
     }
 
     private static void strength(List<Row> rows, Player player) {

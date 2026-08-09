@@ -4,6 +4,7 @@ import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.body.HealthService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
+import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
@@ -11,6 +12,7 @@ import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
+import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.registry.ModAttachments;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +26,7 @@ public final class ApertureService {
     public static final int PRIMARY = ApertureData.PRIMARY;
 
     public static final long TALENT_SPECK_TOTAL = 5000L;
-    public static final long TALENT_QI_HUMAN_MARK = 10L;
+    public static final long TALENT_HUMAN_QI = 100L;
 
     public static ApertureData get(Player p) {return p.getData(ModAttachments.APERTURE);}
     public static Aperture aperture(Player p) {return get(p).primary();}
@@ -123,7 +125,7 @@ public final class ApertureService {
         List<GuPath> paths = physique.getTalentPaths();
         if (paths.isEmpty()) return;
 
-        PathService.addMark(player, GuPath.QI, MarkTag.QI_HUMAN, sign * TALENT_QI_HUMAN_MARK);
+        QiService.add(player, QiKind.HUMAN, sign * TALENT_HUMAN_QI);
         long speck = sign * (TALENT_SPECK_TOTAL / paths.size());
         for (GuPath path : paths) PathService.addSpeck(player, path, MarkTag.NATURAL, speck);
     }

@@ -1,10 +1,10 @@
 package com.unknown.guzhenren.item.material.qi;
 
 import com.unknown.guzhenren.attachment.service.body.BodyService;
+import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
-import com.unknown.guzhenren.custom.enums.path.MarkTag;
+import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.effect.DeathQiEffect;
-import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -12,25 +12,23 @@ public class LifeQiItem extends QiMaterialItem {
 
     private static final String CURED = "guzhenren.item.death_qi_cured";
 
-    private static final int[] DURATION_TICKS = {100, 300, 500, 700, 900};
-
     public LifeQiItem(Properties properties, Rank rank) {
-        super(properties, rank, MarkTag.QI_LIFE);
+        super(properties, rank, QiKind.LIFE);
     }
 
     @Override
     protected int apply(ServerPlayer player, ItemStack stack) {
-        int spent = super.apply(player, stack);
+        long death = QiService.current(player, QiKind.DEATH);
+        if (death <= 0L) return super.apply(player, stack);
 
-        if (player.hasEffect(ModEffects.DEATH_QI)) {
-            player.removeEffect(ModEffects.DEATH_QI);
+        long remainder = qiAmount() - Math.min(qiAmount(), death);
+        QiService.add(player, QiKind.DEATH, -qiAmount());
+        if (remainder > 0L) QiService.add(player, QiKind.LIFE, remainder);
+        if (QiService.current(player, QiKind.DEATH) <= 0L) {
             long refund = BodyService.refundDeathQiDebt(player,
                     DeathQiEffect.REFUND_NUMERATOR, DeathQiEffect.REFUND_DENOMINATOR);
-            inform(player, CURED, refund);
-            return spent;
+            if (refund > 0L) inform(player, CURED, refund);
         }
-
-        applyGraded(player, ModEffects.LIFE_QI, tier(), DURATION_TICKS[tier()]);
-        return spent;
+        return 1;
     }
 }

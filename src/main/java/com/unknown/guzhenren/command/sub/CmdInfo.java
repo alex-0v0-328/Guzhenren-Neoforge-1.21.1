@@ -74,8 +74,7 @@ public final class CmdInfo {
             case InfoModel.PathsHeader e -> header("paths", e.empty());
             case InfoModel.PathRow e -> pathLine(e.path(), e.entry());
             case InfoModel.QiHeader e -> qiHeader(e);
-            case InfoModel.QiRow e -> key(e.speck() ? "qi_speck_entry" : "qi_mark_entry",
-                    enumName(e.tag().getTranslationKey()), e.amount());
+            case InfoModel.QiRow e -> key("qi_entry", enumName(e.kind().getTranslationKey()), e.amount());
             case InfoModel.StrengthHeader e -> header("strength", e.empty());
             case InfoModel.StrengthRow e -> key("strength_entry",
                     ModDisplayText.strengthLabel(enumName(e.branch().getTranslationKey()), e.totalJin()),

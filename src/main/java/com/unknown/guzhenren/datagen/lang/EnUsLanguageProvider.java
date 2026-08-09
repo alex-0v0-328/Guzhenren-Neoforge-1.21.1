@@ -15,6 +15,7 @@ import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
+import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
@@ -158,8 +159,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.qi",              "Qi Path: %s");
         add("guzhenren.command.info.qi_total",        " Marks %s");
         add("guzhenren.command.info.qi_speck_total",  " Specks %s");
-        add("guzhenren.command.info.qi_mark_entry",   "  %s  Marks %s");
-        add("guzhenren.command.info.qi_speck_entry",  "  %s  Specks %s");
+        add("guzhenren.command.info.qi_entry",        "  %s  %s");
         add("guzhenren.command.info.paths",           "Paths:");
         add("guzhenren.command.info.path_entry",      "  %s  %s  Marks %s");
         add("guzhenren.command.info.path_speck",      " Specks %s");
@@ -242,8 +242,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.capacity",             "%s / %s jin");
         add("guzhenren.screen.label.brilliance",     "Brilliance");
         add("guzhenren.screen.path_value",           "%s Marks %s");
-        add("guzhenren.screen.qi_mark",              "Marks %s");
-        add("guzhenren.screen.qi_speck",             "Specks %s");
     }
     //endregion
 
@@ -383,6 +381,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addLifeState();
         addSoulTier();
         addMarkTag();
+        addQiKind();
         addPath();
         addAttainment();
         addWisdomType();
@@ -509,19 +508,21 @@ public class EnUsLanguageProvider extends LanguageProvider {
     private void addMarkTag() {
         add(MarkTag.NATURAL,         "Natural");
         add(MarkTag.RACE,            "Race");
-        add(MarkTag.QI_HEAVEN,       "Heaven Qi");
-        add(MarkTag.QI_EARTH,        "Earth Qi");
-        add(MarkTag.QI_HUMAN,        "Human Qi");
-        add(MarkTag.QI_NATURAL,      "Natural Qi");
-        add(MarkTag.QI_DEATH,        "Death Qi");
-        add(MarkTag.QI_SWORD,        "Sword Qi");
-        add(MarkTag.QI_LIFE,         "Life Qi");
-        add(MarkTag.QI_ESSENCE,      "Essence Qi");
-        add(MarkTag.QI_STRENGTH,     "Strength Qi");
         add(MarkTag.STRENGTH_BEASTS, "Beast Strength Phantom Branch");
         add(MarkTag.STRENGTH_BOAR,   "Boar Strength");
         add(MarkTag.STRENGTH_BEAR,   "Bear Strength");
         add(MarkTag.STRENGTH_HUMAN,  "Human Jun Strength Branch");
+    }
+
+    private void addQiKind() {
+        add(QiKind.SWORD,    "Sword Qi");
+        add(QiKind.STRENGTH, "Strength Qi");
+        add(QiKind.LIFE,     "Life Qi");
+        add(QiKind.ESSENCE,  "Essence Qi");
+        add(QiKind.DEATH,    "Death Qi");
+        add(QiKind.HUMAN,    "Human Qi");
+        add(QiKind.HEAVEN,   "Heaven Qi");
+        add(QiKind.EARTH,    "Earth Qi");
     }
 
     private void addPath() {

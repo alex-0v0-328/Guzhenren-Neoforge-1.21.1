@@ -1,16 +1,13 @@
 package com.unknown.guzhenren.item.material.qi;
 
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
-import com.unknown.guzhenren.attachment.service.body.PathService;
+import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.path.MarkTag;
+import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.item.GuMaterialItem;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,19 +20,18 @@ public class QiMaterialItem extends GuMaterialItem {
     private static final String CHARGE_CAPTION = "guzhenren.hud.refining_plain";
     private static final String FAILED_ESSENCE = "guzhenren.item.failed.essence";
 
-    private static final long[] SPECKS = {1L, 4L, 16L, 64L, 256L};
     private static final long[] ESSENCE_COST = {50L, 500L, 5_000L, 50_000L, 500_000L};
 
-    private final MarkTag tag;
+    private final QiKind kind;
 
-    public QiMaterialItem(Properties properties, Rank rank, MarkTag tag) {
+    public QiMaterialItem(Properties properties, Rank rank, QiKind kind) {
         super(properties, rank, GuPath.QI);
-        this.tag = tag;
+        this.kind = kind;
     }
 
-    public MarkTag tag() {return tag;}
+    public QiKind kind() {return kind;}
 
-    protected long specks() {return SPECKS[tier()];}
+    protected long qiAmount() {return QiKind.tierAmount(tier());}
     protected long essenceCost() {return ESSENCE_COST[tier()];}
 
     @Override
@@ -73,14 +69,7 @@ public class QiMaterialItem extends GuMaterialItem {
 
     @Override
     protected int apply(ServerPlayer player, ItemStack stack) {
-        PathService.addSpeck(player, GuPath.QI, tag, specks());
+        QiService.add(player, kind, qiAmount());
         return 1;
-    }
-
-    protected static void applyGraded(ServerPlayer player, Holder<MobEffect> effect, int grade, int ticks) {
-        MobEffectInstance current = player.getEffect(effect);
-        int amplifier = current == null ? grade : Math.max(grade, current.getAmplifier());
-        int duration = current == null ? ticks : Math.max(ticks, current.getDuration());
-        player.addEffect(new MobEffectInstance(effect, duration, amplifier));
     }
 }

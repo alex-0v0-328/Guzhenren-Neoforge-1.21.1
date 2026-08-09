@@ -5,6 +5,7 @@ import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageTick;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
+import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.compat.customplayer.PartStorageTick;
@@ -38,6 +39,7 @@ public final class PlayerTickEvents {
         if (days > 0L && player.containerMenu instanceof ApertureStorageMenu menu) menu.reload();
 
         closeDistilling(player);
+        QiService.syncEffects(player);
         tickDeathQi(player);
         AttackService.refresh(player);
         EssenceService.regenStep(player);

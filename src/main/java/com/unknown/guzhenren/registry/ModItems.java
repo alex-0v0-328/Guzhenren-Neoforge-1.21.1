@@ -5,6 +5,7 @@ import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
+import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.effect.BruteForceLonghornBeetleGuEffect;
@@ -14,10 +15,8 @@ import com.unknown.guzhenren.item.GuSpec;
 import com.unknown.guzhenren.item.material.LiquorItem;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.item.material.qi.DeathQiItem;
-import com.unknown.guzhenren.item.material.qi.EssenceQiItem;
 import com.unknown.guzhenren.item.material.qi.LifeQiItem;
 import com.unknown.guzhenren.item.material.qi.QiMaterialItem;
-import com.unknown.guzhenren.item.material.qi.StrengthQiItem;
 import com.unknown.guzhenren.item.mortal.BuffGuItem;
 import com.unknown.guzhenren.item.mortal.HopeGuItem;
 import com.unknown.guzhenren.item.mortal.LifespanGuItem;
@@ -33,7 +32,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-//     TODO(data comp): a Gu material carrying a qi type + amount still needs its own component.
 public final class ModItems {
 
     private ModItems() {}
@@ -186,7 +184,7 @@ public final class ModItems {
                     .cooldown(120 * Ticks.SECOND)));
     //endregion
 
-    //region 酒虫 -- the fed clock; one meal, two days of silence, flat at every rank
+    //region Liquor Worm [酒虫] -- hunger bar 8 with 6 per use, and only its own rank can drive it
     public static final DeferredItem<Item> LIQUOR_WORM = ITEMS.register("liquor_worm",
             () -> new LiquorWormItem(tended(), GuSpec.of(Rank.ONE, GuPath.FOOD)
                     .refine(1_600).costPerUse(20)
@@ -245,22 +243,17 @@ public final class ModItems {
     //endregion
 
     //region Qi Path [气道] materials -- 21, ranks I..V
-    public static final DeferredItem<Item> SWORD_QI_1 = qiMaterial("sword_qi_1", Rank.ONE, MarkTag.QI_SWORD);
-    public static final DeferredItem<Item> SWORD_QI_2 = qiMaterial("sword_qi_2", Rank.TWO, MarkTag.QI_SWORD);
-    public static final DeferredItem<Item> SWORD_QI_3 = qiMaterial("sword_qi_3", Rank.THREE, MarkTag.QI_SWORD);
-    public static final DeferredItem<Item> SWORD_QI_4 = qiMaterial("sword_qi_4", Rank.FOUR, MarkTag.QI_SWORD);
-    public static final DeferredItem<Item> SWORD_QI_5 = qiMaterial("sword_qi_5", Rank.FIVE, MarkTag.QI_SWORD);
+    public static final DeferredItem<Item> SWORD_QI_1 = qiMaterial("sword_qi_1", Rank.ONE, QiKind.SWORD);
+    public static final DeferredItem<Item> SWORD_QI_2 = qiMaterial("sword_qi_2", Rank.TWO, QiKind.SWORD);
+    public static final DeferredItem<Item> SWORD_QI_3 = qiMaterial("sword_qi_3", Rank.THREE, QiKind.SWORD);
+    public static final DeferredItem<Item> SWORD_QI_4 = qiMaterial("sword_qi_4", Rank.FOUR, QiKind.SWORD);
+    public static final DeferredItem<Item> SWORD_QI_5 = qiMaterial("sword_qi_5", Rank.FIVE, QiKind.SWORD);
 
-    public static final DeferredItem<Item> STRENGTH_QI_1 = ITEMS.register("strength_qi_1",
-            () -> new StrengthQiItem(qiProperties(), Rank.ONE));
-    public static final DeferredItem<Item> STRENGTH_QI_2 = ITEMS.register("strength_qi_2",
-            () -> new StrengthQiItem(qiProperties(), Rank.TWO));
-    public static final DeferredItem<Item> STRENGTH_QI_3 = ITEMS.register("strength_qi_3",
-            () -> new StrengthQiItem(qiProperties(), Rank.THREE));
-    public static final DeferredItem<Item> STRENGTH_QI_4 = ITEMS.register("strength_qi_4",
-            () -> new StrengthQiItem(qiProperties(), Rank.FOUR));
-    public static final DeferredItem<Item> STRENGTH_QI_5 = ITEMS.register("strength_qi_5",
-            () -> new StrengthQiItem(qiProperties(), Rank.FIVE));
+    public static final DeferredItem<Item> STRENGTH_QI_1 = qiMaterial("strength_qi_1", Rank.ONE, QiKind.STRENGTH);
+    public static final DeferredItem<Item> STRENGTH_QI_2 = qiMaterial("strength_qi_2", Rank.TWO, QiKind.STRENGTH);
+    public static final DeferredItem<Item> STRENGTH_QI_3 = qiMaterial("strength_qi_3", Rank.THREE, QiKind.STRENGTH);
+    public static final DeferredItem<Item> STRENGTH_QI_4 = qiMaterial("strength_qi_4", Rank.FOUR, QiKind.STRENGTH);
+    public static final DeferredItem<Item> STRENGTH_QI_5 = qiMaterial("strength_qi_5", Rank.FIVE, QiKind.STRENGTH);
 
     public static final DeferredItem<Item> LIFE_QI_1 = ITEMS.register("life_qi_1",
             () -> new LifeQiItem(qiProperties(), Rank.ONE));
@@ -273,22 +266,17 @@ public final class ModItems {
     public static final DeferredItem<Item> LIFE_QI_5 = ITEMS.register("life_qi_5",
             () -> new LifeQiItem(qiProperties(), Rank.FIVE));
 
-    public static final DeferredItem<Item> ESSENCE_QI_1 = ITEMS.register("essence_qi_1",
-            () -> new EssenceQiItem(qiProperties(), Rank.ONE));
-    public static final DeferredItem<Item> ESSENCE_QI_2 = ITEMS.register("essence_qi_2",
-            () -> new EssenceQiItem(qiProperties(), Rank.TWO));
-    public static final DeferredItem<Item> ESSENCE_QI_3 = ITEMS.register("essence_qi_3",
-            () -> new EssenceQiItem(qiProperties(), Rank.THREE));
-    public static final DeferredItem<Item> ESSENCE_QI_4 = ITEMS.register("essence_qi_4",
-            () -> new EssenceQiItem(qiProperties(), Rank.FOUR));
-    public static final DeferredItem<Item> ESSENCE_QI_5 = ITEMS.register("essence_qi_5",
-            () -> new EssenceQiItem(qiProperties(), Rank.FIVE));
+    public static final DeferredItem<Item> ESSENCE_QI_1 = qiMaterial("essence_qi_1", Rank.ONE, QiKind.ESSENCE);
+    public static final DeferredItem<Item> ESSENCE_QI_2 = qiMaterial("essence_qi_2", Rank.TWO, QiKind.ESSENCE);
+    public static final DeferredItem<Item> ESSENCE_QI_3 = qiMaterial("essence_qi_3", Rank.THREE, QiKind.ESSENCE);
+    public static final DeferredItem<Item> ESSENCE_QI_4 = qiMaterial("essence_qi_4", Rank.FOUR, QiKind.ESSENCE);
+    public static final DeferredItem<Item> ESSENCE_QI_5 = qiMaterial("essence_qi_5", Rank.FIVE, QiKind.ESSENCE);
 
     public static final DeferredItem<Item> DEATH_QI_5 = ITEMS.register("death_qi_5",
             () -> new DeathQiItem(qiProperties(), Rank.FIVE));
 
-    private static DeferredItem<Item> qiMaterial(String id, Rank rank, MarkTag tag) {
-        return ITEMS.register(id, () -> new QiMaterialItem(qiProperties(), rank, tag));
+    private static DeferredItem<Item> qiMaterial(String id, Rank rank, QiKind kind) {
+        return ITEMS.register(id, () -> new QiMaterialItem(qiProperties(), rank, kind));
     }
 
     private static Item.Properties qiProperties() {return new Item.Properties().stacksTo(64);}

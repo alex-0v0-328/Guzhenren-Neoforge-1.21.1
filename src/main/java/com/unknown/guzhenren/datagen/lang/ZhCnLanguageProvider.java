@@ -15,6 +15,7 @@ import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
+import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
@@ -158,8 +159,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.qi",              "玩家气道  %s");
         add("guzhenren.command.info.qi_total",        " 道痕 %s");
         add("guzhenren.command.info.qi_speck_total",  " 碎屑 %s");
-        add("guzhenren.command.info.qi_mark_entry",   "  %s  道痕 %s");
-        add("guzhenren.command.info.qi_speck_entry",  "  %s  碎屑 %s");
+        add("guzhenren.command.info.qi_entry",        "  %s  %s");
         add("guzhenren.command.info.paths",           "流派造诣");
         add("guzhenren.command.info.path_entry",      "  %s  %s  道痕 %s");
         add("guzhenren.command.info.path_speck",      " 碎屑 %s");
@@ -242,8 +242,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.capacity",             "%s / %s斤");
         add("guzhenren.screen.label.brilliance",     "才情");
         add("guzhenren.screen.path_value",           "%s 道痕 %s");
-        add("guzhenren.screen.qi_mark",              "道痕 %s");
-        add("guzhenren.screen.qi_speck",             "碎屑 %s");
     }
     //endregion
 
@@ -383,6 +381,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addLifeState();
         addSoulTier();
         addMarkTag();
+        addQiKind();
         addPath();
         addAttainment();
         addWisdomType();
@@ -509,19 +508,21 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     private void addMarkTag() {
         add(MarkTag.NATURAL,         "自然");
         add(MarkTag.RACE,            "种族");
-        add(MarkTag.QI_HEAVEN,       "天气");
-        add(MarkTag.QI_EARTH,        "地气");
-        add(MarkTag.QI_HUMAN,        "人气");
-        add(MarkTag.QI_NATURAL,      "自然气");
-        add(MarkTag.QI_DEATH,        "死气");
-        add(MarkTag.QI_SWORD,        "剑气");
-        add(MarkTag.QI_LIFE,         "生气");
-        add(MarkTag.QI_ESSENCE,      "元气");
-        add(MarkTag.QI_STRENGTH,     "力气");
         add(MarkTag.STRENGTH_BEASTS, "兽力虚影流");
         add(MarkTag.STRENGTH_BOAR,   "豕力");
         add(MarkTag.STRENGTH_BEAR,   "熊力");
         add(MarkTag.STRENGTH_HUMAN,  "人力钧力流");
+    }
+
+    private void addQiKind() {
+        add(QiKind.SWORD,    "剑气");
+        add(QiKind.STRENGTH, "力气");
+        add(QiKind.LIFE,     "生气");
+        add(QiKind.ESSENCE,  "元气");
+        add(QiKind.DEATH,    "死气");
+        add(QiKind.HUMAN,    "人气");
+        add(QiKind.HEAVEN,   "天气");
+        add(QiKind.EARTH,    "地气");
     }
 
     private void addPath() {

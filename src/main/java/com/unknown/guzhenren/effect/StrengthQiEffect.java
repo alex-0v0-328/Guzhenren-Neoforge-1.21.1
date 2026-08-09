@@ -12,7 +12,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
 
 public class StrengthQiEffect extends MobEffect {
 
-    private static final double[] ATTACK_BONUS = {0.0625, 0.25, 1.0, 4.0, 16.0};
+    private static final double[] ATTACK_BONUS = {0.25, 1.0, 4.0, 16.0, 64.0};
 
     private static final ResourceLocation MODIFIER_ID =
             ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "strength_qi_attack_damage");

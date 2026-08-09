@@ -4,6 +4,7 @@ import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
+import com.unknown.guzhenren.attachment.data.body.QiData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
 import com.unknown.guzhenren.attachment.data.body.StaminaData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
@@ -13,9 +14,11 @@ import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.HealthService;
+import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.body.StaminaService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.ModAttachments;
 import com.unknown.guzhenren.registry.ModDamageTypes;
@@ -72,6 +75,7 @@ public final class PlayerDataService {
             MindService.empty(player);
         }
         BodyService.clearDeathQiDebt(player);
+        QiService.set(player, QiKind.DEATH, 0L);
         StaminaService.refill(player);
     }
 
@@ -95,6 +99,7 @@ public final class PlayerDataService {
         to.setData(ModAttachments.SOUL, from.getData(ModAttachments.SOUL));
         to.setData(ModAttachments.STAMINA, from.getData(ModAttachments.STAMINA));
         to.setData(ModAttachments.PATH, from.getData(ModAttachments.PATH));
+        to.setData(ModAttachments.QI, from.getData(ModAttachments.QI));
         to.setData(ModAttachments.STRENGTH, from.getData(ModAttachments.STRENGTH));
         to.setData(ModAttachments.MIND, from.getData(ModAttachments.MIND));
         to.setData(ModAttachments.BORN, from.getData(ModAttachments.BORN));
@@ -106,6 +111,7 @@ public final class PlayerDataService {
         player.setData(ModAttachments.SOUL, SoulData.DEFAULT);
         player.setData(ModAttachments.STAMINA, StaminaData.DEFAULT);
         player.setData(ModAttachments.PATH, PathData.DEFAULT);
+        player.setData(ModAttachments.QI, QiData.DEFAULT);
         player.setData(ModAttachments.STRENGTH, StrengthData.DEFAULT);
         player.setData(ModAttachments.ESSENCE_CARRY, new float[ApertureData.MAX_APERTURES]);
         onBirth(player);

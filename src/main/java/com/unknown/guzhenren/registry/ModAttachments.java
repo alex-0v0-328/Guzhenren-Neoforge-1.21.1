@@ -6,6 +6,7 @@ import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
+import com.unknown.guzhenren.attachment.data.body.QiData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
 import com.unknown.guzhenren.attachment.data.body.StaminaData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
@@ -75,6 +76,12 @@ public final class ModAttachments {
             "strength_data", () -> AttachmentType.builder(() -> StrengthData.DEFAULT)
                     .serialize(StrengthData.CODEC)
                     .sync(OWNER_ONLY, StrengthData.STREAM_CODEC)
+                    .build());
+
+    public static final Supplier<AttachmentType<QiData>> QI = ATTACHMENT_TYPES.register(
+            "qi_data", () -> AttachmentType.builder(() -> QiData.DEFAULT)
+                    .serialize(QiData.CODEC)
+                    .sync(OWNER_ONLY, QiData.STREAM_CODEC)
                     .build());
     //endregion
 

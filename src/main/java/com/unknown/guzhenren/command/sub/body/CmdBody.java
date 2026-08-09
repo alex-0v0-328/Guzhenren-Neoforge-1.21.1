@@ -28,6 +28,7 @@ public final class CmdBody {
                 .then(counter("lifespan", BodyService::setLifespan, BodyService::addLifespan))
                 .then(counter("age", BodyService::setAge, BodyService::addAge))
                 .then(CmdPath.node())
+                .then(CmdQi.node())
                 .then(CmdStrength.node());
     }
 

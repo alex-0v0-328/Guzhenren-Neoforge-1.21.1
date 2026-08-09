@@ -22,7 +22,7 @@ public class LifeQiEffect extends MobEffect {
 
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        entity.heal(1.0F);
+        entity.heal(amplifier + 1.0F);
         return true;
     }
 

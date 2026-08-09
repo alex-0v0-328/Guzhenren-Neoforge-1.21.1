@@ -338,9 +338,8 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
             case InfoModel.PathRow e -> new Row(indent, name(e.path().getTranslationKey()), pathValue(e.entry()));
             case InfoModel.QiHeader e -> new Row(indent, label("qi"), qiValue(e));
-            case InfoModel.QiRow e -> new Row(indent, name(e.tag().getTranslationKey()),
-                    Component.translatable(e.speck() ? "guzhenren.screen.qi_speck" : "guzhenren.screen.qi_mark",
-                            e.amount()));
+            case InfoModel.QiRow e -> new Row(indent, name(e.kind().getTranslationKey()),
+                    Component.literal(String.valueOf(e.amount())));
             case InfoModel.StrengthHeader e -> new Row(indent, label("strength"), e.empty() ? none() : null);
             case InfoModel.StrengthRow e -> new Row(indent,
                     ModDisplayText.strengthLabel(name(e.branch().getTranslationKey()), e.totalJin()), e.reading());
