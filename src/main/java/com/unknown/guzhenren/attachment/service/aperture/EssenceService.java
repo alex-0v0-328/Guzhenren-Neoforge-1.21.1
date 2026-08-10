@@ -4,7 +4,7 @@ import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.effect.EssenceQiEffect;
+import com.unknown.guzhenren.effect.pool.EssenceQiEffect;
 import com.unknown.guzhenren.registry.ModAttachments;
 import com.unknown.guzhenren.registry.ModEffects;
 import java.util.Arrays;
@@ -18,9 +18,9 @@ public final class EssenceService {
 
     public static final long BASE_REGEN_PER_DAY = 100L;
     public static final int REGEN_INTERVAL_TICKS = Ticks.SECOND;
+    public static final double HALF_ZOMBIE_REGEN_RATE = 0.5;
 
     public static long regenPerDay(Aperture a) {
-        if (!a.isAlive()) return 0L;
         return BASE_REGEN_PER_DAY * a.talent().getRegenRate() * a.rank().getRankBase()
                 * a.stage().getEssenceMultiplier();
     }
@@ -108,13 +108,14 @@ public final class EssenceService {
         ApertureData data = ApertureService.get(player);
         float[] carry = player.getData(ModAttachments.ESSENCE_CARRY);
 
-        if (isChoked(player)) {
+        if (isChoked(player) || BodyService.isZombie(player)) {
             Arrays.fill(carry, 0.0F);
             return;
         }
 
         boolean distilling = isDistilling(player);
         double bonus = essenceQiBonus(player);
+        double halfZombieRate = BodyService.isHalfZombie(player) ? HALF_ZOMBIE_REGEN_RATE : 1.0;
 
         for (int i = 0; i < data.count(); i++) {
             Aperture aperture = data.get(i);
@@ -125,7 +126,8 @@ public final class EssenceService {
                 continue;
             }
 
-            double perStep = regenPerTick(aperture) * REGEN_INTERVAL_TICKS * (1.0 + bonus);
+            double perStep =
+                    regenPerTick(aperture) * REGEN_INTERVAL_TICKS * (1.0 + bonus) * halfZombieRate;
             if (perStep <= 0.0) continue;
 
             double total = carry[i] + perStep;

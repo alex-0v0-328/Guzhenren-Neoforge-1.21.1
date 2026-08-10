@@ -1,16 +1,17 @@
 package com.unknown.guzhenren.registry;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.effect.AllOutEffortEffect;
-import com.unknown.guzhenren.effect.BruteForceLonghornBeetleGuEffect;
-import com.unknown.guzhenren.effect.DeathQiEffect;
-import com.unknown.guzhenren.effect.DragonpillCricketGuEffect;
-import com.unknown.guzhenren.effect.EssenceQiEffect;
-import com.unknown.guzhenren.effect.FlowerBoarGuEffect;
-import com.unknown.guzhenren.effect.LifeQiEffect;
-import com.unknown.guzhenren.effect.LiquorWormEffect;
-import com.unknown.guzhenren.effect.StrengthQiEffect;
-import com.unknown.guzhenren.effect.VitalityLeafEffect;
+import com.unknown.guzhenren.effect.pool.DeathQiEffect;
+import com.unknown.guzhenren.effect.pool.EssenceQiEffect;
+import com.unknown.guzhenren.effect.pool.HalfZombieEffect;
+import com.unknown.guzhenren.effect.pool.LifeQiEffect;
+import com.unknown.guzhenren.effect.pool.StrengthQiEffect;
+import com.unknown.guzhenren.effect.timed.AllOutEffortEffect;
+import com.unknown.guzhenren.effect.timed.BruteForceLonghornBeetleGuEffect;
+import com.unknown.guzhenren.effect.timed.DragonpillCricketGuEffect;
+import com.unknown.guzhenren.effect.timed.FlowerBoarGuEffect;
+import com.unknown.guzhenren.effect.timed.LiquorWormEffect;
+import com.unknown.guzhenren.effect.timed.VitalityLeafEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -35,6 +36,7 @@ public final class ModEffects {
     private static final int DRAGONPILL_CRICKET_GU_COLOR          = 0xCDDC39;
     private static final int BRUTE_FORCE_LONGHORN_BEETLE_GU_COLOR = 0x455A64;
     private static final int STRENGTH_QI_COLOR                    = 0xFF7043;
+    private static final int HALF_ZOMBIE_COLOR                    = 0x546E7A;
 
     public static final DeferredHolder<MobEffect, VitalityLeafEffect> VITALITY_LEAF = MOB_EFFECTS.register(
             "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, VITALITY_LEAF_COLOR));
@@ -67,6 +69,9 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, BruteForceLonghornBeetleGuEffect> BRUTE_FORCE_LONGHORN_BEETLE_GU =
             MOB_EFFECTS.register("brute_force_longhorn_beetle_gu", () -> new BruteForceLonghornBeetleGuEffect(
                     MobEffectCategory.BENEFICIAL, BRUTE_FORCE_LONGHORN_BEETLE_GU_COLOR));
+
+    public static final DeferredHolder<MobEffect, HalfZombieEffect> HALF_ZOMBIE = MOB_EFFECTS.register(
+            "half_zombie", () -> new HalfZombieEffect(MobEffectCategory.NEUTRAL, HALF_ZOMBIE_COLOR));
 
     public static void register(IEventBus modEventBus) {
         MOB_EFFECTS.register(modEventBus);

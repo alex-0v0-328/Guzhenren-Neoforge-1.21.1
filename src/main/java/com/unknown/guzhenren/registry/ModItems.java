@@ -8,15 +8,10 @@ import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
-import com.unknown.guzhenren.effect.BruteForceLonghornBeetleGuEffect;
-import com.unknown.guzhenren.effect.DragonpillCricketGuEffect;
-import com.unknown.guzhenren.effect.FlowerBoarGuEffect;
+import com.unknown.guzhenren.effect.timed.BruteForceLonghornBeetleGuEffect;
+import com.unknown.guzhenren.effect.timed.DragonpillCricketGuEffect;
+import com.unknown.guzhenren.effect.timed.FlowerBoarGuEffect;
 import com.unknown.guzhenren.item.gu.GuSpec;
-import com.unknown.guzhenren.item.material.LiquorItem;
-import com.unknown.guzhenren.item.material.PrimevalStoneItem;
-import com.unknown.guzhenren.item.material.qi.DeathQiItem;
-import com.unknown.guzhenren.item.material.qi.LifeQiItem;
-import com.unknown.guzhenren.item.material.qi.QiMaterialItem;
 import com.unknown.guzhenren.item.gu.mortal.BuffGuItem;
 import com.unknown.guzhenren.item.gu.mortal.HopeGuItem;
 import com.unknown.guzhenren.item.gu.mortal.LifespanGuItem;
@@ -27,6 +22,12 @@ import com.unknown.guzhenren.item.gu.mortal.liquor.LiquorWormItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.AllOutEffortGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.BeastStrengthGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.HumanStrengthGuItem;
+import com.unknown.guzhenren.item.gu.mortal.zombie.ZombieGuItem;
+import com.unknown.guzhenren.item.material.LiquorItem;
+import com.unknown.guzhenren.item.material.PrimevalStoneItem;
+import com.unknown.guzhenren.item.material.qi.DeathQiItem;
+import com.unknown.guzhenren.item.material.qi.LifeQiItem;
+import com.unknown.guzhenren.item.material.qi.QiMaterialItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -220,6 +221,44 @@ public final class ModItems {
     public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_5 = ITEMS.register("primeval_elder_gu_5",
             () -> new PrimevalElderGuItem(tended(), 100_000_000L, GuSpec.of(Rank.FIVE, GuPath.SPACE)
                     .refine(100_000).costPerUse(1)));
+    //endregion
+
+    //region 僵尸蛊 [zombie Gu] -- 变化道; a timed 半生半僵, and a 5-minute window that makes it permanent
+    public static final DeferredItem<Item> ROAMING_ZOMBIE_GU = ITEMS.register("roaming_zombie_gu",
+            () -> new ZombieGuItem(tended(), 16, 2 * Ticks.MINUTE, GuSpec.of(Rank.TWO, GuPath.TRANSFORMATION)
+                    .refine(16_000).costPerUse(200)
+                    .hungerBar(4, 2).hungerPerUse(2).feed(ModItemTags.ZOMBIE_FEED, 1)
+                    .cooldown(Ticks.SECOND)));
+    public static final DeferredItem<Item> HAIRY_ZOMBIE_GU = ITEMS.register("hairy_zombie_gu",
+            () -> new ZombieGuItem(tended(), 16, 4 * Ticks.MINUTE, GuSpec.of(Rank.THREE, GuPath.TRANSFORMATION)
+                    .refine(160_000).costPerUse(2_000)
+                    .hungerBar(8, 4).hungerPerUse(2).feed(ModItemTags.ZOMBIE_FEED, 1)
+                    .cooldown(Ticks.SECOND)));
+    public static final DeferredItem<Item> HOPPING_ZOMBIE_GU = ITEMS.register("hopping_zombie_gu",
+            () -> new ZombieGuItem(tended(), 32, 6 * Ticks.MINUTE, GuSpec.of(Rank.FOUR, GuPath.TRANSFORMATION)
+                    .refine(1_600_000).costPerUse(20_000)
+                    .hungerBar(16, 6).hungerPerUse(2).feed(ModItemTags.ZOMBIE_FEED, 1)
+                    .cooldown(Ticks.SECOND)));
+
+    public static final DeferredItem<Item> HEAVENLY_DEMON_ZOMBIE_GU = ITEMS.register("heavenly_demon_zombie_gu",
+            () -> fifthRankZombieGu());
+    public static final DeferredItem<Item> NIGHTMARE_ZOMBIE_GU = ITEMS.register("nightmare_zombie_gu",
+            () -> fifthRankZombieGu());
+    public static final DeferredItem<Item> ASURA_ZOMBIE_GU = ITEMS.register("asura_zombie_gu",
+            () -> fifthRankZombieGu());
+    public static final DeferredItem<Item> EARTH_CHIEF_ZOMBIE_GU = ITEMS.register("earth_chief_zombie_gu",
+            () -> fifthRankZombieGu());
+    public static final DeferredItem<Item> PLAGUE_ZOMBIE_GU = ITEMS.register("plague_zombie_gu",
+            () -> fifthRankZombieGu());
+    public static final DeferredItem<Item> BLOOD_WIGHT_GU = ITEMS.register("blood_wight_gu",
+            () -> fifthRankZombieGu());
+
+    private static ZombieGuItem fifthRankZombieGu() {
+        return new ZombieGuItem(tended(), 32, 8 * Ticks.MINUTE, GuSpec.of(Rank.FIVE, GuPath.TRANSFORMATION)
+                .refine(16_000_000).costPerUse(200_000)
+                .hungerBar(16, 8).hungerPerUse(2).feed(ModItemTags.ZOMBIE_FEED, 1)
+                .cooldown(Ticks.SECOND));
+    }
     //endregion
 
     //region 蛊材 [Gu materials]

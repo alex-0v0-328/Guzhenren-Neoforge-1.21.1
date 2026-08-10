@@ -33,6 +33,8 @@ public final class CmdInfo {
                         context -> print(context, InfoModel::aperture)))
                 .then(ModCommandSupport.withTargets(Commands.literal("body"),
                         context -> print(context, InfoModel::body)))
+                .then(ModCommandSupport.withTargets(Commands.literal("soul"),
+                        context -> print(context, InfoModel::soul)))
                 .then(ModCommandSupport.withTargets(Commands.literal("path"),
                         context -> print(context, InfoModel::pathAchievement)))
                 .then(ModCommandSupport.withTargets(Commands.literal("mind"),
@@ -62,9 +64,7 @@ public final class CmdInfo {
                     e.aperture().maxEssence());
             case InfoModel.PathChoice e -> key(e.primary() ? "primary_path" : "secondary_path",
                     ModDisplayText.path(e.path()));
-            case InfoModel.ApertureLife e -> key("aperture_state", enumName(e.state().getTranslationKey()));
 
-            case InfoModel.BodyLife e -> key("life_state", enumName(e.state().getTranslationKey()));
             case InfoModel.Form e -> key("life_form", enumName(e.form().getTranslationKey()));
             case InfoModel.RaceRow e -> key("race", enumName(e.race().getTranslationKey()));
             case InfoModel.Soul e -> key("soul", e.soul().currentSoul(), e.soul().maxSoul())

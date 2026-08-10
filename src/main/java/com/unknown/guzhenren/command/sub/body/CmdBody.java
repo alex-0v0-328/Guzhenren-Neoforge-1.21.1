@@ -6,7 +6,6 @@ import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.body.StaminaService;
 import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
-import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -17,8 +16,6 @@ public final class CmdBody {
 
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("body")
-                .then(ModCommandSupport.enumSetNode("lifestate", LifeState.values(),
-                        BodyService::setLifeState, ModCommandSupport.ANYONE, null))
                 .then(ModCommandSupport.enumSetNode("lifeform", LifeForm.values(),
                         BodyService::setLifeForm, ModCommandSupport.ANYONE, null))
                 .then(ModCommandSupport.enumSetNode("race", Race.values(),

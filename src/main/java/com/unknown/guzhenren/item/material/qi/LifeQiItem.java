@@ -4,7 +4,7 @@ import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
-import com.unknown.guzhenren.effect.DeathQiEffect;
+import com.unknown.guzhenren.effect.pool.DeathQiEffect;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 

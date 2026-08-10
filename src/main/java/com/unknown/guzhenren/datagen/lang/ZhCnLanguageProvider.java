@@ -2,7 +2,6 @@ package com.unknown.guzhenren.datagen.lang;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
-import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
 import com.unknown.guzhenren.custom.enums.aperture.EssenceColor;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
@@ -10,7 +9,6 @@ import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
-import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
@@ -143,7 +141,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.failed.tag_path",      "%s 不是 %s 的来源 —— 通用来源是 natural");
 
         add("guzhenren.command.info.aperture_index",  "第 %s 窍");
-        add("guzhenren.command.info.aperture_state",  "空窍状态  %s");
         add("guzhenren.command.info.realm",           "玩家修为  %s");
         add("guzhenren.command.info.talent",          "玩家天赋  %s");
         add("guzhenren.command.info.essence",         "玩家真元  %s / %s");
@@ -153,8 +150,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.soul",            "玩家魂魄  %s / %s");
         add("guzhenren.command.info.stamina",         "玩家耐力  %s / %s");
         add("guzhenren.command.info.lifespan",        "玩家寿元  %s");
-        add("guzhenren.command.info.life_state",      "肉身状态  %s");
-        add("guzhenren.command.info.life_form",       "玩家形态  %s");
+        add("guzhenren.command.info.life_form",       "生命形态  %s");
         add("guzhenren.command.info.race",            "种族      %s");
         add("guzhenren.command.info.wisdom",          "智道造诣  %s");
         add("guzhenren.command.info.qi",              "玩家气道  %s");
@@ -185,6 +181,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.info.title",           "信息");
         add("guzhenren.screen.tab.aperture",         "空窍");
         add("guzhenren.screen.tab.body",             "肉身");
+        add("guzhenren.screen.tab.soul",             "魂魄");
         add("guzhenren.screen.tab.path",             "流派造诣");
         add("guzhenren.screen.tab.mind",             "脑海");
         add("guzhenren.screen.tab.storage",          "空窍存储");
@@ -228,8 +225,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.talent",         "天赋");
         add("guzhenren.screen.label.essence",        "真元");
         add("guzhenren.screen.label.distilled",      "精炼真元");
-        add("guzhenren.screen.label.state",          "状态");
-        add("guzhenren.screen.label.life_form",      "形态");
+        add("guzhenren.screen.label.life_form",      "生命形态");
         add("guzhenren.screen.label.race",           "种族");
         add("guzhenren.screen.label.wisdom",         "智道造诣");
         add("guzhenren.screen.label.soul",           "魂魄");
@@ -276,6 +272,15 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.FOUR_FLAVORS_LIQUOR_WORM,         "四味酒虫");
         addItem(ModItems.SEVEN_FRAGRANCES_LIQUOR_WORM,     "七香酒虫");
         addItem(ModItems.NINE_EYES_LIQUOR_WORM,            "九眼酒虫");
+        addItem(ModItems.ROAMING_ZOMBIE_GU,                "游僵蛊");
+        addItem(ModItems.HAIRY_ZOMBIE_GU,                  "毛僵蛊");
+        addItem(ModItems.HOPPING_ZOMBIE_GU,                "跳僵蛊");
+        addItem(ModItems.HEAVENLY_DEMON_ZOMBIE_GU,         "天魔尸蛊");
+        addItem(ModItems.NIGHTMARE_ZOMBIE_GU,              "梦魇尸蛊");
+        addItem(ModItems.ASURA_ZOMBIE_GU,                  "修罗尸蛊");
+        addItem(ModItems.EARTH_CHIEF_ZOMBIE_GU,            "地魁尸蛊");
+        addItem(ModItems.PLAGUE_ZOMBIE_GU,                 "病瘟尸蛊");
+        addItem(ModItems.BLOOD_WIGHT_GU,                   "血鬼尸蛊");
         addItem(ModItems.PRIMEVAL_ELDER_GU_1,              "一转元老蛊");
         addItem(ModItems.PRIMEVAL_ELDER_GU_2,              "二转元老蛊");
         addItem(ModItems.PRIMEVAL_ELDER_GU_3,              "三转元老蛊");
@@ -330,6 +335,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.elder_gu_no_stones",    "身上无元石可存");
         add("guzhenren.item.failed.gu_cooldown",           "此蛊尚需 %s 秒");
         add("guzhenren.item.failed.all_out_active",        "全力未歇");
+        add("guzhenren.item.failed.zombie_already",        "已成僵尸 无可再变");
         add("guzhenren.item.failed.gu_starving",           "蛊已太饿 需先喂食");
 
         add("guzhenren.item.gu.invested",                  "已投入 %s/%s");
@@ -356,6 +362,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.dragonpill_cricket_gu",      "龙丸蛐蛐蛊");
         add("effect.guzhenren.brute_force_longhorn_beetle_gu", "蛮力天牛蛊");
         add("effect.guzhenren.all_out_effort",             "全力以赴");
+        add("effect.guzhenren.half_zombie",                "半生半僵");
     }
     //endregion
 
@@ -380,12 +387,10 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addRank();
         addStage();
         addTalent();
-        addApertureState();
         addEssenceColor();
         addTenExtreme();
         addLifeForm();
         addRace();
-        addLifeState();
         addSoulTier();
         addMarkTag();
         addQiKind();
@@ -416,11 +421,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(HumanStrength.TEN_JIN, "十斤");
         add(HumanStrength.JUN,     "钧");
         add(HumanStrength.TEN_JUN, "十钧");
-    }
-
-    private void addApertureState() {
-        add(ApertureState.ALIVE, "生");
-        add(ApertureState.DEAD,  "死");
     }
 
     private void addTitle() {
@@ -460,8 +460,10 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     }
 
     private void addLifeForm() {
-        add(LifeForm.MORTAL,   "凡");
-        add(LifeForm.IMMORTAL, "仙");
+        add(LifeForm.ALIVE,       "生");
+        add(LifeForm.DEAD,        "死");
+        add(LifeForm.ZOMBIE,      "僵");
+        add(LifeForm.HALF_ZOMBIE, "半生半僵");
     }
 
     private void addRace() {
@@ -477,11 +479,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(Race.DRAGONMEN,   "龙人");
         add(Race.MUSHROOMMEN, "菇人");
         add(Race.SNOWMEN,     "雪人");
-    }
-
-    private void addLifeState() {
-        add(LifeState.ALIVE,  "生");
-        add(LifeState.DEAD,   "死");
     }
 
     private void addEssenceColor() {

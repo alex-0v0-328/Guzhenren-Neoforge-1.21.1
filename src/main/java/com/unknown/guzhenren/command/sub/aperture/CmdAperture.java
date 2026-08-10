@@ -9,7 +9,6 @@ import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.command.ModCommandSupport.EnumOperation;
 import com.unknown.guzhenren.command.ModCommandSupport.IntOperation;
 import com.unknown.guzhenren.command.ModEnumArgument;
-import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
@@ -25,9 +24,6 @@ public final class CmdAperture {
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("aperture")
                 .requires(ModCommandSupport::sourceAwakened)
-                .then(ModCommandSupport.enumSetNode("lifestate", ApertureState.values(),
-                        ApertureService::setState, ModCommandSupport.AWAKENED,
-                        ModCommandSupport.FAILED_UNAWAKENED))
                 .then(graded("rank", Rank.settable(),
                         ApertureService::setRank, ApertureService::shiftRank))
                 .then(graded("stage", Stage.settable(),

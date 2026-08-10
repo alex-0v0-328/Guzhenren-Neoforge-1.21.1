@@ -8,7 +8,7 @@ public sealed interface GuClock {
 
     void bind(ServerPlayer player, ItemStack stack);
 
-    boolean tick(ServerPlayer player, ItemStack stack, long days);
+    boolean starves(ServerPlayer player, ItemStack stack, long days);
 
     boolean hungry(ServerPlayer player, ItemStack stack);
 
@@ -16,13 +16,13 @@ public sealed interface GuClock {
 
     boolean eat(TendedGuItem gu, ServerPlayer player, ItemStack stack, ItemStack food);
 
-    int spareAboveFloor(ItemStack stack);
+    int essenceAboveHungerFloor(ItemStack stack);
 
     int essencePerHungerPoint();
 
-    void pour(ItemStack stack, int from, int to);
+    void billHungerForEssence(ItemStack stack, int from, int to);
 
-    boolean spendOnce(ItemStack stack);
+    boolean spendWasForced(ItemStack stack);
 
     boolean barVisible(ItemStack stack);
     float barFraction(ItemStack stack);
@@ -43,7 +43,7 @@ public sealed interface GuClock {
         public void bind(ServerPlayer player, ItemStack stack) {setHunger(stack, max);}
 
         @Override
-        public boolean tick(ServerPlayer player, ItemStack stack, long days) {
+        public boolean starves(ServerPlayer player, ItemStack stack, long days) {
             if (days <= 0L) return false;
 
             int left = hunger(stack) - (int) Math.min(days, max);
@@ -85,7 +85,7 @@ public sealed interface GuClock {
         }
 
         @Override
-        public int spareAboveFloor(ItemStack stack) {
+        public int essenceAboveHungerFloor(ItemStack stack) {
             return Math.max(0, hunger(stack) - CHANNEL_HUNGER_FLOOR) * essencePerHunger;
         }
 
@@ -93,12 +93,12 @@ public sealed interface GuClock {
         public int essencePerHungerPoint() {return essencePerHunger;}
 
         @Override
-        public void pour(ItemStack stack, int from, int to) {
+        public void billHungerForEssence(ItemStack stack, int from, int to) {
             setHunger(stack, hunger(stack) - (to / essencePerHunger - from / essencePerHunger));
         }
 
         @Override
-        public boolean spendOnce(ItemStack stack) {
+        public boolean spendWasForced(ItemStack stack) {
             boolean forced = hunger(stack) <= 0;
             setHunger(stack, hunger(stack) - Math.max(1, perUse));
             return forced;
@@ -115,13 +115,13 @@ public sealed interface GuClock {
     //region 无时钟 -- the "reusable, needs no feeding" cell, representable and unbuilt
     record NoClock() implements GuClock {
         @Override public void bind(ServerPlayer player, ItemStack stack) {}
-        @Override public boolean tick(ServerPlayer player, ItemStack stack, long days) {return false;}
+        @Override public boolean starves(ServerPlayer player, ItemStack stack, long days) {return false;}
         @Override public boolean hungry(ServerPlayer player, ItemStack stack) {return false;}
         @Override public void warn(ServerPlayer player, ItemStack stack, long days) {}
-        @Override public int spareAboveFloor(ItemStack stack) {return Integer.MAX_VALUE;}
+        @Override public int essenceAboveHungerFloor(ItemStack stack) {return Integer.MAX_VALUE;}
         @Override public int essencePerHungerPoint() {return Integer.MAX_VALUE;}
-        @Override public void pour(ItemStack stack, int from, int to) {}
-        @Override public boolean spendOnce(ItemStack stack) {return false;}
+        @Override public void billHungerForEssence(ItemStack stack, int from, int to) {}
+        @Override public boolean spendWasForced(ItemStack stack) {return false;}
         @Override public boolean barVisible(ItemStack stack) {return false;}
         @Override public float barFraction(ItemStack stack) {return 0.0F;}
 

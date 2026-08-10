@@ -1,17 +1,14 @@
-package com.unknown.guzhenren.effect;
+package com.unknown.guzhenren.effect.timed;
 
-import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.Ticks;
-import net.minecraft.resources.ResourceLocation;
+import com.unknown.guzhenren.effect.AttackContributor;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 
-public class BruteForceLonghornBeetleGuEffect extends MobEffect {
+public class BruteForceLonghornBeetleGuEffect extends MobEffect implements AttackContributor {
 
     public static final int DURATION_TICKS = 30 * Ticks.SECOND;
     public static final int AFTERMATH_TICKS = 20 * Ticks.SECOND;
@@ -20,14 +17,12 @@ public class BruteForceLonghornBeetleGuEffect extends MobEffect {
 
     private static final int LAST_TICK = 1;
 
-    private static final ResourceLocation MODIFIER_ID =
-            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "brute_force_longhorn_beetle_attack_damage");
-
     public BruteForceLonghornBeetleGuEffect(MobEffectCategory category, int color) {
         super(category, color);
-        addAttributeModifier(Attributes.ATTACK_DAMAGE, MODIFIER_ID, ATTACK_BONUS,
-                AttributeModifier.Operation.ADD_VALUE);
     }
+
+    @Override
+    public double attackBonus(int amplifier) {return ATTACK_BONUS;}
 
     @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {return duration == LAST_TICK;}

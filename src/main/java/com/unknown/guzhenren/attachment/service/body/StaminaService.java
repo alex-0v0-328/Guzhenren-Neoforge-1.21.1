@@ -55,7 +55,7 @@ public final class StaminaService {
     }
 
     public static boolean consume(ServerPlayer player, long amount) {
-        if (amount <= 0L) return true;
+        if (amount <= 0L || !BodyService.lifeForm(player).spendsStamina()) return true;
         long current = current(player);
         if (current < amount) return false;
         setCurrent(player, current - amount);
@@ -80,6 +80,8 @@ public final class StaminaService {
     }
 
     private static void drain(ServerPlayer player, long amount) {
+        if (!BodyService.lifeForm(player).spendsStamina()) return;
+
         addCurrent(player, -amount);
         if (isEmpty(player)) player.setSprinting(false);
     }

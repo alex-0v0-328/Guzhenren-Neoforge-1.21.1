@@ -205,7 +205,7 @@ public abstract class TendedGuItem extends MortalGuItem {
 
         int round = spec.essencePerRound();
         int leftInThisRound = round - state(stack).investedEssence() % round;
-        long thisStep = Math.min(mostThisStepMaySpend(player, pool, elapsed), clock.spareAboveFloor(stack));
+        long thisStep = Math.min(mostThisStepMaySpend(player, pool, elapsed), clock.essenceAboveHungerFloor(stack));
 
         return (int) Math.min(thisStep, leftInThisRound);
     }
@@ -230,7 +230,7 @@ public abstract class TendedGuItem extends MortalGuItem {
         int pouredBefore = state(stack).investedEssence();
         int pouredAfter = pouredBefore + amount;
 
-        clock.pour(stack, pouredBefore, pouredAfter);
+        clock.billHungerForEssence(stack, pouredBefore, pouredAfter);
         paySpecksCrossed(player, pouredBefore, pouredAfter);
         store(stack, state(stack).withInvested(pouredAfter));
 
@@ -303,7 +303,7 @@ public abstract class TendedGuItem extends MortalGuItem {
         Refusal poor = essenceGate(player, useThreshold(stack), FAILED_ESSENCE);
         if (poor != null) return poor;
 
-        if (spec.channels() && clock.spareAboveFloor(stack) <= 0) return new Refusal(FAILED_STARVING);
+        if (spec.channels() && clock.essenceAboveHungerFloor(stack) <= 0) return new Refusal(FAILED_STARVING);
 
         Refusal cooling = cooldownRefusal(player, stack);
         return cooling != null ? cooling : useGate(player, stack);
@@ -342,7 +342,7 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     protected int drive(ServerPlayer player, ItemStack stack) {
         EssenceService.consume(player, spec.essencePerRound());
-        boolean drivenOnAnEmptyBar = clock.spendOnce(stack);
+        boolean drivenOnAnEmptyBar = clock.spendWasForced(stack);
         paySpecksCrossed(player, 0, spec.essencePerRound());
         grant(player, stack);
 
@@ -457,20 +457,20 @@ public abstract class TendedGuItem extends MortalGuItem {
         return tickOne(player, stack, days, true);
     }
 
-    private static boolean tickOne(ServerPlayer player, ItemStack stack, long days, boolean kept) {
+    private static boolean tickOne(ServerPlayer player, ItemStack stack, long days, boolean autoFeeds) {
         if (!(stack.getItem() instanceof TendedGuItem gu) || !gu.refined(stack)) return false;
 
         gu.payOwnUpkeep(player, stack);
-        if (gu.clock.tick(player, stack, days)) return true;
+        if (gu.clock.starves(player, stack, days)) return true;
 
-        if (kept && gu.autoFeed(player, stack)) return false;
+        if (autoFeeds && gu.autoFeed(player, stack)) return false;
         if (gu.clock.hungry(player, stack)) gu.clock.warn(player, stack, days);
         return false;
     }
 
     protected void payOwnUpkeep(ServerPlayer player, ItemStack stack) {}
 
-    public static void starveAll(ServerPlayer player, long days) {
+    public static void tickCarried(ServerPlayer player, long days) {
         Inventory inventory = player.getInventory();
         for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
             ItemStack stack = inventory.getItem(slot);

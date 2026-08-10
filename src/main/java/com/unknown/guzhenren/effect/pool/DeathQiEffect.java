@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.effect;
+package com.unknown.guzhenren.effect.pool;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

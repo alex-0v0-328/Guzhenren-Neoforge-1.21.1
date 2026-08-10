@@ -12,7 +12,7 @@ public final class PartStorageTick {
 
     private PartStorageTick() {}
 
-    public static void tickDay(ServerPlayer player, long days) {
+    public static void tickInstalled(ServerPlayer player, long days) {
         PartStorage storage = PartStorageService.get(player);
         if (storage.isEmpty()) return;
 

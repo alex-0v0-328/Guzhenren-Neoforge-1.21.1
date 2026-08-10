@@ -17,9 +17,7 @@ import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.body.StaminaService;
 import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
-import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
-import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
@@ -51,11 +49,9 @@ public final class InfoModel {
     public record Essence(Aperture aperture) implements Entry {}
     public record Distilled(Aperture aperture) implements Entry {}
     public record PathChoice(boolean primary, @Nullable GuPath path) implements Entry {}
-    public record ApertureLife(ApertureState state) implements Entry {}
     //endregion
 
     //region Body
-    public record BodyLife(LifeState state) implements Entry {}
     public record Form(LifeForm form) implements Entry {}
     public record RaceRow(Race race) implements Entry {}
     public record Soul(SoulData soul) implements Entry {}
@@ -102,19 +98,15 @@ public final class InfoModel {
             rows.add(new Row(indent, new PathChoice(true, aperture.primaryPath())));
             rows.add(new Row(indent, new PathChoice(false, aperture.secondaryPath())));
         }
-        if (!aperture.isAlive()) rows.add(new Row(indent, new ApertureLife(aperture.state())));
     }
 
     public static List<Row> body(Player player) {
         BodyData body = BodyService.get(player);
-        SoulData soul = SoulService.get(player);
         StrengthData strength = StrengthService.get(player);
         List<Row> rows = new ArrayList<>();
 
-        if (body.lifeState() != LifeState.ALIVE) rows.add(new Row(0, new BodyLife(body.lifeState())));
         rows.add(new Row(0, new Form(body.lifeForm())));
         rows.add(new Row(0, new RaceRow(body.race())));
-        rows.add(new Row(0, new Soul(soul)));
         rows.add(new Row(0, new Stamina(StaminaService.current(player), StaminaService.max(player))));
         rows.add(new Row(0, new Lifespan(body)));
         if (strength.isEmpty()) return rows;
@@ -124,6 +116,10 @@ public final class InfoModel {
         }
         rows.add(new Row(0, new AttackRow(AttackService.bonus(player))));
         return rows;
+    }
+
+    public static List<Row> soul(Player player) {
+        return List.of(new Row(0, new Soul(SoulService.get(player))));
     }
 
     public static List<Row> pathAchievement(Player player) {

@@ -35,10 +35,6 @@ public final class EntityRegistrationEvents {
                 RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 
-    //    ⚠⚠ NaturalSpawner picks Y uniformly from the min build height to the surface, so roughly 94% of
-    //    attempts are underground. Without this check a "surface" mob is really a cave mob.
-    //    ⚠ Sea level, NOT canSeeSky -- leaves count as cover, so canSeeSky would empty every forest floor.
-    //    ⚠ No light and no time check on purpose.
     private static boolean onTheSurface(EntityType<HopeGuEntity> type, ServerLevelAccessor level,
                                         MobSpawnType reason, BlockPos pos, RandomSource random) {
         return pos.getY() >= level.getSeaLevel();

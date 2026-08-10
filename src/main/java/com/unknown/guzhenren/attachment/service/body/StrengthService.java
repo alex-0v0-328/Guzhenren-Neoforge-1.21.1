@@ -31,9 +31,10 @@ public final class StrengthService {
 
     public static int usableJin(Player p) {
         int total = get(p).totalJin();
-        if (isUnleashed(p)) return total;
+        return isUnleashed(p) ? total : usableJin(capacity(p), total);
+    }
 
-        int capacity = capacity(p);
+    public static int usableJin(int capacity, int total) {
         if (total <= capacity) return total;
 
         int span = capacity * (LOCK_MULTIPLE - 1);

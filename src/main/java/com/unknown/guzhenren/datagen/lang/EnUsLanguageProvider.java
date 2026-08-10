@@ -2,7 +2,6 @@ package com.unknown.guzhenren.datagen.lang;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
-import com.unknown.guzhenren.custom.enums.aperture.ApertureState;
 import com.unknown.guzhenren.custom.enums.aperture.EssenceColor;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
@@ -10,7 +9,6 @@ import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
-import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
@@ -143,7 +141,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.failed.tag_path",      "%s is not a source on the %s -- the universal source is natural");
 
         add("guzhenren.command.info.aperture_index",  "Aperture %s");
-        add("guzhenren.command.info.aperture_state",  "Aperture:    %s");
         add("guzhenren.command.info.realm",           "Cultivation: %s");
         add("guzhenren.command.info.talent",          "Aptitude:    %s");
         add("guzhenren.command.info.essence",         "Essence:     %s / %s");
@@ -153,7 +150,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.soul",            "Soul:        %s / %s");
         add("guzhenren.command.info.stamina",         "Stamina:     %s / %s");
         add("guzhenren.command.info.lifespan",        "Lifespan:    %s");
-        add("guzhenren.command.info.life_state",      "Body:        %s");
         add("guzhenren.command.info.life_form",       "Life form:   %s");
         add("guzhenren.command.info.race",            "Race:        %s");
         add("guzhenren.command.info.wisdom",          "Wisdom Path: %s");
@@ -185,6 +181,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.info.title",           "Info");
         add("guzhenren.screen.tab.aperture",         "Aperture");
         add("guzhenren.screen.tab.body",             "Body");
+        add("guzhenren.screen.tab.soul",             "Soul");
         add("guzhenren.screen.tab.path",             "Path Achv");
         add("guzhenren.screen.tab.mind",             "Mind");
         add("guzhenren.screen.tab.storage",          "Storage");
@@ -228,8 +225,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.talent",         "Aptitude");
         add("guzhenren.screen.label.essence",        "Essence");
         add("guzhenren.screen.label.distilled",      "Distilled");
-        add("guzhenren.screen.label.state",          "State");
-        add("guzhenren.screen.label.life_form",      "Form");
+        add("guzhenren.screen.label.life_form",      "Life Form");
         add("guzhenren.screen.label.race",           "Race");
         add("guzhenren.screen.label.wisdom",         "Wisdom Path");
         add("guzhenren.screen.label.soul",           "Soul");
@@ -276,6 +272,15 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.FOUR_FLAVORS_LIQUOR_WORM,         "Four Flavors Liquor Worm");
         addItem(ModItems.SEVEN_FRAGRANCES_LIQUOR_WORM,     "Seven Fragrances Liquor Worm");
         addItem(ModItems.NINE_EYES_LIQUOR_WORM,            "Nine Eyes Liquor Worm");
+        addItem(ModItems.ROAMING_ZOMBIE_GU,                "Roaming Zombie Gu");
+        addItem(ModItems.HAIRY_ZOMBIE_GU,                  "Hairy Zombie Gu");
+        addItem(ModItems.HOPPING_ZOMBIE_GU,                "Hopping Zombie Gu");
+        addItem(ModItems.HEAVENLY_DEMON_ZOMBIE_GU,         "Heavenly Demon Zombie Gu");
+        addItem(ModItems.NIGHTMARE_ZOMBIE_GU,              "Nightmare Zombie Gu");
+        addItem(ModItems.ASURA_ZOMBIE_GU,                  "Asura Zombie Gu");
+        addItem(ModItems.EARTH_CHIEF_ZOMBIE_GU,            "Earth Chief Zombie Gu");
+        addItem(ModItems.PLAGUE_ZOMBIE_GU,                 "Plague Zombie Gu");
+        addItem(ModItems.BLOOD_WIGHT_GU,                   "Blood Wight Gu");
         addItem(ModItems.PRIMEVAL_ELDER_GU_1,              "Primeval Elder Gu I");
         addItem(ModItems.PRIMEVAL_ELDER_GU_2,              "Primeval Elder Gu II");
         addItem(ModItems.PRIMEVAL_ELDER_GU_3,              "Primeval Elder Gu III");
@@ -330,6 +335,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.elder_gu_no_stones",    "You carry no Primeval Stones to store");
         add("guzhenren.item.failed.gu_cooldown",           "This Gu needs another %s seconds");
         add("guzhenren.item.failed.all_out_active",        "The all-out effort has not yet passed");
+        add("guzhenren.item.failed.zombie_already",        "Already a zombie, nothing left to turn");
         add("guzhenren.item.failed.gu_starving",           "This Gu is too hungry - feed it first");
 
         add("guzhenren.item.gu.invested",                  "Invested %s/%s");
@@ -356,6 +362,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.dragonpill_cricket_gu",      "Dragonpill Cricket Gu");
         add("effect.guzhenren.brute_force_longhorn_beetle_gu", "Brute Force Longhorn Beetle Gu");
         add("effect.guzhenren.all_out_effort",             "All-Out Effort");
+        add("effect.guzhenren.half_zombie",                "Half-Zombie");
     }
     //endregion
 
@@ -380,12 +387,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addRank();
         addStage();
         addTalent();
-        addApertureState();
         addEssenceColor();
         addTenExtreme();
         addLifeForm();
         addRace();
-        addLifeState();
         addSoulTier();
         addMarkTag();
         addQiKind();
@@ -416,11 +421,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(HumanStrength.TEN_JIN, "Ten Jin");
         add(HumanStrength.JUN,     "Jun");
         add(HumanStrength.TEN_JUN, "Ten Jun");
-    }
-
-    private void addApertureState() {
-        add(ApertureState.ALIVE, "Alive");
-        add(ApertureState.DEAD,  "Dead");
     }
 
     private void addTitle() {
@@ -460,8 +460,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
     }
 
     private void addLifeForm() {
-        add(LifeForm.MORTAL,   "Mortal");
-        add(LifeForm.IMMORTAL, "Immortal");
+        add(LifeForm.ALIVE,       "Alive");
+        add(LifeForm.DEAD,        "Dead");
+        add(LifeForm.ZOMBIE,      "Zombie");
+        add(LifeForm.HALF_ZOMBIE, "Half-Zombie");
     }
 
     private void addRace() {
@@ -477,11 +479,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(Race.DRAGONMEN,   "Dragonmen");
         add(Race.MUSHROOMMEN, "Mushroommen");
         add(Race.SNOWMEN,     "Snowmen");
-    }
-
-    private void addLifeState() {
-        add(LifeState.ALIVE,  "Alive");
-        add(LifeState.DEAD,   "Dead");
     }
 
     private void addEssenceColor() {

@@ -49,19 +49,24 @@ public final class PlayerInfoScreen extends Screen {
     private static final int TAB_TEXT_DEAD = 0xFF6A6A6A;
 
     private static final int[] ACCENT =
-            {0xFF4FC3F7, 0xFFB388FF, 0xFFFF8A65, 0xFFFFD54F, 0xFF81C784, 0xFFA1887F};
+            {0xFF4FC3F7, 0xFFB388FF, 0xFFB388FF, 0xFFFF8A65, 0xFFFFD54F, 0xFF81C784, 0xFFA1887F};
 
     private static final String[] TAB_KEYS = {
             "guzhenren.screen.tab.aperture",
             "guzhenren.screen.tab.body",
+            "guzhenren.screen.tab.soul",
             "guzhenren.screen.tab.path",
             "guzhenren.screen.tab.mind",
             "guzhenren.screen.tab.storage",
             "guzhenren.screen.tab.refinement",
     };
 
-    private static final int TAB_STORAGE = 4;
-    private static final int TAB_REFINEMENT = 5;
+    private static final int TAB_BODY       = 1;
+    private static final int TAB_SOUL       = 2;
+    private static final int TAB_PATH       = 3;
+    private static final int TAB_MIND       = 4;
+    private static final int TAB_STORAGE    = 5;
+    private static final int TAB_REFINEMENT = 6;
 
     private static final int PICK_COLS = 4;
     private static final int PICK_CELL_W = 84;
@@ -295,9 +300,10 @@ public final class PlayerInfoScreen extends Screen {
 
     private List<Row> rows(LocalPlayer player) {
         List<InfoModel.Row> model = switch (activeTab) {
-            case 1 -> InfoModel.body(player);
-            case 2 -> InfoModel.pathAchievement(player);
-            case 3 -> InfoModel.mind(player);
+            case TAB_BODY -> InfoModel.body(player);
+            case TAB_SOUL -> InfoModel.soul(player);
+            case TAB_PATH -> InfoModel.pathAchievement(player);
+            case TAB_MIND -> InfoModel.mind(player);
             default -> InfoModel.aperture(player);
         };
 
@@ -324,9 +330,7 @@ public final class PlayerInfoScreen extends Screen {
                     ? new Row(indent, label("primary_path"), ModDisplayText.path(e.path()))
                     : new Row(indent, label("secondary_path"),
                             ModDisplayText.path(e.path()).append(detail(pickHint())), true);
-            case InfoModel.ApertureLife e -> new Row(indent, label("state"), name(e.state().getTranslationKey()));
 
-            case InfoModel.BodyLife e -> new Row(indent, label("state"), name(e.state().getTranslationKey()));
             case InfoModel.Form e -> new Row(indent, label("life_form"), name(e.form().getTranslationKey()));
             case InfoModel.RaceRow e -> new Row(indent, label("race"), name(e.race().getTranslationKey()));
             case InfoModel.Soul e -> new Row(indent, label("soul"),

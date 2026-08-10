@@ -66,6 +66,9 @@ public final class ModAttachments {
                     .sync(OWNER_ONLY, StaminaData.STREAM_CODEC)
                     .build());
 
+    public static final Supplier<AttachmentType<float[]>> EXHAUSTION_SEEN = ATTACHMENT_TYPES.register(
+            "exhaustion_seen", () -> AttachmentType.builder(() -> new float[1]).build());
+
     public static final Supplier<AttachmentType<PathData>> PATH = ATTACHMENT_TYPES.register(
             "path_data", () -> AttachmentType.builder(() -> PathData.DEFAULT)
                     .serialize(PathData.CODEC)

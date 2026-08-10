@@ -38,5 +38,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
                 ModItems.SWEET_LIQUOR.get(), ModItems.BITTER_LIQUOR.get(), ModItems.SPICY_LIQUOR.get());
 
         tag(ModItemTags.ALL_OUT_FEED).add(Items.STONE);
+
+        tag(ModItemTags.ZOMBIE_FEED).add(Items.ROTTEN_FLESH);
     }
 }

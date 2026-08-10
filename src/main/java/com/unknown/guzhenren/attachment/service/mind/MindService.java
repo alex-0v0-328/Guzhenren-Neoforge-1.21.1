@@ -1,7 +1,9 @@
 package com.unknown.guzhenren.attachment.service.mind;
 
+import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.data.mind.MindPool;
+import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.ModAttachments;
@@ -11,6 +13,12 @@ import net.minecraft.world.entity.player.Player;
 public final class MindService {
 
     private MindService() {}
+
+    public static final int ZOMBIE_THOUGHT_INTERVAL_TICKS = 5 * Ticks.SECOND;
+
+    private static boolean thinksThisStep(ServerPlayer p) {
+        return !BodyService.isZombie(p) || p.tickCount % ZOMBIE_THOUGHT_INTERVAL_TICKS == 0;
+    }
 
     public static MindData get(Player p) {return p.getData(ModAttachments.MIND);}
     public static MindPool pool(Player p, WisdomType t) {return get(p).pool(t);}
@@ -38,6 +46,8 @@ public final class MindService {
     }
 
     public static void regenStep(ServerPlayer player) {
+        if (!thinksThisStep(player)) return;
+
         MindPool thoughts = pool(player, WisdomType.THOUGHTS);
         if (thoughts.current() >= thoughts.max()) return;
 

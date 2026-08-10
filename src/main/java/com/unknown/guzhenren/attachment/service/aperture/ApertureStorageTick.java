@@ -11,7 +11,7 @@ public final class ApertureStorageTick {
 
     private ApertureStorageTick() {}
 
-    public static void tickDay(ServerPlayer player, long days) {
+    public static void tickStored(ServerPlayer player, long days) {
         for (int aperture = 0; aperture < ApertureData.MAX_APERTURES; aperture++) {
             tickStore(player, aperture, days);
             tickVital(player, aperture, days);

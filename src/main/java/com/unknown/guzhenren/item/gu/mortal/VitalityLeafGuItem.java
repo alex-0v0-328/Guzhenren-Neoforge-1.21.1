@@ -1,6 +1,6 @@
 package com.unknown.guzhenren.item.gu.mortal;
 
-import com.unknown.guzhenren.effect.VitalityLeafEffect;
+import com.unknown.guzhenren.effect.timed.VitalityLeafEffect;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.OneShotGuItem;
 import com.unknown.guzhenren.registry.ModEffects;

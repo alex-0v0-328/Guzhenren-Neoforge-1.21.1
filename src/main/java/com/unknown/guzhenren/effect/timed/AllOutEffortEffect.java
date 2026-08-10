@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.effect;
+package com.unknown.guzhenren.effect.timed;
 
 import com.unknown.guzhenren.client.GradedEffectIcon;
 import java.util.function.Consumer;

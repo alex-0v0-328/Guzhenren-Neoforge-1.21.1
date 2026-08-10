@@ -41,3 +41,16 @@ jobs:
       - name: Build with Gradle
         working-directory: guzhenren-template-1.21.1
         run: ./gradlew build
+
+      # src/generated/resources is a committed source set, and 'build' happily packs a stale one.
+      # git diff alone would miss a provider change that ADDS a file, so this asks git status.
+      - name: Generated resources are up to date
+        working-directory: guzhenren-template-1.21.1
+        run: |
+          ./gradlew runData
+          if [ -n "$(git status --porcelain -- src/generated)" ]; then
+            echo "::error::src/generated is stale. Run ./gradlew runData and commit the result."
+            git status --porcelain -- src/generated
+            git --no-pager diff -- src/generated
+            exit 1
+          fi

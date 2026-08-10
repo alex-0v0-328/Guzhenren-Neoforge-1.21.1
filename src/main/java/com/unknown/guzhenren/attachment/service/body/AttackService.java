@@ -1,10 +1,13 @@
 package com.unknown.guzhenren.attachment.service.body;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
+import com.unknown.guzhenren.effect.AttackContributor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -20,6 +23,8 @@ public final class AttackService {
     private static final ResourceLocation MODIFIER_ID =
             ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "strength_attack_damage");
 
+    public static final double ZOMBIE_ATTACK_BASE = 5.0D;
+
     public static double bonus(Player player) {
         StrengthData data = StrengthService.get(player);
         double total = 0.0D;
@@ -27,7 +32,25 @@ public final class AttackService {
         for (BeastStrength beast : BeastStrength.values()) {
             if (data.has(beast)) total += beast.getAttackBonus();
         }
-        return total + StrengthService.usableJin(player) * HumanStrength.ATTACK_PER_JIN;
+        return total + StrengthService.usableJin(player) * HumanStrength.ATTACK_PER_JIN
+                + zombieBonus(player) + effectBonus(player);
+    }
+
+    public static double effectBonus(Player player) {
+        double total = 0.0D;
+        for (MobEffectInstance instance : player.getActiveEffects()) {
+            if (instance.getEffect().value() instanceof AttackContributor contributor) {
+                total += contributor.attackBonus(instance.getAmplifier());
+            }
+        }
+        return total;
+    }
+
+    public static double zombieBonus(Player player) {
+        BodyData body = BodyService.get(player);
+        if (!body.lifeForm().isAnyZombie() || body.zombieTier() < 0) return 0.0D;
+
+        return ZOMBIE_ATTACK_BASE * (1 << body.zombieTier());
     }
 
     public static void refresh(ServerPlayer player) {

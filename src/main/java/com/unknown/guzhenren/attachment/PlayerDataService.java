@@ -18,6 +18,7 @@ import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.body.StaminaService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.ModAttachments;
@@ -34,6 +35,7 @@ public final class PlayerDataService {
     private PlayerDataService() {}
 
     public static void onJoin(ServerPlayer player) {
+        player.getData(ModAttachments.EXHAUSTION_SEEN)[0] = player.getFoodData().getExhaustionLevel();
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
         HealthService.refresh(player);
         AttackService.refresh(player);
@@ -51,6 +53,10 @@ public final class PlayerDataService {
         MindService.onSleepComplete(player);
     }
 
+    public static void onDeath(ServerPlayer player) {
+        BodyService.setLifeForm(player, LifeForm.DEAD);
+    }
+
     public static void onClone(Player from, Player to, boolean wasDeath, boolean keepInventory) {
         if (wasDeath && !keepInventory) {
             resetAll(to);
@@ -65,6 +71,7 @@ public final class PlayerDataService {
     }
 
     public static void onRespawn(ServerPlayer player) {
+        BodyService.setLifeForm(player, LifeForm.ALIVE);
         if (BodyService.get(player).isExhausted()) {
             BodyService.setLifespan(player, BodyData.DEFAULT_LIFESPAN);
         }

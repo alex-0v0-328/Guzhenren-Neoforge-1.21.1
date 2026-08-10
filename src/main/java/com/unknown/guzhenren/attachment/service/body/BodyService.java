@@ -3,7 +3,6 @@ package com.unknown.guzhenren.attachment.service.body;
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
-import com.unknown.guzhenren.custom.enums.body.LifeState;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
@@ -21,17 +20,48 @@ public final class BodyService {
     }
 
     public static BodyData get(Player p) {return p.getData(ModAttachments.BODY);}
-    public static LifeState lifeState(Player p) {return get(p).lifeState();}
     public static LifeForm lifeForm(Player p) {return get(p).lifeForm();}
+    public static boolean isZombie(Player p) {return get(p).isZombie();}
+    public static boolean isHalfZombie(Player p) {return get(p).isHalfZombie();}
     public static Race race(Player p) {return get(p).race();}
+    public static long now(Player p) {return p.level().getGameTime();}
 
-    public static void setLifeState(ServerPlayer p, LifeState v) {store(p, get(p).withLifeState(v));}
-    public static void setLifeForm(ServerPlayer p, LifeForm v) {store(p, get(p).withLifeForm(v));}
     public static void setAge(ServerPlayer p, long v) {store(p, get(p).withAge(v));}
     public static void addAge(ServerPlayer p, long d) {setAge(p, get(p).age() + d);}
     public static void setLifespan(ServerPlayer p, long v) {store(p, get(p).withLifespan(v));}
     public static void addLifespan(ServerPlayer p, long d) {setLifespan(p, get(p).lifespan() + d);}
     private static void store(ServerPlayer p, BodyData data) {p.setData(ModAttachments.BODY, data);}
+
+    //region Life form [生命形态] -- 生 / 死 / 僵 / 半生半僵
+    public static void setLifeForm(ServerPlayer player, LifeForm form) {
+        BodyData body = get(player);
+        if (body.lifeForm() == form) return;
+
+        BodyData turned = body.withLifeForm(form);
+        store(player, form.isZombie() ? turned.withLifespan(BodyData.ZOMBIE_LIFESPAN) : turned);
+        AttackService.refresh(player);
+    }
+
+    public static void enterHalfZombie(ServerPlayer player, int tier, int durationTicks) {
+        store(player, get(player)
+                .withLifeForm(LifeForm.HALF_ZOMBIE)
+                .withHalfZombieEndTick(now(player) + durationTicks)
+                .withZombieTier(tier));
+        AttackService.refresh(player);
+    }
+
+    public static void turnZombie(ServerPlayer player, int tier) {
+        store(player, get(player)
+                .withLifeForm(LifeForm.ZOMBIE)
+                .withLifespan(BodyData.ZOMBIE_LIFESPAN)
+                .withZombieTier(tier));
+        AttackService.refresh(player);
+    }
+
+    public static boolean wouldRelapse(Player p) {return get(p).withinRelapseWindow(now(p));}
+    public static long halfZombieTicksLeft(Player p) {return get(p).halfZombieTicksLeft(now(p));}
+    public static boolean halfZombieRanOut(Player p) {return get(p).halfZombieRanOut(now(p));}
+    //endregion
 
     //region Race [种族]
     public static void setRace(ServerPlayer player, Race race) {
@@ -91,7 +121,7 @@ public final class BodyService {
         long elapsed = today - body.lastDayIndex();
         if (elapsed == 0L) return 0L;
 
-        store(player, body.aged(elapsed, today));
+        store(player, body.lifeForm().ages() ? body.aged(elapsed, today) : body.withLastDayIndex(today));
         return elapsed;
     }
 }
