@@ -32,6 +32,21 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int CELL = 16;
     private static final int INVENTORY_COLS = 9;
 
+    // Chrome the menu never places a Slot at, so it has no business knowing these.
+    private static final int CRAFT_X = 140;
+    private static final int CRAFT_Y = 76;
+    private static final int CRAFT_W = 52;
+    private static final int CRAFT_H = 20;
+    private static final int BAR_X = 140;
+    private static final int BAR_Y = 102;
+    private static final int BAR_W = 52;
+    private static final int BAR_H = 6;
+    private static final int RECIPE_X = 140;
+    private static final int RECIPE_Y = 114;
+    private static final int RECIPE_W = 52;
+    private static final int RECIPE_H = 20;
+    private static final int LEGEND_Y = 142;
+
     private static final int ACCENT = 0xFFA1887F;
     private static final int PANEL_FILL = 0xBF000000;
     private static final int BORDER = 0x66FFFFFF;
@@ -150,14 +165,14 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
 
     //region the phase bar -- it empties over the 5s window, then over the 2s gap
     private void drawBar(GuiGraphics g, int x, int y) {
-        int bx = x + RefinementMenu.BAR_X;
-        int by = y + RefinementMenu.BAR_Y;
-        g.fill(bx, by, bx + RefinementMenu.BAR_W, by + RefinementMenu.BAR_H, BAR_TRACK);
+        int bx = x + BAR_X;
+        int by = y + BAR_Y;
+        g.fill(bx, by, bx + BAR_W, by + BAR_H, BAR_TRACK);
         if (!menu.running()) return;
 
         int span = menu.inWindow() ? GuRecipe.WINDOW_TICKS : GuRecipe.GAP_TICKS;
-        int filled = RefinementMenu.BAR_W * menu.phaseLeft() / Math.max(1, span);
-        g.fill(bx, by, bx + filled, by + RefinementMenu.BAR_H, barColour());
+        int filled = BAR_W * menu.phaseLeft() / Math.max(1, span);
+        g.fill(bx, by, bx + filled, by + BAR_H, barColour());
     }
 
     private int barColour() {
@@ -169,7 +184,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     @Override
     protected void renderLabels(@NotNull GuiGraphics g, int mouseX, int mouseY) {
         g.drawString(font, title, titleLabelX, titleLabelY, ACCENT, false);
-        g.drawString(font, statusLine(), RefinementMenu.INPUT_X, RefinementMenu.LEGEND_Y,
+        g.drawString(font, statusLine(), RefinementMenu.INPUT_X, LEGEND_Y,
                 statusColour(), false);
         g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, TEXT, false);
         renderGhosts(g);
@@ -309,26 +324,26 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         boolean shortOfEssence = !stopping && clickable() && !menu.affords();
         boolean hover = live && inCraft(mouseX, mouseY);
 
-        g.fill(x, y, x + RefinementMenu.CRAFT_W, y + RefinementMenu.CRAFT_H,
+        g.fill(x, y, x + CRAFT_W, y + CRAFT_H,
                 live ? (hover ? BUTTON_HOVER : BUTTON_IDLE) : BUTTON_DEAD);
         if (live || shortOfEssence) {
-            g.renderOutline(x, y, RefinementMenu.CRAFT_W, RefinementMenu.CRAFT_H,
+            g.renderOutline(x, y, CRAFT_W, CRAFT_H,
                     stopping ? BAR_SHORT : live ? ACCENT : SHORT_RED);
         }
 
         Component label = Component.translatable(stopping ? STOP_KEY : CRAFT_KEY);
-        g.drawString(font, label, x + (RefinementMenu.CRAFT_W - font.width(label)) / 2,
-                y + (RefinementMenu.CRAFT_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
+        g.drawString(font, label, x + (CRAFT_W - font.width(label)) / 2,
+                y + (CRAFT_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
     }
 
     private boolean clickable() {return menu.ready() && !menu.running();}
 
-    private int craftX() {return leftPos + RefinementMenu.CRAFT_X;}
-    private int craftY() {return topPos + RefinementMenu.CRAFT_Y;}
+    private int craftX() {return leftPos + CRAFT_X;}
+    private int craftY() {return topPos + CRAFT_Y;}
 
     private boolean inCraft(double mx, double my) {
-        return mx >= craftX() && mx < craftX() + RefinementMenu.CRAFT_W
-                && my >= craftY() && my < craftY() + RefinementMenu.CRAFT_H;
+        return mx >= craftX() && mx < craftX() + CRAFT_W
+                && my >= craftY() && my < craftY() + CRAFT_H;
     }
     //endregion
 
@@ -339,21 +354,21 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         boolean live = !menu.running();
         boolean hover = live && inRecipe(mouseX, mouseY);
 
-        g.fill(x, y, x + RefinementMenu.RECIPE_W, y + RefinementMenu.RECIPE_H,
+        g.fill(x, y, x + RECIPE_W, y + RECIPE_H,
                 live ? (hover ? BUTTON_HOVER : BUTTON_IDLE) : BUTTON_DEAD);
-        if (live) g.renderOutline(x, y, RefinementMenu.RECIPE_W, RefinementMenu.RECIPE_H, ACCENT);
+        if (live) g.renderOutline(x, y, RECIPE_W, RECIPE_H, ACCENT);
 
         Component label = Component.translatable(RECIPE_KEY);
-        g.drawString(font, label, x + (RefinementMenu.RECIPE_W - font.width(label)) / 2,
-                y + (RefinementMenu.RECIPE_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
+        g.drawString(font, label, x + (RECIPE_W - font.width(label)) / 2,
+                y + (RECIPE_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
     }
 
-    private int recipeX() {return leftPos + RefinementMenu.RECIPE_X;}
-    private int recipeY() {return topPos + RefinementMenu.RECIPE_Y;}
+    private int recipeX() {return leftPos + RECIPE_X;}
+    private int recipeY() {return topPos + RECIPE_Y;}
 
     private boolean inRecipe(double mx, double my) {
-        return mx >= recipeX() && mx < recipeX() + RefinementMenu.RECIPE_W
-                && my >= recipeY() && my < recipeY() + RefinementMenu.RECIPE_H;
+        return mx >= recipeX() && mx < recipeX() + RECIPE_W
+                && my >= recipeY() && my < recipeY() + RECIPE_H;
     }
     //endregion
 
