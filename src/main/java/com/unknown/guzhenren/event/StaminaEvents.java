@@ -17,7 +17,6 @@ public final class StaminaEvents {
 
     private StaminaEvents() {}
 
-    public static final long WEARY_STAMINA = 10L;
     public static final float WEARY_EXTRA_EXHAUSTION = 0.5F;
 
     @SubscribeEvent
@@ -48,7 +47,7 @@ public final class StaminaEvents {
 
         if (spent <= 0.0F) return;
         if (!BodyService.lifeForm(player).spendsStamina()) return;
-        if (StaminaService.current(player) >= WEARY_STAMINA) return;
+        if (!StaminaService.isWeary(player)) return;
 
         food.addExhaustion(spent * WEARY_EXTRA_EXHAUSTION);
         seen[0] = food.getExhaustionLevel();

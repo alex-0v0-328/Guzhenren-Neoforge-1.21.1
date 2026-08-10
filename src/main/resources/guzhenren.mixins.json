@@ -3,6 +3,9 @@
   "package": "com.unknown.guzhenren.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
+  "client": [
+    "LocalPlayerSprintMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },

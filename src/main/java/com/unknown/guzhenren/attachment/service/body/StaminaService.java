@@ -12,8 +12,17 @@ public final class StaminaService {
 
     private StaminaService() {}
 
-    public static final long SPRINT_COST_PER_STEP = 4L;
-    public static final long JUMP_COST = 10L;
+    public static final long SPRINT_COST_PER_STEP = 2L;
+    public static final long JUMP_COST = 5L;
+
+    public static final long SPRINT_RESUME_PERCENT = 20L;
+    public static final long WEARY_PERCENT = 10L;
+
+    public static boolean canKeepSprinting(Player p) {return !isEmpty(p);}
+    public static boolean canResumeSprinting(Player p) {
+        return current(p) * 100L >= max(p) * SPRINT_RESUME_PERCENT;
+    }
+    public static boolean isWeary(Player p) {return current(p) * 100L < max(p) * WEARY_PERCENT;}
 
     public static StaminaData get(Player p) {return p.getData(ModAttachments.STAMINA);}
     public static long current(Player p) {return get(p).currentStamina();}
