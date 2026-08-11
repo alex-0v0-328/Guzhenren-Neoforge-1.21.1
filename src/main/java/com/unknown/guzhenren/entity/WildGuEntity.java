@@ -33,7 +33,7 @@ public abstract class WildGuEntity extends PathfinderMob {
     public Item caughtGu() {return caughtGu.get();}
 
     //region catching -- a bare right click, ungated
-    //    ⚠⚠ Never gate this on 开窍 [awakening]: 希望蛊 [Hope Gu] is the only key to it, so a gate here
+    //    ⚠ Never gate this on 开窍 [awakening]: 希望蛊 [Hope Gu] is the only key to it, so a gate here
     //    would make awakening unreachable forever.
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {

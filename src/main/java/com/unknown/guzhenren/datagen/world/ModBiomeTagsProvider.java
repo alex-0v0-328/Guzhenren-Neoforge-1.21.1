@@ -30,7 +30,7 @@ public class ModBiomeTagsProvider extends TagsProvider<Biome> {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
-        //    ⚠⚠ Every overworld LAND biome, listed one by one rather than #is_overworld: that tag carries the
+        //    ⚠ Every overworld LAND biome, listed one by one rather than #is_overworld: that tag carries the
         //    oceans, whose surface sits at sea level, so the spawn predicate cannot keep motes off the water.
         tag(ModBiomeTags.HOPE_GU_SPAWNS)
                 .add(Biomes.PLAINS)

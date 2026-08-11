@@ -30,15 +30,15 @@ public class HopeGuEntity extends FlyingGuEntity {
         super(type, level, caughtGu, motes);
     }
 
-    //    ⚠⚠ 开窍 [awakening] is the only thing this Gu grants, so an awakened player has nothing to gain and
+    //    ⚠ 开窍 [awakening] is the only thing this Gu grants, so an awakened player has nothing to gain and
     //    it drifts past them. ⚠ Only the APPROACH reads this -- the catch itself stays ungated, always.
     @Override
     public boolean seeks(Player player) {return !ApertureService.isAwakened(player);}
 
-    //    ⚠⚠ ANY player opens the window, not only one it seeks. Were it the sought player alone, a
+    //    ⚠ ANY player opens the window, not only one it seeks. Were it the sought player alone, a
     //    cultivator would never close it and these would pile up to the category cap around the one
     //    person who has no use for them.
-    //    ⚠⚠ It opens on the FIRST sighting and never reopens: walking away neither resets nor pauses it.
+    //    ⚠ It opens on the FIRST sighting and never reopens: walking away neither resets nor pauses it.
     //    ⚠ Deliberately unserialized -- a reloaded Gu starts its minute over, and these despawn anyway.
     @Override
     public void tick() {

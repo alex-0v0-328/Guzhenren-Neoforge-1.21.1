@@ -28,7 +28,7 @@ public final class ModEntityTypes {
 
     private static final int TRACKING_CHUNKS = 8;
 
-    //    ⚠⚠ END_ROD is FULLBRIGHT (SimpleAnimatedParticle.getLightColor returns 15728880). A DUST particle
+    //    ☠ END_ROD is FULLBRIGHT (SimpleAnimatedParticle.getLightColor returns 15728880). A DUST particle
     //    is lit by the world instead, so any tint went muddy in the dark -- which is where these live.
     public static final DeferredHolder<EntityType<?>, EntityType<HopeGuEntity>> HOPE_GU_ENTITY =
             ENTITY_TYPES.register("hope_gu_entity", () -> EntityType.Builder

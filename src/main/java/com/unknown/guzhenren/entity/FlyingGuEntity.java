@@ -32,7 +32,7 @@ public class FlyingGuEntity extends WildGuEntity {
     public static final double DETECT_RANGE = 12.0;
     public static final double HOVER_RANGE  =  2.0;
 
-    //    ⚠⚠ FOLLOW_RANGE is the PATHFINDER's search radius (PathNavigation.createPath passes it straight
+    //    ☠ FOLLOW_RANGE is the PATHFINDER's search radius (PathNavigation.createPath passes it straight
     //    through), NOT "how far it notices a player". DETECT_RANGE is that. Fusing the two starves wandering.
     private static final double FOLLOW_RANGE   = 16.0;
     private static final double MAX_HEALTH     =  1.0;
@@ -90,7 +90,7 @@ public class FlyingGuEntity extends WildGuEntity {
         return navigation;
     }
 
-    //    ⚠⚠ FlyingMoveControl only clears gravity WHILE it is moving the mob. HoverNearPlayerGoal stops the
+    //    ☠ FlyingMoveControl only clears gravity WHILE it is moving the mob. HoverNearPlayerGoal stops the
     //    navigation on purpose, which would hand gravity back and sink the mote. This override is what holds it up.
     @Override
     public boolean isNoGravity() {return true;}

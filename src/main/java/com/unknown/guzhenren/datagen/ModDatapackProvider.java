@@ -32,7 +32,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  * @author Alex
  * @since 1.0.0
  */
-//    ⚠⚠ Every datapack registry this mod writes goes through THIS ONE provider. DatapackBuiltinEntriesProvider
+//    ⚠ Every datapack registry this mod writes goes through THIS ONE provider. DatapackBuiltinEntriesProvider
 //    reports the fixed name "Registries", so a second instance fails the run with "Duplicate provider".
 public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
 
@@ -60,7 +60,7 @@ public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
 
     //    ⚠ The pack size is what a player actually SEES: the category cap (15) bounds the total either way,
     //    but a drift of 2..4 reads far denser than fifteen lone specks spread over 128 blocks.
-    //    ⚠⚠ 4 is the ceiling -- Mob.getMaxSpawnClusterSize() truncates anything larger mid-spawn.
+    //    ⚠ 4 is the ceiling -- Mob.getMaxSpawnClusterSize() truncates anything larger mid-spawn.
     //    ⚠ Weight does nothing above sea level: bats never spawn there, so nothing shares the category.
     private static final int SPAWN_WEIGHT = 8;
     private static final int PACK_MINIMUM = 2;
