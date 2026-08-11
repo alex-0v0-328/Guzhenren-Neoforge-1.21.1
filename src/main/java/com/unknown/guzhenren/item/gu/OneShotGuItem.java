@@ -7,6 +7,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A one-shot Gu [一次性]: refining and using are one act, so it carries no state and it stacks.
+ *
+ * <p>⚠ Its charge length is fixed here. A Gu whose ritual needs a longer bar cannot extend this class
+ * and has to sit directly under {@link MortalGuItem} instead.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public abstract class OneShotGuItem extends MortalGuItem {
 
     private static final String TOOLTIP_REFINE_COST = "guzhenren.item.gu.refine_cost";

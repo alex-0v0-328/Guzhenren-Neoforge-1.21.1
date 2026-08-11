@@ -15,6 +15,15 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Gu material [蛊材] that turns into Qi [气] over a charged press, paid for tick by tick.
+ *
+ * <p>⚠ A material, not a Gu, so it keeps the base item's hooks and it stacks. Only the shared
+ * per-stack state of a tended Gu forces a stack size of one, and this carries none.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class QiMaterialItem extends GuMaterialItem {
 
     private static final String CHARGE_CAPTION = "guzhenren.hud.refining_plain";

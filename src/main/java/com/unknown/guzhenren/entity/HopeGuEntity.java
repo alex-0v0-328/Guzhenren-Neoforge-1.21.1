@@ -9,6 +9,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 
+/**
+ * The wild Hope Gu [希望蛊]: the world's own source of an awakening [开窍].
+ *
+ * <p>⚠ It fades once any player has come into range, not once a particular one has. That sighting
+ * starts a clock, and nothing restarts it afterwards.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class HopeGuEntity extends FlyingGuEntity {
 
     private static final int  FADE_TICKS  = Ticks.MINUTE;

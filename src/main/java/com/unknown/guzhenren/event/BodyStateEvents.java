@@ -11,6 +11,15 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 
+/**
+ * The vanilla moments body [肉身] state answers: breathing, and any change to the active effects.
+ *
+ * <p>⚠ The effect hooks are here so the attack total is recomputed the instant one arrives or leaves.
+ * Left to the heartbeat alone it would lag by up to a second, which is visible on the panel.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class BodyStateEvents {
 

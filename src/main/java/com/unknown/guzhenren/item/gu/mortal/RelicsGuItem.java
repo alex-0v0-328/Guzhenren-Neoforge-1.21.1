@@ -10,6 +10,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A Relics Gu [舍利蛊]: it advances the holder's stage [阶段], and only at its own rank.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class RelicsGuItem extends OneShotGuItem {
 
     private static final String FAILED_RANK_MISMATCH = "guzhenren.item.failed.rank_mismatch";

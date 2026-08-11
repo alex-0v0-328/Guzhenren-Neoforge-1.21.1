@@ -8,6 +8,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The screen for one aperture's [空窍] store, a page at a time.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStorageMenu> {
 
     private static final int SLOT = 18;

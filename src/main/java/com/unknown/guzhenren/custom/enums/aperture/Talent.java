@@ -7,6 +7,15 @@ import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Aptitude [资质], derived from the aperture's base essence and never stored beside it.
+ *
+ * <p>⚠ The constants run high to low, so {@code shift(+1)} is {@code ordinal - 1}. Reading the
+ * direction off the declaration order is exactly how that gets reversed by accident.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum Talent implements StringRepresentable, EnumTranslatable {
 
     EXTREME(100, 100, 10, 20, 150, 10),

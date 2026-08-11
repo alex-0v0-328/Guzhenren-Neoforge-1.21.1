@@ -6,6 +6,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 
+/**
+ * The biome tags this mod declares.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModBiomeTags {
 
     private ModBiomeTags() {}

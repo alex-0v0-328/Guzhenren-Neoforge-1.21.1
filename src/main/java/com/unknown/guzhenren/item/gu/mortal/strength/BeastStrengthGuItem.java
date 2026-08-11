@@ -10,6 +10,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The shared class behind every beast-strength Gu; the species comes from registration.
+ *
+ * <p>⚠ A species declares its own tag and worth on the enum, so adding one never touches this class.
+ * If an edit here starts to look necessary, a number has been put in the wrong place.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class BeastStrengthGuItem extends TendedGuItem {
 
     private static final String FAILED_STRENGTH_HELD = "guzhenren.item.failed.beast_strength_held";

@@ -5,6 +5,15 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The kinds of thought [念] a mind holds, each with its own capacity.
+ *
+ * <p>⚠ Only some may be overfilled past the cap, and only those can ever be lethal.
+ * {@code isBurstable()} is the single declaration of which; never re-test the constant at a call site.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum WisdomType implements StringRepresentable, EnumTranslatable {
 
     THOUGHTS(50_000L, true),

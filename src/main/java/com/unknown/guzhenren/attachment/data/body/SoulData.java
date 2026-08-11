@@ -7,6 +7,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+/**
+ * Soul [魂魄], the one pool that is lethal at the bottom.
+ *
+ * <p>⚠ Its cap is stored rather than derived, because nothing else determines it. Compare
+ * {@link StaminaData}, whose cap has two sources and therefore stores only the earned part.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record SoulData(long maxSoul, long currentSoul) {
 
     public static final long DEFAULT_MAX_SOUL = 100L;

@@ -26,6 +26,15 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The G panel: every tab of what a player is, read straight off the synced attachments.
+ *
+ * <p>⚠ A plain screen with no menu behind it, so it has no container channel to send an intent over.
+ * That absence is the whole reason a client-intent payload exists at all.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class PlayerInfoScreen extends Screen {
 
     private static final float SCREEN_FRACTION = 0.80F;

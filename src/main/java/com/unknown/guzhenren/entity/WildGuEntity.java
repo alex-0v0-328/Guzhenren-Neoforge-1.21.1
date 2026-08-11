@@ -12,6 +12,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A wild Gu [野生蛊虫] living in the world; catching one hands over the Gu item, unrefined.
+ *
+ * <p>⚠ It arrives wild for free, because being refined is the presence of a component and a caught Gu
+ * simply has none. That is why the world needs no special case downstream.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public abstract class WildGuEntity extends PathfinderMob {
 
     private final Supplier<Item> caughtGu;

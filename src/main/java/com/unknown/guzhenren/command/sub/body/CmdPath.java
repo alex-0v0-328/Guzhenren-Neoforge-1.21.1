@@ -16,6 +16,15 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
+/**
+ * {@code /gzr path}: reads and writes attainment [造诣], marks [道痕] and specks [碎屑].
+ *
+ * <p>⚠ Every write names a tag, and the record drops a tag that belongs to another path. A write with
+ * the wrong tag reports success and changes nothing.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class CmdPath {
 
     private CmdPath() {}

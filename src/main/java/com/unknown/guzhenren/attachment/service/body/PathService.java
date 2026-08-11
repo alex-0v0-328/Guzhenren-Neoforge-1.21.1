@@ -10,6 +10,15 @@ import java.util.Map;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * The only writer of Path [流派] progress: attainment, Dao marks [道痕] and specks [碎屑].
+ *
+ * <p>⚠ Every write names a MarkTag, and one owned by a different path is dropped silently by the
+ * record. A write with the wrong tag looks like it worked and did nothing at all.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class PathService {
 
     private PathService() {}

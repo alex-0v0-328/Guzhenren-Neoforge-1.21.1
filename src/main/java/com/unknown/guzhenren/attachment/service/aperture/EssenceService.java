@@ -12,6 +12,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * Essence [真元]: the pool, the distilled reserve, its regen, and the Liquor Worm's [酒虫] phases.
+ *
+ * <p>⚠ A gate must ask {@code spendable()}, never {@code currentEssence()}. Distilling empties the
+ * ordinary pool by design, so a gate on the raw value refuses everything for that whole phase.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class EssenceService {
 
     private EssenceService() {}

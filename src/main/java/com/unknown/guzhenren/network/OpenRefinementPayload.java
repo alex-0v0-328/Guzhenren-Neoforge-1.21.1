@@ -7,6 +7,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Client intent: open the refinement [炼蛊] menu.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record OpenRefinementPayload() implements CustomPacketPayload {
 
     public static final OpenRefinementPayload INSTANCE = new OpenRefinementPayload();

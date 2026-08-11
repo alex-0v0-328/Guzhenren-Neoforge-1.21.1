@@ -6,6 +6,15 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
+/**
+ * All-Out Effort [全力以赴]: while it runs, the body's carrying limit [承受上限] does not apply.
+ *
+ * <p>⚠ A marker with no AttributeModifier. The strength service reads it, so attack still comes out
+ * of one formula rather than gaining a second source.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class AllOutEffortEffect extends MobEffect {
 
     public AllOutEffortEffect(MobEffectCategory category, int color) {

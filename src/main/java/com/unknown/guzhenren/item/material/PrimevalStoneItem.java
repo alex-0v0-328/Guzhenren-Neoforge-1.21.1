@@ -9,6 +9,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Primeval stone [元石]: a right click pours its essence [真元] into the holder's aperture [空窍].
+ *
+ * <p>⚠ It refuses an unawakened player instead of quietly doing nothing, because the service write is
+ * a no-op there and the stone would otherwise be eaten for free.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class PrimevalStoneItem extends GuMaterialItem {
 
     private static final String FAILED_UNAWAKENED = "guzhenren.item.failed.unawakened";

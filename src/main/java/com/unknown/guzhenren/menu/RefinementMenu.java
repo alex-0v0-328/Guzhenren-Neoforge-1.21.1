@@ -34,6 +34,15 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The refinement [炼蛊] container: the ring grid, the ritual's clock, and the settlement.
+ *
+ * <p>⚠ The ritual lives in the menu deliberately -- the menu IS the clock, so closing the window
+ * aborts by construction. Lifting the state out would need an abort path that does not exist.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class RefinementMenu extends AbstractContainerMenu {
 
     public static final int SLOT = 18;

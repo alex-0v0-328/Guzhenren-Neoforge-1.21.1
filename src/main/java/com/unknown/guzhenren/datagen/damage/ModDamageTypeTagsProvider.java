@@ -14,6 +14,12 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Writes the damage type tags.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class ModDamageTypeTagsProvider extends TagsProvider<DamageType> {
 
     public ModDamageTypeTagsProvider(PackOutput output,

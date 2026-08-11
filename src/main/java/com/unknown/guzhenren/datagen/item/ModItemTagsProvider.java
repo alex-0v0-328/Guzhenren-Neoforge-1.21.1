@@ -14,6 +14,12 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Writes the item tags, including the larders a Gu feeds from.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class ModItemTagsProvider extends ItemTagsProvider {
 
     public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,

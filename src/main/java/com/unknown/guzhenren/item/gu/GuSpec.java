@@ -8,6 +8,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * One Gu's numbers, given as a chain at registration so that a registration reads as a table row.
+ *
+ * <p>⚠ {@code validate()} runs at registration and refuses to start the game, naming the Gu, when
+ * those numbers do not divide evenly. It is the first line of defense; never route around it.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class GuSpec {
 
     private final Rank rank;

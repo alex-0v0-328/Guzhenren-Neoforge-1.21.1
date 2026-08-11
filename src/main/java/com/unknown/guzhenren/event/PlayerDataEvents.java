@@ -11,6 +11,15 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 
+/**
+ * The player lifecycle moments, each one forwarded to the single cross-domain service.
+ *
+ * <p>⚠ Nothing is decided in this file. A handler that starts deciding for itself is how two of them
+ * come to disagree about what a respawn keeps.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerDataEvents {
 

@@ -12,6 +12,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Every phrase the HUD, the G panel and the info command share.
+ *
+ * <p>⚠ A phrase built at a call site is one that will eventually word the same fact differently
+ * somewhere else. If two surfaces say a thing, the sentence belongs in this file.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModDisplayText {
 
     private ModDisplayText() {}

@@ -8,6 +8,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
+/**
+ * Max health as an AttributeModifier derived from rank, which is why it does not ride a clone.
+ *
+ * <p>⚠ Transient, and a no-op when the rank has not moved. Lowering the cap must also clamp current
+ * health down -- the one line {@link AttackService} does not need.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class HealthService {
 
     private HealthService() {}

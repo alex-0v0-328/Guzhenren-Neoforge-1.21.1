@@ -10,6 +10,15 @@ import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * Strength [力道]: what has been accumulated, and how much of it a body can actually bring to bear.
+ *
+ * <p>⚠ {@code usableJin(int, int)} is a deliberate seam so the ramp can be unit-tested without a
+ * Player. Keep it -- the ramp had a boundary bug once, and only arithmetic catches that kind.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class StrengthService {
 
     private StrengthService() {}

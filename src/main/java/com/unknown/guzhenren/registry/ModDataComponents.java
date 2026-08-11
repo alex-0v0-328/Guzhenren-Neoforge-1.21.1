@@ -12,6 +12,15 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+/**
+ * The item components this mod adds, for state belonging to one particular stack.
+ *
+ * <p>⚠ A component here is for state that not every tended Gu shares. Anything all of them carry
+ * belongs on the shared state record instead of gaining a component of its own.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModDataComponents {
 
     private ModDataComponents() {}

@@ -16,6 +16,15 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Hope Gu [希望蛊]: it awakens [开窍] an aperture, rolling the aptitude [资质] as its bar fills.
+ *
+ * <p>⚠ One-shot in behavior, but deliberately NOT a subclass of {@code OneShotGuItem}: that class
+ * fixes the charge length, and this ritual bar needs a much longer one.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class HopeGuItem extends MortalGuItem {
 
     private static final String FAILED_AWAKENED = "guzhenren.item.failed.awakened";

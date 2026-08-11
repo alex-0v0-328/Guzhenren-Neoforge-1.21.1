@@ -13,6 +13,12 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Writes the biome tags deciding where a wild Gu [野生蛊虫] may spawn.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 //    ⚠ A tag rather than a literal biome list, so a datapack can retune where 野生蛊虫 [wild Gu] live
 //    without touching this mod. Editing the list here still needs runData.
 public class ModBiomeTagsProvider extends TagsProvider<Biome> {

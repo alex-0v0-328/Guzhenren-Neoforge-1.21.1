@@ -6,6 +6,15 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
+/**
+ * Writes an item model per registered item, dispatching on the item's class.
+ *
+ * <p>⚠ It checks that the texture is really there, so a missing PNG fails datagen instead of shipping
+ * as a missing-texture item nobody notices until they open the tab.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class ModItemModelProvider extends ItemModelProvider {
 
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {

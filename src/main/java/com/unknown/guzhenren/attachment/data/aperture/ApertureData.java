@@ -7,6 +7,15 @@ import java.util.List;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+/**
+ * The Aperture [空窍] attachment: a mortal has none, and awakening [开窍] is what puts one here.
+ *
+ * <p>⚠ {@code with} refuses to grow the list and only {@code opened} appends, so an aperture that does not
+ * exist yet cannot be brought into being merely by writing to it.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record ApertureData(List<Aperture> apertures) {
 
     public static final int MAX_APERTURES = 2;

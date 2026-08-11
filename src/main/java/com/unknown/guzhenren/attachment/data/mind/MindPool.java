@@ -7,6 +7,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+/**
+ * One thought [念] pool of one wisdom type.
+ *
+ * <p>⚠ This record does not clamp itself: it cannot know which wisdom type it belongs to, and only some
+ * of them may burst past the cap, so the clamp lives in the service every write passes through.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record MindPool(long current, long max, boolean bufferUsed) {
 
     public static final Codec<MindPool> CODEC = RecordCodecBuilder.create(instance -> instance.group(

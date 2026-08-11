@@ -23,6 +23,15 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
+/**
+ * The one-second heartbeat: a straight run of steps that most of the player's state depends on.
+ *
+ * <p>⚠ Their ORDER is load-bearing and nothing in the code admits it -- most steps read what an
+ * earlier one just wrote. The dependency of each step is written out in CLAUDE.md. Reorder nothing blind.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerTickEvents {
 

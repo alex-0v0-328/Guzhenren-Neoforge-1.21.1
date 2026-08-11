@@ -6,6 +6,12 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 
+/**
+ * What the refinement [炼蛊] grid is holding, in the shape the recipe manager wants to see it.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record GuRecipeInput(List<ItemStack> slots) implements RecipeInput {
 
     public static GuRecipeInput of(Container container) {

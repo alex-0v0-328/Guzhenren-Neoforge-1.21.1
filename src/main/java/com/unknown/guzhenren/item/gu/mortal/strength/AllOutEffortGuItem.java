@@ -12,6 +12,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * All-Out Effort Gu [全力以赴蛊]: for a while, the body's carrying limit [承受上限] stops applying.
+ *
+ * <p>⚠ Its effect is a marker carrying no AttributeModifier. The lift is read back by the strength
+ * service, so attack still comes out of one formula instead of gaining a second source.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class AllOutEffortGuItem extends TendedGuItem {
 
     private static final String FAILED_ALREADY_UNLEASHED = "guzhenren.item.failed.all_out_active";

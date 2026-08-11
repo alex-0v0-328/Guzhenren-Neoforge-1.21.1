@@ -11,6 +11,16 @@ import java.util.Map;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Qi [气] holdings, sparse: a kind missing from the map is simply one the player is not holding.
+ *
+ * <p>⚠ Every read takes the current tick, because an entry anchors a moment rather than a balance. A
+ * reader without it would report an amount that has already drained away.
+ *
+ * @author Alex
+ * @since 1.0.0
+ * @see QiEntry
+ */
 public record QiData(Map<QiKind, QiEntry> entries) {
 
     public static final QiData DEFAULT = new QiData(Map.of());

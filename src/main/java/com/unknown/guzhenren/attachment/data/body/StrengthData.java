@@ -17,6 +17,15 @@ import java.util.Set;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+/**
+ * Strength [力道]: the beast and human strengths a player has refined into themselves.
+ *
+ * <p>⚠ The compact constructor must use {@code new EnumMap<>(Class)} plus {@code putAll}, never the
+ * {@code EnumMap(Map)} copy constructor -- that one throws on the empty maps DEFAULT is built from.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record StrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Integer> humanStrength) {
 
     public static final StrengthData DEFAULT = new StrengthData(Set.of(), Map.of());

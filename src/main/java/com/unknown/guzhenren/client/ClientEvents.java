@@ -21,6 +21,12 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
+/**
+ * Every client-side registration this mod makes: HUD layers, key mappings, screens and renderers.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID, value = Dist.CLIENT)
 public final class ClientEvents {
 

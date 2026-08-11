@@ -24,6 +24,16 @@ import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
+/**
+ * The English strings, written as an aligned table.
+ *
+ * <p>⚠ Every entry takes the registered object or the enum constant, never a raw key string, so a
+ * renamed registration cannot leave a key behind pointing at nothing.
+ *
+ * @author Alex
+ * @since 1.0.0
+ * @see ZhCnLanguageProvider
+ */
 public class EnUsLanguageProvider extends LanguageProvider {
     public EnUsLanguageProvider(PackOutput output) {
         super(output, Guzhenren.MOD_ID, "en_us");

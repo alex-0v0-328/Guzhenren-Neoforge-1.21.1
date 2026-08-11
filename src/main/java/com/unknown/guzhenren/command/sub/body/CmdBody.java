@@ -10,6 +10,15 @@ import com.unknown.guzhenren.custom.enums.body.Race;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
+/**
+ * {@code /gzr body}: reads and writes body [肉身] state.
+ *
+ * <p>⚠ Setting the zombie [僵] form from here leaves the tier unset, so a zombie made by command
+ * carries no attack bonus. That is this command's shape, not a fault in the bonus.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class CmdBody {
 
     private CmdBody() {}

@@ -12,6 +12,15 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
+/**
+ * Stamina's [耐力] own clock: it counts half-seconds itself, and it bills the jump.
+ *
+ * <p>⚠ This cannot live on the heartbeat, which wakes once a second and returns otherwise. Anything
+ * finer than a second has to count its own ticks, as this file does.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class StaminaEvents {
 

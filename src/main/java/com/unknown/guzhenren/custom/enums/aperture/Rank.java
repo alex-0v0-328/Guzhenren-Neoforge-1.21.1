@@ -6,6 +6,16 @@ import java.util.Arrays;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Rank [转数], the coarse measure of a cultivator, and the tables each grade carries.
+ *
+ * <p>⚠ NONE translates to the empty string on purpose. It reads like an omission and is not one -- the
+ * mortal's word belongs to {@link Title} alone, and a word with two owners drifts apart.
+ *
+ * @author Alex
+ * @since 1.0.0
+ * @see Title
+ */
 public enum Rank implements StringRepresentable, EnumTranslatable {
 
     NONE (      0L,  20, EssenceColor.NONE),

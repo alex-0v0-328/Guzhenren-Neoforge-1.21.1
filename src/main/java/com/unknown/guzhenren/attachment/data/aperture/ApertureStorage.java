@@ -7,6 +7,16 @@ import java.util.Collections;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * The Gu kept inside each Aperture [空窍], including the Vital Gu [本命蛊] bound to that aperture.
+ *
+ * <p>⚠ Serialized but NOT synced. The client never receives this, so every reader has to be server-side
+ * and anything a screen needs must travel by some other route.
+ *
+ * @author Alex
+ * @since 1.0.0
+ * @see ApertureData
+ */
 public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> vital) {
 
     public static final ApertureStorage DEFAULT = new ApertureStorage(List.of(), List.of());

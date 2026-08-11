@@ -13,6 +13,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
+/**
+ * {@code /gzr strength}: reads and writes the beast and human strengths a body holds.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class CmdStrength {
 
     private CmdStrength() {}

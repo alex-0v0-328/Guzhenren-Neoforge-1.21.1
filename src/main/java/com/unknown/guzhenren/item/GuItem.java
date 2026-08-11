@@ -22,6 +22,15 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The base of everything a Gu hand holds, both Gu [蛊虫] and Gu material [蛊材].
+ *
+ * <p>⚠ A charge is paced by the gap between the holder's rank and the item's own, never by the stage.
+ * A leaf wanting its own pacing overrides the hook rather than reaching for the stage.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public abstract class GuItem extends Item {
 
     public static final int COOLDOWN_TICKS = 2;

@@ -12,6 +12,15 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+/**
+ * The creative tabs, filled by dispatching on the item's class.
+ *
+ * <p>⚠ An item extending neither of the two middle classes lands in no tab at all, silently. Nothing
+ * fails and nothing warns; the item simply never appears.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModCreativeTabs {
 
     private ModCreativeTabs() {}

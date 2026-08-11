@@ -7,6 +7,12 @@ import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
+/**
+ * {@code /gzr mind}: reads and writes the thought [念] pools.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class CmdMind {
 
     private CmdMind() {}

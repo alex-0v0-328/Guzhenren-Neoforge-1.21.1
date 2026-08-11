@@ -10,6 +10,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A Gu that grants its vitality effect, refusing while one it granted is still running.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class VitalityLeafGuItem extends OneShotGuItem {
 
     private static final String FAILED_VITALITY_ACTIVE = "guzhenren.item.failed.vitality_active";

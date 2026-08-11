@@ -6,6 +6,15 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The kinds of Qi [气], and how long a holding lasts before it starts decaying.
+ *
+ * <p>⚠ The tier ladder and the decay rate are tuned against each other so every tier empties in the
+ * same number of seconds. Move one without the other and the tiers stop being comparable.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum QiKind implements StringRepresentable, EnumTranslatable {
 
     SWORD    ( 5 * Ticks.MINUTE,                 0),

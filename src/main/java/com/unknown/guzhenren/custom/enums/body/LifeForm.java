@@ -5,6 +5,15 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Life form [生命形态]: the single value saying what the player currently is.
+ *
+ * <p>⚠ Ask the predicates here instead of comparing constants at the call site. Adding a form should
+ * mean answering these questions once; a call site that compares constants just misses the new one.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum LifeForm implements StringRepresentable, EnumTranslatable {
 
     ALIVE,

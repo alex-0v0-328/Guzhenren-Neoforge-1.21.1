@@ -6,6 +6,15 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * The only writer of Soul [魂魄], the one pool whose bottom is lethal.
+ *
+ * <p>⚠ Nothing here kills. Emptying the soul only sets up a lethal state that the last step of the
+ * heartbeat notices, so there is no "kill" call in this file to search for.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class SoulService {
 
     private SoulService() {}

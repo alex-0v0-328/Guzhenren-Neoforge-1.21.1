@@ -18,6 +18,15 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
+/**
+ * Wires every generator that runs at datagen time.
+ *
+ * <p>⚠ What they write is a committed source set, so a provider changed without regenerating ships a
+ * stale jar while the build stays perfectly green.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class DataGenerators {
     private DataGenerators() {}

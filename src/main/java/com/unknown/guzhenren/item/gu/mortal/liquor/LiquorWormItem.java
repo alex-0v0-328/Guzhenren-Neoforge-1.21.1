@@ -13,6 +13,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Liquor Worm [酒虫]: it distils ordinary essence [真元] into the distilled reserve, in phases.
+ *
+ * <p>⚠ While it runs, the ordinary pool is empty by design. Anything gating on essence must ask for
+ * the spendable figure, or it will refuse everything for the whole of that stretch.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class LiquorWormItem extends TendedGuItem {
 
     private static final String FAILED_RANK = "guzhenren.item.failed.liquor_rank";

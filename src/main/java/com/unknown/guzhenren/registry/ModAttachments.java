@@ -20,6 +20,12 @@ import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+/**
+ * Every data attachment this mod puts on a player.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModAttachments {
 
     private ModAttachments() {}

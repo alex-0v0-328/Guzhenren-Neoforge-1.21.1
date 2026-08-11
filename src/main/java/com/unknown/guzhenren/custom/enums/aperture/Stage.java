@@ -6,6 +6,15 @@ import java.util.Arrays;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Stage [阶段] within a rank, and the multiplier it contributes to the essence [真元] cap.
+ *
+ * <p>⚠ The multiplier lives here and the formula lives on the record, so the cap has exactly one
+ * expression. A second place that multiplies is a second answer.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum Stage implements StringRepresentable, EnumTranslatable {
 
     NONE(0),

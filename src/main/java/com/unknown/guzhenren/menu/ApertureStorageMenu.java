@@ -19,6 +19,15 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The container behind one aperture's [空窍] store, paged because the store itself is uncapped.
+ *
+ * <p>⚠ It has to reload after the day-rollover walk, or an open menu saves its stale view back and
+ * resurrects a Gu that starved a moment earlier.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class ApertureStorageMenu extends AbstractContainerMenu {
 
     public static final int COLS = 9;

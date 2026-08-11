@@ -5,6 +5,15 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The color an essence [真元] bar takes at each rank, shaded by stage.
+ *
+ * <p>⚠ Not dead code, though it can look it: the Relics Gu [舍利蛊] names echo these colors without
+ * reading them, because a color word and an item name do not translate the same way.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum EssenceColor implements StringRepresentable, EnumTranslatable {
 
     NONE(0xFF808080, false),

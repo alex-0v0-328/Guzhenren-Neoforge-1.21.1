@@ -10,6 +10,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The shared class behind the human-strength ladder; the rank and the kind come from registration.
+ *
+ * <p>⚠ What it grants rides the player rather than the stack, so a holder who has already maxed out
+ * can hand the Gu to someone else and it goes on working for them.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class HumanStrengthGuItem extends TendedGuItem {
 
     private static final String FAILED_LAYERS_FULL = "guzhenren.item.failed.human_strength_full";

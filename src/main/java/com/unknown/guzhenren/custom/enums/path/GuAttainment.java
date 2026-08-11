@@ -5,6 +5,15 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Attainment [造诣] in a path, from nothing up to the highest grade.
+ *
+ * <p>⚠ Each grade carries its own refinement bonus here, so adding one is a single line and no change
+ * anywhere else. Do not move that table into the code that reads it.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum GuAttainment implements StringRepresentable, EnumTranslatable {
 
     NONE                     (0,   0),

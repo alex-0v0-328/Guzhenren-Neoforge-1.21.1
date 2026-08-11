@@ -4,6 +4,15 @@ import com.unknown.guzhenren.registry.ModDataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * How a tended Gu [需照顾] is billed over time: on a hunger bar, or not at all.
+ *
+ * <p>⚠ "Hungry" means only that the next day rollover will kill it, and the threshold is flat for
+ * every Gu on a bar. It must never be scaled to the size of the meal.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public sealed interface GuClock {
 
     void bind(ServerPlayer player, ItemStack stack);

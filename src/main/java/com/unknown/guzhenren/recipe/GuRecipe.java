@@ -27,6 +27,15 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * One Gu recipe [蛊方]: what it eats, what it yields, and the windows the ritual runs through.
+ *
+ * <p>⚠ A recipe index means the same thing on both sides only because the listing sorts by recipe id.
+ * The recipe manager's own order guarantees nothing at all.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, List<ItemStack> results,
                        long essencePerSecond, long soulPerSecond, List<Integer> windows, int baseSuccess)
         implements Recipe<GuRecipeInput> {

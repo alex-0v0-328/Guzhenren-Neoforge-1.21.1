@@ -7,6 +7,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
+/**
+ * {@code /gzr reset}: puts a player back to what they were born as.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class CmdReset {
 
     private CmdReset() {}

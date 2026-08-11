@@ -14,6 +14,12 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
 
+/**
+ * Mod entry point: builds every registry holder and hands them to the mod event bus.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 @Mod(Guzhenren.MOD_ID)
 public class Guzhenren {
 

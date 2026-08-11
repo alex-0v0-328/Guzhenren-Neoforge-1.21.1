@@ -9,6 +9,15 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
+/**
+ * Draws a graded effect's icon from its amplifier, so one effect can wear a different face per grade.
+ *
+ * <p>⚠ This exists so a family of grades stays a single effect. Splitting it into one effect per
+ * grade would let a player hold two grades of the same thing at the same time.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record GradedEffectIcon(String name, int lowestRank, int highestRank) implements IClientMobEffectExtensions {
 
     private static final int ICON_SIZE = 16;

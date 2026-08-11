@@ -24,6 +24,15 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A tended Gu [需照顾]: wild, then refined [炼化], then fed and used, all on one shared state record.
+ *
+ * <p>⚠ The billing step runs decay, then auto-feed, then warn. Nothing in the code makes that order
+ * look load-bearing, and swapping any two of them changes which Gu survive a day.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public abstract class TendedGuItem extends MortalGuItem {
 
     private static final String TOOLTIP_REFINE = "guzhenren.item.gu.refine_progress";

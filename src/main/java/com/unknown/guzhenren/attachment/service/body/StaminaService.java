@@ -8,6 +8,16 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * Stamina [耐力]: the derived cap, the two sprint gates, and the single door every write passes.
+ *
+ * <p>⚠ Sprinting needs TWO thresholds, not one. Stamina regenerates while resting, so one threshold
+ * only makes sprinting stutter; stopping at empty and resuming higher up is what removes the stutter.
+ *
+ * @author Alex
+ * @since 1.0.0
+ * @see com.unknown.guzhenren.mixin.LocalPlayerSprintMixin
+ */
 public final class StaminaService {
 
     private StaminaService() {}

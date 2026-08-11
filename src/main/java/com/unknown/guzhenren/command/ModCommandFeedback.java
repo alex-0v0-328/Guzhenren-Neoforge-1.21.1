@@ -4,6 +4,15 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 
+/**
+ * Every reply a command sends, in one voice: plain for data, green for what changed, red for what did not.
+ *
+ * <p>⚠ Color carries exactly one meaning here, and that meaning is the category of the reply. It
+ * never encodes a domain, a rank, or a severity.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModCommandFeedback {
 
     private ModCommandFeedback() {}

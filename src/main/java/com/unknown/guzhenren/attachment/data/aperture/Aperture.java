@@ -15,6 +15,15 @@ import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * One Aperture [空窍]: the vessel a cultivator awakens, and the thing that decides how much essence fits.
+ *
+ * <p>⚠ The compact constructor is the only clamp. It derives the cap and makes a secondary path equal to
+ * the primary one unrepresentable, so no writer can route around either rule.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record Aperture(
         Rank rank,
         Stage stage,

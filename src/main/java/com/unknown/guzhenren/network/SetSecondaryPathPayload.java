@@ -10,6 +10,15 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Client intent: choose the secondary path [辅修] on the named aperture [空窍].
+ *
+ * <p>⚠ It is a payload only because the screen that sends it has no menu behind it. Anything inside a
+ * container sends its intent over vanilla's own channels instead.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record SetSecondaryPathPayload(int aperture, @Nullable GuPath path) implements CustomPacketPayload {
 
     public static final Type<SetSecondaryPathPayload> TYPE = new Type<>(

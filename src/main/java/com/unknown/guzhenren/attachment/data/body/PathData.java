@@ -9,6 +9,16 @@ import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.network.codec.StreamCodec;
 
+/**
+ * Path [流派] progress, sparse: a path missing from the map is simply one nobody has walked.
+ *
+ * <p>⚠ The compact constructor is the one door -- a MarkTag owned by a different path is dropped there,
+ * so no writer can file a foreign tag under a path.
+ *
+ * @author Alex
+ * @since 1.0.0
+ * @see PathEntry
+ */
 public record PathData(Map<GuPath, PathEntry> entries) {
 
     public static final PathData DEFAULT = new PathData(Map.of());

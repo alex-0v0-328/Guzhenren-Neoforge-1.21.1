@@ -25,6 +25,15 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The refinement [炼蛊] screen: the ring grid, the phase bar, and the recipe picker.
+ *
+ * <p>⚠ Every cell position comes from the menu's own helpers, so a drawn cell and the real slot
+ * cannot drift apart. Two different pitches are in play; do not reuse the inventory's for the grid.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
 
     private static final int SLOT = RefinementMenu.SLOT;

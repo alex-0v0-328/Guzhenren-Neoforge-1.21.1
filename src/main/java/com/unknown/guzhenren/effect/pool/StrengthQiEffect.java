@@ -7,6 +7,15 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
+/**
+ * Strength Qi [力气], the pool effect that adds attack damage while it is held.
+ *
+ * <p>⚠ It contributes through {@link com.unknown.guzhenren.effect.AttackContributor} rather than an
+ * AttributeModifier, so what the body panel shows and what a hit actually deals stay one number.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class StrengthQiEffect extends MobEffect implements AttackContributor {
 
     private static final double[] ATTACK_BONUS = {0.25, 1.0, 4.0, 16.0, 64.0};

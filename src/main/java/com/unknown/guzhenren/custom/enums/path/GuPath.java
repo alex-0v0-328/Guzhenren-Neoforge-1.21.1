@@ -5,6 +5,15 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Every Dao path [流派] a Gu can belong to. There is no NONE here; "has not chosen" is a null.
+ *
+ * <p>⚠ Never derive a Chinese rendering from the English one. Space Path [宇道] and Time Path [宙道]
+ * both exist, so a guess at either does not fail loudly -- it quietly names the other real path.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum GuPath implements StringRepresentable, EnumTranslatable {
 
     HEAVEN, RULE, SPACE, TIME, HUMAN,

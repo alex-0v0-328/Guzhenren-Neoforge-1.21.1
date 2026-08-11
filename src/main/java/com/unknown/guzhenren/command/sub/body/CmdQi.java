@@ -12,6 +12,15 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
+/**
+ * {@code /gzr qi}: reads and writes Qi [气] holdings.
+ *
+ * <p>⚠ A holding is a time anchor, so an amount written here begins decaying at once. Reading it back
+ * a moment later and finding it smaller is correct behavior.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class CmdQi {
 
     private CmdQi() {}

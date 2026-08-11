@@ -28,6 +28,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * The one cross-domain lifecycle service: birth, sleep, death, clone, respawn, and a full reset.
+ *
+ * <p>⚠ What a clone inherits is decided here and nowhere else. There is deliberately no per-domain copy
+ * hook, because a death-copy and a reset cannot both be the last write.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class PlayerDataService {
 
     private static final String VITAL_LOST = "guzhenren.item.gu.vital_lost";

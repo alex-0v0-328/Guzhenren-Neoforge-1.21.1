@@ -18,6 +18,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The only writer of the Aperture [空窍] attachment: awakening [开窍], rank, stage, talent and paths.
+ *
+ * <p>⚠ The physique-and-talent invariant is enforced here rather than in the record, because repairing
+ * it rolls a die and a compact constructor has to stay a pure function.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ApertureService {
 
     private ApertureService() {}

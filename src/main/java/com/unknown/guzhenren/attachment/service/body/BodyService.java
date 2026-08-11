@@ -11,6 +11,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * The only writer of Body [肉身] state, and the home of every life-form [生命形态] transition.
+ *
+ * <p>⚠ {@code tickAging} returns how many days it just billed, and that count is often far more than
+ * one -- an offline stretch or a {@code /time} jump arrives as a single call.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class BodyService {
 
     private BodyService() {}

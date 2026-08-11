@@ -7,6 +7,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The goal that makes a flying Gu hover beside the player it wants.
+ *
+ * <p>⚠ It drives the movement vector itself and never paths. A mote flies straight, so the
+ * navigation's path cache and stuck detector would be obstacles rather than help.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 //    ⚠⚠ This goal drives deltaMovement itself and NEVER paths. A mote flies in a straight line, so the
 //    navigation's path cache, stuck detector and canUpdatePath gates would all be obstacles, not help.
 public class HoverNearPlayerGoal extends Goal {

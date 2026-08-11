@@ -18,6 +18,15 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A wild Gu that flies: it drifts toward a player it wants, and hovers there.
+ *
+ * <p>⚠ {@code isNoGravity()} is a flat true on purpose. The flying move control only clears gravity
+ * while it is actively moving the mob, and the hover goal stops the navigation.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class FlyingGuEntity extends WildGuEntity {
 
     public static final double DETECT_RANGE = 12.0;

@@ -9,6 +9,12 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+/**
+ * The recipe type and serializer behind refinement [炼蛊].
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModRecipes {
 
     private ModRecipes() {}

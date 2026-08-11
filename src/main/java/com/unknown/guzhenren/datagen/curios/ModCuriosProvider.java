@@ -7,6 +7,15 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import top.theillusivec4.curios.api.CuriosDataProvider;
 
+/**
+ * Writes the Curios slot data. There is no runtime Curios code in this mod at all.
+ *
+ * <p>⚠ Curios carries equipment only, and no Gu ever goes into a Curios slot. That decision is why
+ * the whole Curios footprint here is datagen.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class ModCuriosProvider extends CuriosDataProvider {
 
     public ModCuriosProvider(PackOutput output, ExistingFileHelper fileHelper,

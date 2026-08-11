@@ -11,6 +11,15 @@ import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.network.codec.StreamCodec;
 
+/**
+ * Mind [脑海]: the thought [念] pools, and the brilliance [才情] that decides how fast they refill.
+ *
+ * <p>⚠ Brilliance lives here rather than in an attachment of its own precisely because it IS the regen
+ * rate of these pools; kept apart, the rate and the pools it drives could drift.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record MindData(Brilliance brilliance, Map<WisdomType, MindPool> pools) {
 
     public static final MindData DEFAULT = new MindData(Brilliance.ORDINARY, Map.of());

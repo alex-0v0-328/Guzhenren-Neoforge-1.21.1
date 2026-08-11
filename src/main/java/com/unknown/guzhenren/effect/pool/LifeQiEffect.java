@@ -7,6 +7,12 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 import net.minecraft.world.entity.LivingEntity;
 
+/**
+ * Life Qi [生气], the pool effect that heals for as long as it is held.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class LifeQiEffect extends MobEffect {
 
     public static final int HEAL_INTERVAL_TICKS = 10;

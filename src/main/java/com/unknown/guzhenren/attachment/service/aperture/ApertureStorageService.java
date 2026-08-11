@@ -9,6 +9,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * The only writer of what an Aperture [空窍] holds, including the Vital Gu [本命蛊] bound to each.
+ *
+ * <p>⚠ It reaches into the item package on purpose, against this project's usual direction: binding a
+ * Vital Gu has to read that Gu's declared path. Do not "fix" those imports.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ApertureStorageService {
 
     private ApertureStorageService() {}

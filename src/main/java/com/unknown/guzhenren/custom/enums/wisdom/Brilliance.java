@@ -6,6 +6,15 @@ import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Brilliance [才情]: the grade deciding how fast thought [念] refills.
+ *
+ * <p>⚠ There is deliberately no NONE grade, because a mortal still thinks. The lowest grade is a real
+ * value rather than an absence, and code reading it as "unset" stops a mortal thinking at all.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum Brilliance implements StringRepresentable, EnumTranslatable {
 
     ORDINARY(1, 15),

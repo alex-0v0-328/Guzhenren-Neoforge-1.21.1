@@ -5,6 +5,13 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The tier a soul [魂魄] reads as, derived from its cap and never stored.
+ *
+ * @author Alex
+ * @since 1.0.0
+ * @see com.unknown.guzhenren.custom.enums.aperture.Title
+ */
 public enum SoulTier implements StringRepresentable, EnumTranslatable {
 
     ONE(1L),

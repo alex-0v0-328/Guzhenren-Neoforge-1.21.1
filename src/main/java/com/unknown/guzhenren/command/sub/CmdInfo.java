@@ -20,6 +20,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
+/**
+ * {@code /gzr info}: prints what a player is, from the same rows the G panel draws.
+ *
+ * <p>⚠ The target list hangs off each section, so the bare command means the sender and a name after
+ * it means that player. Lifting the target a level up would change what the bare form does.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class CmdInfo {
 
     private CmdInfo() {}

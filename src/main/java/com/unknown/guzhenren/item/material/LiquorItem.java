@@ -9,6 +9,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Liquor [酒]: what a Liquor Worm [酒虫] is fed, and a drink in its own right.
+ *
+ * <p>⚠ It earns a leaf class only because it is drunk rather than eaten. Several flavours register
+ * against this one class -- a material that differs only in its name needs no class at all.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class LiquorItem extends GuMaterialItem {
 
     private static final int NUTRITION = 1;

@@ -19,6 +19,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 
+/**
+ * The shared pieces every subcommand is built from.
+ *
+ * <p>⚠ Anything that flips the answer of a {@code requires()} predicate has to ask this class to
+ * refresh the command tree, or the client keeps the tree it was last sent.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModCommandSupport {
 
     private ModCommandSupport() {}

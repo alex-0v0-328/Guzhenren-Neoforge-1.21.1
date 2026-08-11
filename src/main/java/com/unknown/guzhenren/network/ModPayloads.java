@@ -13,6 +13,15 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
+/**
+ * Registers the client-intent payloads and handles each of them on the server.
+ *
+ * <p>⚠ This is where a forged payload lands, so a gate that only grays out a button is not a gate.
+ * Every refusal has to exist here as well as on the screen.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModPayloads {
 

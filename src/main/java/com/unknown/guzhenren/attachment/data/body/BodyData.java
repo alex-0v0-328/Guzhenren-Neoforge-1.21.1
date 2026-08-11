@@ -11,6 +11,15 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Body [肉身] state: what the player currently is, as opposed to what they can do.
+ *
+ * <p>⚠ {@code lifeForm} is the ONE life-state value. It replaced two scattered ones, and nothing may go
+ * back to inferring alive-or-dead by reading several fields and reasoning about them.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record BodyData(
         LifeForm lifeForm,
         Race race,

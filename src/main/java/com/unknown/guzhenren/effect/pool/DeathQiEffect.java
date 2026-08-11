@@ -3,6 +3,15 @@ package com.unknown.guzhenren.effect.pool;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 
+/**
+ * Death Qi [死气], the pool effect that burns lifespan [寿元] for as long as it is held.
+ *
+ * <p>⚠ This class holds only the numbers; the burning runs on the heartbeat. A MobEffect gets no
+ * expiry hook here, and the debt has to be settled at the moment the holding ends.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class DeathQiEffect extends MobEffect {
 
     public static final int YEAR_INTERVAL_TICKS = 120;

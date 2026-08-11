@@ -7,6 +7,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+/**
+ * Stamina [耐力], the everyday pool that sprinting and jumping spend and that refills on its own.
+ *
+ * <p>⚠ There is deliberately no max field: the cap is a derived base plus the stored bonus, so this
+ * record cannot clamp itself and the service is the single door that does.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record StaminaData(long currentStamina, long bonusStamina) {
 
     public static final long MORTAL_STAMINA = Talent.NONE.getStaminaBase();

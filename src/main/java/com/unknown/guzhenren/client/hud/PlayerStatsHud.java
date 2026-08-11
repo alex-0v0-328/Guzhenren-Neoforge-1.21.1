@@ -17,6 +17,15 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The top-left readout: the realm line, then one bar per pool.
+ *
+ * <p>⚠ Every phrase it draws comes from the shared display text and is never built here, so the HUD
+ * and the info command cannot word the same fact two different ways.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class PlayerStatsHud implements LayeredDraw.Layer {
 
     public static final PlayerStatsHud INSTANCE = new PlayerStatsHud();

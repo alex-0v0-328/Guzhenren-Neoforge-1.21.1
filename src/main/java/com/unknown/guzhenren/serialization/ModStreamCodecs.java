@@ -8,6 +8,15 @@ import java.util.Set;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+/**
+ * The stream codecs this mod adds: an enum as its ordinal, and enum-keyed maps and sets.
+ *
+ * <p>⚠ A nullable enum travels as its ordinal plus one, with zero meaning unset. No enum here has a
+ * NONE constant to lean on, so this is where "has not chosen" becomes representable on the wire.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModStreamCodecs {
 
     private ModStreamCodecs() {}

@@ -13,6 +13,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Primeval Elder Gu [元老蛊]: a vault for primeval stones that pays its own upkeep out of the vault.
+ *
+ * <p>⚠ It declares no clock and never eats. Starving is unreachable for it by design, so do not
+ * "fix" the missing hunger bar -- a failed refinement is the only thing that can destroy one.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class PrimevalElderGuItem extends TendedGuItem {
 
     private static final String FAILED_EMPTY = "guzhenren.item.failed.elder_gu_empty";

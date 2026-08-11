@@ -33,6 +33,15 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+/**
+ * Every item, and the only place a Gu's numbers actually live.
+ *
+ * <p>⚠ This chain is the truth. A figure written down anywhere else is a copy of it, and when the two
+ * disagree, this file is the one that is right.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModItems {
 
     private ModItems() {}

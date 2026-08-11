@@ -5,6 +5,12 @@ import com.unknown.guzhenren.effect.AttackContributor;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 
+/**
+ * The timed buff of the Flower Boar Gu [花豕蛊]: plain added attack damage, no cost on the way out.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class FlowerBoarGuEffect extends MobEffect implements AttackContributor {
 
     public static final int DURATION_TICKS = 60 * Ticks.SECOND;

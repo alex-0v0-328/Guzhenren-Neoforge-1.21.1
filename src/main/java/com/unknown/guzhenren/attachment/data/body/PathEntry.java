@@ -13,6 +13,15 @@ import java.util.Map;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+/**
+ * One Path's [流派] standing: how far it is cultivated, plus the tagged tallies that got it there.
+ *
+ * <p>⚠ {@code mark()} and {@code speck()} are sums over the tag maps and are never stored: a breakdown
+ * and a total cannot contradict each other when only the breakdown exists.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<MarkTag, Long> specks) {
 
     public static final PathEntry DEFAULT = new PathEntry(GuAttainment.NONE, Map.of(), Map.of());

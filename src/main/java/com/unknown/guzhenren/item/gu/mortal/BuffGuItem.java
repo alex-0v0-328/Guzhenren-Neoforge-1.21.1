@@ -10,6 +10,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The shared class behind the instant-buff Gu; the effect and its length come from registration.
+ *
+ * <p>⚠ Each of them still declares its own feed tag. Sharing a class does not mean sharing a larder.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class BuffGuItem extends TendedGuItem {
 
     private final Holder<MobEffect> buff;

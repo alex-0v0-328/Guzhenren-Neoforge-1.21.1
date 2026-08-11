@@ -8,6 +8,15 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 
+/**
+ * The keys of this mod's damage types.
+ *
+ * <p>⚠ Damage types live in a datapack registry rather than a deferred one, so this file owns only
+ * the keys; the JSON is written at datagen time by a provider that does not exist at runtime.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModDamageTypes {
 
     private ModDamageTypes() {}

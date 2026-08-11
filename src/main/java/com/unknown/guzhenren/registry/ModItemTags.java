@@ -6,6 +6,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
+/**
+ * The item tags this mod declares, most of them the larders a Gu feeds from.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModItemTags {
 
     private ModItemTags() {}

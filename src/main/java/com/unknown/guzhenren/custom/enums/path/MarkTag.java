@@ -6,6 +6,15 @@ import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Where a Dao mark [道痕] or speck [碎屑] came from, so a quantity can later be revoked exactly.
+ *
+ * <p>⚠ A tag declares which path owns it, and a write under any other path is dropped silently rather
+ * than refused. That is what makes a wrongly tagged write look like it worked.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum MarkTag implements StringRepresentable, EnumTranslatable {
 
     NATURAL        (null),

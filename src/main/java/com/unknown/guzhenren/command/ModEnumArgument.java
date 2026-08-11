@@ -12,6 +12,15 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
+/**
+ * A command argument accepting one constant of an enum.
+ *
+ * <p>⚠ It parses any bare word, including the name of a sibling literal. Brigadier flags the
+ * resulting ambiguity at boot in dev, and a nested one has to take its own argument name.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModEnumArgument {
 
     private ModEnumArgument() {}

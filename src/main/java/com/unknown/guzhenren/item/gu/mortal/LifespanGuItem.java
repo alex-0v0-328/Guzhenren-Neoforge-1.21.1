@@ -6,6 +6,12 @@ import com.unknown.guzhenren.item.gu.OneShotGuItem;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * A Gu that grants lifespan [寿元], rolled between the bounds given at registration.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class LifespanGuItem extends OneShotGuItem {
 
     private static final String MSG_GAINED = "guzhenren.item.gu.lifespan_gained";

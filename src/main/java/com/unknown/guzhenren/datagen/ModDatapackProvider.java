@@ -23,6 +23,15 @@ import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.BiomeModifiers;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+/**
+ * The single provider for every datapack registry this mod writes.
+ *
+ * <p>⚠ There can only be one. The builtin-entries provider reports a fixed name, so a second instance
+ * fails datagen outright; add a registry to this one's builder instead.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 //    ⚠⚠ Every datapack registry this mod writes goes through THIS ONE provider. DatapackBuiltinEntriesProvider
 //    reports the fixed name "Registries", so a second instance fails the run with "Duplicate provider".
 public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {

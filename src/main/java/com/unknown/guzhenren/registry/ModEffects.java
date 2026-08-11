@@ -19,6 +19,15 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+/**
+ * Every MobEffect this mod registers, one constant per effect.
+ *
+ * <p>⚠ A family of grades is ONE effect carrying an amplifier, never one effect per grade -- split
+ * them and a player can wear two grades of the same thing at once. The colors are Alex's to choose.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ModEffects {
 
     private ModEffects() {}

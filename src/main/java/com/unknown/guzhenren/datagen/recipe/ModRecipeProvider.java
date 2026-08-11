@@ -21,6 +21,15 @@ import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Writes the refinement [炼蛊] recipes, each one drawn as an ASCII picture of the grid.
+ *
+ * <p>⚠ The drawing is transcribed verbatim, so a wrong corner, a short row or an unkeyed letter fails
+ * datagen. The layout and every number in it are Alex's.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class ModRecipeProvider extends RecipeProvider {
 
     private static final String FOLDER = "refinement/";

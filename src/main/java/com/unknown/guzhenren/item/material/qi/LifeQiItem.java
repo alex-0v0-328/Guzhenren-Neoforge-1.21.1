@@ -8,6 +8,15 @@ import com.unknown.guzhenren.effect.pool.DeathQiEffect;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Life Qi [生气] material: it pays down a Death Qi [死气] debt before it does anything else.
+ *
+ * <p>⚠ Only clearing that debt outright refunds any of the burnt lifespan [寿元]; paying it partway
+ * down refunds nothing at all. The asymmetry is deliberate.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class LifeQiItem extends QiMaterialItem {
 
     private static final String CURED = "guzhenren.item.death_qi_cured";

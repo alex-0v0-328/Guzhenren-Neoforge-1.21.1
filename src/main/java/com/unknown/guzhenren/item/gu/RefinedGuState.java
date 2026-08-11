@@ -6,6 +6,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+/**
+ * The per-stack state a tended Gu [需照顾] carries: how far refined, how well fed, how badly hurt.
+ *
+ * <p>⚠ It stores damage taken rather than health remaining, so a wild Gu's zero already reads as
+ * undamaged. Turning that around would need a special case in every reader.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public record RefinedGuState(boolean refined, int refineProgress, int investedEssence, int hunger,
                              int damageTaken) {
 

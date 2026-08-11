@@ -9,6 +9,15 @@ import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The Ten-Extremes [十绝] physiques, and the tables that hang off each of them.
+ *
+ * <p>⚠ A physique other than NONE exists exactly when the aptitude is the top grade. They are one fact
+ * held in two places, and only the aperture service keeps them in step.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
 
     NONE                              (100, 100,  5),

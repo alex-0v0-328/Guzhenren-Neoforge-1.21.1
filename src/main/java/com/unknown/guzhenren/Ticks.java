@@ -1,5 +1,14 @@
 package com.unknown.guzhenren;
 
+/**
+ * Every unit of time this mod speaks, in ticks.
+ *
+ * <p>⚠ The mod has no config, so a duration someone might one day want to tune still belongs here as a
+ * named constant rather than inline in whatever code happens to use it first.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class Ticks {
 
     private Ticks() {}

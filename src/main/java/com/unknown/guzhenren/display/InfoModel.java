@@ -32,6 +32,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Every row the G panel and the info command share: which rows, in what order, decided once.
+ *
+ * <p>⚠ The entry type is sealed on purpose, so a new row is a compile error in both switches until
+ * both of them handle it. Do not widen it into an open interface.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class InfoModel {
 
     private InfoModel() {}

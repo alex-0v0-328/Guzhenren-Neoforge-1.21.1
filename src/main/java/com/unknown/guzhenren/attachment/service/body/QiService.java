@@ -11,6 +11,15 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * The only writer of Qi [气] holdings, and where their MobEffects are rebuilt from the pool.
+ *
+ * <p>⚠ Those effects are a projection, never the truth. Because the heartbeat rebuilds them, milk and
+ * {@code /effect clear} cannot cure Death Qi [死气] -- the next tick puts it straight back.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class QiService {
 
     private QiService() {}

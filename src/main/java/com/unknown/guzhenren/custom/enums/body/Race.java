@@ -8,6 +8,15 @@ import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Race [种族]: human, plus the variant races that each grant standing on one path.
+ *
+ * <p>⚠ Those marks are booked under the RACE tag, never NATURAL. A race can be changed, and marks that
+ * cannot be told apart from earned ones cannot be taken back.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum Race implements StringRepresentable, EnumTranslatable {
 
     HUMAN       (null),

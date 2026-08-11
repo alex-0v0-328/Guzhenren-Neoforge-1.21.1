@@ -7,6 +7,15 @@ import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * The day-rollover walk over Gu held inside apertures, both the stored ones and each Vital Gu [本命蛊].
+ *
+ * <p>⚠ Every reader here asks {@code refined()} first, because an unrefined Gu's hunger is zero and zero
+ * is also what starvation looks like. Drop that test and the first rollover eats every wild Gu.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ApertureStorageTick {
 
     private ApertureStorageTick() {}

@@ -9,6 +9,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The shared class behind every zombie Gu [僵尸蛊]; the form's length and health come from registration.
+ *
+ * <p>⚠ Using one again too soon is not refused -- it is the penalty, and it makes the form permanent.
+ * That branch leaves early, so anything both outcomes need has to sit ahead of it.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public class ZombieGuItem extends TendedGuItem {
 
     private static final String FAILED_ALREADY_ZOMBIE = "guzhenren.item.failed.zombie_already";

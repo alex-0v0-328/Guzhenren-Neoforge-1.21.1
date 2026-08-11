@@ -6,6 +6,12 @@ import mezz.jei.api.JeiPlugin;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * An empty JEI plugin: a hook left deliberately unfilled, not an oversight.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 @JeiPlugin
 public class ModJeiPlugin implements IModPlugin {
 

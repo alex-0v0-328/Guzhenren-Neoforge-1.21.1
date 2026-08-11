@@ -17,6 +17,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.util.StringRepresentable;
 
+/**
+ * {@code /gzr aperture}: reads and writes the aperture [空窍] itself.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class CmdAperture {
 
     private CmdAperture() {}

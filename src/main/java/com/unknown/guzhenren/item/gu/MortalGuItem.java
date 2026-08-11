@@ -14,6 +14,15 @@ import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A mortal Gu [凡蛊]: it holds the spec and the essence [真元] gate, and holds no per-stack state.
+ *
+ * <p>⚠ Every Gu answers a right click even with nothing else to do, because refining [炼化] is always
+ * an answer. A leaf that declines to answer makes the Gu look broken in the hand.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public abstract class MortalGuItem extends GuItem {
 
     private static final String KIND_KEY = "guzhenren.display.gu";

@@ -12,6 +12,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The bar drawn over the hotbar while a charged use is running.
+ *
+ * <p>⚠ Any Gu whose use has a duration gets this for free, so adding a charged Gu needs no change here.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class ChargeHud implements LayeredDraw.Layer {
 
     public static final ChargeHud INSTANCE = new ChargeHud();

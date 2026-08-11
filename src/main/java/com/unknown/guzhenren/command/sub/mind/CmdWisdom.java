@@ -8,6 +8,15 @@ import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
+/**
+ * The wisdom cells under {@code /gzr mind}, spelled out one literal at a time.
+ *
+ * <p>⚠ They are literals rather than a single enum argument so that brilliance [才情] can sit beside
+ * them as a sibling. Tidying this into one enum argument takes that away.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class CmdWisdom {
 
     private CmdWisdom() {}

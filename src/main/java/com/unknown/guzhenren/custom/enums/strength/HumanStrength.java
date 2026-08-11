@@ -5,6 +5,15 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The human strengths a body accumulates, measured in Jin [斤] and Jun [钧].
+ *
+ * <p>⚠ What a body has accumulated and what it can bring to bear are different questions. Nothing
+ * caps accumulation; only the strength service answers the second one.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public enum HumanStrength implements StringRepresentable, EnumTranslatable {
 
     JIN    (  1,  9),

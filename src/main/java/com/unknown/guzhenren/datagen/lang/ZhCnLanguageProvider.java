@@ -24,6 +24,16 @@ import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
+/**
+ * The Chinese strings, written as an aligned table beside the English one.
+ *
+ * <p>⚠ These renderings are the authority, not a translation of the English. Deriving either side
+ * from the other is how a name quietly comes to mean something it never meant.
+ *
+ * @author Alex
+ * @since 1.0.0
+ * @see EnUsLanguageProvider
+ */
 public class ZhCnLanguageProvider extends LanguageProvider {
     public ZhCnLanguageProvider(PackOutput output) {
         super(output, Guzhenren.MOD_ID, "zh_cn");

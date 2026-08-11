@@ -10,6 +10,15 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * The only writer of Mind [脑海] pools, and the door where every clamp lives.
+ *
+ * <p>⚠ The clamp cannot live in the record: only some wisdom types may burst past their cap, and a
+ * pool does not know which type it belongs to. So every write has to come through here.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class MindService {
 
     private MindService() {}

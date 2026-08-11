@@ -14,6 +14,16 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * The only thing in the mod that touches ATTACK_DAMAGE -- {@code bonus()} is the whole sum.
+ *
+ * <p>⚠ The modifier must stay transient. A permanent one is saved into attribute NBT and then fights
+ * the next login, stacking itself on top of what was already stored there.
+ *
+ * @author Alex
+ * @since 1.0.0
+ * @see HealthService
+ */
 public final class AttackService {
 
     private AttackService() {}

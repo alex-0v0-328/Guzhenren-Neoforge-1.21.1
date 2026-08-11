@@ -8,6 +8,15 @@ import java.util.Map;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * The day-rollover walk over Gu installed into the body parts that the other mod owns.
+ *
+ * <p>⚠ An installed Gu is kept, so it still eats. A Gu that remodels a limb lives inside that limb
+ * rather than being carried, and it would quietly starve without this walk.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
 public final class PartStorageTick {
 
     private PartStorageTick() {}
