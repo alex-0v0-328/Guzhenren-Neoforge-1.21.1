@@ -22,11 +22,11 @@ public final class StaminaService {
 
     private StaminaService() {}
 
-    public static final long SPRINT_COST_PER_STEP = 2L;
-    public static final long JUMP_COST = 5L;
+    public static final long SPRINT_COST_PER_STEP = 1L;
+    public static final long JUMP_COST = 3L;
 
-    public static final long SPRINT_RESUME_PERCENT = 20L;
-    public static final long WEARY_PERCENT = 10L;
+    public static final long SPRINT_RESUME_PERCENT = 30L;
+    public static final long WEARY_PERCENT = 20L;
 
     public static boolean canKeepSprinting(Player p) {return !isEmpty(p);}
     public static boolean canResumeSprinting(Player p) {
