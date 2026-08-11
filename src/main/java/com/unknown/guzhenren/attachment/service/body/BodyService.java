@@ -87,14 +87,15 @@ public final class BodyService {
         if (path == null) return;
 
         PathService.setMark(player, path, MarkTag.RACE, Race.TALENT_MARKS);
-        if (PathService.attainment(player, path).ordinal() < Race.TALENT_ATTAINMENT.ordinal()) {
-            PathService.setAttainment(player, path, Race.TALENT_ATTAINMENT);
-        }
+        PathService.shiftAttainment(player, path, Race.TALENT_SHIFT);
     }
 
     private static void revokeTalent(ServerPlayer player, Race race) {
         GuPath path = race.talentPath();
-        if (path != null) PathService.setMark(player, path, MarkTag.RACE, 0L);
+        if (path == null) return;
+
+        PathService.setMark(player, path, MarkTag.RACE, 0L);
+        PathService.shiftAttainment(player, path, -Race.TALENT_SHIFT);
     }
     //endregion
 

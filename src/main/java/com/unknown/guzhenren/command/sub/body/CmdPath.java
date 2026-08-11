@@ -22,6 +22,9 @@ import net.minecraft.server.level.ServerPlayer;
  * <p>⚠ Every write names a tag, and the record drops a tag that belongs to another path. A write with
  * the wrong tag reports success and changes nothing.
  *
+ * <p>☠ The tag offered here is filtered twice, by path AND by settability. Offering every constant is
+ * how a hand-written RACE mark became forgeable on a path no race can ever revoke.
+ *
  * @author Alex
  * @since 1.0.0
  */
@@ -31,6 +34,7 @@ public final class CmdPath {
 
     private static final String ARG_PATH = "path";
     private static final String ARG_TAG = "tag";
+    private static final MarkTag[] UNKNOWN_PATH = {};
 
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("path")
@@ -42,10 +46,18 @@ public final class CmdPath {
 
     private static ArgumentBuilder<CommandSourceStack, ?> tagged(
             String literal, TagOperation set, TagOperation add) {
-        return Commands.literal(literal).then(ModEnumArgument.arg(ARG_TAG, MarkTag.values())
+        return Commands.literal(literal).then(ModEnumArgument.arg(ARG_TAG, CmdPath::offeredTags)
                 .then(countNode("set", set))
                 .then(countNode("add", add))
                 .then(countNode("sub", (player, path, tag, value) -> add.apply(player, path, tag, -value))));
+    }
+
+    private static MarkTag[] offeredTags(CommandContext<CommandSourceStack> context) {
+        try {
+            return MarkTag.settableOn(pathOf(context));
+        } catch (CommandSyntaxException unknownPath) {
+            return UNKNOWN_PATH;
+        }
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> attainment() {
@@ -72,6 +84,7 @@ public final class CmdPath {
                 context -> {
                     GuPath path = pathOf(context);
                     MarkTag tag = tagOf(context);
+                    if (!tag.isSettable()) return refuseSettable(context, tag);
                     if (!tag.fitsOn(path)) return refuseTag(context, tag, path);
 
                     long value = LongArgumentType.getLong(context, ModCommandSupport.ARG_VALUE);
@@ -85,6 +98,12 @@ public final class CmdPath {
                 ModCommandSupport.FAILED_TAG_PATH,
                 Component.translatable(tag.getTranslationKey()),
                 Component.translatable(path.getTranslationKey())));
+        return 0;
+    }
+
+    private static int refuseSettable(CommandContext<CommandSourceStack> context, MarkTag tag) {
+        ModCommandFeedback.failure(context.getSource(), Component.translatable(
+                ModCommandSupport.FAILED_TAG_SETTABLE, Component.translatable(tag.getTranslationKey())));
         return 0;
     }
 

@@ -2,7 +2,6 @@ package com.unknown.guzhenren.custom.enums.body;
 
 import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
-import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
@@ -11,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Race [种族]: human, plus the variant races that each grant standing on one path.
  *
- * <p>⚠ Those marks are booked under the RACE tag, never NATURAL. A race can be changed, and marks that
- * cannot be told apart from earned ones cannot be taken back.
+ * <p>⚠ A race can be changed, so both halves of that standing must be exactly revocable: the marks are
+ * booked under the RACE tag rather than NATURAL, and the attainment MOVES rather than being set.
  *
  * @author Alex
  * @since 1.0.0
@@ -34,7 +33,9 @@ public enum Race implements StringRepresentable, EnumTranslatable {
     SNOWMEN     (GuPath.ICE_SNOW);
 
     public static final long TALENT_MARKS = 10L;
-    public static final GuAttainment TALENT_ATTAINMENT = GuAttainment.MASTER;
+
+    /** How far the race moves its path's attainment. ⚠ A SHIFT, so leaving the race can undo it exactly. */
+    public static final int TALENT_SHIFT = 1;
 
     public static final Codec<Race> CODEC = StringRepresentable.fromEnum(Race::values);
     private static final String KEY_PREFIX = "guzhenren.enum.body.race.";
