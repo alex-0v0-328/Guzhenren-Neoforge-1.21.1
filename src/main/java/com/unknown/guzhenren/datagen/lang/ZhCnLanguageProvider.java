@@ -136,6 +136,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.hud.using",                            "使用 %s/%s");
         add("guzhenren.hud.refining_plain",                   "炼化中");
         add("guzhenren.hud.using_plain",                      "使用中");
+        add("guzhenren.hud.nourishing",                        "温养 %s%%");
+        add("guzhenren.hud.nourish_starving",                  "真元将尽 %s%%");
     }
     //endregion
 
@@ -231,6 +233,16 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.secondary_path", "辅修流派");
         add("guzhenren.screen.pick.title",           "选择辅修流派");
         add("guzhenren.screen.pick.hint",            "点击选择");
+        add("guzhenren.screen.nourish",              "温养空窍");
+        add("guzhenren.screen.nourish_stop",         "停止温养");
+        add("guzhenren.screen.impact",               "冲击窍壁");
+
+        add("guzhenren.nourish.starved",             "真元断供，温养中止。");
+        add("guzhenren.nourish.stage_up",            "空窍稳固，小境界提升。");
+        add("guzhenren.impact.success",              "窍壁破开，境界更进一转！");
+        add("guzhenren.impact.hold",                 "窍壁未破，境界未动。");
+        add("guzhenren.impact.drop_stage",           "窍壁反震，跌落一阶。");
+        add("guzhenren.impact.drop_base",            "窍壁反震，空窍受损。");
         add("guzhenren.screen.label.realm",          "修为");
         add("guzhenren.screen.label.talent",         "天赋");
         add("guzhenren.screen.label.essence",        "真元");

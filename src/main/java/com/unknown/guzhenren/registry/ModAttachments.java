@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
+import com.unknown.guzhenren.attachment.data.aperture.NourishData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
 import com.unknown.guzhenren.attachment.data.body.QiData;
@@ -50,6 +51,12 @@ public final class ModAttachments {
     public static final Supplier<AttachmentType<ApertureStorage>> APERTURE_STORAGE = ATTACHMENT_TYPES.register(
             "aperture_storage", () -> AttachmentType.builder(() -> ApertureStorage.DEFAULT)
                     .serialize(ApertureStorage.CODEC)
+                    .build());
+
+    public static final Supplier<AttachmentType<NourishData>> NOURISH = ATTACHMENT_TYPES.register(
+            "nourish_data", () -> AttachmentType.builder(() -> NourishData.DEFAULT)
+                    .serialize(NourishData.CODEC)
+                    .sync(OWNER_ONLY, NourishData.STREAM_CODEC)
                     .build());
     //endregion
 

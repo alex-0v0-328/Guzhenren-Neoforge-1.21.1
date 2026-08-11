@@ -4,11 +4,14 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.body.PathEntry;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
+import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import com.unknown.guzhenren.client.ModKeyMappings;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.InfoModel;
 import com.unknown.guzhenren.display.ModDisplayText;
+import com.unknown.guzhenren.network.ImpactApertureWallPayload;
+import com.unknown.guzhenren.network.NourishAperturePayload;
 import com.unknown.guzhenren.network.OpenApertureStoragePayload;
 import com.unknown.guzhenren.network.OpenRefinementPayload;
 import com.unknown.guzhenren.network.SetSecondaryPathPayload;
@@ -70,6 +73,18 @@ public final class PlayerInfoScreen extends Screen {
             "guzhenren.screen.tab.refinement",
     };
 
+    private static final int BTN_H          = 20;
+    private static final int BTN_GAP        = 4;
+    private static final int BTN_IDLE       = 0x33FFFFFF;
+    private static final int BTN_HOVER      = 0x66FFFFFF;
+    private static final int BTN_DEAD       = 0x14FFFFFF;
+    private static final int BTN_PROGRESS   = 0x804FC3F7;
+
+    private static final String KEY_NOURISH      = "guzhenren.screen.nourish";
+    private static final String KEY_NOURISH_STOP = "guzhenren.screen.nourish_stop";
+    private static final String KEY_IMPACT       = "guzhenren.screen.impact";
+
+    private static final int TAB_APERTURE   = 0;
     private static final int TAB_BODY       = 1;
     private static final int TAB_SOUL       = 2;
     private static final int TAB_PATH       = 3;
@@ -147,8 +162,76 @@ public final class PlayerInfoScreen extends Screen {
             y += LINE_H;
         }
         if (hidden > 0) renderScrollBar(g, rows.size(), visible, accent);
+        renderCultivation(g, mouseX, mouseY, accent);
         if (picking) renderPicker(g, mouseX, mouseY, accent);
     }
+
+    //region 温养空窍 [nourish] and 冲击窍壁 [impact] -- the only two real buttons on this panel
+    private boolean cultivationButtons() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        return activeTab == TAB_APERTURE && player != null && ApertureService.isAwakened(player);
+    }
+    private int buttonTop() {return contentBottom() - BTN_H;}
+    private int buttonSplit() {return (contentLeft() + valueRight()) / 2;}
+    private int nourishRight(boolean paired) {return paired ? buttonSplit() - BTN_GAP : valueRight();}
+
+    private void renderCultivation(GuiGraphics g, int mouseX, int mouseY, int accent) {
+        if (!cultivationButtons()) return;
+        LocalPlayer player = Minecraft.getInstance().player;
+        boolean paired = NourishService.canImpact(player);
+        boolean running = NourishService.isCultivating(player);
+
+        int top = buttonTop();
+        int x0 = contentLeft();
+        int x1 = nourishRight(paired);
+        int fill = running ? BTN_HOVER : NourishService.canNourish(player) ? BTN_IDLE : BTN_DEAD;
+
+        g.fill(x0, top, x1, top + BTN_H, fill);
+        if (running) {
+            int done = x0 + Math.round((x1 - x0) * NourishService.fraction(player));
+            g.fill(x0, top, done, top + BTN_H, BTN_PROGRESS);
+        }
+        g.renderOutline(x0, top, x1 - x0, BTN_H, running ? accent : BORDER);
+        label(g, Component.translatable(running ? KEY_NOURISH_STOP : KEY_NOURISH), x0, x1, top);
+
+        if (!paired) return;
+        int x2 = buttonSplit();
+        int x3 = valueRight();
+        g.fill(x2, top, x3, top + BTN_H, inBox(mouseX, mouseY, x2, x3) ? BTN_HOVER : BTN_IDLE);
+        g.renderOutline(x2, top, x3 - x2, BTN_H, accent);
+        label(g, Component.translatable(KEY_IMPACT), x2, x3, top);
+    }
+
+    private void label(GuiGraphics g, Component text, int x0, int x1, int top) {
+        g.drawString(font, text, x0 + (x1 - x0 - font.width(text)) / 2,
+                top + (BTN_H - font.lineHeight) / 2, TEXT, false);
+    }
+
+    private boolean inBox(double mx, double my, int x0, int x1) {
+        return mx >= x0 && mx < x1 && my >= buttonTop() && my < buttonTop() + BTN_H;
+    }
+
+    private boolean clickCultivation(double mx, double my) {
+        if (!cultivationButtons()) return false;
+        LocalPlayer player = Minecraft.getInstance().player;
+        boolean paired = NourishService.canImpact(player);
+
+        if (paired && inBox(mx, my, buttonSplit(), valueRight())) {
+            PacketDistributor.sendToServer(ImpactApertureWallPayload.INSTANCE);
+            return true;
+        }
+        if (!inBox(mx, my, contentLeft(), nourishRight(paired))) return false;
+
+        if (NourishService.isCultivating(player)) {
+            PacketDistributor.sendToServer(new NourishAperturePayload(NourishAperturePayload.Action.CANCEL));
+            return true;
+        }
+        if (!NourishService.canNourish(player)) return true;
+        PacketDistributor.sendToServer(new NourishAperturePayload(NourishAperturePayload.Action.START));
+        onClose();
+        return true;
+    }
+    //endregion
 
     //region scrolling
     private int contentTop() {return topPos + CONTENT_TOP;}
@@ -158,7 +241,8 @@ public final class PlayerInfoScreen extends Screen {
     private int inset() {return (edgeRight() - edgeLeft()) / CONTENT_INSET_DIVISOR;}
     private int edgeLeft() {return leftPos + PAD;}
     private int edgeRight() {return tabLeft() - PAD;}
-    private int visibleRows() {return Math.max(0, (contentBottom() - contentTop()) / LINE_H);}
+    private int rowsBottom() {return contentBottom() - (cultivationButtons() ? BTN_H + BTN_GAP : 0);}
+    private int visibleRows() {return Math.max(0, (rowsBottom() - contentTop()) / LINE_H);}
 
     private void renderScrollBar(GuiGraphics g, int total, int visible, int accent) {
         int x0 = tabLeft() - SCROLL_GAP;
@@ -269,6 +353,7 @@ public final class PlayerInfoScreen extends Screen {
     public boolean mouseClicked(double mx, double my, int button) {
         if (picking) return button != 0 || clickPicker(mx, my);
         if (button == 0) {
+            if (clickCultivation(mx, my)) return true;
             if (clickableRowY >= 0 && my >= clickableRowY - 1 && my < clickableRowY + LINE_H - 1
                     && mx >= contentLeft() - 2 && mx < valueRight() + 2) {
                 picking = true;

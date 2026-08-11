@@ -2,6 +2,7 @@ package com.unknown.guzhenren.client;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.client.hud.ChargeHud;
+import com.unknown.guzhenren.client.hud.NourishHud;
 import com.unknown.guzhenren.client.hud.PlayerStatsHud;
 import com.unknown.guzhenren.client.screen.ApertureStorageScreen;
 import com.unknown.guzhenren.client.screen.PlayerInfoScreen;
@@ -38,10 +39,14 @@ public final class ClientEvents {
     private static final ResourceLocation CHARGE =
             ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "charge");
 
+    private static final ResourceLocation NOURISH =
+            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "nourish");
+
     @SubscribeEvent
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, PLAYER_STATS, PlayerStatsHud.INSTANCE);
         event.registerAbove(VanillaGuiLayers.AIR_LEVEL, CHARGE, ChargeHud.INSTANCE);
+        event.registerAbove(VanillaGuiLayers.AIR_LEVEL, NOURISH, NourishHud.INSTANCE);
     }
 
     @SubscribeEvent

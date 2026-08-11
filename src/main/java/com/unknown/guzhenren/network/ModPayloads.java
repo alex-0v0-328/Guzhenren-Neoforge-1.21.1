@@ -2,6 +2,7 @@ package com.unknown.guzhenren.network;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
+import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import com.unknown.guzhenren.menu.RefinementMenu;
 import net.minecraft.network.chat.Component;
@@ -40,6 +41,24 @@ public final class ModPayloads {
                 ModPayloads::setSecondaryPath);
         registrar.playToServer(OpenRefinementPayload.TYPE, OpenRefinementPayload.STREAM_CODEC,
                 ModPayloads::openRefinement);
+        registrar.playToServer(NourishAperturePayload.TYPE, NourishAperturePayload.STREAM_CODEC,
+                ModPayloads::nourishAperture);
+        registrar.playToServer(ImpactApertureWallPayload.TYPE, ImpactApertureWallPayload.STREAM_CODEC,
+                ModPayloads::impactApertureWall);
+    }
+
+    private static void nourishAperture(NourishAperturePayload payload, IPayloadContext context) {
+        if (!(context.player() instanceof ServerPlayer player)) return;
+
+        switch (payload.action()) {
+            case START -> NourishService.start(player);
+            case CANCEL -> NourishService.cancel(player);
+        }
+    }
+
+    private static void impactApertureWall(ImpactApertureWallPayload payload, IPayloadContext context) {
+        if (!(context.player() instanceof ServerPlayer player)) return;
+        NourishService.impactWall(player);
     }
 
     private static void openRefinement(OpenRefinementPayload payload, IPayloadContext context) {

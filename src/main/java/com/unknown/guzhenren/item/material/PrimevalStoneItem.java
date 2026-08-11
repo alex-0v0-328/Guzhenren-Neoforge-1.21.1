@@ -4,7 +4,10 @@ import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.item.gu.mortal.PrimevalElderGuItem;
+import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -53,4 +56,30 @@ public class PrimevalStoneItem extends GuMaterialItem {
         long deficit = EssenceService.maxEssence(player) - EssenceService.currentEssence(player);
         return (int) Math.min(stack.getCount(), (deficit + essence - 1) / essence);
     }
+
+    //region sourcing stones for something else -- the walk lives here, not in a service
+    public static long pourInto(ServerPlayer player, long wanted) {
+        if (wanted <= 0L) return 0L;
+        long each = ((PrimevalStoneItem) ModItems.PRIMEVAL_STONE.get()).essence();
+        int left = (int) Math.min(Integer.MAX_VALUE, (wanted + each - 1) / each);
+        int taken = 0;
+
+        ItemStack offhand = player.getItemInHand(InteractionHand.OFF_HAND);
+        if (offhand.getItem() instanceof PrimevalElderGuItem elder) {
+            int drawn = elder.drawStones(offhand, left);
+            taken += drawn;
+            left -= drawn;
+        }
+        for (int i = 0; i < player.getInventory().getContainerSize() && left > 0; i++) {
+            ItemStack stack = player.getInventory().getItem(i);
+            if (!(stack.getItem() instanceof PrimevalStoneItem)) continue;
+            int drawn = Math.min(left, stack.getCount());
+            stack.shrink(drawn);
+            taken += drawn;
+            left -= drawn;
+        }
+        if (taken > 0) EssenceService.add(player, taken * each);
+        return taken * each;
+    }
+    //endregion
 }

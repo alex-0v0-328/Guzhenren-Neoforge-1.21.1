@@ -136,6 +136,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.hud.refining_plain",                   "Refining");
         add("guzhenren.hud.using_plain",                      "Using");
         add("guzhenren.hud.using",                            "Use %s/%s");
+        add("guzhenren.hud.nourishing",                        "Nourishing %s%%");
+        add("guzhenren.hud.nourish_starving",                  "Essence running dry %s%%");
     }
     //endregion
 
@@ -231,6 +233,16 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.secondary_path", "Secondary Path");
         add("guzhenren.screen.pick.title",           "Choose a Secondary Path");
         add("guzhenren.screen.pick.hint",            "click to set");
+        add("guzhenren.screen.nourish",              "Nourish the Aperture");
+        add("guzhenren.screen.nourish_stop",         "Stop Nourishing");
+        add("guzhenren.screen.impact",               "Strike the Wall");
+
+        add("guzhenren.nourish.starved",             "The essence ran out -- the cultivation broke off.");
+        add("guzhenren.nourish.stage_up",            "The aperture settles a stage higher.");
+        add("guzhenren.impact.success",              "The wall gives way -- a whole rank higher!");
+        add("guzhenren.impact.hold",                 "The wall holds. Nothing moved.");
+        add("guzhenren.impact.drop_stage",           "The wall throws you back a stage.");
+        add("guzhenren.impact.drop_base",            "The wall cracks the aperture itself.");
         add("guzhenren.screen.label.realm",          "Realm");
         add("guzhenren.screen.label.talent",         "Aptitude");
         add("guzhenren.screen.label.essence",        "Essence");
