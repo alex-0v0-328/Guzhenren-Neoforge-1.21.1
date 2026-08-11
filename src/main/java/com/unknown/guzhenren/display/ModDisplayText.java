@@ -6,6 +6,7 @@ import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
+import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import net.minecraft.network.chat.Component;
@@ -70,6 +71,31 @@ public final class ModDisplayText {
     public static MutableComponent lifespan(BodyData body) {
         return Component.translatable("guzhenren.display.lifespan", body.lifespan(), body.age());
     }
+
+    //region 气道 [the Qi Path] standing -- one header line, drawn by both the G panel and the info command
+    public static boolean qiStandingEmpty(GuAttainment attainment, long mark, long speck) {
+        return attainment == GuAttainment.NONE && mark <= 0L && speck <= 0L;
+    }
+
+    /** ⚠ {@code [无]} means the whole line is bare, so a grade of NONE beside a count is simply omitted. */
+    public static MutableComponent qiStanding(GuAttainment attainment, long mark, long speck) {
+        if (qiStandingEmpty(attainment, mark, speck)) return Component.translatable("guzhenren.display.none");
+
+        MutableComponent value = attainment == GuAttainment.NONE ? null
+                : Component.translatable("guzhenren.display.path_attainment",
+                        Component.translatable(GuPath.QI.getTranslationKey()),
+                        Component.translatable(attainment.getTranslationKey()));
+        value = appendCount(value, "guzhenren.display.qi_marks", mark);
+        value = appendCount(value, "guzhenren.display.qi_specks", speck);
+        return value;
+    }
+
+    private static @Nullable MutableComponent appendCount(@Nullable MutableComponent head, String key, long amount) {
+        if (amount <= 0L) return head;
+        MutableComponent part = Component.translatable(key, amount);
+        return head == null ? part : head.append(" ").append(part);
+    }
+    //endregion
 
     public static MutableComponent realmAndTalent(Aperture a) {return realmTitle(a).append(GAP).append(talent(a));}
 

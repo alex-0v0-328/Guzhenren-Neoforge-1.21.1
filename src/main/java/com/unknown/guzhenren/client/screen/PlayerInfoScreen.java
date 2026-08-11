@@ -437,7 +437,8 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.Lifespan e -> new Row(indent, label("lifespan"), ModDisplayText.lifespan(e.body()));
             case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
             case InfoModel.PathRow e -> new Row(indent, name(e.path().getTranslationKey()), pathValue(e.entry()));
-            case InfoModel.QiHeader e -> new Row(indent, label("qi"), qiValue(e));
+            case InfoModel.QiHeader e -> new Row(indent, label("qi"),
+                    ModDisplayText.qiStanding(e.attainment(), e.totalMark(), e.totalSpeck()));
             case InfoModel.QiRow e -> new Row(indent, name(e.kind().getTranslationKey()),
                     Component.literal(String.valueOf(e.amount())));
             case InfoModel.StrengthHeader e -> new Row(indent, label("strength"), e.empty() ? none() : null);
@@ -470,19 +471,6 @@ public final class PlayerInfoScreen extends Screen {
                 name(entry.attainment().getTranslationKey()), entry.mark());
         if (entry.speck() > 0L) {
             value.append(Component.translatable("guzhenren.command.info.path_speck", entry.speck()));
-        }
-        return value;
-    }
-
-    private static MutableComponent qiValue(InfoModel.QiHeader e) {
-        MutableComponent value = e.attainment() == GuAttainment.NONE
-                ? none()
-                : name(e.attainment().getTranslationKey());
-        if (e.totalMark() > 0L) {
-            value.append(Component.translatable("guzhenren.command.info.qi_total", e.totalMark()));
-        }
-        if (e.totalSpeck() > 0L) {
-            value.append(Component.translatable("guzhenren.command.info.qi_speck_total", e.totalSpeck()));
         }
         return value;
     }

@@ -108,13 +108,7 @@ public final class CmdInfo {
     }
 
     private static MutableComponent qiHeader(InfoModel.QiHeader e) {
-        Component value = e.attainment() == GuAttainment.NONE
-                ? none()
-                : enumName(e.attainment().getTranslationKey());
-        MutableComponent header = key("qi", value);
-        if (e.totalMark() > 0L) header.append(key("qi_total", e.totalMark()));
-        if (e.totalSpeck() > 0L) header.append(key("qi_speck_total", e.totalSpeck()));
-        return header;
+        return key("qi", ModDisplayText.qiStanding(e.attainment(), e.totalMark(), e.totalSpeck()));
     }
 
     private static MutableComponent pathLine(GuPath path, PathEntry entry) {

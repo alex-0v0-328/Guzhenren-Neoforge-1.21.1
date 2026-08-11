@@ -82,6 +82,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.8",                 "八");
         add("guzhenren.display.base_units.9",                 "九");
         add("guzhenren.display.none",                         "[无]");
+        add("guzhenren.display.path_attainment",              "%s%s");
+        add("guzhenren.display.qi_marks",                     "道痕 %s");
+        add("guzhenren.display.qi_specks",                    "碎屑 %s");
         add("guzhenren.display.wild",                         "野生·%s");
         add("guzhenren.display.vital",                        "本命·%s");
         add("guzhenren.display.strength.beast_reading",       "[%s%s之力]");
@@ -167,8 +170,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.race",            "种族      %s");
         add("guzhenren.command.info.wisdom",          "智道造诣  %s");
         add("guzhenren.command.info.qi",              "玩家气道  %s");
-        add("guzhenren.command.info.qi_total",        " 道痕 %s");
-        add("guzhenren.command.info.qi_speck_total",  " 碎屑 %s");
         add("guzhenren.command.info.qi_entry",        "  %s  %s");
         add("guzhenren.command.info.paths",           "流派造诣");
         add("guzhenren.command.info.path_entry",      "  %s  %s  道痕 %s");
