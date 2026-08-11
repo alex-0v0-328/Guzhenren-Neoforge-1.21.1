@@ -8,6 +8,7 @@ import com.unknown.guzhenren.item.gu.mortal.PrimevalElderGuItem;
 import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +19,9 @@ import org.jetbrains.annotations.Nullable;
  * <p>⚠ It refuses an unawakened player instead of quietly doing nothing, because the service write is
  * a no-op there and the stone would otherwise be eaten for free.
  *
+ * <p>☠ It also owns every automatic draw on carried stones, including the top-up line. A second copy
+ * of that line drifts, and the pool silently clamps whatever a caller pours past the cap.
+ *
  * @author Alex
  * @since 1.0.0
  */
@@ -25,6 +29,9 @@ public class PrimevalStoneItem extends GuMaterialItem {
 
     private static final String FAILED_UNAWAKENED = "guzhenren.item.failed.unawakened";
     private static final String FAILED_FULL = "guzhenren.item.failed.essence_full";
+
+    public static final int REFILL_BELOW_PERCENT = 50;
+    public static final int REFILL_UP_TO_PERCENT = 80;
 
     private final long essence;
 
@@ -57,11 +64,35 @@ public class PrimevalStoneItem extends GuMaterialItem {
         return (int) Math.min(stack.getCount(), (deficit + essence - 1) / essence);
     }
 
+    //region 元石补给 [the stone top-up] -- one line, so two callers cannot drift apart
+    public static long essencePerStone() {
+        return ModItems.PRIMEVAL_STONE.get() instanceof PrimevalStoneItem stone ? stone.essence() : 0L;
+    }
+    public static boolean needsTopUp(Player p) {
+        long max = EssenceService.maxEssence(p);
+        return max > 0L && EssenceService.currentEssence(p) * 100L < max * REFILL_BELOW_PERCENT;
+    }
+    public static long topUpDeficit(Player p) {
+        return EssenceService.maxEssence(p) * REFILL_UP_TO_PERCENT / 100L - EssenceService.currentEssence(p);
+    }
+
+    /** Refills from carried stones, and only once the pool has fallen below the line. */
+    public static void topUp(ServerPlayer player) {
+        if (needsTopUp(player)) pourInto(player, topUpDeficit(player));
+    }
+    //endregion
+
     //region sourcing stones for something else -- the walk lives here, not in a service
     public static long pourInto(ServerPlayer player, long wanted) {
-        if (wanted <= 0L) return 0L;
-        long each = ((PrimevalStoneItem) ModItems.PRIMEVAL_STONE.get()).essence();
-        int left = (int) Math.min(Integer.MAX_VALUE, (wanted + each - 1) / each);
+        long each = essencePerStone();
+        if (wanted <= 0L || each <= 0L) return 0L;
+        int taken = draw(player, (int) Math.min(Integer.MAX_VALUE, (wanted + each - 1) / each));
+        if (taken > 0) EssenceService.add(player, taken * each);
+        return taken * each;
+    }
+
+    private static int draw(ServerPlayer player, int wanted) {
+        int left = wanted;
         int taken = 0;
 
         ItemStack offhand = player.getItemInHand(InteractionHand.OFF_HAND);
@@ -70,16 +101,50 @@ public class PrimevalStoneItem extends GuMaterialItem {
             taken += drawn;
             left -= drawn;
         }
-        for (int i = 0; i < player.getInventory().getContainerSize() && left > 0; i++) {
-            ItemStack stack = player.getInventory().getItem(i);
+        Inventory inventory = player.getInventory();
+        for (int i = 0; i < inventory.getContainerSize() && left > 0; i++) {
+            ItemStack stack = inventory.getItem(i);
             if (!(stack.getItem() instanceof PrimevalStoneItem)) continue;
             int drawn = Math.min(left, stack.getCount());
             stack.shrink(drawn);
             taken += drawn;
             left -= drawn;
         }
-        if (taken > 0) EssenceService.add(player, taken * each);
-        return taken * each;
+        return taken;
+    }
+    //endregion
+
+    //region ☠ a lump bigger than the pool -- these stones burn straight, never through the cap
+    public static long worthOnHand(Player player) {
+        long stones = 0L;
+        ItemStack offhand = player.getItemInHand(InteractionHand.OFF_HAND);
+        if (offhand.getItem() instanceof PrimevalElderGuItem) stones += PrimevalElderGuItem.stored(offhand);
+
+        Inventory inventory = player.getInventory();
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            ItemStack stack = inventory.getItem(i);
+            if (stack.getItem() instanceof PrimevalStoneItem) stones += stack.getCount();
+        }
+        return stones * essencePerStone();
+    }
+
+    public static boolean canAfford(Player p, long cost) {
+        return EssenceService.spendable(p) + worthOnHand(p) >= cost;
+    }
+
+    public static boolean spend(ServerPlayer player, long cost) {
+        if (cost <= 0L) return true;
+        long each = essencePerStone();
+        if (each <= 0L || !canAfford(player, cost)) return false;
+
+        long fromPool = Math.min(EssenceService.spendable(player), cost);
+        EssenceService.consume(player, fromPool);
+
+        long owed = cost - fromPool;
+        if (owed <= 0L) return true;
+        long drawn = draw(player, (int) Math.min(Integer.MAX_VALUE, (owed + each - 1) / each)) * each;
+        if (drawn > owed) EssenceService.add(player, drawn - owed);
+        return true;
     }
     //endregion
 }

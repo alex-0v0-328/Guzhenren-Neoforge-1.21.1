@@ -283,6 +283,7 @@
   "guzhenren.impact.drop_base": "窍壁反震，空窍受损。",
   "guzhenren.impact.drop_stage": "窍壁反震，跌落一阶。",
   "guzhenren.impact.hold": "窍壁未破，境界未动。",
+  "guzhenren.impact.poor": "冲击窍壁需真元 %s，元石折算在内。",
   "guzhenren.impact.success": "窍壁破开，境界更进一转！",
   "guzhenren.item.death_qi_cured": "生气化去死气 —— 回复 %s 年寿元",
   "guzhenren.item.failed.all_out_active": "全力未歇",

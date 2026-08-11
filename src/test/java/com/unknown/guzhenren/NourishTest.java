@@ -4,35 +4,38 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
+import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.NourishData;
 import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import com.unknown.guzhenren.attachment.service.aperture.NourishService.Outcome;
+import com.unknown.guzhenren.custom.enums.aperture.Rank;
+import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class NourishTest {
 
     @Test
-    @DisplayName("冲击窍壁 ordinary table splits at 20 / 50 / 80")
+    @DisplayName("冲击窍壁 ordinary table splits at 40 / 70 / 90")
     void ordinaryBoundaries() {
         assertSame(Outcome.SUCCESS, NourishService.resolve(0, false));
-        assertSame(Outcome.SUCCESS, NourishService.resolve(19, false));
-        assertSame(Outcome.HOLD, NourishService.resolve(20, false));
-        assertSame(Outcome.HOLD, NourishService.resolve(49, false));
-        assertSame(Outcome.DROP_STAGE, NourishService.resolve(50, false));
-        assertSame(Outcome.DROP_STAGE, NourishService.resolve(79, false));
-        assertSame(Outcome.DROP_BASE, NourishService.resolve(80, false));
+        assertSame(Outcome.SUCCESS, NourishService.resolve(39, false));
+        assertSame(Outcome.HOLD, NourishService.resolve(40, false));
+        assertSame(Outcome.HOLD, NourishService.resolve(69, false));
+        assertSame(Outcome.DROP_STAGE, NourishService.resolve(70, false));
+        assertSame(Outcome.DROP_STAGE, NourishService.resolve(89, false));
+        assertSame(Outcome.DROP_BASE, NourishService.resolve(90, false));
         assertSame(Outcome.DROP_BASE, NourishService.resolve(99, false));
     }
 
     @Test
-    @DisplayName("十绝体 table splits at 50 / 80 -- the two tables cut at different points")
+    @DisplayName("十绝体 table splits at 60 / 85 -- the two tables cut at different points")
     void extremeBoundaries() {
         assertSame(Outcome.SUCCESS, NourishService.resolve(0, true));
-        assertSame(Outcome.SUCCESS, NourishService.resolve(49, true));
-        assertSame(Outcome.HOLD, NourishService.resolve(50, true));
-        assertSame(Outcome.HOLD, NourishService.resolve(79, true));
-        assertSame(Outcome.DROP_STAGE, NourishService.resolve(80, true));
+        assertSame(Outcome.SUCCESS, NourishService.resolve(59, true));
+        assertSame(Outcome.HOLD, NourishService.resolve(60, true));
+        assertSame(Outcome.HOLD, NourishService.resolve(84, true));
+        assertSame(Outcome.DROP_STAGE, NourishService.resolve(85, true));
         assertSame(Outcome.DROP_STAGE, NourishService.resolve(99, true));
     }
 
@@ -53,8 +56,30 @@ class NourishTest {
             if (NourishService.resolve(roll, false) == Outcome.SUCCESS) ordinarySuccess++;
             if (NourishService.resolve(roll, true) == Outcome.SUCCESS) extremeSuccess++;
         }
-        assertEquals(20, ordinarySuccess);
-        assertEquals(50, extremeSuccess);
+        assertEquals(40, ordinarySuccess);
+        assertEquals(60, extremeSuccess);
+    }
+
+    @Test
+    @DisplayName("冲击窍壁 costs one and a half Ten-Extremes peak pools -- the ×10 rank ladder, exactly")
+    void impactCostLadder() {
+        assertEquals(1_200L, cost(Rank.ONE));
+        assertEquals(12_000L, cost(Rank.TWO));
+        assertEquals(120_000L, cost(Rank.THREE));
+        assertEquals(1_200_000L, cost(Rank.FOUR));
+    }
+
+    @Test
+    @DisplayName("no pool can hold one strike -- even a 十绝 peak pool is only two thirds of it")
+    void noPoolCoversAStrike() {
+        for (Rank rank : new Rank[] {Rank.ONE, Rank.TWO, Rank.THREE, Rank.FOUR}) {
+            long peak = Aperture.maxEssence(rank, Stage.PEAK, Aperture.MAX_BASE);
+            assertEquals(cost(rank) * 2L, peak * 3L, "rank " + rank);
+        }
+    }
+
+    private static long cost(Rank rank) {
+        return NourishService.IMPACT_COST_PER_RANK_BASE * rank.getRankBase();
     }
 
     @Test

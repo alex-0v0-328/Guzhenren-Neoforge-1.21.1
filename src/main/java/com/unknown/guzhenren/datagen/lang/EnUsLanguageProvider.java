@@ -239,6 +239,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
 
         add("guzhenren.nourish.starved",             "The essence ran out -- the cultivation broke off.");
         add("guzhenren.nourish.stage_up",            "The aperture settles a stage higher.");
+        add("guzhenren.impact.poor",                 "The strike needs %s essence, pool and stones together.");
         add("guzhenren.impact.success",              "The wall gives way -- a whole rank higher!");
         add("guzhenren.impact.hold",                 "The wall holds. Nothing moved.");
         add("guzhenren.impact.drop_stage",           "The wall throws you back a stage.");

@@ -239,6 +239,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
 
         add("guzhenren.nourish.starved",             "真元断供，温养中止。");
         add("guzhenren.nourish.stage_up",            "空窍稳固，小境界提升。");
+        add("guzhenren.impact.poor",                 "冲击窍壁需真元 %s，元石折算在内。");
         add("guzhenren.impact.success",              "窍壁破开，境界更进一转！");
         add("guzhenren.impact.hold",                 "窍壁未破，境界未动。");
         add("guzhenren.impact.drop_stage",           "窍壁反震，跌落一阶。");

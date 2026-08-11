@@ -26,11 +26,15 @@ public final class NourishService {
 
     public static final int PERCENT_PER_SECOND = 1;
     public static final int COST_DIVISOR = 100;
-    public static final int BASE_LOSS_MIN = 5;
-    public static final int BASE_LOSS_MAX = 10;
+    public static final int BASE_LOSS_MIN = 1;
+    public static final int BASE_LOSS_MAX = 5;
+
+    /** One strike costs one and a half of a Ten-Extremes peak pool, so no pool can ever hold it. */
+    public static final long IMPACT_COST_PER_RANK_BASE = 1_200L;
 
     private static final String STARVED = "guzhenren.nourish.starved";
     private static final String STAGE_UP = "guzhenren.nourish.stage_up";
+    private static final String IMPACT_POOR = "guzhenren.impact.poor";
     private static final String IMPACT_SUCCESS = "guzhenren.impact.success";
     private static final String IMPACT_HOLD = "guzhenren.impact.hold";
     private static final String IMPACT_DROP_STAGE = "guzhenren.impact.drop_stage";
@@ -62,6 +66,10 @@ public final class NourishService {
         long max = EssenceService.maxEssence(p);
         return Math.max(1L, (max + COST_DIVISOR - 1) / COST_DIVISOR);
     }
+    public static long impactCost(Player p) {
+        return IMPACT_COST_PER_RANK_BASE * ApertureService.aperture(p).rank().getRankBase();
+    }
+    public static boolean canAffordImpact(Player p) {return PrimevalStoneItem.canAfford(p, impactCost(p));}
 
     public static void start(ServerPlayer player) {
         if (!canNourish(player)) return;
@@ -110,8 +118,7 @@ public final class NourishService {
     }
 
     private static boolean pay(ServerPlayer player, long cost) {
-        if (EssenceService.consume(player, cost)) return true;
-        PrimevalStoneItem.pourInto(player, cost - EssenceService.spendable(player));
+        PrimevalStoneItem.topUp(player);
         return EssenceService.consume(player, cost);
     }
     //endregion
@@ -120,6 +127,12 @@ public final class NourishService {
     public static void impactWall(ServerPlayer player) {
         if (!canImpact(player)) return;
         Aperture a = ApertureService.aperture(player);
+        long cost = impactCost(player);
+        if (!PrimevalStoneItem.spend(player, cost)) {
+            player.displayClientMessage(Component.translatable(IMPACT_POOR, cost), true);
+            return;
+        }
+
         int roll = player.getRandom().nextInt(100);
         Outcome outcome = resolve(roll, a.isExtreme());
 
@@ -149,13 +162,13 @@ public final class NourishService {
      */
     public static Outcome resolve(int roll, boolean extreme) {
         if (extreme) {
-            if (roll < 50) return Outcome.SUCCESS;
-            if (roll < 80) return Outcome.HOLD;
+            if (roll < 60) return Outcome.SUCCESS;
+            if (roll < 85) return Outcome.HOLD;
             return Outcome.DROP_STAGE;
         }
-        if (roll < 20) return Outcome.SUCCESS;
-        if (roll < 50) return Outcome.HOLD;
-        if (roll < 80) return Outcome.DROP_STAGE;
+        if (roll < 40) return Outcome.SUCCESS;
+        if (roll < 70) return Outcome.HOLD;
+        if (roll < 90) return Outcome.DROP_STAGE;
         return Outcome.DROP_BASE;
     }
     //endregion

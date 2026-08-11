@@ -13,7 +13,6 @@ import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.item.gu.mortal.PrimevalElderGuItem;
 import com.unknown.guzhenren.recipe.GuRecipe;
 import com.unknown.guzhenren.recipe.GuRecipeInput;
-import com.unknown.guzhenren.registry.ModItems;
 import com.unknown.guzhenren.registry.ModMenus;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -103,8 +102,6 @@ public class RefinementMenu extends AbstractContainerMenu {
     private static final int FULL_SUCCESS = 100;
 
     private static final int OPENING_PERCENT = 40;
-    private static final int REFILL_BELOW_PERCENT = 50;
-    private static final int REFILL_UP_TO_PERCENT = 80;
     private static final int CURRENT_PER_MAX_SOUL = 10;
 
     private static final int DATA_READY = 0;
@@ -373,21 +370,15 @@ public class RefinementMenu extends AbstractContainerMenu {
 
     //region 元石补给 [the stone top-up] -- only ever what the window did not want
     private void refillFromSupply(ServerPlayer server) {
-        long max = EssenceService.maxEssence(server);
-        long current = EssenceService.currentEssence(server);
-        if (max <= 0L || current * 100L >= max * REFILL_BELOW_PERCENT) return;
+        if (!PrimevalStoneItem.needsTopUp(server)) return;
 
-        long perStone = essencePerStone();
-        long missing = max * REFILL_UP_TO_PERCENT / 100L - current;
+        long perStone = PrimevalStoneItem.essencePerStone();
+        long missing = PrimevalStoneItem.topUpDeficit(server);
         if (perStone <= 0L || missing <= 0L) return;
 
         int wanted = (int) Math.min(Integer.MAX_VALUE, (missing + perStone - 1) / perStone);
         int drawn = takeStones(wanted);
         if (drawn > 0) EssenceService.add(server, drawn * perStone);
-    }
-
-    private static long essencePerStone() {
-        return ModItems.PRIMEVAL_STONE.get() instanceof PrimevalStoneItem stone ? stone.essence() : 0L;
     }
     //endregion
 

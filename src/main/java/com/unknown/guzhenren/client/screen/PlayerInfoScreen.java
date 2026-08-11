@@ -197,7 +197,9 @@ public final class PlayerInfoScreen extends Screen {
         if (!paired) return;
         int x2 = buttonSplit();
         int x3 = valueRight();
-        g.fill(x2, top, x3, top + BTN_H, inBox(mouseX, mouseY, x2, x3) ? BTN_HOVER : BTN_IDLE);
+        int strike = !NourishService.canAffordImpact(player) ? BTN_DEAD
+                : inBox(mouseX, mouseY, x2, x3) ? BTN_HOVER : BTN_IDLE;
+        g.fill(x2, top, x3, top + BTN_H, strike);
         g.renderOutline(x2, top, x3 - x2, BTN_H, accent);
         label(g, Component.translatable(KEY_IMPACT), x2, x3, top);
     }
