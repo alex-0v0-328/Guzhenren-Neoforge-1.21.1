@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The goal that makes a flying Gu hover beside the player it wants.
  *
- * <p>⚠ It drives the movement vector itself and never paths. A mote flies straight, so the
+ * <p>⚠⚠ It drives the movement vector itself and never paths. A mote flies straight, so the
  * navigation's path cache and stuck detector would be obstacles rather than help.
  *
  * @author Alex
