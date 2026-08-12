@@ -436,8 +436,7 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.Lifespan e -> new Row(indent, label("lifespan"), ModDisplayText.lifespan(e.body()));
             case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
             case InfoModel.PathRow e -> new Row(indent, name(e.path().getTranslationKey()), pathValue(e.entry()));
-            case InfoModel.QiHeader e -> new Row(indent, label("qi"),
-                    ModDisplayText.pathStanding(GuPath.QI, e.attainment(), e.totalMark(), e.totalSpeck()));
+            case InfoModel.QiHeader ignored -> new Row(indent, label("qi"), null);
             case InfoModel.QiRow e -> new Row(indent, name(e.kind().getTranslationKey()),
                     Component.literal(String.valueOf(e.amount())));
             case InfoModel.StrengthHeader ignored -> new Row(indent, label("strength"), null);
@@ -447,8 +446,7 @@ public final class PlayerInfoScreen extends Screen {
                     Component.translatable("guzhenren.screen.capacity", e.usable(), e.total()));
             case InfoModel.AttackRow e -> new Row(indent, label("attack"),
                     Component.literal(ModDisplayText.attackBonus(e.bonus())));
-            case InfoModel.WisdomHeader e -> new Row(indent, label("wisdom"),
-                    ModDisplayText.pathStanding(GuPath.WISDOM, e.attainment(), e.totalMark(), e.totalSpeck()));
+            case InfoModel.WisdomHeader ignored -> new Row(indent, label("wisdom"), null);
 
             case InfoModel.BrillianceRow e -> new Row(indent, label("brilliance"),
                     name(e.brilliance().getTranslationKey()).append(detail(Component.translatable(

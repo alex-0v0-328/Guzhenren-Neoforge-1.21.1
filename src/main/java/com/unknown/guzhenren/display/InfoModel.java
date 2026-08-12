@@ -19,7 +19,6 @@ import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.Race;
-import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
@@ -68,13 +67,14 @@ public final class InfoModel {
     public record Lifespan(BodyData body) implements Entry {}
     public record PathsHeader(boolean empty) implements Entry {}
     public record PathRow(GuPath path, PathEntry entry) implements Entry {}
-    public record QiHeader(GuAttainment attainment, long totalMark, long totalSpeck) implements Entry {}
+    public record QiHeader() implements Entry {}
     public record QiRow(QiKind kind, long amount) implements Entry {}
     public record StrengthHeader() implements Entry {}
     public record StrengthRow(StrengthBranch branch, int totalJin, Component reading) implements Entry {}
     public record CapacityRow(int usable, int total) implements Entry {}
     public record AttackRow(double bonus) implements Entry {}
-    public record WisdomHeader(GuAttainment attainment, long totalMark, long totalSpeck) implements Entry {}
+    //  TODO(智道): ⚠ KEPT -- nothing builds this yet. 智道蛊虫 will give the section rows, as 力道 has.
+    public record WisdomHeader() implements Entry {}
     //endregion
 
     //region Mind
@@ -134,7 +134,6 @@ public final class InfoModel {
     public static List<Row> pathAchievement(Player player) {
         List<Row> rows = new ArrayList<>();
         strength(rows, player);
-        wisdom(rows, player);
         qi(rows, player);
         paths(rows, player);
         return rows;
@@ -148,18 +147,14 @@ public final class InfoModel {
     }
 
     private static void qi(List<Row> rows, Player player) {
-        GuAttainment attainment = PathService.attainment(player, GuPath.QI);
-        long mark = PathService.mark(player, GuPath.QI);
-        long speck = PathService.speck(player, GuPath.QI);
-
         List<Row> held = new ArrayList<>();
         for (QiKind kind : QiKind.values()) {
             long amount = QiService.current(player, kind);
             if (amount > 0L) held.add(new Row(INDENT, new QiRow(kind, amount)));
         }
-        if (held.isEmpty() && ModDisplayText.pathStandingEmpty(attainment, mark, speck)) return;
+        if (held.isEmpty()) return;
 
-        rows.add(new Row(0, new QiHeader(attainment, mark, speck)));
+        rows.add(new Row(0, new QiHeader()));
         rows.addAll(held);
     }
 
@@ -176,15 +171,6 @@ public final class InfoModel {
             rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN, data.totalJin(),
                     ModDisplayText.humanStrengthLine(data))));
         }
-    }
-
-    private static void wisdom(List<Row> rows, Player player) {
-        GuAttainment attainment = PathService.attainment(player, GuPath.WISDOM);
-        long mark = PathService.mark(player, GuPath.WISDOM);
-        long speck = PathService.speck(player, GuPath.WISDOM);
-        if (ModDisplayText.pathStandingEmpty(attainment, mark, speck)) return;
-
-        rows.add(new Row(0, new WisdomHeader(attainment, mark, speck)));
     }
 
     public static List<Row> mind(Player player) {

@@ -81,7 +81,7 @@ public final class CmdInfo {
             case InfoModel.Lifespan e -> key("lifespan", ModDisplayText.lifespan(e.body()));
             case InfoModel.PathsHeader e -> header("paths", e.empty());
             case InfoModel.PathRow e -> pathLine(e.path(), e.entry());
-            case InfoModel.QiHeader e -> qiHeader(e);
+            case InfoModel.QiHeader ignored -> key("qi");
             case InfoModel.QiRow e -> key("qi_entry", enumName(e.kind().getTranslationKey()), e.amount());
             case InfoModel.StrengthHeader ignored -> key("strength");
             case InfoModel.StrengthRow e -> key("strength_entry",
@@ -89,8 +89,7 @@ public final class CmdInfo {
                     e.reading());
             case InfoModel.CapacityRow e -> key("capacity", e.usable(), e.total());
             case InfoModel.AttackRow e -> key("attack", ModDisplayText.attackBonus(e.bonus()));
-            case InfoModel.WisdomHeader e -> key("wisdom", ModDisplayText.pathStanding(
-                    GuPath.WISDOM, e.attainment(), e.totalMark(), e.totalSpeck()));
+            case InfoModel.WisdomHeader ignored -> key("wisdom");
 
             case InfoModel.BrillianceRow e -> key("brilliance", enumName(e.brilliance().getTranslationKey()))
                     .append(muted(key("brilliance_rate", e.brilliance().getThoughtsPerSecond())));
@@ -104,10 +103,6 @@ public final class CmdInfo {
         MutableComponent talent = ModDisplayText.talent(e.aperture());
         if (e.awakened()) talent.append(muted(ModDisplayText.baseFraction(e.aperture().baseEssence())));
         return key("talent", talent);
-    }
-
-    private static MutableComponent qiHeader(InfoModel.QiHeader e) {
-        return key("qi", ModDisplayText.pathStanding(GuPath.QI, e.attainment(), e.totalMark(), e.totalSpeck()));
     }
 
     private static MutableComponent pathLine(GuPath path, PathEntry entry) {

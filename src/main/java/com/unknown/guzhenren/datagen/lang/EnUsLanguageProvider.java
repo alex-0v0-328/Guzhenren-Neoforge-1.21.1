@@ -82,9 +82,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.8",                 "Eight");
         add("guzhenren.display.base_units.9",                 "Nine");
         add("guzhenren.display.none",                         "[NONE]");
-        add("guzhenren.display.path_attainment",              "%s %s");
-        add("guzhenren.display.marks",                        "Marks %s");
-        add("guzhenren.display.specks",                       "Specks %s");
         add("guzhenren.display.wild",                         "Wild %s");
         add("guzhenren.display.vital",                        "Vital %s");
         add("guzhenren.display.strength.beast_reading",       "[Strength of %s %s]");
@@ -166,8 +163,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.lifespan",        "Lifespan:    %s");
         add("guzhenren.command.info.life_form",       "Life form:   %s");
         add("guzhenren.command.info.race",            "Race:        %s");
-        add("guzhenren.command.info.wisdom",          "Wisdom Path: %s");
-        add("guzhenren.command.info.qi",              "Qi Path: %s");
+        add("guzhenren.command.info.wisdom",          "Wisdom Path:");
+        add("guzhenren.command.info.qi",              "Qi Path:");
         add("guzhenren.command.info.qi_entry",        "  %s  %s");
         add("guzhenren.command.info.paths",           "Paths:");
         add("guzhenren.command.info.path_entry",      "  %s  %s  Marks %s");

@@ -6,7 +6,6 @@ import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
-import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import net.minecraft.network.chat.Component;
@@ -71,31 +70,6 @@ public final class ModDisplayText {
     public static MutableComponent lifespan(BodyData body) {
         return Component.translatable("guzhenren.display.lifespan", body.lifespan(), body.age());
     }
-
-    //region a path's standing -- the header line 气道 and 智道 each get, on both the panel and the command
-    public static boolean pathStandingEmpty(GuAttainment attainment, long mark, long speck) {
-        return attainment == GuAttainment.NONE && mark <= 0L && speck <= 0L;
-    }
-
-    /** ⚠ Bare reads as NOTHING, never {@code [无]} — the section is only drawn when it holds something. */
-    public static MutableComponent pathStanding(GuPath path, GuAttainment attainment, long mark, long speck) {
-        if (pathStandingEmpty(attainment, mark, speck)) return Component.empty();
-
-        MutableComponent value = attainment == GuAttainment.NONE ? null
-                : Component.translatable("guzhenren.display.path_attainment",
-                        Component.translatable(path.getTranslationKey()),
-                        Component.translatable(attainment.getTranslationKey()));
-        value = appendCount(value, "guzhenren.display.marks", mark);
-        value = appendCount(value, "guzhenren.display.specks", speck);
-        return value;
-    }
-
-    private static @Nullable MutableComponent appendCount(@Nullable MutableComponent head, String key, long amount) {
-        if (amount <= 0L) return head;
-        MutableComponent part = Component.translatable(key, amount);
-        return head == null ? part : head.append(" ").append(part);
-    }
-    //endregion
 
     public static MutableComponent realmAndTalent(Aperture a) {return realmTitle(a).append(GAP).append(talent(a));}
 
