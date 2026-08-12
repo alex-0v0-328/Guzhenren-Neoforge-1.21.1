@@ -83,8 +83,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.9",                 "Nine");
         add("guzhenren.display.none",                         "[NONE]");
         add("guzhenren.display.path_attainment",              "%s %s");
-        add("guzhenren.display.qi_marks",                     "Marks %s");
-        add("guzhenren.display.qi_specks",                    "Specks %s");
+        add("guzhenren.display.marks",                        "Marks %s");
+        add("guzhenren.display.specks",                       "Specks %s");
         add("guzhenren.display.wild",                         "Wild %s");
         add("guzhenren.display.vital",                        "Vital %s");
         add("guzhenren.display.strength.beast_reading",       "[Strength of %s %s]");

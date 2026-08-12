@@ -7,7 +7,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.unknown.guzhenren.attachment.data.body.PathEntry;
 import com.unknown.guzhenren.command.ModCommandFeedback;
 import com.unknown.guzhenren.command.ModCommandSupport;
-import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.InfoModel;
 import com.unknown.guzhenren.display.ModDisplayText;
@@ -84,14 +83,14 @@ public final class CmdInfo {
             case InfoModel.PathRow e -> pathLine(e.path(), e.entry());
             case InfoModel.QiHeader e -> qiHeader(e);
             case InfoModel.QiRow e -> key("qi_entry", enumName(e.kind().getTranslationKey()), e.amount());
-            case InfoModel.StrengthHeader e -> header("strength", e.empty());
+            case InfoModel.StrengthHeader ignored -> key("strength");
             case InfoModel.StrengthRow e -> key("strength_entry",
                     ModDisplayText.strengthLabel(enumName(e.branch().getTranslationKey()), e.totalJin()),
                     e.reading());
             case InfoModel.CapacityRow e -> key("capacity", e.usable(), e.total());
             case InfoModel.AttackRow e -> key("attack", ModDisplayText.attackBonus(e.bonus()));
-            case InfoModel.WisdomHeader e -> key("wisdom", e.attainment() == GuAttainment.NONE
-                    ? none() : enumName(e.attainment().getTranslationKey()));
+            case InfoModel.WisdomHeader e -> key("wisdom", ModDisplayText.pathStanding(
+                    GuPath.WISDOM, e.attainment(), e.totalMark(), e.totalSpeck()));
 
             case InfoModel.BrillianceRow e -> key("brilliance", enumName(e.brilliance().getTranslationKey()))
                     .append(muted(key("brilliance_rate", e.brilliance().getThoughtsPerSecond())));
@@ -108,7 +107,7 @@ public final class CmdInfo {
     }
 
     private static MutableComponent qiHeader(InfoModel.QiHeader e) {
-        return key("qi", ModDisplayText.qiStanding(e.attainment(), e.totalMark(), e.totalSpeck()));
+        return key("qi", ModDisplayText.pathStanding(GuPath.QI, e.attainment(), e.totalMark(), e.totalSpeck()));
     }
 
     private static MutableComponent pathLine(GuPath path, PathEntry entry) {

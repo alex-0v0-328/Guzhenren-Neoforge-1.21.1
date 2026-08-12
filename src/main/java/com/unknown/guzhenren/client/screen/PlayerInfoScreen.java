@@ -6,7 +6,6 @@ import com.unknown.guzhenren.attachment.data.body.PathEntry;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import com.unknown.guzhenren.client.ModKeyMappings;
-import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.InfoModel;
 import com.unknown.guzhenren.display.ModDisplayText;
@@ -438,10 +437,10 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
             case InfoModel.PathRow e -> new Row(indent, name(e.path().getTranslationKey()), pathValue(e.entry()));
             case InfoModel.QiHeader e -> new Row(indent, label("qi"),
-                    ModDisplayText.qiStanding(e.attainment(), e.totalMark(), e.totalSpeck()));
+                    ModDisplayText.pathStanding(GuPath.QI, e.attainment(), e.totalMark(), e.totalSpeck()));
             case InfoModel.QiRow e -> new Row(indent, name(e.kind().getTranslationKey()),
                     Component.literal(String.valueOf(e.amount())));
-            case InfoModel.StrengthHeader e -> new Row(indent, label("strength"), e.empty() ? none() : null);
+            case InfoModel.StrengthHeader ignored -> new Row(indent, label("strength"), null);
             case InfoModel.StrengthRow e -> new Row(indent,
                     ModDisplayText.strengthLabel(name(e.branch().getTranslationKey()), e.totalJin()), e.reading());
             case InfoModel.CapacityRow e -> new Row(indent, label("capacity"),
@@ -449,7 +448,7 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.AttackRow e -> new Row(indent, label("attack"),
                     Component.literal(ModDisplayText.attackBonus(e.bonus())));
             case InfoModel.WisdomHeader e -> new Row(indent, label("wisdom"),
-                    e.attainment() == GuAttainment.NONE ? none() : name(e.attainment().getTranslationKey()));
+                    ModDisplayText.pathStanding(GuPath.WISDOM, e.attainment(), e.totalMark(), e.totalSpeck()));
 
             case InfoModel.BrillianceRow e -> new Row(indent, label("brilliance"),
                     name(e.brilliance().getTranslationKey()).append(detail(Component.translatable(

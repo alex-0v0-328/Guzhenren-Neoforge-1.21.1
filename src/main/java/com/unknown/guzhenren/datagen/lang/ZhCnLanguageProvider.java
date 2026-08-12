@@ -83,8 +83,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.9",                 "九");
         add("guzhenren.display.none",                         "[无]");
         add("guzhenren.display.path_attainment",              "%s%s");
-        add("guzhenren.display.qi_marks",                     "道痕 %s");
-        add("guzhenren.display.qi_specks",                    "碎屑 %s");
+        add("guzhenren.display.marks",                        "道痕 %s");
+        add("guzhenren.display.specks",                       "碎屑 %s");
         add("guzhenren.display.wild",                         "野生·%s");
         add("guzhenren.display.vital",                        "本命·%s");
         add("guzhenren.display.strength.beast_reading",       "[%s%s之力]");

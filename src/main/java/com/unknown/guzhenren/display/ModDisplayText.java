@@ -72,21 +72,21 @@ public final class ModDisplayText {
         return Component.translatable("guzhenren.display.lifespan", body.lifespan(), body.age());
     }
 
-    //region 气道 [the Qi Path] standing -- one header line, drawn by both the G panel and the info command
-    public static boolean qiStandingEmpty(GuAttainment attainment, long mark, long speck) {
+    //region a path's standing -- the header line 气道 and 智道 each get, on both the panel and the command
+    public static boolean pathStandingEmpty(GuAttainment attainment, long mark, long speck) {
         return attainment == GuAttainment.NONE && mark <= 0L && speck <= 0L;
     }
 
-    /** ⚠ {@code [无]} means the whole line is bare, so a grade of NONE beside a count is simply omitted. */
-    public static MutableComponent qiStanding(GuAttainment attainment, long mark, long speck) {
-        if (qiStandingEmpty(attainment, mark, speck)) return Component.translatable("guzhenren.display.none");
+    /** ⚠ Bare reads as NOTHING, never {@code [无]} — the section is only drawn when it holds something. */
+    public static MutableComponent pathStanding(GuPath path, GuAttainment attainment, long mark, long speck) {
+        if (pathStandingEmpty(attainment, mark, speck)) return Component.empty();
 
         MutableComponent value = attainment == GuAttainment.NONE ? null
                 : Component.translatable("guzhenren.display.path_attainment",
-                        Component.translatable(GuPath.QI.getTranslationKey()),
+                        Component.translatable(path.getTranslationKey()),
                         Component.translatable(attainment.getTranslationKey()));
-        value = appendCount(value, "guzhenren.display.qi_marks", mark);
-        value = appendCount(value, "guzhenren.display.qi_specks", speck);
+        value = appendCount(value, "guzhenren.display.marks", mark);
+        value = appendCount(value, "guzhenren.display.specks", speck);
         return value;
     }
 
