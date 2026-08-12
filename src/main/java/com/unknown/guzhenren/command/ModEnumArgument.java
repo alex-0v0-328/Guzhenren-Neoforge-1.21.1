@@ -16,8 +16,8 @@ import net.minecraft.util.StringRepresentable;
 /**
  * A command argument accepting one constant of an enum.
  *
- * <p>⚠ It parses any bare word, including the name of a sibling literal. Brigadier flags the
- * resulting ambiguity at boot in dev, and a nested one has to take its own argument name.
+ * <p>☠ Everything typed after a redirect is parsed into a CHILD context, and {@code /gzr} is that
+ * redirect — so a read of an earlier argument must go through {@code getLastChild()} or it throws.
  *
  * @author Alex
  * @since 1.0.0
@@ -46,8 +46,8 @@ public final class ModEnumArgument {
     }
 
     public static <E extends Enum<E> & StringRepresentable> E get(
-            CommandContext<CommandSourceStack> context, String name, E[] values) throws CommandSyntaxException {
-        String raw = StringArgumentType.getString(context, name);
+            CommandContext<?> context, String name, E[] values) throws CommandSyntaxException {
+        String raw = StringArgumentType.getString(context.getLastChild(), name);
         for (E value : values) {
             if (value.getSerializedName().equals(raw)) return value;
         }
