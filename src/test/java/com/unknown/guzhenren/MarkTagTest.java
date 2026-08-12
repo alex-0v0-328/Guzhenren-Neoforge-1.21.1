@@ -1,8 +1,7 @@
 package com.unknown.guzhenren;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.custom.enums.path.GuPath;
@@ -15,12 +14,12 @@ import org.junit.jupiter.api.Test;
 class MarkTagTest {
 
     @Test
-    @DisplayName("RACE is settable on NO path -- a command must never be able to forge a race mark")
-    void raceIsNeverSettable() {
+    @DisplayName("自然 [NATURAL] owns no path -- it is the one tag a command may book, on all 33")
+    void naturalFitsEveryPath() {
+        assertNull(MarkTag.NATURAL.owner());
         for (GuPath path : GuPath.values()) {
-            assertFalse(List.of(MarkTag.settableOn(path)).contains(MarkTag.RACE), "path " + path);
+            assertTrue(MarkTag.NATURAL.fitsOn(path), "path " + path);
         }
-        assertFalse(MarkTag.RACE.isSettable());
     }
 
     @Test
@@ -32,51 +31,34 @@ class MarkTagTest {
     }
 
     @Test
-    @DisplayName("a path with no tags of its own is offered 自然 [natural] alone")
-    void untaggedPathOffersNaturalOnly() {
-        assertArrayEquals(new MarkTag[] {MarkTag.NATURAL}, MarkTag.settableOn(GuPath.QI));
-        assertArrayEquals(new MarkTag[] {MarkTag.NATURAL}, MarkTag.settableOn(GuPath.EARTH));
-    }
-
-    @Test
-    @DisplayName("力道 [STRENGTH] is the one path that owns tags, and it is offered all four plus 自然")
-    void strengthOffersItsOwnFour() {
-        assertArrayEquals(new MarkTag[] {
-                MarkTag.NATURAL,
+    @DisplayName("力道 [STRENGTH] is the only path owning tags, and it owns exactly four")
+    void strengthIsTheOnlyOwner() {
+        List<MarkTag> owned = Arrays.stream(MarkTag.values()).filter(tag -> tag.owner() != null).toList();
+        assertEquals(List.of(
                 MarkTag.STRENGTH_BEASTS,
                 MarkTag.STRENGTH_BOAR,
                 MarkTag.STRENGTH_BEAR,
-                MarkTag.STRENGTH_HUMAN,
-        }, MarkTag.settableOn(GuPath.STRENGTH));
+                MarkTag.STRENGTH_HUMAN), owned);
+        owned.forEach(tag -> assertEquals(GuPath.STRENGTH, tag.owner(), tag.toString()));
     }
 
     @Test
-    @DisplayName("STRENGTH is the only path owning tags -- every other path gets exactly one offer")
-    void onlyStrengthOwnsTags() {
-        int owning = 0;
-        for (GuPath path : GuPath.values()) {
-            int offered = MarkTag.settableOn(path).length;
-            if (offered > 1) owning++;
-            else assertEquals(1, offered, "path " + path);
-        }
-        assertEquals(1, owning);
-    }
-
-    @Test
-    @DisplayName("what is offered is always a subset of what fits -- the two filters cannot disagree")
-    void offeredIsSubsetOfFitting() {
-        for (GuPath path : GuPath.values()) {
-            for (MarkTag tag : MarkTag.settableOn(path)) {
-                assertTrue(tag.fitsOn(path), tag + " on " + path);
-                assertTrue(tag.isSettable(), tag.toString());
+    @DisplayName("an owned tag fits its own path and NO other -- a write elsewhere is dropped in silence")
+    void anOwnedTagFitsItsOwnPathAlone() {
+        for (MarkTag tag : MarkTag.values()) {
+            if (tag.owner() == null) continue;
+            for (GuPath path : GuPath.values()) {
+                assertEquals(tag.owner() == path, tag.fitsOn(path), tag + " on " + path);
             }
         }
     }
 
     @Test
-    @DisplayName("every tag but RACE is settable, so the exception stays a deliberate list of one")
-    void raceIsTheOnlyException() {
-        List<MarkTag> unsettable = Arrays.stream(MarkTag.values()).filter(tag -> !tag.isSettable()).toList();
-        assertEquals(List.of(MarkTag.RACE), unsettable);
+    @DisplayName("the two boars share one tag and the bear has its own -- three constants, two species")
+    void boarsShareOneSpeciesTag() {
+        assertEquals(MarkTag.STRENGTH_BEASTS, MarkTag.STRENGTH_BOAR.parent());
+        assertEquals(MarkTag.STRENGTH_BEASTS, MarkTag.STRENGTH_BEAR.parent());
+        assertNull(MarkTag.STRENGTH_BEASTS.parent());
+        assertNull(MarkTag.NATURAL.parent());
     }
 }

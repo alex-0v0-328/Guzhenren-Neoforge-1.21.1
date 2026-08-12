@@ -153,8 +153,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
 
         add("guzhenren.command.failed.awakened",      "%s 已开窍 —— 要重掷请先 /guzhenren reset");
         add("guzhenren.command.failed.unawakened",    "%s 尚未开窍 —— 修为相关的值只能由 /guzhenren awaken 建立");
-        add("guzhenren.command.failed.tag_path",      "%s 不是 %s 的来源 —— 通用来源是 natural");
-        add("guzhenren.command.failed.tag_settable",  "%s 归它自己的系统记账，命令改不了 —— 种族道痕请用 /guzhenren body race set");
 
         add("guzhenren.command.info.aperture_index",  "第 %s 窍");
         add("guzhenren.command.info.realm",           "玩家修为  %s");

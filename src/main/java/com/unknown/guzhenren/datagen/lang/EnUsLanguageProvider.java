@@ -153,8 +153,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
 
         add("guzhenren.command.failed.awakened",      "%s has already awakened -- run /guzhenren reset first to re-roll");
         add("guzhenren.command.failed.unawakened",    "%s has not awakened -- cultivation values are established by /guzhenren awaken");
-        add("guzhenren.command.failed.tag_path",      "%s is not a source on the %s -- the universal source is natural");
-        add("guzhenren.command.failed.tag_settable",  "%s is booked by its own system and no command may set it -- race marks come from /guzhenren body race set");
 
         add("guzhenren.command.info.aperture_index",  "Aperture %s");
         add("guzhenren.command.info.realm",           "Cultivation: %s");

@@ -5,7 +5,6 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.unknown.guzhenren.attachment.service.body.PathService;
-import com.unknown.guzhenren.command.ModCommandFeedback;
 import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.command.ModEnumArgument;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
@@ -13,17 +12,13 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
  * {@code /gzr path}: reads and writes attainment [造诣], marks [道痕] and specks [碎屑].
  *
- * <p>⚠ Every write names a tag, and the record drops a tag that belongs to another path. A write with
- * the wrong tag reports success and changes nothing.
- *
- * <p>☠ The tag offered here is filtered twice, by path AND by settability. Offering every constant is
- * how a hand-written RACE mark became forgeable on a path no race can ever revoke.
+ * <p>☠ A command books 自然 [NATURAL] and can name no other tag. A hand-written source tag cannot be
+ * told from what a Gu laid down, and that is how a race mark was forged onto a path no race revokes.
  *
  * @author Alex
  * @since 1.0.0
@@ -33,31 +28,21 @@ public final class CmdPath {
     private CmdPath() {}
 
     private static final String ARG_PATH = "path";
-    private static final String ARG_TAG = "tag";
-    private static final MarkTag[] UNKNOWN_PATH = {};
 
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("path")
                 .then(ModEnumArgument.arg(ARG_PATH, GuPath.values())
-                        .then(tagged("mark", PathService::setMark, PathService::addMark))
-                        .then(tagged("speck", PathService::setSpeck, PathService::addSpeck))
+                        .then(tally("mark",  PathService::setMark,  PathService::addMark))
+                        .then(tally("speck", PathService::setSpeck, PathService::addSpeck))
                         .then(attainment()));
     }
 
-    private static ArgumentBuilder<CommandSourceStack, ?> tagged(
-            String literal, TagOperation set, TagOperation add) {
-        return Commands.literal(literal).then(ModEnumArgument.arg(ARG_TAG, CmdPath::offeredTags)
+    private static ArgumentBuilder<CommandSourceStack, ?> tally(
+            String literal, TallyOperation set, TallyOperation add) {
+        return Commands.literal(literal)
                 .then(countNode("set", set))
                 .then(countNode("add", add))
-                .then(countNode("sub", (player, path, tag, value) -> add.apply(player, path, tag, -value))));
-    }
-
-    private static MarkTag[] offeredTags(CommandContext<CommandSourceStack> context) {
-        try {
-            return MarkTag.settableOn(pathOf(context));
-        } catch (CommandSyntaxException unknownPath) {
-            return UNKNOWN_PATH;
-        }
+                .then(countNode("sub", (player, path, tag, value) -> add.apply(player, path, tag, -value)));
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> attainment() {
@@ -78,33 +63,15 @@ public final class CmdPath {
 
     //region builders
 
-    private static ArgumentBuilder<CommandSourceStack, ?> countNode(String literal, TagOperation operation) {
+    private static ArgumentBuilder<CommandSourceStack, ?> countNode(String literal, TallyOperation operation) {
         return Commands.literal(literal).then(ModCommandSupport.withTargets(
                 Commands.argument(ModCommandSupport.ARG_VALUE, LongArgumentType.longArg()),
                 context -> {
                     GuPath path = pathOf(context);
-                    MarkTag tag = tagOf(context);
-                    if (!tag.isSettable()) return refuseSettable(context, tag);
-                    if (!tag.fitsOn(path)) return refuseTag(context, tag, path);
-
                     long value = LongArgumentType.getLong(context, ModCommandSupport.ARG_VALUE);
                     return ModCommandSupport.apply(context,
-                            player -> operation.apply(player, path, tag, value));
+                            player -> operation.apply(player, path, MarkTag.NATURAL, value));
                 }));
-    }
-
-    private static int refuseTag(CommandContext<CommandSourceStack> context, MarkTag tag, GuPath path) {
-        ModCommandFeedback.failure(context.getSource(), Component.translatable(
-                ModCommandSupport.FAILED_TAG_PATH,
-                Component.translatable(tag.getTranslationKey()),
-                Component.translatable(path.getTranslationKey())));
-        return 0;
-    }
-
-    private static int refuseSettable(CommandContext<CommandSourceStack> context, MarkTag tag) {
-        ModCommandFeedback.failure(context.getSource(), Component.translatable(
-                ModCommandSupport.FAILED_TAG_SETTABLE, Component.translatable(tag.getTranslationKey())));
-        return 0;
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> attainmentShift(String literal, int delta) {
@@ -118,14 +85,10 @@ public final class CmdPath {
         return ModEnumArgument.get(context, ARG_PATH, GuPath.values());
     }
 
-    private static MarkTag tagOf(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        return ModEnumArgument.get(context, ARG_TAG, MarkTag.values());
-    }
-
     //endregion
 
     @FunctionalInterface
-    private interface TagOperation {
+    private interface TallyOperation {
         void apply(ServerPlayer player, GuPath path, MarkTag tag, long value);
     }
 }

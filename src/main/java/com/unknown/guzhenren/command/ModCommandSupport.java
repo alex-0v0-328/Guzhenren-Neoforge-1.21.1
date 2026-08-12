@@ -37,8 +37,6 @@ public final class ModCommandSupport {
 
     public static final String FAILED_AWAKENED = "guzhenren.command.failed.awakened";
     public static final String FAILED_UNAWAKENED = "guzhenren.command.failed.unawakened";
-    public static final String FAILED_TAG_PATH = "guzhenren.command.failed.tag_path";
-    public static final String FAILED_TAG_SETTABLE = "guzhenren.command.failed.tag_settable";
 
     public static final Predicate<ServerPlayer> ANYONE = player -> true;
     public static final Predicate<ServerPlayer> AWAKENED = ApertureService::isAwakened;
