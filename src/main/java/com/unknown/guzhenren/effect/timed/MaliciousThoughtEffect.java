@@ -1,0 +1,52 @@
+package com.unknown.guzhenren.effect.timed;
+
+import com.unknown.guzhenren.Ticks;
+import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.client.GradedEffectIcon;
+import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
+import java.util.function.Consumer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
+
+/**
+ * The Malicious Thought Gu [恶念蛊] effect: each second for twelve seconds it adds tagged thoughts.
+ *
+ * <p>⚠ One effect, four grades -- amplifier is the rank's tier, and the per-second table is given at
+ * registration. The immediate portion lands in the Gu's payout, not here.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
+public class MaliciousThoughtEffect extends MobEffect {
+
+    public static final int DURATION_TICKS = 12 * Ticks.SECOND;
+
+    private final long[] evilPerSecond;
+
+    public MaliciousThoughtEffect(MobEffectCategory category, int color, long[] evilPerSecond) {
+        super(category, color);
+        this.evilPerSecond = evilPerSecond;
+    }
+
+    @Override
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
+        return duration % Ticks.SECOND == 0;
+    }
+
+    @Override
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+        if (entity instanceof ServerPlayer player) {
+            int index = Math.clamp(amplifier, 0, evilPerSecond.length - 1);
+            MindService.addThoughts(player, evilPerSecond[index], ThoughtTag.EVIL);
+        }
+        return true;
+    }
+
+    @Override
+    public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
+        consumer.accept(GradedEffectIcon.item("malicious_thought_gu", 2, 5));
+    }
+}

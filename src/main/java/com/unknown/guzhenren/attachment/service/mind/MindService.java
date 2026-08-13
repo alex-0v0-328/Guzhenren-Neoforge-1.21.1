@@ -6,8 +6,10 @@ import com.unknown.guzhenren.attachment.data.mind.MindPool;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
+import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.ModAttachments;
+import java.util.Map;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -35,12 +37,25 @@ public final class MindService {
     public static long current(Player p, WisdomType t) {return pool(p, t).current();}
     public static long max(Player p, WisdomType t) {return pool(p, t).max();}
     public static Brilliance brilliance(Player p) {return get(p).brilliance();}
+    public static Map<ThoughtTag, Long> taggedThoughts(Player p) {return get(p).taggedThoughts();}
+    public static long taggedAmount(Player p, ThoughtTag tag) {return get(p).taggedThoughts().getOrDefault(tag, 0L);}
+    public static long naturalThoughts(Player p) {
+        long tagged = get(p).taggedThoughts().values().stream().mapToLong(Long::longValue).sum();
+        return Math.max(0L, current(p, WisdomType.THOUGHTS) - tagged);
+    }
 
     public static void setCurrent(ServerPlayer p, WisdomType t, long v) {
         MindPool pool = pool(p, t);
         set(p, t, pool.withCurrent(t.isBurstable() ? v : Math.min(v, pool.max())));
     }
     public static void addCurrent(ServerPlayer p, WisdomType t, long d) {setCurrent(p, t, current(p, t) + d);}
+    public static void addThoughts(ServerPlayer p, long amount, ThoughtTag tag) {
+        if (amount <= 0L) return;
+        setCurrent(p, WisdomType.THOUGHTS, current(p, WisdomType.THOUGHTS) + amount);
+        if (tag != ThoughtTag.NATURAL) {
+            store(p, get(p).withTagged(tag, taggedAmount(p, tag) + amount));
+        }
+    }
     public static void setMax(ServerPlayer p, WisdomType t, long v) {set(p, t, pool(p, t).withMax(v));}
     public static void addMax(ServerPlayer p, WisdomType t, long d) {setMax(p, t, max(p, t) + d);}
     public static void empty(ServerPlayer p) {store(p, get(p).emptied());}

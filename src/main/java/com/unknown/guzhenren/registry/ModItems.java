@@ -23,6 +23,7 @@ import com.unknown.guzhenren.item.gu.mortal.strength.AllOutEffortGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.BeastStrengthGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.HumanStrengthGuItem;
 import com.unknown.guzhenren.item.gu.mortal.time.WatchGuItem;
+import com.unknown.guzhenren.item.gu.mortal.wisdom.MaliciousThoughtGuItem;
 import com.unknown.guzhenren.item.gu.mortal.zombie.ZombieGuItem;
 import com.unknown.guzhenren.item.material.LiquorItem;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
@@ -282,7 +283,34 @@ public final class ModItems {
             () -> new WatchGuItem(tended(), ModEffects.THIRD_WATCH_GU, 5 * Ticks.MINUTE,
                     GuSpec.of(Rank.FIVE, GuPath.TIME)
                             .refine(16_000_000).costPerUse(200_000)
-                            .hungerBar(12, 1).hungerPerUse(0).regainEvery(1_000)
+                             .hungerBar(12, 1).hungerPerUse(0).regainEvery(1_000)
+                             .cooldown(Ticks.SECOND)));
+    //endregion
+
+    //region 恶念蛊 [Malicious Thought Gu] -- 智道; a one-use flood of evil thoughts, taken by its use
+    public static final DeferredItem<Item> MALICIOUS_THOUGHT_GU_2 = ITEMS.register("malicious_thought_gu_2",
+            () -> new MaliciousThoughtGuItem(tended(), ModEffects.MALICIOUS_THOUGHT_GU, 64L,
+                    GuSpec.of(Rank.TWO, GuPath.WISDOM)
+                            .refine(16_000).costPerUse(200)
+                            .hungerBar(12, 4).hungerPerUse(0).feed(ModItemTags.MALICIOUS_THOUGHT_FEED, 1)
+                            .cooldown(Ticks.SECOND)));
+    public static final DeferredItem<Item> MALICIOUS_THOUGHT_GU_3 = ITEMS.register("malicious_thought_gu_3",
+            () -> new MaliciousThoughtGuItem(tended(), ModEffects.MALICIOUS_THOUGHT_GU, 640L,
+                    GuSpec.of(Rank.THREE, GuPath.WISDOM)
+                            .refine(160_000).costPerUse(2_000)
+                            .hungerBar(12, 4).hungerPerUse(0).feed(ModItemTags.MALICIOUS_THOUGHT_FEED, 1)
+                            .cooldown(Ticks.SECOND)));
+    public static final DeferredItem<Item> MALICIOUS_THOUGHT_GU_4 = ITEMS.register("malicious_thought_gu_4",
+            () -> new MaliciousThoughtGuItem(tended(), ModEffects.MALICIOUS_THOUGHT_GU, 6_400L,
+                    GuSpec.of(Rank.FOUR, GuPath.WISDOM)
+                            .refine(1_600_000).costPerUse(20_000)
+                            .hungerBar(12, 4).hungerPerUse(0).feed(ModItemTags.MALICIOUS_THOUGHT_FEED, 1)
+                            .cooldown(Ticks.SECOND)));
+    public static final DeferredItem<Item> MALICIOUS_THOUGHT_GU_5 = ITEMS.register("malicious_thought_gu_5",
+            () -> new MaliciousThoughtGuItem(tended(), ModEffects.MALICIOUS_THOUGHT_GU, 64_000L,
+                    GuSpec.of(Rank.FIVE, GuPath.WISDOM)
+                            .refine(16_000_000).costPerUse(200_000)
+                            .hungerBar(12, 4).hungerPerUse(0).feed(ModItemTags.MALICIOUS_THOUGHT_FEED, 1)
                             .cooldown(Ticks.SECOND)));
     //endregion
 

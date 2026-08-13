@@ -451,6 +451,8 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.AttackRow e -> new Row(indent, label("attack"),
                     Component.literal(ModDisplayText.attackBonus(e.bonus())));
             case InfoModel.WisdomHeader ignored -> new Row(indent, label("wisdom"), null);
+            case InfoModel.WisdomRow e -> new Row(indent, name(e.tag().getTranslationKey()),
+                    Component.literal(String.valueOf(e.amount())));
 
             case InfoModel.BrillianceRow e -> new Row(indent, label("brilliance"),
                     name(e.brilliance().getTranslationKey()).append(detail(Component.translatable(

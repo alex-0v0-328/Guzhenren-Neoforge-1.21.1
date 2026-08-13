@@ -29,6 +29,6 @@ public class EssenceQiEffect extends MobEffect {
 
     @Override
     public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(new GradedEffectIcon("essence_qi", 1, 5));
+        consumer.accept(GradedEffectIcon.mobEffect("essence_qi", 1, 5));
     }
 }

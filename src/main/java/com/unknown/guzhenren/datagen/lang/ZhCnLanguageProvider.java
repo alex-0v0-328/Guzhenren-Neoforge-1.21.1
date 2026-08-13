@@ -19,6 +19,7 @@ import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
+import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.data.PackOutput;
@@ -168,6 +169,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.life_form",       "生命形态  %s");
         add("guzhenren.command.info.race",            "种族      %s");
         add("guzhenren.command.info.wisdom",          "智道造诣");
+        add("guzhenren.command.info.wisdom_entry",    "  %s  %s");
         add("guzhenren.command.info.qi",              "气道造诣");
         add("guzhenren.command.info.qi_entry",        "  %s  %s");
         add("guzhenren.command.info.paths",           "流派造诣");
@@ -316,6 +318,10 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.PRIMEVAL_ELDER_GU_5,              "五转元老蛊");
         addItem(ModItems.SECOND_WATCH_GU,                  "两更蛊");
         addItem(ModItems.THIRD_WATCH_GU,                   "三更蛊");
+        addItem(ModItems.MALICIOUS_THOUGHT_GU_2,           "二转恶念蛊");
+        addItem(ModItems.MALICIOUS_THOUGHT_GU_3,           "三转恶念蛊");
+        addItem(ModItems.MALICIOUS_THOUGHT_GU_4,           "四转恶念蛊");
+        addItem(ModItems.MALICIOUS_THOUGHT_GU_5,           "五转恶念蛊");
         addItem(ModItems.PRIMEVAL_STONE,                   "元石");
         addItem(ModItems.LIQUOR,                           "酒");
         addItem(ModItems.SOUR_LIQUOR,                      "酸酒");
@@ -430,6 +436,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addAttainment();
         addWisdomType();
         addBrilliance();
+        addThoughtTag();
         addBeastStrength();
         addStrengthBranch();
         addHumanStrength();
@@ -634,6 +641,10 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(Brilliance.DISTINCTIVE, "才情不俗");
         add(Brilliance.OUTSTANDING, "才情卓越");
         add(Brilliance.UNRIVALED,   "才情旷世");
+    }
+    private void addThoughtTag() {
+        add(ThoughtTag.NATURAL, "自然念");
+        add(ThoughtTag.EVIL,    "恶念");
     }
     //endregion
 }

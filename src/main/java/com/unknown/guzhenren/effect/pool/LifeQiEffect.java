@@ -34,6 +34,6 @@ public class LifeQiEffect extends MobEffect {
 
     @Override
     public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(new GradedEffectIcon("life_qi", 1, 5));
+        consumer.accept(GradedEffectIcon.mobEffect("life_qi", 1, 5));
     }
 }

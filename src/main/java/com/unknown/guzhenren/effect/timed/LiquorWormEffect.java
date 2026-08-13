@@ -23,6 +23,6 @@ public class LiquorWormEffect extends MobEffect {
 
     @Override
     public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(new GradedEffectIcon("liquor_worm", 1, 4));
+        consumer.accept(GradedEffectIcon.mobEffect("liquor_worm", 1, 4));
     }
 }

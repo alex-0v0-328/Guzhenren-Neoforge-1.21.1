@@ -23,6 +23,6 @@ public class AllOutEffortEffect extends MobEffect {
 
     @Override
     public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(new GradedEffectIcon("all_out_effort", 3, 5));
+        consumer.accept(GradedEffectIcon.mobEffect("all_out_effort", 3, 5));
     }
 }

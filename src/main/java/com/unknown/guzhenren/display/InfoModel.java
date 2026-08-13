@@ -25,6 +25,7 @@ import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
+import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +78,8 @@ public final class InfoModel {
     public record TimeRow(int rate, long specks) implements Entry {}
     public record CapacityRow(int usable, int total) implements Entry {}
     public record AttackRow(double bonus) implements Entry {}
-    //  TODO(智道): ⚠ KEPT -- nothing builds this yet. 智道蛊虫 will give the section rows, as 力道 has.
     public record WisdomHeader() implements Entry {}
+    public record WisdomRow(ThoughtTag tag, long amount) implements Entry {}
     //endregion
 
     //region Mind
@@ -138,6 +139,7 @@ public final class InfoModel {
     public static List<Row> pathAchievement(Player player) {
         List<Row> rows = new ArrayList<>();
         strength(rows, player);
+        wisdom(rows, player);
         qi(rows, player);
         time(rows, player);
         paths(rows, player);
@@ -185,6 +187,19 @@ public final class InfoModel {
             rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN, data.totalJin(),
                     ModDisplayText.humanStrengthLine(data))));
         }
+    }
+
+    private static void wisdom(List<Row> rows, Player player) {
+        List<Row> held = new ArrayList<>();
+        long natural = MindService.naturalThoughts(player);
+        if (natural > 0L) held.add(new Row(INDENT, new WisdomRow(ThoughtTag.NATURAL, natural)));
+        MindService.taggedThoughts(player).forEach((tag, amount) -> {
+            if (amount > 0L) held.add(new Row(INDENT, new WisdomRow(tag, amount)));
+        });
+        if (held.isEmpty()) return;
+
+        rows.add(new Row(0, new WisdomHeader()));
+        rows.addAll(held);
     }
 
     public static List<Row> mind(Player player) {

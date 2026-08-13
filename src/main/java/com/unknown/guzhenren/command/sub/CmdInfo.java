@@ -92,6 +92,7 @@ public final class CmdInfo {
             case InfoModel.CapacityRow e -> key("capacity", e.usable(), e.total());
             case InfoModel.AttackRow e -> key("attack", ModDisplayText.attackBonus(e.bonus()));
             case InfoModel.WisdomHeader ignored -> key("wisdom");
+            case InfoModel.WisdomRow e -> key("wisdom_entry", enumName(e.tag().getTranslationKey()), e.amount());
 
             case InfoModel.BrillianceRow e -> key("brilliance", enumName(e.brilliance().getTranslationKey()))
                     .append(muted(key("brilliance_rate", e.brilliance().getThoughtsPerSecond())));

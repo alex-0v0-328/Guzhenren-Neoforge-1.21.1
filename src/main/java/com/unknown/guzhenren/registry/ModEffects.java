@@ -11,6 +11,7 @@ import com.unknown.guzhenren.effect.timed.BruteForceLonghornBeetleGuEffect;
 import com.unknown.guzhenren.effect.timed.DragonpillCricketGuEffect;
 import com.unknown.guzhenren.effect.timed.FlowerBoarGuEffect;
 import com.unknown.guzhenren.effect.timed.LiquorWormEffect;
+import com.unknown.guzhenren.effect.timed.MaliciousThoughtEffect;
 import com.unknown.guzhenren.effect.timed.TimeFlowEffect;
 import com.unknown.guzhenren.effect.timed.VitalityLeafEffect;
 import net.minecraft.core.registries.Registries;
@@ -49,6 +50,8 @@ public final class ModEffects {
     private static final int HALF_ZOMBIE_COLOR                    = 0x546E7A;
     /** Alex's ruling: black, and it stands for every Time Path effect that follows, not just these two. */
     private static final int TIME_FLOW_COLOR                      = 0x000000;
+    //  TODO(color): placeholder pending Alex's pick.
+    private static final int MALICIOUS_THOUGHT_COLOR              = 0x4A148C;
 
     public static final DeferredHolder<MobEffect, VitalityLeafEffect> VITALITY_LEAF = MOB_EFFECTS.register(
             "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, VITALITY_LEAF_COLOR));
@@ -94,6 +97,10 @@ public final class ModEffects {
             "third_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, TIME_FLOW_COLOR,
                     3, 3_000L, "third_watch_gu"));
     //endregion
+
+    public static final DeferredHolder<MobEffect, MaliciousThoughtEffect> MALICIOUS_THOUGHT_GU = MOB_EFFECTS.register(
+            "malicious_thought_gu", () -> new MaliciousThoughtEffect(
+                    MobEffectCategory.BENEFICIAL, MALICIOUS_THOUGHT_COLOR, new long[]{2L, 20L, 200L, 2_000L}));
 
     public static void register(IEventBus modEventBus) {
         MOB_EFFECTS.register(modEventBus);

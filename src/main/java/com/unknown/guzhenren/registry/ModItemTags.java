@@ -32,6 +32,8 @@ public final class ModItemTags {
 
     public static final TagKey<Item> ZOMBIE_FEED = key("zombie_feed");
 
+    public static final TagKey<Item> MALICIOUS_THOUGHT_FEED = key("malicious_thought_feed");
+
     private static TagKey<Item> key(String name) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, name));
     }

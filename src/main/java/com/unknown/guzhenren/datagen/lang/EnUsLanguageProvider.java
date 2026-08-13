@@ -19,6 +19,7 @@ import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
+import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.data.PackOutput;
@@ -168,6 +169,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.life_form",       "Life form:   %s");
         add("guzhenren.command.info.race",            "Race:        %s");
         add("guzhenren.command.info.wisdom",          "Wisdom Path:");
+        add("guzhenren.command.info.wisdom_entry",    "  %s  %s");
         add("guzhenren.command.info.qi",              "Qi Path:");
         add("guzhenren.command.info.qi_entry",        "  %s  %s");
         add("guzhenren.command.info.paths",           "Paths:");
@@ -316,6 +318,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.PRIMEVAL_ELDER_GU_5,              "Primeval Elder Gu V");
         addItem(ModItems.SECOND_WATCH_GU,                  "Second Watch Gu");
         addItem(ModItems.THIRD_WATCH_GU,                   "Third Watch Gu");
+        addItem(ModItems.MALICIOUS_THOUGHT_GU_2,           "Malicious Thought Gu II");
+        addItem(ModItems.MALICIOUS_THOUGHT_GU_3,           "Malicious Thought Gu III");
+        addItem(ModItems.MALICIOUS_THOUGHT_GU_4,           "Malicious Thought Gu IV");
+        addItem(ModItems.MALICIOUS_THOUGHT_GU_5,           "Malicious Thought Gu V");
         addItem(ModItems.PRIMEVAL_STONE,                   "Primeval Stone");
         addItem(ModItems.LIQUOR,                           "Liquor");
         addItem(ModItems.SOUR_LIQUOR,                      "Sour Liquor");
@@ -430,6 +436,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addAttainment();
         addWisdomType();
         addBrilliance();
+        addThoughtTag();
         addBeastStrength();
         addStrengthBranch();
         addHumanStrength();
@@ -634,6 +641,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(Brilliance.DISTINCTIVE, "Distinctive Brilliance");
         add(Brilliance.OUTSTANDING, "Outstanding Brilliance");
         add(Brilliance.UNRIVALED,   "Unrivaled Brilliance");
+    }
+    private void addThoughtTag() {
+        add(ThoughtTag.NATURAL, "Natural");
+        add(ThoughtTag.EVIL,    "Malicious");
     }
     //endregion
 }

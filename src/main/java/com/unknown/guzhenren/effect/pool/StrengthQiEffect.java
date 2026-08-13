@@ -31,6 +31,6 @@ public class StrengthQiEffect extends MobEffect implements AttackContributor {
 
     @Override
     public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(new GradedEffectIcon("strength_qi", 1, 5));
+        consumer.accept(GradedEffectIcon.mobEffect("strength_qi", 1, 5));
     }
 }
