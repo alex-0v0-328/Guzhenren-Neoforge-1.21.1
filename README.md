@@ -6,15 +6,15 @@
 
 ## 工具链 <sub>Toolchain</sub>
 
-| | |
-|---|---|
-| Minecraft | `1.21.1` |
-| NeoForge | `21.1.235` |
-| Parchment | `2024.11.17` |
-| Java | `21` |
-| mod id / package | `guzhenren` · `com.unknown.guzhenren` |
-| 必需依赖 <sub>required</sub> | `customplayer` |
-| 可选依赖 <sub>optional</sub> | `JEI` · `Curios` |
+|                              |                                       |
+|------------------------------|---------------------------------------|
+| Minecraft                    | `1.21.1`                              |
+| NeoForge                     | `21.1.235`                            |
+| Parchment                    | `2024.11.17`                          |
+| Java                         | `21`                                  |
+| mod id / package             | `guzhenren` · `com.unknown.guzhenren` |
+| 必需依赖 <sub>required</sub> | `customplayer`                        |
+| 可选依赖 <sub>optional</sub> | `JEI` · `Curios`                      |
 
 ```
 ./gradlew build      # 编译 + 打包 + 跑单测 / compile, jar, unit tests
@@ -32,14 +32,14 @@
 玩家状态全部是 **NeoForge data attachment**，每一个都是**不可变 record**，写入只经过拥有它的 service。
 <sub>Player state lives in data attachments, one immutable record each, written only through its owning service.</sub>
 
-| Attachment | 装什么 |
-|---|---|
-| `ApertureData` | 空窍：转数、阶段、资质、体质、真元池 <sub>rank, stage, talent, physique, essence</sub> |
-| `BodyData` | 生命形态、种族、年龄与寿元、死气欠账 <sub>life form, race, age & lifespan, death-qi debt</sub> |
-| `SoulData` · `StaminaData` | 魂魄、耐力 <sub>soul, stamina</sub> |
-| `PathData` | 33 条流派的道痕/碎屑，每笔带来源 tag <sub>Dao marks and specks, each tagged with its source</sub> |
-| `QiData` · `StrengthData` · `MindData` | 八种气、力道三分支、念/意/情 <sub>qi, strength branches, mind pools</sub> |
-| `NourishData` · `ApertureStorage` | 修炼进度、空窍内的蛊虫仓 <sub>cultivation progress, Gu storage</sub> |
+| Attachment                             | 装什么                                                                                            |
+|----------------------------------------|---------------------------------------------------------------------------------------------------|
+| `ApertureData`                         | 空窍：转数、阶段、资质、体质、真元池 <sub>rank, stage, talent, physique, essence</sub>            |
+| `BodyData`                             | 生命形态、种族、年龄与寿元、死气欠账 <sub>life form, race, age & lifespan, death-qi debt</sub>    |
+| `SoulData` · `StaminaData`             | 魂魄、耐力 <sub>soul, stamina</sub>                                                               |
+| `PathData`                             | 33 条流派的道痕/碎屑，每笔带来源 tag <sub>Dao marks and specks, each tagged with its source</sub> |
+| `QiData` · `StrengthData` · `MindData` | 八种气、力道三分支、念/意/情 <sub>qi, strength branches, mind pools</sub>                         |
+| `NourishData` · `ApertureStorage`      | 修炼进度、空窍内的蛊虫仓 <sub>cultivation progress, Gu storage</sub>                              |
 
 ⚠ 同步靠 attachment 自带的 `sync(OWNER_ONLY, …)`，**不写玩家数据的 payload**；
 唯一的自定义 payload 是 G 面板的按钮意图。
