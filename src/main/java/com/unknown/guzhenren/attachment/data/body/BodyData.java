@@ -36,8 +36,8 @@ public record BodyData(
     public static final int NO_ZOMBIE_TIER = -1;
 
     /**
-     * ⚠ A year is a game day, and a heartbeat carries {@code SECOND * PARTS_PER_TICK} of these -- 120,
-     * which every Time Path rate divides, so no beat of a hastened life is ever rounded away.
+     * ⚠ A year is a game day. The unit is finer than a tick so that a Time Path form which one day SLOWS
+     * a life, rather than hastening one, still divides a heartbeat's share evenly.
      */
     public static final long PARTS_PER_TICK = 6L;
     public static final long PARTS_PER_YEAR = Ticks.DAY * PARTS_PER_TICK;

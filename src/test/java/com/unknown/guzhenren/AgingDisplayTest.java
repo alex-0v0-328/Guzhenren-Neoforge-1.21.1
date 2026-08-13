@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
+import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,35 +16,46 @@ class AgingDisplayTest {
 
     private static final long BEAT = Ticks.SECOND;
 
+    /** What one stretch of world time costs him, through the same door every other spend goes through. */
+    private static long lived(long elapsedTicks, int rate) {
+        return TimeFlowService.perStep(rate, BodyService.elapsedParts(elapsedTicks));
+    }
+
     @Test
     @DisplayName("a game day is exactly one year, and a heartbeat is a whole number of parts")
     void aDayIsOneYear() {
         assertEquals(BodyData.PARTS_PER_YEAR, Ticks.DAY * BodyData.PARTS_PER_TICK);
-        assertEquals(120L, BEAT * BodyData.PARTS_PER_TICK);
+        assertEquals(120L, BodyService.elapsedParts(BEAT));
     }
 
     @Test
-    @DisplayName("a heartbeat bills a whole number of parts at every rate a player can reach")
-    void everyRateDividesAHeartbeat() {
-        assertEquals(120L, BodyService.livedParts(BEAT, 1));
-        assertEquals(60L, BodyService.livedParts(BEAT, 2));
-        assertEquals(40L, BodyService.livedParts(BEAT, 3));
-        assertEquals(24L, BodyService.livedParts(BEAT, 5));
+    @DisplayName("☠ a hastened clock spends life FASTER -- the rate multiplies, it never divides")
+    void hasteSpendsLifeFaster() {
+        long ordinary = lived(BEAT, 1);
+        assertEquals(120L, ordinary);
 
         for (int rate : RATES) {
-            assertEquals(BEAT * BodyData.PARTS_PER_TICK, BodyService.livedParts(BEAT, rate) * rate,
-                    "rate " + rate + " loses a part every beat");
+            assertEquals(ordinary * rate, lived(BEAT, rate), "rate " + rate);
+            if (rate > 1) assertTrue(lived(BEAT, rate) > ordinary, "rate " + rate);
         }
     }
 
     @Test
-    @DisplayName("a whole game day of heartbeats sums to exactly one year, not a part more or less")
-    void aDayOfHeartbeatsSumsToOneYear() {
+    @DisplayName("a whole game day costs exactly one year at ordinary speed, and N years at rate N")
+    void aDayCostsAYearPerRate() {
         long beatsPerDay = Ticks.DAY / BEAT;
         for (int rate : RATES) {
-            long summed = BodyService.livedParts(BEAT, rate) * beatsPerDay;
-            assertEquals(BodyData.PARTS_PER_YEAR / rate, summed, "rate " + rate);
+            assertEquals(BodyData.PARTS_PER_YEAR * rate, lived(BEAT, rate) * beatsPerDay, "rate " + rate);
         }
+    }
+
+    @Test
+    @DisplayName("one five-minute form costs a quarter of a year per point of rate")
+    void oneFormCostsAQuarterYearPerRate() {
+        long form = 5L * Ticks.MINUTE;
+        assertEquals(BodyData.PARTS_PER_YEAR / 2L, lived(form, 2));
+        assertEquals(BodyData.PARTS_PER_YEAR * 3L / 4L, lived(form, 3));
+        assertEquals(BodyData.PARTS_PER_YEAR * 5L / 4L, lived(form, 5));
     }
 
     @Test
@@ -51,9 +63,7 @@ class AgingDisplayTest {
     void offlineMatchesBeatByBeat() {
         long beats = 137L;
         for (int rate : RATES) {
-            long atOnce = BodyService.livedParts(beats * BEAT, rate);
-            long oneByOne = BodyService.livedParts(BEAT, rate) * beats;
-            assertEquals(oneByOne, atOnce, "rate " + rate);
+            assertEquals(lived(BEAT, rate) * beats, lived(beats * BEAT, rate), "rate " + rate);
         }
     }
 
@@ -61,18 +71,8 @@ class AgingDisplayTest {
     @DisplayName("time running backwards bills nothing rather than handing life back")
     void backwardsTimeBillsNothing() {
         for (int rate : RATES) {
-            assertEquals(0L, BodyService.livedParts(-Ticks.DAY, rate), "rate " + rate);
-            assertEquals(0L, BodyService.livedParts(0L, rate), "rate " + rate);
-        }
-    }
-
-    @Test
-    @DisplayName("a hastened clock spends strictly less life over the same stretch of world time")
-    void hasteSpendsLessLife() {
-        long ordinary = BodyService.livedParts(Ticks.DAY, 1);
-        for (int rate : RATES) {
-            if (rate == 1) continue;
-            assertTrue(BodyService.livedParts(Ticks.DAY, rate) < ordinary, "rate " + rate);
+            assertEquals(0L, lived(-Ticks.DAY, rate), "rate " + rate);
+            assertEquals(0L, lived(0L, rate), "rate " + rate);
         }
     }
 

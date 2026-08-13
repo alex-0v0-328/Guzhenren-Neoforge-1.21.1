@@ -89,7 +89,7 @@ public final class NourishService {
      * and the price instead would round the round's length off the pool it is defined to cost.
      */
     public static void tickNourish(ServerPlayer player) {
-        for (int second = TimeFlowService.rate(player); second > 0; second--) {
+        for (int second = TimeFlowService.steps(player); second > 0; second--) {
             if (!nourishSecond(player)) return;
         }
     }

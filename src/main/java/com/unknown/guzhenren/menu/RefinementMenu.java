@@ -281,7 +281,7 @@ public class RefinementMenu extends AbstractContainerMenu {
     @Override
     public void broadcastChanges() {
         if (player instanceof ServerPlayer server) {
-            for (int step = TimeFlowService.rate(server); step > 0 && running != null; step--) {
+            for (int step = TimeFlowService.steps(server); step > 0 && running != null; step--) {
                 advance(server);
             }
             craftData.set(DATA_AFFORD, pending != null && affords(server, pending) ? 1 : 0);

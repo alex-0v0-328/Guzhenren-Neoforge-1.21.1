@@ -11,8 +11,8 @@ import net.minecraft.world.entity.player.Player;
  * The only door the player's own clock [自身时间] is hastened through, and 宙道 [Time Path] is all that
  * comes to it.
  *
- * <p>⚠ A Gu's own clock and the world's clock never pass through here. A time anchor rescaled after the
- * fact reports a quantity that was never true, and nothing checks it.
+ * <p>☠ Three verbs leave this class and a caller uses one of them: {@code waited}, {@code perStep},
+ * {@code steps}. Doing arithmetic on {@code rate()} at a call site is how 寿元 once aged BACKWARDS.
  *
  * @author Alex
  * @since 1.0.0
@@ -60,14 +60,19 @@ public final class TimeFlowService {
         PathService.setSpeck(player, GuPath.TIME, MarkTag.TIME_FLOW, booked);
     }
 
-    //region 自身时间 [his own clock] -- two verbs, because it only ever takes two shapes
+    //region 自身时间 [his own clock] -- three verbs, because it only ever takes three shapes
     /** A stretch he has to sit through: a press held down, a cooldown, a ritual waited out. */
     public static int waited(Player p, int ticks) {return waited(rate(p), ticks);}
 
-    /** What he earns or spends in one step, so a hastened clock moves MORE per step, never more often. */
+    /** What he earns or SPENDS in one step -- essence, thought, stamina, and the life it costs him. */
     public static long perStep(Player p, long amount) {return perStep(rate(p), amount);}
     public static double perStep(Player p, double amount) {return perStep(rate(p), amount);}
 
+    /**
+     * How many times a coupled counter must run this beat, for the two that cannot take a bigger step:
+     * 温养 and 炼蛊, whose progress and price would round apart if either were scaled on its own.
+     */
+    public static int steps(Player p) {return rate(p);}
     //endregion
 
     //region the arithmetic alone -- a rate rather than a player, so it can be asserted without a world

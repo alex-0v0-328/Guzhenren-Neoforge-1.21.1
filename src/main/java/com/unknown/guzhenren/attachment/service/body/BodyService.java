@@ -170,15 +170,18 @@ public final class BodyService {
             store(player, body.withLastBilledTick(now));
             return;
         }
-        long lived = livedParts(now - body.lastBilledTick(), TimeFlowService.rate(player));
+        long lived = TimeFlowService.perStep(player, elapsedParts(now - body.lastBilledTick()));
         if (lived <= 0L) return;
 
         store(player, body.lived(lived, now));
     }
 
-    /** ⚠ A heartbeat carries 120 parts and every reachable rate divides it, so nothing is rounded away. */
-    public static long livedParts(long elapsedTicks, int rate) {
-        return Math.max(0L, elapsedTicks) * BodyData.PARTS_PER_TICK / rate;
+    /**
+     * ☠ 寿元 is SPENT, so it goes through {@code perStep} like every other thing he spends -- hastened
+     * means FASTER. Hand-rolling the rate here once made it run backwards, into a pure longevity buff.
+     */
+    public static long elapsedParts(long elapsedTicks) {
+        return Math.max(0L, elapsedTicks) * BodyData.PARTS_PER_TICK;
     }
     //endregion
 }
