@@ -78,7 +78,7 @@ public final class CmdInfo {
             case InfoModel.Soul e -> key("soul", e.soul().currentSoul(), e.soul().maxSoul())
                     .append(muted(enumName(e.soul().tier().getTranslationKey())));
             case InfoModel.Stamina e -> key("stamina", e.current(), e.max());
-            case InfoModel.Lifespan e -> key("lifespan", ModDisplayText.lifespan(e.body()));
+            case InfoModel.Lifespan e -> key("lifespan", ModDisplayText.lifespan(e.lifespan(), e.age()));
             case InfoModel.PathsHeader e -> header("paths", e.empty());
             case InfoModel.PathRow e -> pathLine(e.path(), e.entry());
             case InfoModel.QiHeader ignored -> key("qi");

@@ -433,7 +433,8 @@ public final class PlayerInfoScreen extends Screen {
                             .append(detail(name(e.soul().tier().getTranslationKey()))));
             case InfoModel.Stamina e -> new Row(indent, label("stamina"),
                     Component.literal(ModDisplayText.pool(e.current(), e.max())));
-            case InfoModel.Lifespan e -> new Row(indent, label("lifespan"), ModDisplayText.lifespan(e.body()));
+            case InfoModel.Lifespan e -> new Row(indent, label("lifespan"),
+                    ModDisplayText.lifespan(e.lifespan(), e.age()));
             case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
             case InfoModel.PathRow e -> new Row(indent, name(e.path().getTranslationKey()), pathValue(e.entry()));
             case InfoModel.QiHeader ignored -> new Row(indent, label("qi"), null);

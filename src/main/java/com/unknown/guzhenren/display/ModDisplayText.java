@@ -3,13 +3,16 @@ package com.unknown.guzhenren.display;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
+import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
+import java.util.Locale;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -67,9 +70,21 @@ public final class ModDisplayText {
                 : Component.translatable(path.getTranslationKey());
     }
 
-    public static MutableComponent lifespan(BodyData body) {
-        return Component.translatable("guzhenren.display.lifespan", body.lifespan(), body.age());
+    /**
+     * ⚠ Both figures are derived, so the pair moves smoothly instead of once a day: the stored years are
+     * whole and the tenth comes from how far into the current one he has actually lived.
+     */
+    public static MutableComponent lifespan(double lifespan, double age) {
+        return Component.translatable("guzhenren.display.lifespan", tenth(lifespan), tenth(age));
     }
+
+    public static MutableComponent lifespan(Player player) {
+        BodyData body = BodyService.get(player);
+        double lived = BodyService.yearsSinceBilled(player);
+        return lifespan(body.lifespan() - lived, body.age() + lived);
+    }
+
+    private static String tenth(double years) {return String.format(Locale.ROOT, "%.1f", years);}
 
     public static MutableComponent realmAndTalent(Aperture a) {return realmTitle(a).append(GAP).append(talent(a));}
 

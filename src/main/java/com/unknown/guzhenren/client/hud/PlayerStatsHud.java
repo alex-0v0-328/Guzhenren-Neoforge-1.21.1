@@ -84,7 +84,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         bar(graphics, font, y, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);
         y += BAR_HEIGHT + GROUP_GAP;
 
-        line(graphics, font, y, Component.translatable("guzhenren.hud.lifespan", ModDisplayText.lifespan(body)));
+        line(graphics, font, y, Component.translatable("guzhenren.hud.lifespan", ModDisplayText.lifespan(player)));
     }
 
     private static void line(GuiGraphics graphics, Font font, int y, Component text) {

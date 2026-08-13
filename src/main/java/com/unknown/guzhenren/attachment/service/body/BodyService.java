@@ -137,6 +137,23 @@ public final class BodyService {
         return elapsed;
     }
 
+    /**
+     * ⚠ Years of his OWN life spent since 寿元 was last billed, and it goes negative while he carries
+     * credit. Never clamp it: the display subtracts it, and the clamp is what would make it stand still.
+     */
+    public static double yearsSinceBilled(Player player) {
+        BodyData body = get(player);
+        if (body.lastDayIndex() == BodyData.UNTRACKED) return 0.0D;
+
+        return yearsSinceBilled(player.level().getDayTime(), body.lastDayIndex(), body.hastenedParts());
+    }
+
+    public static double yearsSinceBilled(long dayTime, long lastDayIndex, long hastenedParts) {
+        long unbilled = Math.max(0L, dayTime / Ticks.DAY - lastDayIndex);
+        double parts = Ticks.DAY * (double) TimeFlowService.PARTS_PER_TICK;
+        return unbilled + dayTime % Ticks.DAY / (double) Ticks.DAY - hastenedParts / parts;
+    }
+
     //region 宙道 [Time Path] -- the days he lived through without spending them
     private static BodyData bankHastenedTime(ServerPlayer player) {
         BodyData body = get(player);

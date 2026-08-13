@@ -66,7 +66,7 @@ public final class InfoModel {
     public record RaceRow(Race race) implements Entry {}
     public record Soul(SoulData soul) implements Entry {}
     public record Stamina(long current, long max) implements Entry {}
-    public record Lifespan(BodyData body) implements Entry {}
+    public record Lifespan(double lifespan, double age) implements Entry {}
     public record PathsHeader(boolean empty) implements Entry {}
     public record PathRow(GuPath path, PathEntry entry) implements Entry {}
     public record QiHeader() implements Entry {}
@@ -121,7 +121,8 @@ public final class InfoModel {
         rows.add(new Row(0, new Form(body.lifeForm())));
         rows.add(new Row(0, new RaceRow(body.race())));
         rows.add(new Row(0, new Stamina(StaminaService.current(player), StaminaService.max(player))));
-        rows.add(new Row(0, new Lifespan(body)));
+        double lived = BodyService.yearsSinceBilled(player);
+        rows.add(new Row(0, new Lifespan(body.lifespan() - lived, body.age() + lived)));
         if (strength.isEmpty()) return rows;
 
         if (strength.hasBranch(StrengthBranch.HUMAN)) {
