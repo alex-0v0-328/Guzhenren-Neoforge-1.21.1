@@ -25,7 +25,9 @@ public enum MarkTag implements StringRepresentable, EnumTranslatable {
     STRENGTH_BEASTS(GuPath.STRENGTH),
     STRENGTH_BOAR  (GuPath.STRENGTH),
     STRENGTH_BEAR  (GuPath.STRENGTH),
-    STRENGTH_HUMAN (GuPath.STRENGTH);
+    STRENGTH_HUMAN (GuPath.STRENGTH),
+
+    TIME_FLOW      (GuPath.TIME);
 
     public static final Codec<MarkTag> CODEC = StringRepresentable.fromEnum(MarkTag::values);
     private static final String KEY_PREFIX = "guzhenren.enum.path.tag.";

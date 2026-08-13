@@ -273,15 +273,17 @@ public final class ModItems {
 
     //region 更蛊 [Watch Gu] -- 宙道; tended like any other, and taken by the one use it is kept for
     public static final DeferredItem<Item> SECOND_WATCH_GU = ITEMS.register("second_watch_gu",
-            () -> new WatchGuItem(tended(), 5 * Ticks.MINUTE, GuSpec.of(Rank.FOUR, GuPath.TIME)
-                    .refine(1_600_000).costPerUse(20_000)
-                    .hungerBar(12, 1).hungerPerUse(0).regainEvery(2_000)
-                    .cooldown(Ticks.SECOND)));
+            () -> new WatchGuItem(tended(), ModEffects.SECOND_WATCH_GU, 5 * Ticks.MINUTE,
+                    GuSpec.of(Rank.FOUR, GuPath.TIME)
+                            .refine(1_600_000).costPerUse(20_000)
+                            .hungerBar(12, 1).hungerPerUse(0).regainEvery(2_000)
+                            .cooldown(Ticks.SECOND)));
     public static final DeferredItem<Item> THIRD_WATCH_GU = ITEMS.register("third_watch_gu",
-            () -> new WatchGuItem(tended(), 5 * Ticks.MINUTE, GuSpec.of(Rank.FIVE, GuPath.TIME)
-                    .refine(16_000_000).costPerUse(200_000)
-                    .hungerBar(12, 1).hungerPerUse(0).regainEvery(1_000)
-                    .cooldown(Ticks.SECOND)));
+            () -> new WatchGuItem(tended(), ModEffects.THIRD_WATCH_GU, 5 * Ticks.MINUTE,
+                    GuSpec.of(Rank.FIVE, GuPath.TIME)
+                            .refine(16_000_000).costPerUse(200_000)
+                            .hungerBar(12, 1).hungerPerUse(0).regainEvery(1_000)
+                            .cooldown(Ticks.SECOND)));
     //endregion
 
     //region 蛊材 [Gu materials]

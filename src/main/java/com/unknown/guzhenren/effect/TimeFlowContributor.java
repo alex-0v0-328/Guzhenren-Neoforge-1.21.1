@@ -1,10 +1,10 @@
 package com.unknown.guzhenren.effect;
 
 /**
- * The one seam anything hastens the player's own clock through.
+ * The one seam anything hastens the player's own clock through, and books what that speed is worth.
  *
- * <p>⚠ The rate walks the active effects and keeps the LARGEST answer, never the product -- two
- * temporal forms compounding would run away, and no reader downstream could tell that they had.
+ * <p>⚠ Rates SUM across the active effects rather than taking the best one -- two Watch Gu are meant
+ * to be worn together, and the sum is the number he asked to see.
  *
  * @author Alex
  * @since 1.0.0
@@ -13,4 +13,6 @@ package com.unknown.guzhenren.effect;
 public interface TimeFlowContributor {
 
     int timeRate(int amplifier);
+
+    long timeSpecks(int amplifier);
 }

@@ -31,15 +31,18 @@ class MarkTagTest {
     }
 
     @Test
-    @DisplayName("力道 [STRENGTH] is the only path owning tags, and it owns exactly four")
-    void strengthIsTheOnlyOwner() {
+    @DisplayName("every owned tag belongs to 力道 [STRENGTH] or 宙道 [TIME], and to nothing else")
+    void onlyTwoPathsOwnTags() {
         List<MarkTag> owned = Arrays.stream(MarkTag.values()).filter(tag -> tag.owner() != null).toList();
         assertEquals(List.of(
                 MarkTag.STRENGTH_BEASTS,
                 MarkTag.STRENGTH_BOAR,
                 MarkTag.STRENGTH_BEAR,
-                MarkTag.STRENGTH_HUMAN), owned);
-        owned.forEach(tag -> assertEquals(GuPath.STRENGTH, tag.owner(), tag.toString()));
+                MarkTag.STRENGTH_HUMAN,
+                MarkTag.TIME_FLOW), owned);
+        assertEquals(GuPath.TIME, MarkTag.TIME_FLOW.owner());
+        owned.stream().filter(tag -> tag != MarkTag.TIME_FLOW)
+                .forEach(tag -> assertEquals(GuPath.STRENGTH, tag.owner(), tag.toString()));
     }
 
     @Test

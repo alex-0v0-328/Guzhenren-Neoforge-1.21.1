@@ -1,6 +1,9 @@
 package com.unknown.guzhenren.attachment.service.body;
 
+import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.effect.TimeFlowContributor;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
@@ -21,21 +24,47 @@ public final class TimeFlowService {
 
     public static final int NORMAL_RATE = 1;
 
-    /** ⚠ Ageing is banked in these, not in ticks: every rate divides six, so no heartbeat loses a part. */
+    /**
+     * ⚠ Ageing is banked in these rather than in ticks, so that a heartbeat's share stays a whole number:
+     * a beat carries {@code SECOND * PARTS_PER_TICK} of them, and every rate reachable today divides it.
+     */
     public static final long PARTS_PER_TICK = 6L;
 
     public static int rate(Player player) {
-        int rate = NORMAL_RATE;
+        int rate = 0;
         for (MobEffectInstance instance : player.getActiveEffects()) {
             if (instance.getEffect().value() instanceof TimeFlowContributor contributor) {
-                rate = Math.max(rate, contributor.timeRate(instance.getAmplifier()));
+                rate += contributor.timeRate(instance.getAmplifier());
             }
         }
-        //   TODO(宙道造诣): the attainment term joins HERE, so that no caller has to learn about it.
+        if (rate < NORMAL_RATE) return NORMAL_RATE;
+        //   TODO(宙道造诣): a grade term joins HERE, so that no caller has to learn about it.
         return rate;
     }
 
     public static boolean hastened(Player p) {return rate(p) > NORMAL_RATE;}
+
+    /** What the running forms have booked onto the Time Flow tag, and so owe back the moment they end. */
+    public static long specks(Player player) {
+        long total = 0L;
+        for (MobEffectInstance instance : player.getActiveEffects()) {
+            if (instance.getEffect().value() instanceof TimeFlowContributor contributor) {
+                total += contributor.timeSpecks(instance.getAmplifier());
+            }
+        }
+        return total;
+    }
+
+    /**
+     * ⚠ The tag is a PROJECTION of the running forms, never a grant and a matching revoke. That is what
+     * makes milk, {@code /effect clear} and death take the specks back too, none of which fires a hook.
+     */
+    public static void syncSpecks(ServerPlayer player) {
+        long booked = specks(player);
+        if (PathService.speck(player, GuPath.TIME, MarkTag.TIME_FLOW) == booked) return;
+
+        PathService.setSpeck(player, GuPath.TIME, MarkTag.TIME_FLOW, booked);
+    }
 
     //region 自身时间 [his own clock] -- two verbs, because it only ever takes two shapes
     /** A stretch he has to sit through: a press held down, a cooldown, a ritual waited out. */

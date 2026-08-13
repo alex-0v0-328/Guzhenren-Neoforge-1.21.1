@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 
 class TimeFlowServiceTest {
 
-    private static final int[] RATES = {1, 2, 3};
+    /** Every rate a player can actually reach: one Watch Gu, the other, or both worn together. */
+    private static final int[] RATES = {1, 2, 3, 5};
 
     @Test
     @DisplayName("an ordinary clock changes nothing at all")
@@ -48,6 +49,7 @@ class TimeFlowServiceTest {
         assertEquals(0L, TimeFlowService.skipped(1, Ticks.SECOND));
         assertEquals(60L, TimeFlowService.skipped(2, Ticks.SECOND));
         assertEquals(80L, TimeFlowService.skipped(3, Ticks.SECOND));
+        assertEquals(96L, TimeFlowService.skipped(5, Ticks.SECOND));
     }
 
     @Test
@@ -69,6 +71,7 @@ class TimeFlowServiceTest {
 
         assertEquals(partsPerDay / 2, TimeFlowService.skipped(2, Ticks.SECOND) * heartbeatsPerDay);
         assertEquals(partsPerDay * 2 / 3, TimeFlowService.skipped(3, Ticks.SECOND) * heartbeatsPerDay);
+        assertEquals(partsPerDay * 4 / 5, TimeFlowService.skipped(5, Ticks.SECOND) * heartbeatsPerDay);
     }
 
     @Test

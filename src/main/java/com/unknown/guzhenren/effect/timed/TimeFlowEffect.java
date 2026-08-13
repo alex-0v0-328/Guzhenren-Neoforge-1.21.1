@@ -1,6 +1,6 @@
 package com.unknown.guzhenren.effect.timed;
 
-import com.unknown.guzhenren.client.GradedEffectIcon;
+import com.unknown.guzhenren.client.ItemEffectIcon;
 import com.unknown.guzhenren.effect.TimeFlowContributor;
 import java.util.function.Consumer;
 import net.minecraft.world.effect.MobEffect;
@@ -8,10 +8,10 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
- * The 宙道 [Time Path] form: while it runs, the wearer's own clock [自身时间] runs faster than the world's.
+ * The 宙道 [Time Path] form: while it runs, the wearer's own clock [自身时间] outruns the world's.
  *
- * <p>⚠ Its own remaining duration is the world's time and is never hastened -- an effect that shortened
- * itself would end before the length it promised.
+ * <p>⚠ One of these per Gu rather than one graded family, precisely so two can be worn together and
+ * their rates add. Its own remaining duration is the world's time and is never hastened.
  *
  * @author Alex
  * @since 1.0.0
@@ -19,23 +19,25 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  */
 public class TimeFlowEffect extends MobEffect implements TimeFlowContributor {
 
-    /** Indexed by amplifier, which is the Gu's tier; the lower rungs carry no Time Path Gu yet. */
-    private static final int[] RATE_BY_AMPLIFIER = {1, 1, 1, 2, 3};
+    private final int rate;
+    private final long specks;
+    private final String icon;
 
-    private static final int LOWEST_RANK = 4;
-    private static final int HIGHEST_RANK = 5;
-
-    public TimeFlowEffect(MobEffectCategory category, int color) {
+    public TimeFlowEffect(MobEffectCategory category, int color, int rate, long specks, String icon) {
         super(category, color);
+        this.rate = rate;
+        this.specks = specks;
+        this.icon = icon;
     }
 
     @Override
-    public int timeRate(int amplifier) {
-        return RATE_BY_AMPLIFIER[Math.clamp(amplifier, 0, RATE_BY_AMPLIFIER.length - 1)];
-    }
+    public int timeRate(int amplifier) {return rate;}
+
+    @Override
+    public long timeSpecks(int amplifier) {return specks;}
 
     @Override
     public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(new GradedEffectIcon("time_flow", LOWEST_RANK, HIGHEST_RANK));
+        consumer.accept(new ItemEffectIcon(icon));
     }
 }

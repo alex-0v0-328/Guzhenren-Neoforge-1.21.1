@@ -83,6 +83,8 @@ public final class CmdInfo {
             case InfoModel.PathRow e -> pathLine(e.path(), e.entry());
             case InfoModel.QiHeader ignored -> key("qi");
             case InfoModel.QiRow e -> key("qi_entry", enumName(e.kind().getTranslationKey()), e.amount());
+            case InfoModel.TimeHeader ignored -> key("time");
+            case InfoModel.TimeRow e -> key("time_entry", ModDisplayText.timeFlow(e.rate(), e.specks()));
             case InfoModel.StrengthHeader ignored -> key("strength");
             case InfoModel.StrengthRow e -> key("strength_entry",
                     ModDisplayText.strengthLabel(enumName(e.branch().getTranslationKey()), e.totalJin()),

@@ -23,8 +23,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * Every MobEffect this mod registers, one constant per effect.
  *
- * <p>⚠ A family of grades is ONE effect carrying an amplifier, never one effect per grade -- split
- * them and a player can wear two grades of the same thing at once. The colors are Alex's to choose.
+ * <p>⚠ Grades that exclude each other are ONE effect with an amplifier; members meant to be worn
+ * TOGETHER get one effect each. The colors are Alex's to choose and are never derived from anything.
  *
  * @author Alex
  * @since 1.0.0
@@ -47,8 +47,8 @@ public final class ModEffects {
     private static final int BRUTE_FORCE_LONGHORN_BEETLE_GU_COLOR = 0x455A64;
     private static final int STRENGTH_QI_COLOR                    = 0xFF7043;
     private static final int HALF_ZOMBIE_COLOR                    = 0x546E7A;
-    /**  TODO(宙道): a placeholder grey, claiming no hue -- every effect's colour is Alex's to name. */
-    private static final int TIME_FLOW_COLOR                      = 0x9E9E9E;
+    /** Alex's ruling: black, and it stands for every Time Path effect that follows, not just these two. */
+    private static final int TIME_FLOW_COLOR                      = 0x000000;
 
     public static final DeferredHolder<MobEffect, VitalityLeafEffect> VITALITY_LEAF = MOB_EFFECTS.register(
             "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, VITALITY_LEAF_COLOR));
@@ -85,8 +85,15 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, HalfZombieEffect> HALF_ZOMBIE = MOB_EFFECTS.register(
             "half_zombie", () -> new HalfZombieEffect(MobEffectCategory.NEUTRAL, HALF_ZOMBIE_COLOR));
 
-    public static final DeferredHolder<MobEffect, TimeFlowEffect> TIME_FLOW = MOB_EFFECTS.register(
-            "time_flow", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, TIME_FLOW_COLOR));
+    //region 更蛊 [Watch Gu] -- one effect per Gu, so both can be worn at once and their rates add
+    public static final DeferredHolder<MobEffect, TimeFlowEffect> SECOND_WATCH_GU = MOB_EFFECTS.register(
+            "second_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, TIME_FLOW_COLOR,
+                    2, 2_000L, "second_watch_gu"));
+
+    public static final DeferredHolder<MobEffect, TimeFlowEffect> THIRD_WATCH_GU = MOB_EFFECTS.register(
+            "third_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, TIME_FLOW_COLOR,
+                    3, 3_000L, "third_watch_gu"));
+    //endregion
 
     public static void register(IEventBus modEventBus) {
         MOB_EFFECTS.register(modEventBus);

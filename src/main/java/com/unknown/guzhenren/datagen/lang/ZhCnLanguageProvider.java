@@ -82,6 +82,10 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.8",                 "八");
         add("guzhenren.display.base_units.9",                 "九");
         add("guzhenren.display.none",                         "[无]");
+        add("guzhenren.display.time.multiple.2",              "两倍");
+        add("guzhenren.display.time.multiple.3",              "三倍");
+        add("guzhenren.display.time.multiple.4",              "四倍");
+        add("guzhenren.display.time.multiple.5",              "五倍");
         add("guzhenren.display.wild",                         "野生·%s");
         add("guzhenren.display.vital",                        "本命·%s");
         add("guzhenren.display.strength.beast_reading",       "[%s%s之力]");
@@ -171,6 +175,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.path_speck",      " 碎屑 %s");
         add("guzhenren.command.info.strength",        "力道造诣");
         add("guzhenren.command.info.strength_entry",  "  %s  %s");
+        add("guzhenren.command.info.time",            "宙道造诣");
+        add("guzhenren.command.info.time_entry",      "  时间流速  %s");
         add("guzhenren.command.info.capacity",        "肉身承受  %s / %s斤");
         add("guzhenren.command.info.attack",          "肉身攻击  %s");
         add("guzhenren.command.info.brilliance",      "才情  %s");
@@ -254,6 +260,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.qi",             "气道造诣");
         add("guzhenren.screen.label.paths",          "流派造诣");
         add("guzhenren.screen.label.strength",       "力道造诣");
+        add("guzhenren.screen.label.time",           "宙道造诣");
+        add("guzhenren.screen.label.time_flow",      "时间流速");
         add("guzhenren.screen.label.capacity",       "承受");
         add("guzhenren.screen.label.attack",         "攻击力");
         add("guzhenren.screen.capacity",             "%s / %s斤");
@@ -359,7 +367,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.all_out_active",        "全力未歇");
         add("guzhenren.item.failed.zombie_already",        "已成僵尸 无可再变");
         add("guzhenren.item.failed.gu_starving",           "蛊已太饿 需先喂食");
-        add("guzhenren.item.failed.time_flow_active",      "更漏未尽");
 
         add("guzhenren.item.gu.invested",                  "已投入 %s/%s");
         add("guzhenren.item.gu.refine_progress",           "炼化 %s/%s");
@@ -375,18 +382,19 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.vital_lost",                "%s断绝，气血、魂魄与念头俱损！");
         add("guzhenren.item.death_qi_cured",               "生气化去死气 —— 回复 %s 年寿元");
 
-        add("effect.guzhenren.vitality_leaf",              "生机叶");
-        add("effect.guzhenren.liquor_worm",                "酒虫");
-        add("effect.guzhenren.life_qi",                    "生气");
-        add("effect.guzhenren.essence_qi",                 "元气");
-        add("effect.guzhenren.death_qi",                   "死气");
-        add("effect.guzhenren.strength_qi",                "力气");
-        add("effect.guzhenren.flower_boar_gu",             "花豕蛊");
-        add("effect.guzhenren.dragonpill_cricket_gu",      "龙丸蛐蛐蛊");
-        add("effect.guzhenren.brute_force_longhorn_beetle_gu", "蛮力天牛蛊");
-        add("effect.guzhenren.all_out_effort",             "全力以赴");
-        add("effect.guzhenren.half_zombie",                "半生半僵");
-        add("effect.guzhenren.time_flow",                  "更漏飞转");
+        add("effect.guzhenren.vitality_leaf",              "生机叶蛊效果");
+        add("effect.guzhenren.liquor_worm",                "酒虫效果");
+        add("effect.guzhenren.life_qi",                    "生气效果");
+        add("effect.guzhenren.essence_qi",                 "元气效果");
+        add("effect.guzhenren.death_qi",                   "死气效果");
+        add("effect.guzhenren.strength_qi",                "力气效果");
+        add("effect.guzhenren.flower_boar_gu",             "花豕蛊效果");
+        add("effect.guzhenren.dragonpill_cricket_gu",      "龙丸蛐蛐蛊效果");
+        add("effect.guzhenren.brute_force_longhorn_beetle_gu", "蛮力天牛蛊效果");
+        add("effect.guzhenren.all_out_effort",             "全力以赴蛊效果");
+        add("effect.guzhenren.half_zombie",                "半生半僵效果");
+        add("effect.guzhenren.second_watch_gu",            "两更蛊效果");
+        add("effect.guzhenren.third_watch_gu",             "三更蛊效果");
     }
     //endregion
 

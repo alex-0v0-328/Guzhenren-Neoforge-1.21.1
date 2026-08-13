@@ -77,6 +77,13 @@ public final class ModDisplayText {
 
     public static String attackBonus(double bonus) {return "+" + bonus;}
 
+    /** ⚠ The specks here are the Time Flow tag's own share, not the path's total; the list row holds that. */
+    public static MutableComponent timeFlow(int rate, long specks) {
+        MutableComponent line = Component.translatable("guzhenren.display.time.multiple." + rate);
+        if (specks > 0L) line.append(Component.translatable("guzhenren.command.info.path_speck", specks));
+        return line;
+    }
+
     public static MutableComponent beastStrengthLine(StrengthData data) {
         MutableComponent line = Component.empty();
         data.beastReadings().forEach((family, reading) -> line.append(beastReading(family, reading)));

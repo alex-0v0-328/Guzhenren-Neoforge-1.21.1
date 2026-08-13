@@ -439,6 +439,9 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.QiHeader ignored -> new Row(indent, label("qi"), null);
             case InfoModel.QiRow e -> new Row(indent, name(e.kind().getTranslationKey()),
                     Component.literal(String.valueOf(e.amount())));
+            case InfoModel.TimeHeader ignored -> new Row(indent, label("time"), null);
+            case InfoModel.TimeRow e -> new Row(indent, label("time_flow"),
+                    ModDisplayText.timeFlow(e.rate(), e.specks()));
             case InfoModel.StrengthHeader ignored -> new Row(indent, label("strength"), null);
             case InfoModel.StrengthRow e -> new Row(indent,
                     ModDisplayText.strengthLabel(name(e.branch().getTranslationKey()), e.totalJin()), e.reading());

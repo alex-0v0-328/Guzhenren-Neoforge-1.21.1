@@ -82,6 +82,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.8",                 "Eight");
         add("guzhenren.display.base_units.9",                 "Nine");
         add("guzhenren.display.none",                         "[NONE]");
+        add("guzhenren.display.time.multiple.2",              "x2");
+        add("guzhenren.display.time.multiple.3",              "x3");
+        add("guzhenren.display.time.multiple.4",              "x4");
+        add("guzhenren.display.time.multiple.5",              "x5");
         add("guzhenren.display.wild",                         "Wild %s");
         add("guzhenren.display.vital",                        "Vital %s");
         add("guzhenren.display.strength.beast_reading",       "[Strength of %s %s]");
@@ -171,6 +175,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.path_speck",      " Specks %s");
         add("guzhenren.command.info.strength",        "Strength Path:");
         add("guzhenren.command.info.strength_entry",  "  %s  %s");
+        add("guzhenren.command.info.time",            "Time Path:");
+        add("guzhenren.command.info.time_entry",      "  Time Flow  %s");
         add("guzhenren.command.info.capacity",        "Bearing:     %s / %s jin");
         add("guzhenren.command.info.attack",          "Attack:      %s");
         add("guzhenren.command.info.brilliance",      "Brilliance:  %s");
@@ -254,6 +260,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.qi",             "Qi Path");
         add("guzhenren.screen.label.paths",          "Paths");
         add("guzhenren.screen.label.strength",       "Strength Path");
+        add("guzhenren.screen.label.time",           "Time Path");
+        add("guzhenren.screen.label.time_flow",      "Time Flow");
         add("guzhenren.screen.label.capacity",       "Bearing");
         add("guzhenren.screen.label.attack",         "Attack");
         add("guzhenren.screen.capacity",             "%s / %s jin");
@@ -359,7 +367,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.all_out_active",        "The all-out effort has not yet passed");
         add("guzhenren.item.failed.zombie_already",        "Already a zombie, nothing left to turn");
         add("guzhenren.item.failed.gu_starving",           "This Gu is too hungry - feed it first");
-        add("guzhenren.item.failed.time_flow_active",      "Your hours are already running short");
 
         add("guzhenren.item.gu.invested",                  "Invested %s/%s");
         add("guzhenren.item.gu.refine_progress",           "Refined %s/%s");
@@ -375,18 +382,19 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.gu.vital_lost",                "Your %s is gone -- health, soul and mind all suffer!");
         add("guzhenren.item.death_qi_cured",               "Life Qi dispels the Death Qi -- %s years of lifespan restored");
 
-        add("effect.guzhenren.vitality_leaf",              "Vitality Leaf");
-        add("effect.guzhenren.liquor_worm",                "Liquor Worm");
-        add("effect.guzhenren.life_qi",                    "Life Qi");
-        add("effect.guzhenren.essence_qi",                 "Essence Qi");
-        add("effect.guzhenren.death_qi",                   "Death Qi");
-        add("effect.guzhenren.strength_qi",                "Strength Qi");
-        add("effect.guzhenren.flower_boar_gu",             "Flower Boar Gu");
-        add("effect.guzhenren.dragonpill_cricket_gu",      "Dragonpill Cricket Gu");
-        add("effect.guzhenren.brute_force_longhorn_beetle_gu", "Brute Force Longhorn Beetle Gu");
-        add("effect.guzhenren.all_out_effort",             "All-Out Effort");
-        add("effect.guzhenren.half_zombie",                "Half-Zombie");
-        add("effect.guzhenren.time_flow",                  "Hastened Hours");
+        add("effect.guzhenren.vitality_leaf",              "Vitality Leaf Gu Effect");
+        add("effect.guzhenren.liquor_worm",                "Liquor Worm Effect");
+        add("effect.guzhenren.life_qi",                    "Life Qi Effect");
+        add("effect.guzhenren.essence_qi",                 "Essence Qi Effect");
+        add("effect.guzhenren.death_qi",                   "Death Qi Effect");
+        add("effect.guzhenren.strength_qi",                "Strength Qi Effect");
+        add("effect.guzhenren.flower_boar_gu",             "Flower Boar Gu Effect");
+        add("effect.guzhenren.dragonpill_cricket_gu",      "Dragonpill Cricket Gu Effect");
+        add("effect.guzhenren.brute_force_longhorn_beetle_gu", "Brute Force Longhorn Beetle Gu Effect");
+        add("effect.guzhenren.all_out_effort",             "All-Out Effort Gu Effect");
+        add("effect.guzhenren.half_zombie",                "Half-Zombie Effect");
+        add("effect.guzhenren.second_watch_gu",            "Second Watch Gu Effect");
+        add("effect.guzhenren.third_watch_gu",             "Third Watch Gu Effect");
     }
     //endregion
 
