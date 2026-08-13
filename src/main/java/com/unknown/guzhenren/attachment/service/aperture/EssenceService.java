@@ -4,6 +4,7 @@ import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
+import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.effect.pool.EssenceQiEffect;
 import com.unknown.guzhenren.registry.ModAttachments;
 import com.unknown.guzhenren.registry.ModEffects;
@@ -135,8 +136,8 @@ public final class EssenceService {
                 continue;
             }
 
-            double perStep =
-                    regenPerTick(aperture) * REGEN_INTERVAL_TICKS * (1.0 + bonus) * halfZombieRate;
+            double perStep = TimeFlowService.perStep(player,
+                    regenPerTick(aperture) * REGEN_INTERVAL_TICKS * (1.0 + bonus) * halfZombieRate);
             if (perStep <= 0.0) continue;
 
             double total = carry[i] + perStep;

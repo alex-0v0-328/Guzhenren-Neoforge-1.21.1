@@ -121,7 +121,7 @@ public final class BodyService {
         if (server == null) return 0L;
 
         long today = dayIndex(server);
-        BodyData body = get(player);
+        BodyData body = bankHastenedTime(player);
 
         if (body.lastDayIndex() == BodyData.UNTRACKED || today < body.lastDayIndex()) {
             store(player, body.withLastDayIndex(today));
@@ -131,7 +131,31 @@ public final class BodyService {
         long elapsed = today - body.lastDayIndex();
         if (elapsed == 0L) return 0L;
 
-        store(player, body.lifeForm().ages() ? body.aged(elapsed, today) : body.withLastDayIndex(today));
+        store(player, body.lifeForm().ages()
+                ? agedAfterHastening(body, elapsed, today)
+                : body.withLastDayIndex(today));
         return elapsed;
     }
+
+    //region 宙道 [Time Path] -- the days he lived through without spending them
+    private static BodyData bankHastenedTime(ServerPlayer player) {
+        BodyData body = get(player);
+        long parts = TimeFlowService.skipped(player, Ticks.SECOND);
+        if (parts <= 0L || !body.lifeForm().ages()) return body;
+
+        BodyData banked = body.withHastenedParts(body.hastenedParts() + parts);
+        store(player, banked);
+        return banked;
+    }
+
+    /**
+     * ⚠ The count of days is billed to 寿元 alone and is NEVER what this returns to its caller -- three
+     * Gu-hunger walks read that count, and forgiving it there would freeze every Gu's bar instead.
+     */
+    private static BodyData agedAfterHastening(BodyData body, long elapsed, long today) {
+        long perDay = Ticks.DAY * TimeFlowService.PARTS_PER_TICK;
+        long free = Math.min(elapsed, body.hastenedParts() / perDay);
+        return body.aged(elapsed - free, today).withHastenedParts(body.hastenedParts() - free * perDay);
+    }
+    //endregion
 }

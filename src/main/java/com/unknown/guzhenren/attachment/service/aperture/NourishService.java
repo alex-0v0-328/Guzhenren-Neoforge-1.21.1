@@ -2,6 +2,7 @@ package com.unknown.guzhenren.attachment.service.aperture;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.NourishData;
+import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
@@ -82,11 +83,21 @@ public final class NourishService {
         store(player, data.withCultivating(false).withStarvedSince(NourishData.NOT_STARVED));
     }
 
-    //region the second that the heartbeat bills
+    //region 温养 [nourishing] -- the second that the heartbeat bills
+    /**
+     * ⚠ A hastened clock bills MORE seconds per heartbeat, never a bigger second. Scaling the progress
+     * and the price instead would round the round's length off the pool it is defined to cost.
+     */
     public static void tickNourish(ServerPlayer player) {
+        for (int second = TimeFlowService.rate(player); second > 0; second--) {
+            if (!nourishSecond(player)) return;
+        }
+    }
+
+    private static boolean nourishSecond(ServerPlayer player) {
         NourishData data = get(player);
-        if (!data.cultivating()) return;
-        if (!ApertureService.isAwakened(player) || atCeiling(player)) {cancel(player); return;}
+        if (!data.cultivating()) return false;
+        if (!ApertureService.isAwakened(player) || atCeiling(player)) {cancel(player); return false;}
 
         player.setDeltaMovement(Vec3.ZERO);
 
@@ -97,24 +108,25 @@ public final class NourishService {
             if (starving.starvedOut(now)) {
                 store(player, starving.withCultivating(false).withStarvedSince(NourishData.NOT_STARVED));
                 player.displayClientMessage(Component.translatable(STARVED), true);
-                return;
+                return false;
             }
             store(player, starving);
-            return;
+            return false;
         }
 
         NourishData fed = data.withStarvedSince(NourishData.NOT_STARVED)
                 .withProgress(data.progress() + PERCENT_PER_SECOND);
-        if (!fed.isFull()) {store(player, fed); return;}
+        if (!fed.isFull()) {store(player, fed); return true;}
 
         Stage stage = ApertureService.aperture(player).stage();
         if (stage == Stage.HIGHEST) {
             store(player, fed.withCultivating(false));
-            return;
+            return false;
         }
         ApertureService.setStage(player, stage.shift(1));
         store(player, NourishData.DEFAULT);
         player.displayClientMessage(Component.translatable(STAGE_UP), true);
+        return false;
     }
 
     private static boolean pay(ServerPlayer player, long cost) {

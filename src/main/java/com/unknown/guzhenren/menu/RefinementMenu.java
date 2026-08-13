@@ -5,6 +5,7 @@ import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
+import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.item.GuItem;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
@@ -280,7 +281,9 @@ public class RefinementMenu extends AbstractContainerMenu {
     @Override
     public void broadcastChanges() {
         if (player instanceof ServerPlayer server) {
-            if (running != null) advance(server);
+            for (int step = TimeFlowService.rate(server); step > 0 && running != null; step--) {
+                advance(server);
+            }
             craftData.set(DATA_AFFORD, pending != null && affords(server, pending) ? 1 : 0);
         }
         super.broadcastChanges();

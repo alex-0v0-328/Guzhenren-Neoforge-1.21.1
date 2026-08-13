@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.item;
 
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
+import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.ModDisplayText;
@@ -64,8 +65,8 @@ public abstract class GuItem extends Item {
 
     protected int chargeByGap(Player player, int fast, int same, int slow) {
         int gap = rankGap(player);
-        if (gap > 0) return fast;
-        return gap == 0 ? same : slow;
+        if (gap > 0) return TimeFlowService.waited(player, fast);
+        return TimeFlowService.waited(player, gap == 0 ? same : slow);
     }
     //endregion
 
@@ -178,7 +179,7 @@ public abstract class GuItem extends Item {
     protected int cooldownTicks(ItemStack stack) {return COOLDOWN_TICKS;}
 
     protected void spend(ServerPlayer player, ItemStack stack, int count) {
-        player.getCooldowns().addCooldown(this, cooldownTicks(stack));
+        player.getCooldowns().addCooldown(this, TimeFlowService.waited(player, cooldownTicks(stack)));
         if (count > 0 && !player.hasInfiniteMaterials()) stack.shrink(count);
     }
 }

@@ -306,6 +306,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.PRIMEVAL_ELDER_GU_3,              "三转元老蛊");
         addItem(ModItems.PRIMEVAL_ELDER_GU_4,              "四转元老蛊");
         addItem(ModItems.PRIMEVAL_ELDER_GU_5,              "五转元老蛊");
+        addItem(ModItems.SECOND_WATCH_GU,                  "两更蛊");
+        addItem(ModItems.THIRD_WATCH_GU,                   "三更蛊");
         addItem(ModItems.PRIMEVAL_STONE,                   "元石");
         addItem(ModItems.LIQUOR,                           "酒");
         addItem(ModItems.SOUR_LIQUOR,                      "酸酒");
@@ -357,6 +359,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.all_out_active",        "全力未歇");
         add("guzhenren.item.failed.zombie_already",        "已成僵尸 无可再变");
         add("guzhenren.item.failed.gu_starving",           "蛊已太饿 需先喂食");
+        add("guzhenren.item.failed.time_flow_active",      "更漏未尽");
 
         add("guzhenren.item.gu.invested",                  "已投入 %s/%s");
         add("guzhenren.item.gu.refine_progress",           "炼化 %s/%s");
@@ -383,6 +386,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.brute_force_longhorn_beetle_gu", "蛮力天牛蛊");
         add("effect.guzhenren.all_out_effort",             "全力以赴");
         add("effect.guzhenren.half_zombie",                "半生半僵");
+        add("effect.guzhenren.time_flow",                  "更漏飞转");
     }
     //endregion
 

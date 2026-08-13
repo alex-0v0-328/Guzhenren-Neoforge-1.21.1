@@ -4,6 +4,7 @@ import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.PlayerDataService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
+import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.display.ModDisplayText;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.registry.ModDataComponents;
@@ -59,6 +60,9 @@ public abstract class TendedGuItem extends MortalGuItem {
     protected abstract @Nullable Refusal payoutGate(Player player, ItemStack stack);
     protected abstract void payout(ServerPlayer player, ItemStack stack);
     protected int feedUnits(ItemStack food) {return spec.feedUnits(food);}
+
+    /** ⚠ A Gu taken by its own use may never be bound: the slot would lose it on the very first click. */
+    public boolean canBeVital() {return true;}
     //endregion
 
     //region state
@@ -145,7 +149,7 @@ public abstract class TendedGuItem extends MortalGuItem {
     public void bornRefined(ServerPlayer player, ItemStack stack) {
         store(stack, new RefinedGuState(true, refineCost(), 0, 0, state(stack).damageTaken()));
         clock.bind(player, stack);
-        stack.set(ModDataComponents.REFINED_AT.get(), gameTime(player));
+        stack.set(ModDataComponents.REFINED_AT.get(), cooldownStamp(player, REFINE_DONE_COOLDOWN_TICKS));
     }
     //endregion
 
@@ -220,19 +224,21 @@ public abstract class TendedGuItem extends MortalGuItem {
     }
 
     private long mostThisStepMaySpend(ServerPlayer player, long pool, int elapsed) {
-        if (guPaced(player)) return Math.min(pool, clock.essencePerHungerPoint());
-        return poolPacedStep(pool, elapsed);
+        if (guPaced(player)) {
+            return Math.min(pool, TimeFlowService.perStep(player, clock.essencePerHungerPoint()));
+        }
+        return poolPacedStep(player, pool, elapsed);
     }
 
     private long poured(ServerPlayer player, int elapsed) {
         long pool = EssenceService.spendable(player);
         if (pool < ESSENCE_FLOOR) return 0L;
-        return guPaced(player) ? pool : poolPacedStep(pool, elapsed);
+        return guPaced(player) ? pool : poolPacedStep(player, pool, elapsed);
     }
 
-    private static long poolPacedStep(long pool, int elapsed) {
+    private static long poolPacedStep(ServerPlayer player, long pool, int elapsed) {
         int stepIndex = (elapsed % Ticks.SECOND) / POOL_PACED_STEP_TICKS;
-        return pool / (POOL_PACED_STEPS + 1 - stepIndex);
+        return Math.min(pool, TimeFlowService.perStep(player, pool / (POOL_PACED_STEPS + 1 - stepIndex)));
     }
 
     private void pour(ServerPlayer player, ItemStack stack, int amount) {
@@ -260,7 +266,9 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     private void grant(ServerPlayer player, ItemStack stack) {
         payout(player, stack);
-        if (spec.useCooldownTicks() > 0) stack.set(ModDataComponents.USED_AT.get(), gameTime(player));
+        if (spec.useCooldownTicks() > 0) {
+            stack.set(ModDataComponents.USED_AT.get(), cooldownStamp(player, spec.useCooldownTicks()));
+        }
     }
     //endregion
 
@@ -268,6 +276,14 @@ public abstract class TendedGuItem extends MortalGuItem {
     private static final String FAILED_COOLDOWN = "guzhenren.item.failed.gu_cooldown";
 
     private static long gameTime(ServerPlayer player) {return player.server.overworld().getGameTime();}
+
+    /**
+     * ⚠ Stamped BACK by the share a hastened clock has already served, because the stamp is read again
+     * long after the form has ended. Scaling the window on the way out would recompute a live cooldown.
+     */
+    private static long cooldownStamp(ServerPlayer player, int window) {
+        return gameTime(player) - (window - TimeFlowService.waited(player, window));
+    }
 
     private int cooldownLeft(Player player, @Nullable Long stamp, int window) {
         MinecraftServer server = player.getServer();

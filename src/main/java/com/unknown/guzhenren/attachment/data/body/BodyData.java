@@ -28,7 +28,8 @@ public record BodyData(
         long lastDayIndex,
         long deathQiLifespanLost,
         long halfZombieEndTick,
-        int zombieTier
+        int zombieTier,
+        long hastenedParts
 ) {
 
     public static final long UNTRACKED = -1L;
@@ -40,8 +41,8 @@ public record BodyData(
 
     public static final long RELAPSE_WINDOW_TICKS = 5L * Ticks.MINUTE;
 
-    public static final BodyData DEFAULT = new BodyData(
-            LifeForm.ALIVE, Race.HUMAN, DEFAULT_AGE, DEFAULT_LIFESPAN, UNTRACKED, 0L, UNTRACKED, NO_ZOMBIE_TIER);
+    public static final BodyData DEFAULT = new BodyData(LifeForm.ALIVE, Race.HUMAN, DEFAULT_AGE,
+            DEFAULT_LIFESPAN, UNTRACKED, 0L, UNTRACKED, NO_ZOMBIE_TIER, 0L);
 
     public static final Codec<BodyData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             LifeForm.CODEC.optionalFieldOf("life_form", LifeForm.ALIVE).forGetter(BodyData::lifeForm),
@@ -51,7 +52,8 @@ public record BodyData(
             Codec.LONG.optionalFieldOf("last_day_index", UNTRACKED).forGetter(BodyData::lastDayIndex),
             Codec.LONG.optionalFieldOf("death_qi_lifespan_lost", 0L).forGetter(BodyData::deathQiLifespanLost),
             Codec.LONG.optionalFieldOf("half_zombie_end_tick", UNTRACKED).forGetter(BodyData::halfZombieEndTick),
-            Codec.INT.optionalFieldOf("zombie_tier", NO_ZOMBIE_TIER).forGetter(BodyData::zombieTier)
+            Codec.INT.optionalFieldOf("zombie_tier", NO_ZOMBIE_TIER).forGetter(BodyData::zombieTier),
+            Codec.LONG.optionalFieldOf("hastened_parts", 0L).forGetter(BodyData::hastenedParts)
     ).apply(instance, BodyData::new));
 
     private static final StreamCodec<ByteBuf, LifeForm> FORM = ModStreamCodecs.ofEnum(LifeForm.class);
@@ -68,7 +70,8 @@ public record BodyData(
                     ByteBufCodecs.VAR_LONG.decode(buf),
                     ByteBufCodecs.VAR_LONG.decode(buf),
                     ByteBufCodecs.VAR_LONG.decode(buf),
-                    ByteBufCodecs.VAR_INT.decode(buf));
+                    ByteBufCodecs.VAR_INT.decode(buf),
+                    ByteBufCodecs.VAR_LONG.decode(buf));
         }
 
         @Override
@@ -81,12 +84,14 @@ public record BodyData(
             ByteBufCodecs.VAR_LONG.encode(buf, value.deathQiLifespanLost());
             ByteBufCodecs.VAR_LONG.encode(buf, value.halfZombieEndTick());
             ByteBufCodecs.VAR_INT.encode(buf, value.zombieTier());
+            ByteBufCodecs.VAR_LONG.encode(buf, value.hastenedParts());
         }
     };
 
     public BodyData {
         age = Math.max(0L, age);
         deathQiLifespanLost = Math.max(0L, deathQiLifespanLost);
+        hastenedParts = Math.max(0L, hastenedParts);
     }
 
     public boolean isExhausted() {return lifespan <= 0L;}
@@ -102,39 +107,43 @@ public record BodyData(
 
     public BodyData withLifeForm(LifeForm v) {
         return new BodyData(v, race, age, lifespan, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier);
+                halfZombieEndTick, zombieTier, hastenedParts);
     }
     public BodyData withRace(Race v) {
         return new BodyData(lifeForm, v, age, lifespan, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier);
+                halfZombieEndTick, zombieTier, hastenedParts);
     }
     public BodyData withAge(long v) {
         return new BodyData(lifeForm, race, v, lifespan, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier);
+                halfZombieEndTick, zombieTier, hastenedParts);
     }
     public BodyData withLifespan(long v) {
         return new BodyData(lifeForm, race, age, v, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier);
+                halfZombieEndTick, zombieTier, hastenedParts);
     }
     public BodyData withLastDayIndex(long v) {
         return new BodyData(lifeForm, race, age, lifespan, v, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier);
+                halfZombieEndTick, zombieTier, hastenedParts);
     }
     public BodyData withDeathQiLifespanLost(long v) {
         return new BodyData(lifeForm, race, age, lifespan, lastDayIndex, v,
-                halfZombieEndTick, zombieTier);
+                halfZombieEndTick, zombieTier, hastenedParts);
     }
     public BodyData withHalfZombieEndTick(long v) {
         return new BodyData(lifeForm, race, age, lifespan, lastDayIndex, deathQiLifespanLost,
-                v, zombieTier);
+                v, zombieTier, hastenedParts);
     }
     public BodyData withZombieTier(int v) {
         return new BodyData(lifeForm, race, age, lifespan, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, v);
+                halfZombieEndTick, v, hastenedParts);
+    }
+    public BodyData withHastenedParts(long v) {
+        return new BodyData(lifeForm, race, age, lifespan, lastDayIndex, deathQiLifespanLost,
+                halfZombieEndTick, zombieTier, v);
     }
 
     public BodyData aged(long days, long today) {
         return new BodyData(lifeForm, race, age + days, lifespan - days, today, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier);
+                halfZombieEndTick, zombieTier, hastenedParts);
     }
 }

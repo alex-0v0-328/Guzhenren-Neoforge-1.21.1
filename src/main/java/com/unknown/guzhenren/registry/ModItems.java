@@ -22,6 +22,7 @@ import com.unknown.guzhenren.item.gu.mortal.liquor.LiquorWormItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.AllOutEffortGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.BeastStrengthGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.HumanStrengthGuItem;
+import com.unknown.guzhenren.item.gu.mortal.time.WatchGuItem;
 import com.unknown.guzhenren.item.gu.mortal.zombie.ZombieGuItem;
 import com.unknown.guzhenren.item.material.LiquorItem;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
@@ -268,6 +269,19 @@ public final class ModItems {
                 .hungerBar(16, 8).hungerPerUse(2).feed(ModItemTags.ZOMBIE_FEED, 1)
                 .cooldown(Ticks.SECOND));
     }
+    //endregion
+
+    //region 更蛊 [Watch Gu] -- 宙道; tended like any other, and taken by the one use it is kept for
+    public static final DeferredItem<Item> SECOND_WATCH_GU = ITEMS.register("second_watch_gu",
+            () -> new WatchGuItem(tended(), 5 * Ticks.MINUTE, GuSpec.of(Rank.FOUR, GuPath.TIME)
+                    .refine(1_600_000).costPerUse(20_000)
+                    .hungerBar(12, 1).hungerPerUse(0).regainEvery(2_000)
+                    .cooldown(Ticks.SECOND)));
+    public static final DeferredItem<Item> THIRD_WATCH_GU = ITEMS.register("third_watch_gu",
+            () -> new WatchGuItem(tended(), 5 * Ticks.MINUTE, GuSpec.of(Rank.FIVE, GuPath.TIME)
+                    .refine(16_000_000).costPerUse(200_000)
+                    .hungerBar(12, 1).hungerPerUse(0).regainEvery(1_000)
+                    .cooldown(Ticks.SECOND)));
     //endregion
 
     //region 蛊材 [Gu materials]

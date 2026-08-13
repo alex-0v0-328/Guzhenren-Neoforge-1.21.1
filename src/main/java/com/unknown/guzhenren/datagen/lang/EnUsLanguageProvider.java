@@ -306,6 +306,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.PRIMEVAL_ELDER_GU_3,              "Primeval Elder Gu III");
         addItem(ModItems.PRIMEVAL_ELDER_GU_4,              "Primeval Elder Gu IV");
         addItem(ModItems.PRIMEVAL_ELDER_GU_5,              "Primeval Elder Gu V");
+        addItem(ModItems.SECOND_WATCH_GU,                  "Second Watch Gu");
+        addItem(ModItems.THIRD_WATCH_GU,                   "Third Watch Gu");
         addItem(ModItems.PRIMEVAL_STONE,                   "Primeval Stone");
         addItem(ModItems.LIQUOR,                           "Liquor");
         addItem(ModItems.SOUR_LIQUOR,                      "Sour Liquor");
@@ -357,6 +359,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.all_out_active",        "The all-out effort has not yet passed");
         add("guzhenren.item.failed.zombie_already",        "Already a zombie, nothing left to turn");
         add("guzhenren.item.failed.gu_starving",           "This Gu is too hungry - feed it first");
+        add("guzhenren.item.failed.time_flow_active",      "Your hours are already running short");
 
         add("guzhenren.item.gu.invested",                  "Invested %s/%s");
         add("guzhenren.item.gu.refine_progress",           "Refined %s/%s");
@@ -383,6 +386,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.brute_force_longhorn_beetle_gu", "Brute Force Longhorn Beetle Gu");
         add("effect.guzhenren.all_out_effort",             "All-Out Effort");
         add("effect.guzhenren.half_zombie",                "Half-Zombie");
+        add("effect.guzhenren.time_flow",                  "Hastened Hours");
     }
     //endregion
 

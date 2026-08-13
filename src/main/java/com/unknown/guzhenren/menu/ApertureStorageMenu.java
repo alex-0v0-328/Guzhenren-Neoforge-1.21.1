@@ -198,6 +198,7 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
             if (!(stack.getItem() instanceof TendedGuItem gu) || !gu.refined(stack)) return false;
+            if (!gu.canBeVital()) return false;
             return !GuItem.isVital(stack) || GuItem.isVitalOf(stack, player);
         }
 

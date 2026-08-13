@@ -11,6 +11,7 @@ import com.unknown.guzhenren.effect.timed.BruteForceLonghornBeetleGuEffect;
 import com.unknown.guzhenren.effect.timed.DragonpillCricketGuEffect;
 import com.unknown.guzhenren.effect.timed.FlowerBoarGuEffect;
 import com.unknown.guzhenren.effect.timed.LiquorWormEffect;
+import com.unknown.guzhenren.effect.timed.TimeFlowEffect;
 import com.unknown.guzhenren.effect.timed.VitalityLeafEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
@@ -46,6 +47,8 @@ public final class ModEffects {
     private static final int BRUTE_FORCE_LONGHORN_BEETLE_GU_COLOR = 0x455A64;
     private static final int STRENGTH_QI_COLOR                    = 0xFF7043;
     private static final int HALF_ZOMBIE_COLOR                    = 0x546E7A;
+    /**  TODO(宙道): a placeholder grey, claiming no hue -- every effect's colour is Alex's to name. */
+    private static final int TIME_FLOW_COLOR                      = 0x9E9E9E;
 
     public static final DeferredHolder<MobEffect, VitalityLeafEffect> VITALITY_LEAF = MOB_EFFECTS.register(
             "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, VITALITY_LEAF_COLOR));
@@ -81,6 +84,9 @@ public final class ModEffects {
 
     public static final DeferredHolder<MobEffect, HalfZombieEffect> HALF_ZOMBIE = MOB_EFFECTS.register(
             "half_zombie", () -> new HalfZombieEffect(MobEffectCategory.NEUTRAL, HALF_ZOMBIE_COLOR));
+
+    public static final DeferredHolder<MobEffect, TimeFlowEffect> TIME_FLOW = MOB_EFFECTS.register(
+            "time_flow", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, TIME_FLOW_COLOR));
 
     public static void register(IEventBus modEventBus) {
         MOB_EFFECTS.register(modEventBus);

@@ -58,6 +58,11 @@ public final class ModDataComponents {
                     .persistent(Codec.LONG)
                     .networkSynchronized(ByteBufCodecs.VAR_LONG));
 
+    public static final Supplier<DataComponentType<Long>> HUNGER_FED_AT =
+            DATA_COMPONENTS.registerComponentType("hunger_fed_at", builder -> builder
+                    .persistent(Codec.LONG)
+                    .networkSynchronized(ByteBufCodecs.VAR_LONG));
+
     public static void register(IEventBus modEventBus) {
         DATA_COMPONENTS.register(modEventBus);
     }

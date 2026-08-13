@@ -90,7 +90,7 @@ public final class StaminaService {
             drain(player, SPRINT_COST_PER_STEP);
             return;
         }
-        addCurrent(player, regenPerStep(player));
+        addCurrent(player, TimeFlowService.perStep(player, regenPerStep(player)));
     }
 
     public static void spendOnJump(ServerPlayer player) {
