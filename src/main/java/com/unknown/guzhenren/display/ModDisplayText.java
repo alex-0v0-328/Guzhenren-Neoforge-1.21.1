@@ -3,7 +3,6 @@ package com.unknown.guzhenren.display;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
-import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
@@ -71,20 +70,18 @@ public final class ModDisplayText {
     }
 
     /**
-     * ⚠ Both figures are derived, so the pair moves smoothly instead of once a day: the stored years are
-     * whole and the tenth comes from how far into the current one he has actually lived.
+     * ⚠ Two decimals, not one: a hundredth of a year is twelve real seconds at ordinary speed, which is
+     * the coarsest step the eye still reads as movement. A tenth stands still for two minutes.
      */
     public static MutableComponent lifespan(double lifespan, double age) {
-        return Component.translatable("guzhenren.display.lifespan", tenth(lifespan), tenth(age));
+        return Component.translatable("guzhenren.display.lifespan", years(lifespan), years(age));
     }
 
-    public static MutableComponent lifespan(Player player) {
-        BodyData body = BodyService.get(player);
-        double lived = BodyService.yearsSinceBilled(player);
-        return lifespan(body.lifespan() - lived, body.age() + lived);
+    public static MutableComponent lifespan(BodyData body) {
+        return lifespan(body.lifespanYears(), body.ageYears());
     }
 
-    private static String tenth(double years) {return String.format(Locale.ROOT, "%.1f", years);}
+    private static String years(double v) {return String.format(Locale.ROOT, "%.2f", v);}
 
     public static MutableComponent realmAndTalent(Aperture a) {return realmTitle(a).append(GAP).append(talent(a));}
 

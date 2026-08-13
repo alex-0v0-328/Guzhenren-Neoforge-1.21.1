@@ -24,12 +24,6 @@ public final class TimeFlowService {
 
     public static final int NORMAL_RATE = 1;
 
-    /**
-     * ⚠ Ageing is banked in these rather than in ticks, so that a heartbeat's share stays a whole number:
-     * a beat carries {@code SECOND * PARTS_PER_TICK} of them, and every rate reachable today divides it.
-     */
-    public static final long PARTS_PER_TICK = 6L;
-
     public static int rate(Player player) {
         int rate = 0;
         for (MobEffectInstance instance : player.getActiveEffects()) {
@@ -74,8 +68,6 @@ public final class TimeFlowService {
     public static long perStep(Player p, long amount) {return perStep(rate(p), amount);}
     public static double perStep(Player p, double amount) {return perStep(rate(p), amount);}
 
-    /** The share of a stretch he lived through without spending it, which is what ageing hands back. */
-    public static long skipped(Player p, int ticks) {return skipped(rate(p), ticks);}
     //endregion
 
     //region the arithmetic alone -- a rate rather than a player, so it can be asserted without a world
@@ -84,10 +76,5 @@ public final class TimeFlowService {
 
     public static long perStep(int rate, long amount) {return amount * rate;}
     public static double perStep(int rate, double amount) {return amount * rate;}
-
-    public static long skipped(int rate, int ticks) {
-        long parts = ticks * PARTS_PER_TICK;
-        return parts - parts / rate;
-    }
     //endregion
 }

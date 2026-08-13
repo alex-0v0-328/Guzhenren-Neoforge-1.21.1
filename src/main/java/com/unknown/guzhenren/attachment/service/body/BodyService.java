@@ -35,11 +35,21 @@ public final class BodyService {
     public static Race race(Player p) {return get(p).race();}
     public static long now(Player p) {return p.level().getGameTime();}
 
-    public static void setAge(ServerPlayer p, long v) {store(p, get(p).withAge(v));}
-    public static void addAge(ServerPlayer p, long d) {setAge(p, get(p).age() + d);}
-    public static void setLifespan(ServerPlayer p, long v) {store(p, get(p).withLifespan(v));}
-    public static void addLifespan(ServerPlayer p, long d) {setLifespan(p, get(p).lifespan() + d);}
     private static void store(ServerPlayer p, BodyData data) {p.setData(ModAttachments.BODY, data);}
+
+    //region 寿元与年龄 [lifespan and age] -- ⚠ every caller speaks YEARS; only this file knows about parts
+    public static void setAge(ServerPlayer p, long years) {store(p, get(p).withAgeParts(BodyData.parts(years)));}
+    public static void setLifespan(ServerPlayer p, long years) {
+        store(p, get(p).withLifespanParts(BodyData.parts(years)));
+    }
+
+    public static void addAge(ServerPlayer p, long years) {
+        store(p, get(p).withAgeParts(get(p).ageParts() + BodyData.parts(years)));
+    }
+    public static void addLifespan(ServerPlayer p, long years) {
+        store(p, get(p).withLifespanParts(get(p).lifespanParts() + BodyData.parts(years)));
+    }
+    //endregion
 
     //region Life form [生命形态] -- 生 / 死 / 僵 / 半生半僵
     public static void setLifeForm(ServerPlayer player, LifeForm form) {
@@ -47,7 +57,7 @@ public final class BodyService {
         if (body.lifeForm() == form) return;
 
         BodyData turned = body.withLifeForm(form);
-        store(player, form.isZombie() ? turned.withLifespan(BodyData.ZOMBIE_LIFESPAN) : turned);
+        store(player, form.isZombie() ? turned.withLifespanParts(BodyData.parts(BodyData.ZOMBIE_LIFESPAN)) : turned);
         AttackService.refresh(player);
     }
 
@@ -62,7 +72,7 @@ public final class BodyService {
     public static void turnZombie(ServerPlayer player, int tier) {
         store(player, get(player)
                 .withLifeForm(LifeForm.ZOMBIE)
-                .withLifespan(BodyData.ZOMBIE_LIFESPAN)
+                .withLifespanParts(BodyData.parts(BodyData.ZOMBIE_LIFESPAN))
                 .withZombieTier(tier));
         AttackService.refresh(player);
     }
@@ -102,26 +112,31 @@ public final class BodyService {
     //region Death Qi [死气] debt
     public static void drainByDeathQi(ServerPlayer player, long years) {
         BodyData body = get(player);
-        store(player, body.withLifespan(body.lifespan() - years)
+        store(player, body.withLifespanParts(body.lifespanParts() - BodyData.parts(years))
                 .withDeathQiLifespanLost(body.deathQiLifespanLost() + years));
     }
 
     public static long refundDeathQiDebt(ServerPlayer player, int numerator, int denominator) {
         BodyData body = get(player);
         long refund = body.deathQiLifespanLost() * numerator / denominator;
-        store(player, body.withLifespan(body.lifespan() + refund).withDeathQiLifespanLost(0L));
+        store(player, body.withLifespanParts(body.lifespanParts() + BodyData.parts(refund))
+                .withDeathQiLifespanLost(0L));
         return refund;
     }
 
     public static void clearDeathQiDebt(ServerPlayer p) {store(p, get(p).withDeathQiLifespanLost(0L));}
     //endregion
 
+    /**
+     * ⚠ This counts DAYS for the three Gu-hunger walks and nothing else -- 寿元 left it for
+     * {@code tickLifespan}, which bills every heartbeat instead of once a day.
+     */
     public static long tickAging(ServerPlayer player) {
         MinecraftServer server = player.getServer();
         if (server == null) return 0L;
 
         long today = dayIndex(server);
-        BodyData body = bankHastenedTime(player);
+        BodyData body = get(player);
 
         if (body.lastDayIndex() == BodyData.UNTRACKED || today < body.lastDayIndex()) {
             store(player, body.withLastDayIndex(today));
@@ -131,48 +146,39 @@ public final class BodyService {
         long elapsed = today - body.lastDayIndex();
         if (elapsed == 0L) return 0L;
 
-        store(player, body.lifeForm().ages()
-                ? agedAfterHastening(body, elapsed, today)
-                : body.withLastDayIndex(today));
+        store(player, body.withLastDayIndex(today));
         return elapsed;
     }
 
+    //region 寿元的钟 -- billed on the heartbeat, because 宙道 changes how fast he spends it
     /**
-     * ⚠ Years of his OWN life spent since 寿元 was last billed, and it goes negative while he carries
-     * credit. Never clamp it: the display subtracts it, and the clamp is what would make it stand still.
+     * ⚠ The anchor is the world's {@code dayTime}, not {@code gameTime}, so {@code /time add} still ages
+     * him. Time running backwards re-anchors and bills nothing, the same guard {@code tickAging} carries.
      */
-    public static double yearsSinceBilled(Player player) {
+    public static void tickLifespan(ServerPlayer player) {
+        MinecraftServer server = player.getServer();
+        if (server == null) return;
+
+        long now = server.overworld().getDayTime();
         BodyData body = get(player);
-        if (body.lastDayIndex() == BodyData.UNTRACKED) return 0.0D;
 
-        return yearsSinceBilled(player.level().getDayTime(), body.lastDayIndex(), body.hastenedParts());
+        if (body.lastBilledTick() == BodyData.UNTRACKED || now < body.lastBilledTick()) {
+            store(player, body.withLastBilledTick(now));
+            return;
+        }
+        if (!body.lifeForm().ages()) {
+            store(player, body.withLastBilledTick(now));
+            return;
+        }
+        long lived = livedParts(now - body.lastBilledTick(), TimeFlowService.rate(player));
+        if (lived <= 0L) return;
+
+        store(player, body.lived(lived, now));
     }
 
-    public static double yearsSinceBilled(long dayTime, long lastDayIndex, long hastenedParts) {
-        long unbilled = Math.max(0L, dayTime / Ticks.DAY - lastDayIndex);
-        double parts = Ticks.DAY * (double) TimeFlowService.PARTS_PER_TICK;
-        return unbilled + dayTime % Ticks.DAY / (double) Ticks.DAY - hastenedParts / parts;
-    }
-
-    //region 宙道 [Time Path] -- the days he lived through without spending them
-    private static BodyData bankHastenedTime(ServerPlayer player) {
-        BodyData body = get(player);
-        long parts = TimeFlowService.skipped(player, Ticks.SECOND);
-        if (parts <= 0L || !body.lifeForm().ages()) return body;
-
-        BodyData banked = body.withHastenedParts(body.hastenedParts() + parts);
-        store(player, banked);
-        return banked;
-    }
-
-    /**
-     * ⚠ The count of days is billed to 寿元 alone and is NEVER what this returns to its caller -- three
-     * Gu-hunger walks read that count, and forgiving it there would freeze every Gu's bar instead.
-     */
-    private static BodyData agedAfterHastening(BodyData body, long elapsed, long today) {
-        long perDay = Ticks.DAY * TimeFlowService.PARTS_PER_TICK;
-        long free = Math.min(elapsed, body.hastenedParts() / perDay);
-        return body.aged(elapsed - free, today).withHastenedParts(body.hastenedParts() - free * perDay);
+    /** ⚠ A heartbeat carries 120 parts and every reachable rate divides it, so nothing is rounded away. */
+    public static long livedParts(long elapsedTicks, int rate) {
+        return Math.max(0L, elapsedTicks) * BodyData.PARTS_PER_TICK / rate;
     }
     //endregion
 }

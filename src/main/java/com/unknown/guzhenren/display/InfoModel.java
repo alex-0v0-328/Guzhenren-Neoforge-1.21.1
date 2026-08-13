@@ -121,8 +121,7 @@ public final class InfoModel {
         rows.add(new Row(0, new Form(body.lifeForm())));
         rows.add(new Row(0, new RaceRow(body.race())));
         rows.add(new Row(0, new Stamina(StaminaService.current(player), StaminaService.max(player))));
-        double lived = BodyService.yearsSinceBilled(player);
-        rows.add(new Row(0, new Lifespan(body.lifespan() - lived, body.age() + lived)));
+        rows.add(new Row(0, new Lifespan(body.lifespanYears(), body.ageYears())));
         if (strength.isEmpty()) return rows;
 
         if (strength.hasBranch(StrengthBranch.HUMAN)) {

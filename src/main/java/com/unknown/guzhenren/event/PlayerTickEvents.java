@@ -62,6 +62,7 @@ public final class PlayerTickEvents {
         tickDeathQi(player);
         AttackService.refresh(player);
         TimeFlowService.syncSpecks(player);
+        BodyService.tickLifespan(player);
         EssenceService.regenStep(player);
         NourishService.tickNourish(player);
         MindService.regenStep(player);

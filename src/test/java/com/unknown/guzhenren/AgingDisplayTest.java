@@ -3,65 +3,84 @@ package com.unknown.guzhenren;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class AgingDisplayTest {
 
-    private static final double EXACT = 1.0E-9D;
+    /** Every rate a player can reach: no Watch Gu, one, the other, or both worn together. */
+    private static final int[] RATES = {1, 2, 3, 5};
 
-    private static final long PARTS_PER_DAY = Ticks.DAY * TimeFlowService.PARTS_PER_TICK;
+    private static final long BEAT = Ticks.SECOND;
 
-    private static double lived(long dayTime, long lastDayIndex, long hastenedParts) {
-        return BodyService.yearsSinceBilled(dayTime, lastDayIndex, hastenedParts);
+    @Test
+    @DisplayName("a game day is exactly one year, and a heartbeat is a whole number of parts")
+    void aDayIsOneYear() {
+        assertEquals(BodyData.PARTS_PER_YEAR, Ticks.DAY * BodyData.PARTS_PER_TICK);
+        assertEquals(120L, BEAT * BodyData.PARTS_PER_TICK);
     }
 
     @Test
-    @DisplayName("a freshly billed year starts at nothing lived and reaches a whole one")
-    void aYearRunsFromZeroToOne() {
-        assertEquals(0.0D, lived(0L, 0L, 0L), EXACT);
-        assertEquals(0.5D, lived(Ticks.HALF_DAY, 0L, 0L), EXACT);
-        assertTrue(lived(Ticks.DAY - 1L, 0L, 0L) < 1.0D);
+    @DisplayName("a heartbeat bills a whole number of parts at every rate a player can reach")
+    void everyRateDividesAHeartbeat() {
+        assertEquals(120L, BodyService.livedParts(BEAT, 1));
+        assertEquals(60L, BodyService.livedParts(BEAT, 2));
+        assertEquals(40L, BodyService.livedParts(BEAT, 3));
+        assertEquals(24L, BodyService.livedParts(BEAT, 5));
+
+        for (int rate : RATES) {
+            assertEquals(BEAT * BodyData.PARTS_PER_TICK, BodyService.livedParts(BEAT, rate) * rate,
+                    "rate " + rate + " loses a part every beat");
+        }
     }
 
     @Test
-    @DisplayName("the second between a rollover and the heartbeat that bills it does not jump a year")
-    void therolloverGapDoesNotJump() {
-        double last = lived(Ticks.DAY - 1L, 0L, 0L);
-        double unbilled = lived(Ticks.DAY + Ticks.SECOND, 0L, 0L);
-        assertTrue(unbilled > last, unbilled + " should keep rising past " + last);
-        assertTrue(unbilled - last < 0.001D, "jumped by " + (unbilled - last));
+    @DisplayName("a whole game day of heartbeats sums to exactly one year, not a part more or less")
+    void aDayOfHeartbeatsSumsToOneYear() {
+        long beatsPerDay = Ticks.DAY / BEAT;
+        for (int rate : RATES) {
+            long summed = BodyService.livedParts(BEAT, rate) * beatsPerDay;
+            assertEquals(BodyData.PARTS_PER_YEAR / rate, summed, "rate " + rate);
+        }
     }
 
     @Test
-    @DisplayName("billing a day subtracts exactly one year's worth, so the pair of figures stays put")
-    void billingADayIsContinuous() {
-        long carry = PARTS_PER_DAY / 4L;
-        double before = lived(Ticks.DAY, 0L, carry);
-        double after = lived(Ticks.DAY, 1L, carry);
-        assertEquals(1.0D, before - after, EXACT);
+    @DisplayName("one long offline stretch bills the same as the beats it stood in for")
+    void offlineMatchesBeatByBeat() {
+        long beats = 137L;
+        for (int rate : RATES) {
+            long atOnce = BodyService.livedParts(beats * BEAT, rate);
+            long oneByOne = BodyService.livedParts(BEAT, rate) * beats;
+            assertEquals(oneByOne, atOnce, "rate " + rate);
+        }
     }
 
     @Test
-    @DisplayName("banked time slows the figure down, and a whole day of credit stops it dead")
-    void bankedTimeSlowsTheFigure() {
-        assertEquals(0.1D, lived(Ticks.HALF_DAY, 0L, PARTS_PER_DAY * 2L / 5L), EXACT);
-        assertEquals(0.0D, lived(Ticks.HALF_DAY, 0L, PARTS_PER_DAY / 2L), EXACT);
+    @DisplayName("time running backwards bills nothing rather than handing life back")
+    void backwardsTimeBillsNothing() {
+        for (int rate : RATES) {
+            assertEquals(0L, BodyService.livedParts(-Ticks.DAY, rate), "rate " + rate);
+            assertEquals(0L, BodyService.livedParts(0L, rate), "rate " + rate);
+        }
     }
 
     @Test
-    @DisplayName("⚠ carried credit reads NEGATIVE and must never be clamped, or the figure stands still")
-    void carriedCreditGoesNegative() {
-        assertTrue(lived(0L, 0L, PARTS_PER_DAY * 4L / 5L) < 0.0D);
-        assertEquals(-0.8D, lived(0L, 0L, PARTS_PER_DAY * 4L / 5L), EXACT);
+    @DisplayName("a hastened clock spends strictly less life over the same stretch of world time")
+    void hasteSpendsLessLife() {
+        long ordinary = BodyService.livedParts(Ticks.DAY, 1);
+        for (int rate : RATES) {
+            if (rate == 1) continue;
+            assertTrue(BodyService.livedParts(Ticks.DAY, rate) < ordinary, "rate " + rate);
+        }
     }
 
     @Test
-    @DisplayName("an offline stretch bills every day it covers rather than only the last one")
-    void offlineStretchCountsEveryDay() {
-        assertEquals(5.0D, lived(5L * Ticks.DAY, 0L, 0L), EXACT);
-        assertEquals(5.5D, lived(5L * Ticks.DAY + Ticks.HALF_DAY, 0L, 0L), EXACT);
+    @DisplayName("a default body starts on the stated years, not on a bare part count")
+    void defaultsAreStatedInYears() {
+        assertEquals(BodyData.DEFAULT_AGE, (long) BodyData.DEFAULT.ageYears());
+        assertEquals(BodyData.DEFAULT_LIFESPAN, (long) BodyData.DEFAULT.lifespanYears());
+        assertTrue(BodyData.DEFAULT.lifespanParts() > 0L);
     }
 }
