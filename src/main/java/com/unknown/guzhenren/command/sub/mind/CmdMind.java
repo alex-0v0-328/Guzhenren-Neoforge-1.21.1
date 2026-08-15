@@ -10,8 +10,14 @@ import net.minecraft.commands.Commands;
 /**
  * {@code /gzr mind}: reads and writes the thought [念] pools.
  *
+ * <p>Offers graded set/up/down for brilliance [才情] and delegates to
+ * {@link com.unknown.guzhenren.command.sub.mind.CmdWisdom} for the three wisdom pools. All of
+ * {@code /gzr mind} is ungated -- a mortal thinks too.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.sub.mind.CmdWisdom
  */
 public final class CmdMind {
 

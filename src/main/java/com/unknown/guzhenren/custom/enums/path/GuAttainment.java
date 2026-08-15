@@ -8,11 +8,17 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Attainment [造诣] in a path, from nothing up to the highest grade.
  *
+ * <p>Closed vocabulary enum paired with {@link GuPath}: stored once per path in {@code PathEntry}, and
+ * no sibling mod may extend the grade ladder. {@code shift(int)} clamps at both ends, so callers never
+ * touch {@code ordinal()}.
+ *
  * <p>⚠ Each grade carries its own refinement bonus here, so adding one is a single line and no change
  * anywhere else. Do not move that table into the code that reads it.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see GuPath
  */
 public enum GuAttainment implements StringRepresentable, EnumTranslatable {
 

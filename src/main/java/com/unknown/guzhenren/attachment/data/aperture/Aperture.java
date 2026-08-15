@@ -18,11 +18,25 @@ import org.jetbrains.annotations.Nullable;
 /**
  * One Aperture [空窍]: the vessel a cultivator awakens, and the thing that decides how much essence fits.
  *
- * <p>⚠ The compact constructor is the only clamp. It derives the cap and makes a secondary path equal to
- * the primary one unrepresentable, so no writer can route around either rule.
+ * <p>Leaf record nested inside {@link ApertureData}; immutable. Eight components: rank, stage,
+ * baseEssence, extremePhysique, currentEssence, two nullable {@link GuPath} (primary/secondary), and
+ * distilledEssence. The compact ctor is the only clamp -- it derives the cap and floors current
+ * against it, and makes a secondary path equal to the primary one unrepresentable.
+ *
+ * <p>⚠ This record has EIGHT components, so its {@code STREAM_CODEC} is hand-written --
+ * {@code StreamCodec.composite} stops at six, and the encode/decode order matches by hand with no
+ * compile-time check. ⚠ {@code baseEssence} is clamped to {@code [MIN_BASE, MAX_BASE]} (20..100) when
+ * positive; {@code 0} is reserved for {@code NONE} and {@code 1..19} is a hole, not a value. ⚠ The two
+ * {@link GuPath} fields are the ONLY nullables in the whole data model, carried via
+ * {@code ofNullableEnum} (ordinal+1, 0 = unset). ⚠ {@code openedAt} rolls the physique die, so reading
+ * the physique BEFORE {@code ApertureService.enforce} lands sees {@code NONE} and the talent grant
+ * silently never happens.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see ApertureData
+ * @see ApertureService
  */
 public record Aperture(
         Rank rank,

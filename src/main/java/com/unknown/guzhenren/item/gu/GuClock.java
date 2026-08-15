@@ -7,11 +7,19 @@ import net.minecraft.world.item.ItemStack;
 /**
  * How a tended Gu [需照顾] is billed over time, and what it takes to keep one alive.
  *
- * <p>⚠ "Hungry" means only that the next day rollover will kill it, and the threshold is flat for
- * every Gu on a bar. It must never be scaled to the size of the meal.
+ * <p>A sealed interface with three implementations: {@link HungerBar} (the boars, human-jun, buff Gu,
+ * all-out-effort, liquor worm, zombies -- anyone with a bar that drains), {@link TimeFed} (reserved
+ * for Gu whose feed material does not exist yet), and {@link NoClock} (primeval elder Gu -- never
+ * hungry, never feeds). Built by {@link GuSpec#buildClock} at construction.
+ *
+ * <p>⚠ "Hungry" means only that the next day rollover will kill it, and the threshold is flat at 1
+ * for every Gu on a bar. It must never be scaled to the size of the meal.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see GuSpec
+ * @see TendedGuItem
  */
 public sealed interface GuClock {
 

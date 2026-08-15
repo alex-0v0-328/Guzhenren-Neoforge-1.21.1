@@ -9,10 +9,16 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Rank [转数], the coarse measure of a cultivator, and the tables each grade carries.
  *
- * <p>⚠ NONE translates to the empty string on purpose. It reads like an omission and is not one -- the
- * mortal's word belongs to {@link Title} alone, and a word with two owners drifts apart.
+ * <p>Closed vocabulary enum: {@code rankBase}, {@code maxHealth} and the {@link EssenceColor} all live
+ * here as the single source. {@code NONE} is outside the settable range; {@code shift(int)} clamps at
+ * {@code ONE..FIVE}. No sibling mod may add a rank.
+ *
+ * <p>⚠ {@code NONE} translates to the empty string on purpose -- the mortal's word belongs to
+ * {@link Title} alone, and a word with two owners drifts apart. {@code SIX..NINE} carry deliberate
+ * zeroes (phase 3); do not "fix" them.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  * @see Title
  */

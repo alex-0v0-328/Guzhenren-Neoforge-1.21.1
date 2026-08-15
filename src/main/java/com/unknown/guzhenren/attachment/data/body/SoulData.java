@@ -10,11 +10,21 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * Soul [魂魄], the one pool that is lethal at the bottom.
  *
- * <p>⚠ Its cap is stored rather than derived, because nothing else determines it. Compare
- * {@link StaminaData}, whose cap has two sources and therefore stores only the earned part.
+ * <p>Immutable record attachment keyed {@code soul_data}; {@link SoulService} is the only writer. The
+ * compact constructor floors {@code maxSoul} at zero and clamps {@code currentSoul} to {@code [0, max]},
+ * so a cap of 0 also lands current at 0 -- one check catches both.
+ *
+ * <p>⚠ Its cap is STORED rather than derived, because nothing else determines it -- compare
+ * {@link StaminaData}, whose cap has two sources and therefore stores only the earned part. ⚠
+ * {@code revived()} returns currentSoul {@code 1} (not 0) and restores {@code DEFAULT_MAX_SOUL} when
+ * the cap itself was 0: a respawn may never hand back a value the lethal check would fire on. ⚠ The
+ * {@code SoulTier} is derived from {@code maxSoul} via {@code SoulTier.fromSoul}, never stored.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see SoulService
+ * @see com.unknown.guzhenren.custom.enums.soul.SoulTier
  */
 public record SoulData(long maxSoul, long currentSoul) {
 

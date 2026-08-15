@@ -37,11 +37,19 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The refinement [炼蛊] container: the ring grid, the ritual's clock, and the settlement.
  *
- * <p>⚠ The ritual lives in the menu deliberately -- the menu IS the clock, so closing the window
- * aborts by construction. Lifting the state out would need an abort path that does not exist.
+ * <p>Extends {@link net.minecraft.world.inventory.AbstractContainerMenu}. The menu IS the clock -- its
+ * {@code broadcastChanges} runs every tick, so closing the window aborts by construction and lifting
+ * the state out would need an abort path that does not exist. The 5×5 grid (corners cut), the primeval
+ * stone slot, and the 2×2 output are all transient; no attachment is involved.
+ *
+ * <p>⚠ The ritual lives in the menu deliberately. The grid locks while it runs, nothing is consumed
+ * until the last tick, and the client reads every live figure through {@link net.minecraft.world.inventory.ContainerData}
+ * (nine ints) because it cannot match a recipe itself.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.recipe.GuRecipe
  */
 public class RefinementMenu extends AbstractContainerMenu {
 

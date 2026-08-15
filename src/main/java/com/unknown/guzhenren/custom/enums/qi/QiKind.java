@@ -9,10 +9,15 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The kinds of Qi [气], and how long a holding lasts before it starts decaying.
  *
- * <p>⚠ The tier ladder and the decay rate are tuned against each other so every tier empties in the
- * same number of seconds. Move one without the other and the tiers stop being comparable.
+ * <p>Closed vocabulary enum: eight kinds, and {@code HEAVEN}/{@code EARTH} have no source in phase 2
+ * (升仙's threshold, not a gap). {@code SWORD} has no effect at all. No sibling mod may add a kind.
+ *
+ * <p>⚠ The tier ladder ({@code 10 << 2×tier}) and the decay rate ({@code 1 << tier}) are tuned against
+ * each other so every tier empties in the same number of seconds. Move one without the other and the
+ * tiers stop being comparable.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public enum QiKind implements StringRepresentable, EnumTranslatable {

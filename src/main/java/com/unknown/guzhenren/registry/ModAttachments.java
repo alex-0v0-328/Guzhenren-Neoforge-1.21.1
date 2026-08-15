@@ -24,7 +24,15 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 /**
  * Every data attachment this mod puts on a player.
  *
+ * <p>DeferredRegister holder: the ten record attachments (immutable, written only through their
+ * service) plus the three scratch fields ({@code ESSENCE_CARRY}, {@code EXHAUSTION_SEEN}, {@code BORN}).
+ * Synced ones use {@code OWNER_ONLY}; the storage and scratch fields are sync-less.
+ *
+ * <p>⚠ A domain is not an attachment: the body is one domain across six. Never give an attachment the
+ * bare domain word -- {@code qi}/{@code soul}/{@code strength} are also {@code GuPath} names.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public final class ModAttachments {

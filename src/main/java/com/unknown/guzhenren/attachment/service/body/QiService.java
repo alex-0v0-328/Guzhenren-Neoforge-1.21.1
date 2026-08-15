@@ -15,11 +15,24 @@ import net.minecraft.world.entity.player.Player;
 /**
  * The only writer of Qi [气] holdings, and where their MobEffects are rebuilt from the pool.
  *
- * <p>⚠ Those effects are a projection, never the truth. Because the heartbeat rebuilds them, milk and
- * {@code /effect clear} cannot cure Death Qi [死气] -- the next tick puts it straight back.
+ * <p>Static service over the {@code qi_data} attachment; reads take {@link Player}, writes take
+ * {@link ServerPlayer}. Every {@code store} also runs {@code syncEffects}, which rebuilds the four
+ * qi MobEffects from the pool so they match what the player is actually holding.
+ *
+ * <p>⚠ Those effects are a PROJECTION, never the truth -- because the heartbeat rebuilds them, milk
+ * and {@code /effect clear} cannot cure Death Qi [死气]; the next tick puts it straight back. ⚠
+ * {@code set} re-anchors the hold on the SUM when adding to an existing kind, never "takes the higher
+ * grade" and never refuses -- death qi accumulates like every other kind. ⚠ The graded syncs
+ * ({@code syncGraded}) compute the tier off the CURRENT amount, so a kind past its hold that has
+ * decayed down a tier bracket reads a lower-tier effect -- his short-term {@code TODO(decay)} is that
+ * a kind past its hold reads NO effect while decaying. ⚠ {@code syncDeath} refreshes with a 20-tick
+ * duration so a missed heartbeat does not let the curse lapse.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see QiData
+ * @see QiEntry
  */
 public final class QiService {
 

@@ -18,11 +18,19 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The Malicious Thought Gu [恶念蛊]: a one-use wisdom Gu that floods the mind with evil thoughts.
  *
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.ConsumedGuItem}, making it tended AND taken by its
+ * own use. The payout grants an immediate burst of thoughts tagged
+ * {@link com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag#EVIL} via
+ * {@link com.unknown.guzhenren.attachment.service.mind.MindService#addThoughts}, then stamps the
+ * sustained effect whose amplifier is derived from the rank.
+ *
  * <p>⚠ Rank five floods past the burst line from an empty mind, so it kills on the spot. That is the
  * design, not a bug -- the antidote is thought conversion, unbuilt.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.ConsumedGuItem
  */
 public class MaliciousThoughtGuItem extends ConsumedGuItem {
 

@@ -17,11 +17,18 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 /**
  * Registers the client-intent payloads and handles each of them on the server.
  *
+ * <p>Every payload in this mod is a client intent -- a G-panel button that attachment sync cannot
+ * carry upstream. None carries player data; downstream player data always travels as synced state.
+ * This class wires the five payloads to their server-side handlers: opening the two containers,
+ * setting the secondary path, and the two cultivation actions.
+ *
  * <p>⚠ This is where a forged payload lands, so a gate that only grays out a button is not a gate.
  * Every refusal has to exist here as well as on the screen.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.client.screen.PlayerInfoScreen
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModPayloads {

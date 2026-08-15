@@ -12,13 +12,22 @@ import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 
 /**
- * The vanilla moments body [肉身] state answers: breathing, and any change to the active effects.
+ * The vanilla moments body [肉身] state answers: breathing, and any add/remove/expire of a {@link
+ * net.minecraft.world.effect.MobEffect}.
  *
- * <p>⚠ The effect hooks are here so the attack total is recomputed the instant one arrives or leaves.
- * Left to the heartbeat alone it would lag by up to a second, which is visible on the panel.
+ * <p>{@code onBreathe} lets an undead life form breathe underwater — {@link
+ * com.unknown.guzhenren.attachment.service.body.BodyService#lifeForm} decides who. The three
+ * {@link net.neoforged.neoforge.event.entity.living.MobEffectEvent} hooks each call {@link
+ * com.unknown.guzhenren.attachment.service.body.AttackService#refresh} so the attack total
+ * recomputes the instant an effect arrives or leaves.
+ *
+ * <p>⚠ Left to the heartbeat alone the attack row would lag by up to a second, which is visible on
+ * the panel.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.body.AttackService
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class BodyStateEvents {

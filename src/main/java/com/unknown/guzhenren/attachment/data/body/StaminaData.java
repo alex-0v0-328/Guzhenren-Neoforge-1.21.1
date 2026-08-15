@@ -10,11 +10,20 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * Stamina [耐力], the everyday pool that sprinting and jumping spend and that refills on its own.
  *
- * <p>⚠ There is deliberately no max field: the cap is a derived base plus the stored bonus, so this
- * record cannot clamp itself and the service is the single door that does.
+ * <p>Immutable record attachment keyed {@code stamina_data}; {@link StaminaService} is the only writer.
+ * Two components: the current value and a bonus that a physique Gu may add. The cap is derived
+ * ({@code baseMax + bonus}), never stored, which is why this record cannot clamp itself.
+ *
+ * <p>⚠ There is deliberately no {@code max} field: the cap has two sources ({@link com.unknown.guzhenren.custom.enums.aperture.Talent}
+ * and {@link com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique}), so storing a third copy
+ * would let them drift apart. ⚠ The compact ctor only floors both fields at 0 -- the upper clamp lives
+ * in {@link StaminaService#setCurrent}, because only the service knows the derived cap. ⚠ A future
+ * "+5000 max stamina" Gu stores a BONUS, not the cap, exactly as this record already does.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.body.StaminaService
  */
 public record StaminaData(long currentStamina, long bonusStamina) {
 

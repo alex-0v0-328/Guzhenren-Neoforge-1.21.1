@@ -16,11 +16,23 @@ import net.minecraft.world.entity.player.Player;
 /**
  * The only writer of Mind [脑海] pools, and the door where every clamp lives.
  *
+ * <p>Static service over the {@code mind_data} attachment; reads take {@link Player}, writes take
+ * {@link ServerPlayer}. {@code setCurrent} is the single clamp -- it reads {@link WisdomType#isBurstable}
+ * to decide whether the value may exceed the cap, so a non-burstable type is hard-capped here. {@code
+ * regenStep} is the heartbeat entry; a zombie thinks only every 5th second ({@code ZOMBIE_THOUGHT_INTERVAL_TICKS}).
+ *
  * <p>⚠ The clamp cannot live in the record: only some wisdom types may burst past their cap, and a
- * pool does not know which type it belongs to. So every write has to come through here.
+ * pool does not know which type it belongs to. So every write has to come through here. ⚠ Regan always
+ * stops at the cap -- the body must never idle itself into 脑海炸裂 [mind ocean shattered]; only a Gu,
+ * item or command may overfill. ⚠ {@code addThoughts} writes the tag total AFTER the current, so a
+ * write that lowers current thoughts has the tag totals rescaled by the ctor -- call {@code setCurrent}
+ * first or the tag map oversums. ⚠ Sleep restores only HALF the deficit when the buffer was used.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see MindData
+ * @see MindPool
  */
 public final class MindService {
 

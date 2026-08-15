@@ -15,11 +15,18 @@ import org.jetbrains.annotations.Nullable;
 /**
  * All-Out Effort Gu [全力以赴蛊]: for a while, the body's carrying limit [承受上限] stops applying.
  *
- * <p>⚠ Its effect is a marker carrying no AttributeModifier. The lift is read back by the strength
- * service, so attack still comes out of one formula instead of gaining a second source.
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. Three rungs register against this one
+ * class (三转..五转). The payout stamps a marker effect and calls
+ * {@link com.unknown.guzhenren.attachment.service.body.AttackService#refresh}; the lift itself is read
+ * back by the strength service, so attack still comes out of one formula.
+ *
+ * <p>⚠ Its effect is a marker carrying no {@code AttributeModifier}. A modifier would be a second
+ * source for one fact, and re-using it while it runs is a refusal.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.TendedGuItem
  */
 public class AllOutEffortGuItem extends TendedGuItem {
 

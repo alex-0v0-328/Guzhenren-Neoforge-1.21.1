@@ -9,11 +9,17 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The beast strengths a body can hold, each declaring what it is worth.
  *
- * <p>⚠ The species declares its own mark tag and attack bonus right here, so adding one is a single
- * constant that touches neither the Gu item nor the attack sum. Do not move those to the reader.
+ * <p>Closed vocabulary enum stored as {@code Set<BeastStrength>} on {@code StrengthData}. Each constant
+ * carries its own {@link MarkTag} and attack bonus, so adding a beast is one constant touching neither
+ * the Gu item nor the attack sum. No sibling mod may add a species.
+ *
+ * <p>⚠ A species tag is per SPECIES, not per constant: {@code WHITE_BOAR} and {@code BLACK_BOAR} share
+ * {@code STRENGTH_BOAR}. Do not move the tag or the bonus into the reader.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see MarkTag
  */
 public enum BeastStrength implements StringRepresentable, EnumTranslatable {
 

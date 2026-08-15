@@ -10,10 +10,16 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Aptitude [资质], derived from the aperture's base essence and never stored beside it.
  *
- * <p>⚠ The constants run high to low, so {@code shift(+1)} is {@code ordinal - 1}. Reading the
- * direction off the declaration order is exactly how that gets reversed by accident.
+ * <p>Closed vocabulary enum: regen rate, stamina base and the roll weights all live here. {@code NONE}
+ * is outside the settable range; {@code shift(int)} clamps at {@code EXTREME..FOURTH}. No sibling mod
+ * may add a grade.
+ *
+ * <p>⚠ The constants run HIGH to LOW, so {@code shift(+1)} is {@code ordinal - 1}. Reading the direction
+ * off the declaration order is exactly how that gets reversed by accident. {@code 1..19} is a hole, not
+ * a value ({@code fromPercent} -> {@code NONE}).
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public enum Talent implements StringRepresentable, EnumTranslatable {

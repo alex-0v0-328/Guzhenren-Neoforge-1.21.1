@@ -8,10 +8,15 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The kinds of thought [念] a mind holds, each with its own capacity.
  *
+ * <p>Closed vocabulary enum: the three pools on {@code MindData}, and no sibling mod may add a fourth.
+ * Capacities {@code 50000 / 12 / 8} live here as the single declaration; {@code BURST_NUMERATOR/DENOMINATOR}
+ * is the one place the overfill ratio is written.
+ *
  * <p>⚠ Only some may be overfilled past the cap, and only those can ever be lethal.
  * {@code isBurstable()} is the single declaration of which; never re-test the constant at a call site.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public enum WisdomType implements StringRepresentable, EnumTranslatable {

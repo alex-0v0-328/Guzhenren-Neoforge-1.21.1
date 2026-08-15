@@ -15,11 +15,17 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * {@code /gzr qi}: reads and writes Qi [气] holdings.
  *
+ * <p>Uses {@link com.unknown.guzhenren.command.ModEnumArgument} for the Qi kind, then offers
+ * {@code set}/{@code add}/{@code sub}. All writes delegate to
+ * {@link com.unknown.guzhenren.attachment.service.body.QiService}.
+ *
  * <p>⚠ A holding is a time anchor, so an amount written here begins decaying at once. Reading it back
  * a moment later and finding it smaller is correct behavior.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.ModEnumArgument
  */
 public final class CmdQi {
 

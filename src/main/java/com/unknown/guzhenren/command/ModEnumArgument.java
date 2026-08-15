@@ -14,13 +14,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
 /**
- * A command argument accepting one constant of an enum.
+ * A command argument accepting one constant of an enum, spelled as a {@code word()} literal.
+ *
+ * <p>Provides both a static-constants factory and a dynamic one that computes suggestions from what
+ * was already parsed. The {@code get} method reads from the deepest context via
+ * {@code getLastChild()} because {@code /gzr} is a redirect.
  *
  * <p>☠ Everything typed after a redirect is parsed into a CHILD context, and {@code /gzr} is that
- * redirect — so a read of an earlier argument must go through {@code getLastChild()} or it throws.
+ * redirect -- so a read of an earlier argument must go through {@code getLastChild()} or it throws
+ * {@code IllegalArgumentException}, which Brigadier does NOT catch, and the suggestion list comes back
+ * empty and silent.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.ModCommand
  */
 public final class ModEnumArgument {
 

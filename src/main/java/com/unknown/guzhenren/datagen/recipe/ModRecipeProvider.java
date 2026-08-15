@@ -24,11 +24,17 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Writes the refinement [炼蛊] recipes, each one drawn as an ASCII picture of the grid.
  *
+ * <p>Extends {@link net.minecraft.data.recipes.RecipeProvider}. Each recipe is transcribed verbatim
+ * from an ASCII drawing ({@code '.'} empty, {@code ' '} cut corner), so a wrong corner, a short row
+ * or an unkeyed letter fails datagen. Output lands under {@code data/guzhenren/recipe/refinement/}.
+ *
  * <p>⚠ The drawing is transcribed verbatim, so a wrong corner, a short row or an unkeyed letter fails
  * datagen. The layout and every number in it are Alex's.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.recipe.GuRecipe
  */
 public class ModRecipeProvider extends RecipeProvider {
 

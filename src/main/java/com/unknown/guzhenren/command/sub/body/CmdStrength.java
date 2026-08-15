@@ -16,8 +16,15 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * {@code /gzr strength}: reads and writes the beast and human strengths a body holds.
  *
+ * <p>Offers {@code grant}/{@code revoke}/{@code clear} for beast strengths and
+ * {@code set}/{@code add}/{@code sub} for human strengths. All writes delegate to
+ * {@link com.unknown.guzhenren.attachment.service.body.StrengthService}, which is also the one funnel
+ * that refreshes the attack modifier.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.ModEnumArgument
  */
 public final class CmdStrength {
 

@@ -10,11 +10,21 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * The Aperture [空窍] attachment: a mortal has none, and awakening [开窍] is what puts one here.
  *
- * <p>⚠ {@code with} refuses to grow the list and only {@code opened} appends, so an aperture that does not
- * exist yet cannot be brought into being merely by writing to it.
+ * <p>Immutable record attachment keyed {@code aperture_data}, synced {@code OWNER_ONLY}; written only
+ * by {@link ApertureService}. Holds up to {@code MAX_APERTURES} (2) {@link Aperture} entries; an empty
+ * list IS the "unawakened" state, not a special flag.
+ *
+ * <p>⚠ {@code with(index, aperture)} REFUSES to grow the list -- only {@code opened} appends -- so an
+ * aperture that does not exist yet cannot be brought into being merely by writing to it. This is the
+ * mirror of {@link ApertureStorage#with}, which GROWS to reach its index; the two are deliberately
+ * opposite. ⚠ {@code MAX_APERTURES} caps the {@code STREAM_CODEC} list too, so a longer list is
+ * silently truncated on sync, not rejected.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see Aperture
+ * @see ApertureService
  */
 public record ApertureData(List<Aperture> apertures) {
 

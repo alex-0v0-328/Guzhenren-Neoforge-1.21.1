@@ -15,11 +15,17 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * The creative tabs, filled by dispatching on the item's class.
  *
- * <p>⚠ An item extending neither of the two middle classes lands in no tab at all, silently. Nothing
- * fails and nothing warns; the item simply never appears.
+ * <p>DeferredRegister holder: two tabs ({@code mortal_gu}, {@code gu_material}), populated by
+ * {@code instanceof} on {@link MortalGuItem} / {@link GuMaterialItem}. An item extending neither middle
+ * class lands in no tab at all.
+ *
+ * <p>⚠ That miss is silent: nothing fails and nothing warns, the item simply never appears. The two
+ * tab constants stay unused by the language provider (it has no creative-tab overload).
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see ModItems
  */
 public final class ModCreativeTabs {
 

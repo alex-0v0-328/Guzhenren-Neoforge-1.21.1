@@ -28,12 +28,15 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 /**
  * The English strings, written as an aligned table.
  *
- * <p>⚠ Every entry takes the registered object or the enum constant, never a raw key string, so a
- * renamed registration cannot leave a key behind pointing at nothing.
+ * <p>Extends {@link net.neoforged.neoforge.common.data.LanguageProvider} for {@code en_us}. Every
+ * entry takes the registered object or the enum constant, never a raw key string, so a renamed
+ * registration cannot leave a key behind pointing at nothing. The value column aligns per
+ * {@code add*()} method to that method's longest key.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
- * @see ZhCnLanguageProvider
+ * @see com.unknown.guzhenren.datagen.lang.ZhCnLanguageProvider
  */
 public class EnUsLanguageProvider extends LanguageProvider {
     public EnUsLanguageProvider(PackOutput output) {

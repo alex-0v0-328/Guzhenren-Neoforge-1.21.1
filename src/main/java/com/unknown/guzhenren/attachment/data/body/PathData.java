@@ -12,12 +12,19 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * Path [流派] progress, sparse: a path missing from the map is simply one nobody has walked.
  *
- * <p>⚠ The compact constructor is the one door -- a MarkTag owned by a different path is dropped there,
- * so no writer can file a foreign tag under a path.
+ * <p>Immutable record attachment keyed {@code path_data}; {@link PathService} is the only writer. Each
+ * value is a {@link PathEntry}, and the compact constructor runs {@link PathEntry#retainingTagsFor} on
+ * every entry so no writer can file a {@link MarkTag} under a path it does not belong to.
+ *
+ * <p>⚠ That tag-drop is SILENT: a write with the wrong tag looks like it worked and did nothing at all.
+ * ⚠ A default {@link PathEntry} (no attainment, no marks, no specks) is pruned out of the map entirely,
+ * so a path that has been fully revoked simply disappears -- do not read "absent" as "never touched".
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  * @see PathEntry
+ * @see com.unknown.guzhenren.attachment.service.body.PathService
  */
 public record PathData(Map<GuPath, PathEntry> entries) {
 

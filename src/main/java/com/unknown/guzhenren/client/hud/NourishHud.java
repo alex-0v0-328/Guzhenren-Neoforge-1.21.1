@@ -12,11 +12,19 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The bar drawn over the hotbar while the aperture is being nourished [温养空窍].
  *
+ * <p>Extends {@link com.unknown.guzhenren.client.hud.HotbarHud}. Registered above
+ * {@code VanillaGuiLayers.AIR_LEVEL}. Reads the cultivation fraction from
+ * {@link com.unknown.guzhenren.attachment.service.aperture.NourishService#fraction} and swaps to a red
+ * fill when starving.
+ *
  * <p>⚠ It is a separate layer from the charge bar on purpose: that one reads only the held item, and
  * grafting a player attachment into it would take away the property its own header states.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.client.hud.HotbarHud
+ * @see com.unknown.guzhenren.client.hud.ChargeHud
  */
 public final class NourishHud extends HotbarHud {
 

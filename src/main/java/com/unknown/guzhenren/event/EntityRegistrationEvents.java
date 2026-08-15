@@ -19,8 +19,16 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 /**
  * Where this mod's entities declare their attributes and where they are allowed to spawn.
  *
+ * <p>Today only {@link com.unknown.guzhenren.entity.HopeGuEntity} is registered, sharing
+ * {@link com.unknown.guzhenren.entity.FlyingGuEntity}'s attributes. The spawn placement uses
+ * {@link net.minecraft.world.level.levelgen.Heightmap.Types#MOTION_BLOCKING_NO_LEAVES} and a custom
+ * check that requires {@code pos.getY() >= level.getSeaLevel()} — NOT {@code canSeeSky}, because
+ * leaves count as cover and would empty every forest floor.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.entity.FlyingGuEntity
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class EntityRegistrationEvents {

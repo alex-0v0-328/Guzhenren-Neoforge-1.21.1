@@ -12,13 +12,19 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
- * The Malicious Thought Gu [恶念蛊] effect: each second for twelve seconds it adds tagged thoughts.
+ * The Malicious Thought Gu [恶念蛊] effect: each second for twelve seconds it adds evil-tagged
+ * thoughts [恶念] to the mind ocean [脑海].
  *
- * <p>⚠ One effect, four grades -- amplifier is the rank's tier, and the per-second table is given at
- * registration. The immediate portion lands in the Gu's payout, not here.
+ * <p>Timed effects own their truth on vanilla's timer. One effect, four grades — the amplifier is
+ * the rank's tier, and the {@code evilPerSecond} table is given at registration. The immediate
+ * portion lands in the Gu's payout, not here; this effect owns only the per-second drip. Thoughts
+ * land through {@link com.unknown.guzhenren.attachment.service.mind.MindService#addThoughts} tagged
+ * {@code EVIL}.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.mind.MindService
  */
 public class MaliciousThoughtEffect extends MobEffect {
 

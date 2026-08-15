@@ -14,13 +14,22 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 /**
- * Mind [脑海]: the thought [念] pools, and the brilliance [才情] that decides how fast they refill.
+ * Mind [脑海]: the brilliance [才情] and the three thought [念] pools it drives.
  *
- * <p>⚠ Brilliance lives here rather than in an attachment of its own precisely because it IS the regen
- * rate of these pools; kept apart, the rate and the pools it drives could drift.
+ * <p>Immutable record attachment keyed {@code mind_data}; {@link MindService} is the only writer. The
+ * three pools live in a dense {@link EnumMap} over {@link WisdomType} -- a type missing from the map is
+ * filled with {@link MindPool#of} by the compact constructor, so a reader never has to guard null.
+ *
+ * <p>⚠ Brilliance lives here rather than in its own attachment precisely because it IS the regen rate
+ * of these pools; kept apart, the rate and the pools it drives could drift. ⚠ The compact constructor
+ * rescales {@code taggedThoughts} down to {@code current(THOUGHTS)} when the tags oversum, so a write
+ * that lowers the current thoughts also has to lower the tag totals or the ctor silently will.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see MindPool
+ * @see MindService
  */
 public record MindData(Brilliance brilliance, Map<WisdomType, MindPool> pools, Map<ThoughtTag, Long> taggedThoughts) {
 

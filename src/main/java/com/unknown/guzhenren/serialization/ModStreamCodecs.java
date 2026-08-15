@@ -11,10 +11,16 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * The stream codecs this mod adds: an enum as its ordinal, and enum-keyed maps and sets.
  *
+ * <p>Provides {@code ofEnum} (ordinal round-trip), {@code ofNullableEnum} (ordinal + 1, zero = unset),
+ * {@code enumMap}, and {@code enumSet}. The nullable-enum idiom is what lets the two nullable
+ * {@code GuPath} fields on {@code Aperture} travel on the wire without a {@code NONE} constant to
+ * lean on. Used by the attachment stream codecs and the client-intent payloads.
+ *
  * <p>⚠ A nullable enum travels as its ordinal plus one, with zero meaning unset. No enum here has a
  * NONE constant to lean on, so this is where "has not chosen" becomes representable on the wire.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public final class ModStreamCodecs {

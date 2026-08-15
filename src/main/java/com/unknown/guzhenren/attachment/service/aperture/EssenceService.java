@@ -14,13 +14,26 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * Essence [真元]: the pool, the distilled reserve, its regen, and the Liquor Worm's [酒虫] phases.
+ * Essence [真元]: the pool, the distilled reserve, its regen, and the Liquor Worm's [酒虫] three phases.
  *
- * <p>⚠ A gate must ask {@code spendable()}, never {@code currentEssence()}. Distilling empties the
- * ordinary pool by design, so a gate on the raw value refuses everything for that whole phase.
+ * <p>Static service; reads take {@link Player}, writes take {@link ServerPlayer} and route through
+ * {@link ApertureService#set} (which fires {@link HealthService#refresh}). {@code regenStep} is the
+ * heartbeat entry point; it carries a float remainder in {@code ESSENCE_CARRY} (unsynced, unserialized,
+ * mutated in place) so a fractional regen banks across ticks instead of being lost.
+ *
+ * <p>⚠ A gate must ask {@code spendable()}, never {@code currentEssence()} -- distilling empties the
+ * ordinary pool by design, so a gate on the raw value refuses everything for that whole phase. ⚠
+ * {@code consume} burns the distilled reserve at the 1:2 rate FIRST, then the ordinary pool; the
+ * distilled half is rounded UP so the last point cannot pay for itself twice. ⚠ Every path that SKIPS
+ * a regen step (death-qi choke, zombie) must zero the carry -- both do today; the two {@code = 0.0F}
+ * writes are the mechanic, not tidying. ⚠ {@code isChoked} outranks the liquor redirect AND the
+ * essence-qi bonus -- it is checked first in {@code regenStep} and returns.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see ApertureService
+ * @see TimeFlowService
  */
 public final class EssenceService {
 

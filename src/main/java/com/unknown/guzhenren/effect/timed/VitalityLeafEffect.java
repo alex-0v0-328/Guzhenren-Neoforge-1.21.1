@@ -5,9 +5,17 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
 /**
- * The timed healing of the Vitality Leaf Gu [生机叶蛊], on its own vanilla timer.
+ * The timed healing of the Vitality Leaf Gu [生机叶蛊]: heals one HP every ten ticks for 640 ticks,
+ * on its own vanilla timer.
+ *
+ * <p>Timed effects own their truth on vanilla's {@link net.minecraft.world.effect.MobEffect} timer —
+ * unlike pool effects, they are not rebuilt every heartbeat, so milk does cure them. Re-using the
+ * Gu while this effect runs is a refusal ({@code vitality_active}).
+ *
+ * <p>⚠ 碎屑 is zero — a timed buff alters nothing permanently.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public class VitalityLeafEffect extends MobEffect {

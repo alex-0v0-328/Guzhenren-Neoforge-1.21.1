@@ -12,12 +12,18 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The shared class behind the instant-buff Gu; the effect and its length come from registration.
+ * The shared class behind every instant-buff Gu; the effect holder and its length come from registration.
+ *
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. Three Gu register against this one
+ * class (花豕蛊 / 蛮力天牛蛊 / 龙丸蛐蛐蛊); the payout simply adds the effect and returns. The gate is
+ * always open here because the refusal "effect already running" lives in the base's own check.
  *
  * <p>⚠ Each of them still declares its own feed tag. Sharing a class does not mean sharing a larder.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.TendedGuItem
  */
 public class BuffGuItem extends TendedGuItem {
 

@@ -13,11 +13,19 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Liquor [酒]: what a Liquor Worm [酒虫] is fed, and a drink in its own right.
  *
- * <p>⚠ It earns a leaf class only because it is drunk rather than eaten. Several flavours register
- * against this one class -- a material that differs only in its name needs no class at all.
+ * <p>Extends {@link com.unknown.guzhenren.item.material.GuMaterialItem}. It earns a leaf class only
+ * because it is drunk rather than eaten -- the {@code FoodProperties} builder needs a
+ * {@link net.minecraft.world.item.UseAnim#DRINK} animation and a nausea chance. Five registrations
+ * (酒 plus four flavours) use this one class; the flavours exist because the 四味酒虫 recipe takes one
+ * of each.
+ *
+ * <p>⚠ {@code FoodProperties.Builder.effect} must take a {@code Supplier} -- the effect holder resolves
+ * too early during registration otherwise.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.material.GuMaterialItem
  */
 public class LiquorItem extends GuMaterialItem {
 

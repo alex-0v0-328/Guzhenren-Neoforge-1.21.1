@@ -8,11 +8,17 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Title [称号], derived from the rank and never stored.
  *
- * <p>⚠ This is the only place the mortal-versus-immortal distinction still lives. Storing it would
- * create a second answer that the rank could then contradict.
+ * <p>Closed vocabulary enum: the only place the mortal-versus-immortal distinction still lives today.
+ * {@code fromRank} maps {@code NONE} -> {@code MORTAL}, {@code ONE..FIVE} -> {@code GU_MASTER},
+ * {@code SIX..NINE} -> {@code GU_IMMORTAL}. No sibling mod may add a title.
+ *
+ * <p>⚠ Storing it would create a second answer that the rank could then contradict. The mortal's word
+ * belongs to this enum alone, which is why {@link Rank#NONE} translates to the empty string.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see Rank
  */
 public enum Title implements StringRepresentable, EnumTranslatable {
 

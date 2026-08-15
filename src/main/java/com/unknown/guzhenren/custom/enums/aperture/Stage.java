@@ -9,10 +9,15 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Stage [阶段] within a rank, and the multiplier it contributes to the essence [真元] cap.
  *
- * <p>⚠ The multiplier lives here and the formula lives on the record, so the cap has exactly one
- * expression. A second place that multiplies is a second answer.
+ * <p>Closed vocabulary enum: the multiplier lives here and the formula lives on the record, so the cap
+ * has exactly one expression. {@code NONE} is outside the settable range; {@code shift(int)} clamps at
+ * {@code INIT..PEAK}. No sibling mod may add a stage.
+ *
+ * <p>⚠ A second place that multiplies is a second answer -- do not re-declare the multiplier at a call
+ * site. {@code NONE}'s multiplier is {@code 0}, which is the mortal's empty pool, not a fallback.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public enum Stage implements StringRepresentable, EnumTranslatable {

@@ -10,8 +10,16 @@ import net.minecraft.network.chat.Component;
  * Shared layout for the bars drawn over the hotbar: geometry, the baseline that armour and mounts move,
  * and the three-fill draw every such bar reuses.
  *
+ * <p>Package-private abstract base for {@link com.unknown.guzhenren.client.hud.ChargeHud} and
+ * {@link com.unknown.guzhenren.client.hud.NourishHud}. The {@code barTop} method rides vanilla's
+ * held-item-name baseline so armour and a mount's health push the bar up instead of hiding it. All
+ * drawing is {@code g.fill}, no textures.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.client.hud.ChargeHud
+ * @see com.unknown.guzhenren.client.hud.NourishHud
  */
 abstract class HotbarHud implements LayeredDraw.Layer {
 

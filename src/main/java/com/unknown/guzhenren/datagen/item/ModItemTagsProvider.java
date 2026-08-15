@@ -17,7 +17,12 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Writes the item tags, including the larders a Gu feeds from.
  *
+ * <p>Extends {@link net.minecraft.data.tags.ItemTagsProvider}. Defines the feed tags ({@code boar_feed},
+ * {@code bear_feed}, {@code jin_feed}, {@code liquor_feed}, etc.), the zombie feed tag, and the
+ * all-out-effort feed tag. Every tag references the registered item or a vanilla item, never a raw id.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public class ModItemTagsProvider extends ItemTagsProvider {

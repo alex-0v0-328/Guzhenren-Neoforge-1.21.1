@@ -8,10 +8,20 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
 import net.minecraft.world.entity.LivingEntity;
 
 /**
- * Life Qi [生气], the pool effect that heals for as long as it is held.
+ * Life Qi [生气] effect — a pool projection of the 生气 held in {@link
+ * com.unknown.guzhenren.attachment.data.qi.QiData}, which heals the holder periodically.
+ *
+ * <p>Pool effects are rebuilt every heartbeat by {@code QiService.syncEffects}, so milk cannot cure
+ * them — the pool is the truth. The heal runs on vanilla's own {@code applyEffectTick} cadence
+ * ({@code HEAL_INTERVAL_TICKS} 10), healing {@code amplifier + 1} HP each pulse.
+ *
+ * <p>⚠ 生气 does NOT refuse when 死气 is present: it pays 死气 down 1:1 first, and only the excess
+ * reaches the 生气 pool.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.body.QiService
  */
 public class LifeQiEffect extends MobEffect {
 

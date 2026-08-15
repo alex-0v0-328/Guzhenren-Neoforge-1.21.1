@@ -9,11 +9,20 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * One kind of Qi [气] the player is currently holding.
  *
- * <p>⚠ A time anchor, not a running total. Nothing ticks it down -- what is left is derived from the
- * current tick, which is why this needs no clock of its own.
+ * <p>Leaf record nested inside {@link QiData}; immutable. Two components: the amount and the tick the
+ * hold ends at. The live amount is derived by {@link QiData#current} from the current tick, so this
+ * record carries no running counter and ticks nothing down itself.
+ *
+ * <p>⚠ A time anchor, not a running total -- nothing ticks it down, which is why it needs no clock of
+ * its own. ⚠ Re-adding to a kind does not "take the higher grade": {@link QiService#set} re-anchors
+ * the hold on the SUM, so a write path that re-applies the same kind restarts the hold full. ⚠ Both
+ * fields are floored at 0 in the compact ctor; {@code holdEndTick == 0} is a valid (if unusual) value.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see QiData
+ * @see QiService
  */
 public record QiEntry(long amount, long holdEndTick) {
 

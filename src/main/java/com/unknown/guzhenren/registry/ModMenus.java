@@ -13,8 +13,14 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * The container menus this mod registers.
  *
+ * <p>DeferredRegister holder: owns {@link ApertureStorageMenu} (the Gu vault, paged) and
+ * {@link RefinementMenu} (the 炼蛊 furnace). Both are opened client-intent-only from the G panel.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see ApertureStorageMenu
+ * @see RefinementMenu
  */
 public final class ModMenus {
 

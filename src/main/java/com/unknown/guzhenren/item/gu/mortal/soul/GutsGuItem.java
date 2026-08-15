@@ -9,8 +9,14 @@ import net.minecraft.world.item.ItemStack;
 /**
  * The Guts Gu [胆识蛊]: a one-shot soul Gu that raises the soul cap [魂魄上限] by ten.
  *
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.OneShotGuItem}. The apply delegates to
+ * {@link com.unknown.guzhenren.attachment.service.body.SoulService#addMax}; no gate is needed because a
+ * cap raise is always legal and never stacks past what the service clamps.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.OneShotGuItem
  */
 public class GutsGuItem extends OneShotGuItem {
 

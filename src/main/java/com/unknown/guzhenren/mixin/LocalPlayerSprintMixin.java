@@ -10,11 +10,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * The mod's only mixin: it makes the client's own sprint check fail when stamina [耐力] says so.
  *
+ * <p>Injects at the HEAD of {@code LocalPlayer.hasEnoughFoodToStartSprinting} and cancels the return
+ * when {@link com.unknown.guzhenren.attachment.service.body.StaminaService} says the player cannot
+ * sprint. The predicate branches on whether the player is already sprinting
+ * ({@code canKeepSprinting} vs {@code canResumeSprinting}).
+ *
  * <p>☠ A server-side stop cannot hold, because the client re-sprints every tick the key is down.
  * NeoForge offers no sprint hook at all, so this method is the only place to stand.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.client.NourishClientEvents
  */
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerSprintMixin {

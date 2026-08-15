@@ -28,11 +28,19 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The refinement [炼蛊] screen: the ring grid, the phase bar, and the recipe picker.
  *
+ * <p>Extends {@link net.minecraft.client.gui.screens.inventory.AbstractContainerScreen} for
+ * {@link com.unknown.guzhenren.menu.RefinementMenu}. Draws the 5×5 grid (corners cut), the craft
+ * button in three states, the phase bar, the stone slot, and the recipe picker modal. Ghosts for
+ * missing ingredients are drawn from {@code renderLabels} so the carried item paints last. The picker
+ * modal translates Z to 500 to stay above slot items.
+ *
  * <p>⚠ Every cell position comes from the menu's own helpers, so a drawn cell and the real slot
  * cannot drift apart. Two different pitches are in play; do not reuse the inventory's for the grid.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.menu.RefinementMenu
  */
 public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
 

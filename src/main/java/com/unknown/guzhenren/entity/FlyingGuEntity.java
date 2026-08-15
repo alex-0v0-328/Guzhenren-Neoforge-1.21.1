@@ -21,11 +21,19 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A wild Gu that flies: it drifts toward a player it wants, and hovers there.
  *
+ * <p>Extends {@link com.unknown.guzhenren.entity.WildGuEntity}. Uses a flying move control and flying
+ * path navigation; the {@code HoverNearPlayerGoal} drives the movement vector directly. Spawns
+ * fullbright {@code END_ROD} particles at one per tick. The {@code seeks} method is the one door for
+ * "who does it fly toward"; the base wants anyone, a leaf narrows it.
+ *
  * <p>⚠ {@code isNoGravity()} is a flat true on purpose. The flying move control only clears gravity
  * while it is actively moving the mob, and the hover goal stops the navigation.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.entity.WildGuEntity
+ * @see com.unknown.guzhenren.entity.ai.HoverNearPlayerGoal
  */
 public class FlyingGuEntity extends WildGuEntity {
 

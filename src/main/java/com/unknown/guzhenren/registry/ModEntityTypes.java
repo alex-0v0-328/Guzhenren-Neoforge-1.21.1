@@ -13,8 +13,14 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * The entity types this mod registers.
  *
+ * <p>DeferredRegister holder: owns the {@link HopeGuEntity} ambient mote
+ * ({@code MobCategory.AMBIENT}, {@code END_ROD} particle). The catch is a bare right click and is never
+ * gated on awakening [开窍].
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see HopeGuEntity
  */
 public final class ModEntityTypes {
 

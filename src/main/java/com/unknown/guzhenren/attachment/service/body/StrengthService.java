@@ -13,11 +13,25 @@ import net.minecraft.world.entity.player.Player;
 /**
  * Strength [力道]: what has been accumulated, and how much of it a body can actually bring to bear.
  *
+ * <p>Static service over the {@code strength_data} attachment; reads take {@link Player}, writes take
+ * {@link ServerPlayer} and route through {@code store} (which fires {@link AttackService#refresh}).
+ * {@code usableJin} is the one reader of the 承受上限 [capacity] ramp; {@code isUnleashed} checks the
+ * 全力以赴 effect, which lifts the ramp to the raw total.
+ *
  * <p>⚠ {@code usableJin(int, int)} is a deliberate seam so the ramp can be unit-tested without a
- * Player. Keep it -- the ramp had a boundary bug once, and only arithmetic catches that kind.
+ * {@link Player} -- keep it. The ramp had a boundary bug once ({@code min(total, cap+20)} jumped 101
+ * straight to 120), and only arithmetic catches that kind. ⚠ The tail is EARNED over
+ * {@code [capacity, capacity × LOCK_MULTIPLE]} in 20 linear steps, never granted at once; the lock
+ * scales WITH the physique (cap 300 locks at 3000), so an absolute 1000 would make a better
+ * physique's ramp steeper, which is backwards. ⚠ 兽力 sits OUTSIDE the ramp and outside 全力以赴's lift
+ * -- it counts in 一猪之力, not 斤. ⚠ A mortal reads {@code Aperture.NONE} → capacity 100, the intended
+ * default; a cross-domain READ, not a grant, so it does not count toward the coordinator threshold.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see StrengthData
+ * @see AttackService
  */
 public final class StrengthService {
 

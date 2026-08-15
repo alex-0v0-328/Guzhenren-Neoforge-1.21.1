@@ -12,13 +12,21 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 
 /**
- * The player lifecycle moments, each one forwarded to the single cross-domain service.
+ * The player lifecycle moments — login, death, clone, respawn, sleep — each forwarded to {@link
+ * com.unknown.guzhenren.attachment.PlayerDataService}.
  *
- * <p>⚠ Nothing is decided in this file. A handler that starts deciding for itself is how two of them
- * come to disagree about what a respawn keeps.
+ * <p>This file holds no decisions of its own; a handler that starts deciding for itself is how two
+ * of them come to disagree about what a respawn keeps. {@code keepInventory} is read off the
+ * {@link net.minecraft.server.MinecraftServer}'s gamerules, never {@code level()}, and passed into
+ * {@code onClone} which is the single place a death-copy and a reset are settled.
+ *
+ * <p>⚠ {@code onWakeUp} guards on {@code wakeImmediately} / {@code updateLevel} / {@code
+ * isSleepingLongEnough} — it is an edge, not a level, so watching the tick handler would double-fire.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.PlayerDataService
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerDataEvents {

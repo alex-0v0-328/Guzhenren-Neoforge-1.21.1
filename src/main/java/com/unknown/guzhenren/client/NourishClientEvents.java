@@ -13,11 +13,17 @@ import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 /**
  * The client half of the cultivation stance [温养空窍]: it holds the player still and pulls the view in.
  *
+ * <p>Annotated {@code @EventBusSubscriber(Dist.CLIENT)}. On {@code MovementInputUpdateEvent} it zeroes
+ * every input axis while {@link com.unknown.guzhenren.attachment.service.aperture.NourishService#isCultivating}
+ * is true; on {@code ComputeFovModifierEvent} it sets a multiplier so the view pulls in to 100.
+ *
  * <p>☠ Standing still can only be enforced on the CLIENT. A server-side stop is undone on the very
  * next tick by whatever key is held -- the same lesson the sprint mixin was written for.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.mixin.LocalPlayerSprintMixin
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID, value = Dist.CLIENT)
 public final class NourishClientEvents {

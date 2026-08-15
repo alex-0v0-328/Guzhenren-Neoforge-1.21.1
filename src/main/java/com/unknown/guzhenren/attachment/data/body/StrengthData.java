@@ -20,11 +20,21 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * Strength [力道]: the beast and human strengths a player has refined into themselves.
  *
+ * <p>Immutable record attachment keyed {@code strength_data}; {@link StrengthService} is the only
+ * writer. Two components: a {@link Set} of {@link BeastStrength} (one kind once ever) and a sparse
+ * {@link Map} of {@link HumanStrength} to layer count. The compact ctor caps each human kind at its
+ * own {@code getMaxLayers()} and prunes zero-or-below entries.
+ *
  * <p>⚠ The compact constructor must use {@code new EnumMap<>(Class)} plus {@code putAll}, never the
- * {@code EnumMap(Map)} copy constructor -- that one throws on the empty maps DEFAULT is built from.
+ * {@code EnumMap(Map)} copy constructor -- that one throws on the empty maps {@code DEFAULT} is built
+ * from. Same shape for the {@link EnumSet}. ⚠ The four per-kind layer caps (9/9/30/30) sum to exactly
+ * 9,999 jin; changing one constant breaks that identity. ⚠ {@code beastReadings()} groups by
+ * {@code MarkTag}, not by species constant -- two boars share one tag and one bracket.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.body.StrengthService
  */
 public record StrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Integer> humanStrength) {
 

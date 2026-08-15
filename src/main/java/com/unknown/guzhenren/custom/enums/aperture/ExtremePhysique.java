@@ -12,11 +12,17 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The Ten-Extremes [十绝] physiques, and the tables that hang off each of them.
  *
- * <p>⚠ A physique other than NONE exists exactly when the aptitude is the top grade. They are one fact
- * held in two places, and only the aperture service keeps them in step.
+ * <p>Closed vocabulary enum on {@code ApertureData}. A physique other than {@code NONE} exists exactly
+ * when the aptitude is the top grade -- one fact held in two places, kept in step only by the aperture
+ * service. No sibling mod may add a physique.
+ *
+ * <p>⚠ The birth die skips {@code PURE_DREAM_REALITY_SEEKER} ({@code randomTenExtreme} excludes it): it
+ * translates and is settable but can never be rolled. Read the "after" physique only AFTER {@code enforce}.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see GuPath
  */
 public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
 

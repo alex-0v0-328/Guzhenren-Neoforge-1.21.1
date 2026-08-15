@@ -10,13 +10,20 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 
 /**
- * The timed buff of the Brute Force Longhorn Beetle Gu [蛮力天牛蛊], which charges on the way out.
+ * The timed buff of the Brute Force Longhorn Beetle Gu [蛮力天牛蛊]: added attack damage for thirty
+ * seconds, followed by a twenty-second weakness aftermath.
  *
- * <p>⚠ The aftermath is applied on the effect's last tick, because a MobEffect gets no expiry hook.
- * Changing how that last tick is recognized is how the penalty quietly stops happening.
+ * <p>Timed effects own their truth on vanilla's timer. The attack bonus goes through {@link
+ * com.unknown.guzhenren.effect.AttackContributor}; the aftermath is applied on the effect's last
+ * tick ({@code duration == 1}), because a {@link net.minecraft.world.effect.MobEffect} has no expiry
+ * hook. Changing how that last tick is recognized is how the penalty quietly stops happening.
+ *
+ * <p>⚠ The aftermath is a punishment — milk skipping it is the intended design, NOT a gap.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.effect.AttackContributor
  */
 public class BruteForceLonghornBeetleGuEffect extends MobEffect implements AttackContributor {
 

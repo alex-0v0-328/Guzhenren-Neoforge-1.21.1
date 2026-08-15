@@ -20,13 +20,21 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 
 /**
- * The shared pieces every subcommand is built from.
+ * The shared pieces every subcommand is built from: target resolution, gating, and feedback.
+ *
+ * <p>Provides the {@code withTargets} wrapper that hangs {@code [targets]} off a literal, the
+ * {@code apply} / {@code applyIf} runners that iterate per target, the {@code sourceAwakened}
+ * predicate used by {@code requires()}, and {@code refreshCommands} which re-sends the command tree
+ * after a gate flip. Also hosts the shared verb builders ({@code enumSetNode}, {@code longNode},
+ * {@code counter}) that every domain leaf reuses.
  *
  * <p>⚠ Anything that flips the answer of a {@code requires()} predicate has to ask this class to
  * refresh the command tree, or the client keeps the tree it was last sent.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.ModCommandFeedback
  */
 public final class ModCommandSupport {
 

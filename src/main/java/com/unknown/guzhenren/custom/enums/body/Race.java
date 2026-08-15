@@ -10,11 +10,18 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Race [种族]: human, plus the variant races that each grant standing on one path.
  *
+ * <p>Closed vocabulary enum on {@code BodyData}. Everyone is born {@code HUMAN}; a variant is only ever
+ * made, never rolled. {@code DRAGONMEN} is the only variant a player may become; the other ten are
+ * NPC-only. No sibling mod may add a race.
+ *
  * <p>⚠ A race can be changed, so both halves of that standing must be exactly revocable: the marks are
- * booked under the RACE tag rather than NATURAL, and the attainment MOVES rather than being set.
+ * booked under {@code RACE} rather than {@code NATURAL}, and the attainment MOVES (a shift) rather than
+ * being set. {@code Race.HUMAN} is not {@link GuPath#HUMAN} [人道].
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see GuPath
  */
 public enum Race implements StringRepresentable, EnumTranslatable {
 

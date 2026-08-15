@@ -1,13 +1,20 @@
 package com.unknown.guzhenren.effect;
 
 /**
- * The one seam anything adds attack damage through.
+ * The one seam anything adds attack damage through, so the body panel and a real hit stay one number.
  *
- * <p>☠ The attack sum walks the active effects and asks each one, instead of listing the effects it
- * knows about. An AttributeModifier here would be a second source for a single number.
+ * <p>Implemented by the 力道 qi effect and the timed attack-buff Gu effects. {@link
+ * com.unknown.guzhenren.attachment.service.body.AttackService#bonus} walks {@code getActiveEffects()}
+ * and asks each contributor, instead of listing the effects it knows about — a new effect is one
+ * interface, no edit there.
+ *
+ * <p>☠ An {@link net.minecraft.world.entity.ai.attributes.AttributeModifier} here would be a second
+ * source for a single number, so never give an effect its own modifier.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.body.AttackService
  */
 public interface AttackContributor {
 

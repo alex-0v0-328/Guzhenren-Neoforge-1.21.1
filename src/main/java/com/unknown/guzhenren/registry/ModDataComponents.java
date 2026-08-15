@@ -15,11 +15,18 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * The item components this mod adds, for state belonging to one particular stack.
  *
- * <p>⚠ A component here is for state that not every tended Gu shares. Anything all of them carry
- * belongs on the shared state record instead of gaining a component of its own.
+ * <p>DeferredRegister holder: {@link RefinedGuState}, {@code VITAL_OWNER}, {@code STORED_STONES},
+ * {@code REFINED_AT}, {@code AWAKEN_BASE}, {@code USED_AT} and {@code HUNGER_FED_AT}. A component here
+ * is for state that not every tended Gu shares; anything all of them carry belongs on the shared state
+ * record instead.
+ *
+ * <p>⚠ Game-clock timestamps default to {@code 0}, which is a real game time -- judge {@code null},
+ * never {@code 0}, or a fresh world reads "already used".
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see RefinedGuState
  */
 public final class ModDataComponents {
 

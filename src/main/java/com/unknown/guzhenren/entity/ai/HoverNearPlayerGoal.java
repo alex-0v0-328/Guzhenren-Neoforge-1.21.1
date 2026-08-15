@@ -10,11 +10,19 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The goal that makes a flying Gu hover beside the player it wants.
  *
+ * <p>Extends {@link net.minecraft.world.entity.ai.goal.Goal}. Drives the movement vector directly and
+ * never paths -- a mote flies straight, so the navigation's path cache and stuck detector would be
+ * obstacles rather than help. The target is re-read every tick via
+ * {@link com.unknown.guzhenren.entity.FlyingGuEntity#seekTarget}; a sine bob on {@code tickCount}
+ * gives the hover its drift.
+ *
  * <p>☠ It drives the movement vector itself and never paths. A mote flies straight, so the
  * navigation's path cache and stuck detector would be obstacles rather than help.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.entity.FlyingGuEntity
  */
     public class HoverNearPlayerGoal extends Goal {
 

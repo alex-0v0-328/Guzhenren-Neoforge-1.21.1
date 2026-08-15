@@ -11,13 +11,21 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 /**
- * {@code /gzr body}: reads and writes body [肉身] state.
+ * {@code /gzr body}: reads and writes body [肉身] state -- life form, race, soul, stamina, lifespan, age.
+ *
+ * <p>Assembles the body sub-tree under {@code /gzr body}, delegating to
+ * {@link com.unknown.guzhenren.command.sub.body.CmdPath},
+ * {@link com.unknown.guzhenren.command.sub.body.CmdQi}, and
+ * {@link com.unknown.guzhenren.command.sub.body.CmdStrength} for the deeper branches. All of
+ * {@code /gzr body} is ungated -- a mortal has soul, ages, walks a path, and thinks.
  *
  * <p>⚠ Setting the zombie [僵] form from here leaves the tier unset, so a zombie made by command
  * carries no attack bonus. That is this command's shape, not a fault in the bonus.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.ModCommandSupport
  */
 public final class CmdBody {
 

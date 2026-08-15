@@ -28,12 +28,17 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 /**
  * The Chinese strings, written as an aligned table beside the English one.
  *
+ * <p>Extends {@link net.neoforged.neoforge.common.data.LanguageProvider} for {@code zh_cn}. Every
+ * entry takes the registered object or the enum constant, never a raw key string. The value column
+ * aligns per {@code add*()} method to that method's longest key.
+ *
  * <p>⚠ These renderings are the authority, not a translation of the English. Deriving either side
  * from the other is how a name quietly comes to mean something it never meant.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
- * @see EnUsLanguageProvider
+ * @see com.unknown.guzhenren.datagen.lang.EnUsLanguageProvider
  */
 public class ZhCnLanguageProvider extends LanguageProvider {
     public ZhCnLanguageProvider(PackOutput output) {

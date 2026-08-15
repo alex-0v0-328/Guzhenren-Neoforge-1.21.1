@@ -11,11 +11,19 @@ import net.minecraft.world.item.ItemStack;
 /**
  * Life Qi [生气] material: it pays down a Death Qi [死气] debt before it does anything else.
  *
+ * <p>Extends {@link com.unknown.guzhenren.item.material.qi.QiMaterialItem}. The apply overrides the
+ * base to route the amount into {@link com.unknown.guzhenren.attachment.service.body.QiService} against
+ * Death Qi first; only the excess reaches the Life Qi pool. When Death Qi clears to zero the lifespan
+ * refund is handled by
+ * {@link com.unknown.guzhenren.attachment.service.body.BodyService#refundDeathQiDebt}.
+ *
  * <p>⚠ Only clearing that debt outright refunds any of the burnt lifespan [寿元]; paying it partway
  * down refunds nothing at all. The asymmetry is deliberate.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.material.qi.QiMaterialItem
  */
 public class LifeQiItem extends QiMaterialItem {
 

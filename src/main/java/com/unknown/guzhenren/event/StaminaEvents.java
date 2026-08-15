@@ -13,13 +13,22 @@ import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
- * Stamina's [耐力] own clock: it counts half-seconds itself, and it bills the jump.
+ * Stamina's [耐力] own tick handler: it counts half-seconds itself and bills the jump.
  *
- * <p>⚠ This cannot live on the heartbeat, which wakes once a second and returns otherwise. Anything
- * finer than a second has to count its own ticks, as this file does.
+ * <p>Cannot live on {@link PlayerTickEvents}, which returns early unless {@code tickCount % 20 == 0};
+ * anything finer than a second must count its own ticks. Every tick it samples {@link
+ * net.minecraft.world.food.FoodData}'s exhaustion against the {@code EXHAUSTION_SEEN} scratch array
+ * and, while the player is weary, adds half of each rise back. The jump cost lands on {@link
+ * net.neoforged.neoforge.event.entity.living.LivingEvent.LivingJumpEvent}, which is not cancellable,
+ * so the cost floors at 0.
+ *
+ * <p>⚠ {@code EXHAUSTION_SEEN} is anchored in {@code onJoin} — exhaustion is serialized, so an
+ * unanchored first sample bills the whole carried-over amount at once.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.body.StaminaService
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class StaminaEvents {

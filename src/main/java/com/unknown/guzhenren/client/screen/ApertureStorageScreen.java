@@ -11,8 +11,15 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The screen for one aperture's [空窍] store, a page at a time.
  *
+ * <p>Extends {@link net.minecraft.client.gui.screens.inventory.AbstractContainerScreen} for
+ * {@link com.unknown.guzhenren.menu.ApertureStorageMenu}. Draws 54 slots per page, prev/next pager
+ * buttons, and the Vital Gu [本命蛊] slot past the right edge of the panel. A back button ({@code <-})
+ * closes the container first, then opens the G panel. All drawing is {@code g.fill}, no textures.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.menu.ApertureStorageMenu
  */
 public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStorageMenu> {
 

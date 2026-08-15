@@ -14,13 +14,21 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Liquor Worm [酒虫]: it distils ordinary essence [真元] into the distilled reserve, in phases.
+ * Liquor Worm [酒虫]: a tended Gu that distils ordinary essence [真元] into the distilled reserve, in phases.
  *
- * <p>⚠ While it runs, the ordinary pool is empty by design. Anything gating on essence must ask for
- * the spendable figure, or it will refuse everything for the whole of that stretch.
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. Four rungs register against this one
+ * class, each usable only at its own rank. The payout calls
+ * {@link com.unknown.guzhenren.attachment.service.aperture.EssenceService#beginDistilling} and stamps a
+ * day-long effect; the three phases (drain, redirect, 1:2 spend) live in the service and the effect,
+ * not here.
+ *
+ * <p>⚠ While it runs the ordinary pool is empty by design. Anything gating on essence must ask for the
+ * spendable figure, or it will refuse everything for the whole of that stretch.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.TendedGuItem
  */
 public class LiquorWormItem extends TendedGuItem {
 

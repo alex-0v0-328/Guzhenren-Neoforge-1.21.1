@@ -15,13 +15,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A mortal Gu [凡蛊]: it holds the spec and the essence [真元] gate, and holds no per-stack state.
+ * A mortal Gu [凡蛊]: holds the {@link GuSpec} and the essence [真元] gate, but no per-stack state.
+ *
+ * <p>Sits between {@link GuItem} and the two concrete branches: {@link OneShotGuItem} (refining IS
+ * the use, stacks, no state) and {@link TendedGuItem} (refined then fed and used, carries
+ * {@link RefinedGuState}). The constructor runs {@link GuSpec#validate} so a typo in the numbers
+ * fails at startup, naming the Gu.
  *
  * <p>⚠ Every Gu answers a right click even with nothing else to do, because refining [炼化] is always
  * an answer. A leaf that declines to answer makes the Gu look broken in the hand.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see GuSpec
  */
 public abstract class MortalGuItem extends GuItem {
 

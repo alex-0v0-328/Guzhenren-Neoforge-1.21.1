@@ -11,10 +11,17 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A Gu that grants its vitality effect, refusing while one it granted is still running.
+ * A one-shot Gu that grants the vitality effect [生机叶], refusing while one it granted is still running.
+ *
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.OneShotGuItem}. The gate checks
+ * {@code hasEffect(VITALITY_LEAF)} so a re-use while the effect runs is a refusal, not a refresh;
+ * the apply hands the effect holder and its duration to
+ * {@link com.unknown.guzhenren.registry.ModEffects#instance}.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.OneShotGuItem
  */
 public class VitalityLeafGuItem extends OneShotGuItem {
 

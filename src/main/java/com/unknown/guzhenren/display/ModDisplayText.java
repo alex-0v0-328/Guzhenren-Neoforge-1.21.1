@@ -17,11 +17,18 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Every phrase the HUD, the G panel and the info command share.
  *
- * <p>⚠ A phrase built at a call site is one that will eventually word the same fact differently
- * somewhere else. If two surfaces say a thing, the sentence belongs in this file.
+ * <p>The single source for shared wording: a phrase built at a call site is one that will eventually
+ * word the same fact differently somewhere else. If two surfaces say a thing, the sentence belongs in
+ * this file. Brackets ({@code [无]}, {@code [太日阳莽体]}) are baked into the lang value, never assembled here.
+ *
+ * <p>⚠ Two decimals on lifespan, not one: a hundredth of a year is twelve real seconds, the coarsest
+ * step the eye still reads as movement. The Time Flow specks here are the tag's own share, not the
+ * path total.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see InfoModel
  */
 public final class ModDisplayText {
 

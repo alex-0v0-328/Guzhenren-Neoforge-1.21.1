@@ -17,11 +17,17 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * {@code /gzr path}: reads and writes attainment [造诣], marks [道痕] and specks [碎屑].
  *
+ * <p>Uses {@link com.unknown.guzhenren.command.ModEnumArgument} for the path argument, then offers
+ * {@code set}/{@code add}/{@code sub} for mark and speck and {@code set}/{@code up}/{@code down} for
+ * attainment. All writes delegate to {@link com.unknown.guzhenren.attachment.service.body.PathService}.
+ *
  * <p>☠ A command books 自然 [NATURAL] and can name no other tag. A hand-written source tag cannot be
  * told from what a Gu laid down, and that is how a race mark was forged onto a path no race revokes.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.ModEnumArgument
  */
 public final class CmdPath {
 

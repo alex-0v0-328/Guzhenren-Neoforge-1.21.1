@@ -15,11 +15,25 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Nourishing the Aperture [温养空窍] and striking its wall [冲击窍壁] -- the only way a rank rises.
  *
- * <p>☠ A rank-up must set the stage back to the lowest one. Raising the rank alone leaves the old
- * stage in place, which reads as an impossible cultivation and multiplies the essence cap by itself.
+ * <p>Static service over the {@code nourish_data} attachment; reads take {@link Player}, writes take
+ * {@link ServerPlayer}. Two client-intent entry points ({@code start}, {@code impactWall}) driven by
+ * G-panel buttons, plus {@code tickNourish} on the heartbeat. The strike cost is paid in 元石 via
+ * {@link PrimevalStoneItem#spend}, never via the essence pool -- it is 1.5× a ten-extreme peak pool by
+ * construction, so no pool can hold it.
+ *
+ * <p>⚠ A rank-up MUST also set the stage back to {@code LOWEST} -- {@code setRank} leaves the stage
+ * alone, so the missing call yields a "二转巅峰" that squares the essence cap. ⚠ The strike zeroes
+ * progress whether it succeeds or fails; that IS how "you must run a whole peak round again" is
+ * implemented, with no separate flag. ⚠ Charge the strike BEFORE rolling, and leave the progress
+ * alone when the charge fails -- a click nobody can afford must cost nothing. ⚠ A hastened clock
+ * bills MORE seconds per heartbeat ({@code steps}), never a bigger second -- scaling the progress and
+ * the price instead would round the round's length off the pool it is defined to cost.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see ApertureService
+ * @see TimeFlowService
  */
 public final class NourishService {
 

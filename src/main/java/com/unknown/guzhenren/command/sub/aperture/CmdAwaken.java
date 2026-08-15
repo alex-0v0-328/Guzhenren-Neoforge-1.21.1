@@ -10,11 +10,18 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * {@code /gzr awaken}: opens an aperture [空窍] without the Gu that normally does it.
  *
+ * <p>Sits at the root of the command tree so that {@code /gzr aperture} can carry a single
+ * {@code requires()} gate. Delegates to {@link com.unknown.guzhenren.attachment.service.aperture.ApertureService#awaken}
+ * and then calls {@link com.unknown.guzhenren.command.ModCommandSupport#refreshCommands} so the client
+ * sees the newly-revealed branches.
+ *
  * <p>⚠ The service does not refuse a holder who is already awakened; it appends another one. The gate
  * has to live here, in the caller.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.sub.CmdReset
  */
 public final class CmdAwaken {
 

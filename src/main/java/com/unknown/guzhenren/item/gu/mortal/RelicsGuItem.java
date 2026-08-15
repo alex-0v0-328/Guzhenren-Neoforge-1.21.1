@@ -11,10 +11,16 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A Relics Gu [舍利蛊]: it advances the holder's stage [阶段], and only at its own rank.
+ * A one-shot Relics Gu [舍利蛊] that advances the holder's stage [阶段], only at its own rank.
+ *
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.OneShotGuItem}. The gate refuses a rank mismatch and
+ * a holder already at {@link com.unknown.guzhenren.custom.enums.aperture.Stage#HIGHEST}; the apply
+ * delegates to {@link com.unknown.guzhenren.attachment.service.aperture.ApertureService#shiftStage}.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.OneShotGuItem
  */
 public class RelicsGuItem extends OneShotGuItem {
 

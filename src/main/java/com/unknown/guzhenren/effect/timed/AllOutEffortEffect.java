@@ -7,13 +7,21 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
- * All-Out Effort [全力以赴]: while it runs, the body's carrying limit [承受上限] does not apply.
+ * All-Out Effort [全力以赴] effect: while it runs, the body's carrying limit [承受上限] does not
+ * apply, unlocking a stockpiled 斤 total.
  *
- * <p>⚠ A marker with no AttributeModifier. The strength service reads it, so attack still comes out
- * of one formula rather than gaining a second source.
+ * <p>Timed effects own their truth on vanilla's timer. This is a marker with no {@link
+ * net.minecraft.world.entity.ai.attributes.AttributeModifier} — the lift is read by {@link
+ * com.unknown.guzhenren.attachment.service.body.StrengthService#usableJin}, so attack still comes
+ * out of one formula rather than gaining a second source.
+ *
+ * <p>⚠ 碎屑 is zero — a timed buff alters nothing permanently. Re-using it while it runs is a
+ * refusal ({@code all_out_active}).
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.body.StrengthService
  */
 public class AllOutEffortEffect extends MobEffect {
 

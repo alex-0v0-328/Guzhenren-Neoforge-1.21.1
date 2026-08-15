@@ -20,8 +20,15 @@ import net.minecraft.util.StringRepresentable;
 /**
  * {@code /gzr aperture}: reads and writes the aperture [空窍] itself.
  *
+ * <p>Guarded by a {@code requires(sourceAwakened)} gate (presentation only) AND an
+ * {@code applyOnAwakened} per-target gate (data protection). Offers graded setters for rank, stage,
+ * and talent, the physique setter, and the essence sub-tree with {@code base}/{@code current}/
+ * {@code distilled} and their {@code refill} where applicable.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.ModCommandSupport
  */
 public final class CmdAperture {
 

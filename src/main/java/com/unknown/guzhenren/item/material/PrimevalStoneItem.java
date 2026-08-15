@@ -16,14 +16,22 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Primeval stone [元石]: a right click pours its essence [真元] into the holder's aperture [空窍].
  *
- * <p>⚠ It refuses an unawakened player instead of quietly doing nothing, because the service write is
- * a no-op there and the stone would otherwise be eaten for free.
+ * <p>Extends {@link com.unknown.guzhenren.item.material.GuMaterialItem}. The essence value comes from
+ * registration. The gate refuses an unawakened player (the service write is a silent no-op there) and a
+ * full pool. It also owns every automatic draw on carried stones, including the top-up line that
+ * refills below 50% and stops at 80%, and the {@code drawStones} path used by both the refinement
+ * menu and the Elder Gu vault.
+ *
+ * <p>⚠ It refuses an unawakened player instead of quietly doing nothing, because the stone would
+ * otherwise be eaten for free.
  *
  * <p>☠ It also owns every automatic draw on carried stones, including the top-up line. A second copy
  * of that line drifts, and the pool silently clamps whatever a caller pours past the cap.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.material.GuMaterialItem
  */
 public class PrimevalStoneItem extends GuMaterialItem {
 

@@ -11,11 +11,19 @@ import net.minecraft.world.item.ItemStack;
 /**
  * The day-rollover walk over Gu installed into the body parts that the other mod owns.
  *
+ * <p>Sits in {@code compat/customplayer} because it reaches into
+ * {@link com.unknown.customplayer.attachment.service.body.PartStorageService}. On each day rollover it
+ * iterates installed items, and for any that are a {@link com.unknown.guzhenren.item.gu.TendedGuItem}
+ * it calls {@code tickInContainer} so the Gu still eats, starves, and dies even while remodelled into
+ * a limb. Mutates a copy and writes it back via {@code PartStorageService.store}.
+ *
  * <p>⚠ An installed Gu is kept, so it still eats. A Gu that remodels a limb lives inside that limb
  * rather than being carried, and it would quietly starve without this walk.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.TendedGuItem
  */
 public final class PartStorageTick {
 

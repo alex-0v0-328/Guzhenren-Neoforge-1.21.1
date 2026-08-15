@@ -8,13 +8,23 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 /**
- * One thought [念] pool of one wisdom type.
+ * One thought [念] pool of one {@link WisdomType}.
+ *
+ * <p>Leaf record nested inside {@link MindData}; immutable, with the standard {@code DEFAULT}-codec-
+ * stream-with pattern. The compact ctor only floors {@code current}/{@code max} at zero and latches
+ * {@code bufferUsed} when {@code current > max}.
  *
  * <p>⚠ This record does not clamp itself: it cannot know which wisdom type it belongs to, and only some
- * of them may burst past the cap, so the clamp lives in the service every write passes through.
+ * of them may burst past the cap, so the clamp lives in {@link MindService} -- every write passes
+ * through there. ⚠ {@code burstAt()} divides before multiplying ({@code max / DENOM * NUMER}) so a huge
+ * cap cannot overflow; do not "tidy" the order. ⚠ {@code slept()} restores only HALF the deficit when
+ * the buffer was used -- never reduce {@code current}.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see MindData
+ * @see MindService
  */
 public record MindPool(long current, long max, boolean bufferUsed) {
 

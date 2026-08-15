@@ -13,11 +13,18 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The shared class behind the human-strength ladder; the rank and the kind come from registration.
  *
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. Four rungs register against this one
+ * class (斤 / 十斤 / 钧 / 十钧). The gate refuses a holder who has maxed out that kind; the apply
+ * delegates to {@link com.unknown.guzhenren.attachment.service.body.StrengthService#addHumanStrength}.
+ * One layer per grant is fixed by {@code LAYERS_PER_GRANT}.
+ *
  * <p>⚠ What it grants rides the player rather than the stack, so a holder who has already maxed out
  * can hand the Gu to someone else and it goes on working for them.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.TendedGuItem
  */
 public class HumanStrengthGuItem extends TendedGuItem {
 

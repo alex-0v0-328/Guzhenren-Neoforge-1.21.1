@@ -18,11 +18,19 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Gu material [蛊材] that turns into Qi [气] over a charged press, paid for tick by tick.
  *
+ * <p>Extends {@link com.unknown.guzhenren.item.material.GuMaterialItem}. The {@link QiKind} comes from
+ * registration; essence cost scales with the rank tier and is spread evenly across the charge ladder
+ * (5/10/20 ticks via {@code useChargeByGap}). The apply delegates to
+ * {@link com.unknown.guzhenren.attachment.service.body.QiService#add}.
+ *
  * <p>⚠ A material, not a Gu, so it keeps the base item's hooks and it stacks. Only the shared
- * per-stack state of a tended Gu forces a stack size of one, and this carries none.
+ * per-stack state of a tended Gu forces a stack size of one, and this carries none. No progress is
+ * stored -- the component is shared by the whole stack, and storing it would be the Hope Gu bug.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.material.GuMaterialItem
  */
 public class QiMaterialItem extends GuMaterialItem {
 

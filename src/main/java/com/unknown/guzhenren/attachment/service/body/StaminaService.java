@@ -11,11 +11,23 @@ import net.minecraft.world.entity.player.Player;
 /**
  * Stamina [耐力]: the derived cap, the two sprint gates, and the single door every write passes.
  *
- * <p>⚠ Sprinting needs TWO thresholds, not one. Stamina regenerates while resting, so one threshold
- * only makes sprinting stutter; stopping at empty and resuming higher up is what removes the stutter.
+ * <p>Static service over the {@code stamina_data} attachment; reads take {@link Player}, writes take
+ * {@link ServerPlayer}. The cap is derived ({@code baseMax + bonus}), so this service is the only
+ * thing that can clamp. {@code step} is the heartbeat entry: sprinting and regen are EXCLUSIVE (one or
+ * the other per step), because both at once would net a free sprint for a mortal.
+ *
+ * <p>⚠ Sprinting needs TWO thresholds, not one: {@code WEARY_PERCENT} 20 (below which the vanilla
+ * hunger bar drains 1.5×) sits BELOW {@code SPRINT_RESUME_PERCENT} 30, and that ordering IS the design
+ * -- the last fifth of a sprint is spent weary, and a rest crosses back out before you may run again.
+ * Invert them and the weary zone becomes unreachable by sprinting. ⚠ {@code store} no-ops when the
+ * record has not moved -- otherwise a full pool pushes a sync packet twice a second forever. ⚠ A jump
+ * cannot be refused ({@code LivingJumpEvent} is not cancellable); the cost simply floors at 0. ⚠
+ * Creative/spectator refill instead of paying, in both {@code step} and {@code spendOnJump}.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see StaminaData
  * @see com.unknown.guzhenren.mixin.LocalPlayerSprintMixin
  */
 public final class StaminaService {

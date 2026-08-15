@@ -24,13 +24,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The base of everything a Gu hand holds, both Gu [蛊虫] and Gu material [蛊材].
+ * The abstract base of everything a Gu hand holds, covering both Gu [蛊虫] and Gu material [蛊材].
  *
- * <p>⚠ A charge is paced by the gap between the holder's rank and the item's own, never by the stage.
- * A leaf wanting its own pacing overrides the hook rather than reaching for the stage.
+ * <p>Extends {@link Item} to add the four right-click templates a leaf fills: plain use, sneak use,
+ * charge pacing, and Vital Gu [本命蛊] binding. The charge duration is paced by the gap between the
+ * holder's rank and the item's own via {@code chargeByGap}, never by the stage.
+ *
+ * <p>⚠ The four hooks ({@code gate}, {@code apply}, {@code useDurationTicks}, {@code hasSneakUse}) are
+ * re-read in both {@code use} and {@code finishUsingItem}, so leaving or entering a crouch mid-charge
+ * switches which branch lands. A leaf wanting its own pacing overrides the hook, not the stage.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see MortalGuItem
  */
 public abstract class GuItem extends Item {
 

@@ -21,10 +21,16 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 /**
  * Wires every generator that runs at datagen time.
  *
+ * <p>Annotated {@code @EventBusSubscriber}. On {@code GatherDataEvent} it adds every provider:
+ * two language providers, the item model provider, the datapack builtin-entries provider, and the tag
+ * providers for items, damage types, and biomes. The output is a committed source set under
+ * {@code src/generated/resources}.
+ *
  * <p>⚠ What they write is a committed source set, so a provider changed without regenerating ships a
  * stale jar while the build stays perfectly green.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)

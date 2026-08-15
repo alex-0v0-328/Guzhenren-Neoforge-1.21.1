@@ -8,14 +8,24 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
- * The 宙道 [Time Path] form: while it runs, the wearer's own clock [自身时间] outruns the world's.
+ * The 宙道 [Time Path] timed form: while it runs, the wearer's own clock [自身时间] outruns the
+ * world's by the declared rate.
  *
- * <p>⚠ One of these per Gu rather than one graded family, precisely so two can be worn together and
- * their rates add. Its own remaining duration is the world's time and is never hastened.
+ * <p>Timed effects own their truth on vanilla's timer. One effect per Gu rather than a graded
+ * family, precisely so two Watch Gu [更蛊] can be worn together and their rates add. Implements
+ * {@link com.unknown.guzhenren.effect.TimeFlowContributor}; {@link
+ * com.unknown.guzhenren.attachment.service.body.TimeFlowService} sums every contributor and derives
+ * the specks [碎屑] under {@code MarkTag.TIME_FLOW} every heartbeat.
+ *
+ * <p>⚠ The effect's own remaining duration is WORLD time and is never hastened — five minutes is
+ * five real minutes. Specks are lent and taken back on expiry, milk, {@code /effect clear} or death;
+ * the tag has no writer and is derived by {@code syncSpecks}.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
- * @see TimeFlowContributor
+ * @see com.unknown.guzhenren.effect.TimeFlowContributor
+ * @see com.unknown.guzhenren.attachment.service.body.TimeFlowService
  */
 public class TimeFlowEffect extends MobEffect implements TimeFlowContributor {
 

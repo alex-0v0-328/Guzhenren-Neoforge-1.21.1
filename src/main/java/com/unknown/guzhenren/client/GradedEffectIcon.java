@@ -6,13 +6,19 @@ import net.minecraft.world.effect.MobEffectInstance;
 /**
  * Draws a graded effect's icon from its amplifier, so one effect can wear a different face per grade.
  *
+ * <p>Implements {@link com.unknown.guzhenren.client.EffectIconLayout} as a record carrying a name, a
+ * directory ({@code mob_effect} or {@code item}), and the rank range. The texture path is
+ * {@code directory/name_rank}, where rank is {@code amplifier + 1} clamped to the range. Two factories
+ * ({@code mobEffect} / {@code item}) select which texture set to read from.
+ *
  * <p>⚠ This exists so a family of grades stays a single effect. Splitting it into one effect per
  * grade would let a player hold two grades of the same thing at the same time.
  *
- * <p>The directory selects mob_effect textures or the Gu's own item texture; see the two factories.
- *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.client.EffectIconLayout
+ * @see com.unknown.guzhenren.client.ItemEffectIcon
  */
 public record GradedEffectIcon(String name, String directory, int lowestRank, int highestRank) implements EffectIconLayout {
 

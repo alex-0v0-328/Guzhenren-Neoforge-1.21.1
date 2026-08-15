@@ -27,10 +27,15 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * Every MobEffect this mod registers, one constant per effect.
  *
- * <p>⚠ Grades that exclude each other are ONE effect with an amplifier; members meant to be worn
- * TOGETHER get one effect each. The colors are Alex's to choose and are never derived from anything.
+ * <p>DeferredRegister holder: grades that exclude each other are ONE effect with an amplifier; members
+ * meant to be worn TOGETHER get one effect each (the two Watch Gu, so their rates add). Every color is
+ * Alex's pick and is never derived from anything.
+ *
+ * <p>⚠ Since 2026-08-14 every effect is built through {@code instance}, which sets
+ * {@code showParticles=false, showIcon=true}; the color only feeds the {@link MobEffect} ctor.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public final class ModEffects {

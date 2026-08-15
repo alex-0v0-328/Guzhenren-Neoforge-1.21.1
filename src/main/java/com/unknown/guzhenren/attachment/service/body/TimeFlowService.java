@@ -8,15 +8,28 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * The only door the player's own clock [自身时间] is hastened through, and 宙道 [Time Path] is all that
+ * The only door the player's own clock [自身时间] is hastened through; 宙道 [Time Path] is all that
  * comes to it.
  *
- * <p>☠ Three verbs leave this class and a caller uses one of them: {@code waited}, {@code perStep},
- * {@code steps}. Doing arithmetic on {@code rate()} at a call site is how 寿元 once aged BACKWARDS.
+ * <p>Static service; {@code rate()} walks {@code getActiveEffects()} for every
+ * {@link TimeFlowContributor} and sums, flooring at 1. {@code syncSpecks} is called from the heartbeat
+ * to keep the {@code TIME_FLOW} tag a projection of the running forms -- the only thing that revokes
+ * 宙道 specks on expiry, milk, {@code /effect clear} and death (none of which fire a hook).
+ *
+ * <p>⚠ THREE verbs leave this class and a caller uses ONE of them: {@code waited}, {@code perStep},
+ * {@code steps}. Doing arithmetic on {@code rate()} at a call site is how 寿元 once aged BACKWARDS --
+ * only {@code InfoModel} may read {@code rate()} to print it. ⚠ {@code perStep} is what 寿元 goes
+ * through, so a hastened life is SPENT FASTER (the same verb as essence and thoughts, which is why
+ * the sign cannot be got wrong); {@code waited} floors at one tick (a 2-tick cooldown ÷3 is 0, which
+ * reads as no cooldown). ⚠ The tag is a PROJECTION, never a grant plus a matching revoke -- that is
+ * what makes the specks come back on milk/clear/death. ⚠ A 造诣 grade term has no spec yet; when it
+ * lands it goes INSIDE {@code rate()}, and no caller changes.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  * @see AttackService
+ * @see TimeFlowContributor
  */
 public final class TimeFlowService {
 

@@ -10,12 +10,21 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The bar drawn over the hotbar while a charged use is running.
+ * The bar drawn over the hotbar while a charged Gu use is running.
+ *
+ * <p>Extends {@link com.unknown.guzhenren.client.hud.HotbarHud}. Registered above
+ * {@code VanillaGuiLayers.AIR_LEVEL}. Reads the held item's {@code getUseDuration} and
+ * {@code chargeFraction} from {@link com.unknown.guzhenren.item.GuItem}; if the item provides its own
+ * fraction the bar reads that, otherwise it falls back to the vanilla remaining-ticks ratio.
  *
  * <p>⚠ Any Gu whose use has a duration gets this for free, so adding a charged Gu needs no change here.
+ * Whenever a leaf's caption is a {@code a / b} reading, that leaf owes a {@code chargeFraction} over
+ * the same pair.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.client.hud.HotbarHud
  */
 public final class ChargeHud extends HotbarHud {
 

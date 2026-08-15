@@ -14,11 +14,17 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A Watch Gu [更蛊]: for a while its holder's own clock [自身时间] outruns the world's, and then it is gone.
  *
- * <p>⚠ It refuses nothing. Wearing two Watch Gu at once is the design, and their rates and their specks
- * both add -- the speed and the price it books live on the effect, not here.
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.ConsumedGuItem}, making it tended AND taken by its
+ * own use. Two rungs register against this one class (两更蛊 ×2 / 三更蛊 ×3); the effect holder and its
+ * length come from registration, and the rate and speck it books live on the effect, not here.
+ *
+ * <p>⚠ It refuses nothing. Wearing two Watch Gu at once is the design, and their rates and their
+ * specks both add.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.ConsumedGuItem
  */
 public class WatchGuItem extends ConsumedGuItem {
 

@@ -12,8 +12,13 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * The recipe type and serializer behind refinement [炼蛊].
  *
+ * <p>DeferredRegister holder: owns the {@code refinement} {@link RecipeType} and its
+ * {@link GuRecipe.Serializer}, wired to the mod event bus by {@code register}. No gameplay lives here.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see GuRecipe
  */
 public final class ModRecipes {
 

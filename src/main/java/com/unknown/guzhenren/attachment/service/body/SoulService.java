@@ -9,11 +9,22 @@ import net.minecraft.world.entity.player.Player;
 /**
  * The only writer of Soul [魂魄], the one pool whose bottom is lethal.
  *
- * <p>⚠ Nothing here kills. Emptying the soul only sets up a lethal state that the last step of the
- * heartbeat notices, so there is no "kill" call in this file to search for.
+ * <p>Static service over the {@code soul_data} attachment; reads take {@link Player}, writes take
+ * {@link ServerPlayer}. The compact ctor of {@link SoulData} already clamps current to {@code [0, max]},
+ * so this service is mostly a pass-through -- but it owns the {@code revive} and {@code refill} shapes
+ * the lifecycle needs.
+ *
+ * <p>⚠ Nothing here KILLS. Emptying the soul only sets up a lethal state that the last step of the
+ * heartbeat ({@code checkLethalState}) notices, so there is no "kill" call in this file to search for.
+ * ⚠ A cap of 0 also lands current at 0 (one check catches both), so {@code revive} must restore
+ * {@code DEFAULT_MAX_SOUL} when the cap itself was 0 -- a respawn may never hand back a value the
+ * lethal check would fire on. ⚠ Nothing raises {@code maxSoul} yet -- that 手段 is 魂道's, unbuilt;
+ * do not "fix" the cost by softening the numbers.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see SoulData
  */
 public final class SoulService {
 

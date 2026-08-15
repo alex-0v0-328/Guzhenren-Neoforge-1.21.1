@@ -7,13 +7,22 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
- * The effect worn while a Liquor Worm [酒虫] is distilling.
+ * The effect worn while a Liquor Worm [酒虫] is in its distilling phase — a marker for the vanilla
+ * HUD icon, not the state itself.
  *
- * <p>⚠ It marks the state; it does not hold it. The essence service owns the phases, so removing the
- * effect does not end the distillation.
+ * <p>Timed effects own their truth on vanilla's timer, but this one is exceptional: it marks the
+ * state, it does not hold it. {@link com.unknown.guzhenren.attachment.service.aperture.EssenceService}
+ * owns the three phases, so removing this effect does not end the distillation. The 1:2 payback
+ * on expiry is watched by {@code PlayerTickEvents.closeDistilling}, which reads the level — the
+ * only thing that catches milk, {@code /effect clear} and death.
+ *
+ * <p>☠ Hanging the payback on this effect's expiry would be wrong: {@link
+ * net.minecraft.world.effect.MobEffect} has no expiry hook.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.aperture.EssenceService
  */
 public class LiquorWormEffect extends MobEffect {
 

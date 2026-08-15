@@ -21,11 +21,24 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The only writer of the Aperture [空窍] attachment: awakening [开窍], rank, stage, talent and paths.
  *
- * <p>⚠ The physique-and-talent invariant is enforced here rather than in the record, because repairing
- * it rolls a die and a compact constructor has to stay a pure function.
+ * <p>Static service over the {@code aperture_data} attachment; reads take {@link Player}, writes take
+ * {@link ServerPlayer}. Every write routes through {@code store}, which also fires
+ * {@link HealthService#refresh} so max health never lags a rank change. {@code reconcileTalentPaths}
+ * is the one place {@code aperture/} writes {@code body/} -- it grants/revokes the ten-extreme talent
+ * specks and the human qi.
+ *
+ * <p>⚠ The physique-and-talent invariant is enforced here ({@code enforce}) rather than in the record,
+ * because repairing it rolls a die and a compact constructor has to stay a pure function. ⚠ The
+ * "after" physique must be read AFTER {@code enforce} -- reading it before sees {@code NONE} and the
+ * talent grant silently never lands. ⚠ {@code awaken} does NOT refuse an awakened holder -- it
+ * appends; the caller gates. ⚠ {@code reconcileTalentPaths} is one of the two existing cross-domain
+ * grants; a third one is the threshold to extract a coordinator (the {@code TODO(refactor)} below).
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see ApertureData
+ * @see EssenceService
  */
 public final class ApertureService {
 

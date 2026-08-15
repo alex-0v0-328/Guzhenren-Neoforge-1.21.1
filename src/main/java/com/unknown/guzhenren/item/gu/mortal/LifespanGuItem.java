@@ -7,10 +7,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * A Gu that grants lifespan [寿元], rolled between the bounds given at registration.
+ * A one-shot Gu that grants lifespan [寿元], rolled between the bounds given at registration.
+ *
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.OneShotGuItem}; the roll window is the only thing the
+ * constructor carries, and the service write goes through
+ * {@link com.unknown.guzhenren.attachment.service.body.BodyService#addLifespan}. Each of the four rungs
+ * carries its own range, and the name is the promise -- the roll only decides the tail.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.OneShotGuItem
  */
 public class LifespanGuItem extends OneShotGuItem {
 

@@ -15,11 +15,18 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A wild Gu [野生蛊虫] living in the world; catching one hands over the Gu item, unrefined.
  *
+ * <p>Extends {@link net.minecraft.world.entity.PathfinderMob}. The catch is a bare right click and is
+ * NEVER gated on awakening [开窍] -- 希望蛊 is the only key to it, so a gate here would make awakening
+ * unreachable. The caught item arrives wild for free because being refined is the presence of a
+ * component and a caught Gu simply has none. Drops nothing on death ({@code shouldDropLoot} is false).
+ *
  * <p>⚠ It arrives wild for free, because being refined is the presence of a component and a caught Gu
  * simply has none. That is why the world needs no special case downstream.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.entity.FlyingGuEntity
  */
 public abstract class WildGuEntity extends PathfinderMob {
 

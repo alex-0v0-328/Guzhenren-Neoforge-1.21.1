@@ -37,11 +37,19 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Every row the G panel and the info command share: which rows, in what order, decided once.
  *
- * <p>⚠ The entry type is sealed on purpose, so a new row is a compile error in both switches until
- * both of them handle it. Do not widen it into an open interface.
+ * <p>The shared structure for both surfaces: deciding "draw or not" here (not in a surface) is what
+ * avoids one side printing a section header with [无] beside a real Dao-mark [道痕] figure. The
+ * {@code Entry} type is sealed on purpose, so a new row is a compile error in both switches until both
+ * handle it.
+ *
+ * <p>⚠ A named section (Strength Attainment [力道造诣], Qi Attainment [气道造诣], ...) is a LABEL AND ITS
+ * ROWS, never a value; attainment [造诣] and Dao marks [道痕] belong to the path-attainment list
+ * [流派造诣]. Do not widen {@code Entry} into an open interface.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see ModDisplayText
  */
 public final class InfoModel {
 

@@ -10,11 +10,22 @@ import net.minecraft.world.item.ItemStack;
 /**
  * The day-rollover walk over Gu held inside apertures, both the stored ones and each Vital Gu [本命蛊].
  *
- * <p>⚠ Every reader here asks {@code refined()} first, because an unrefined Gu's hunger is zero and zero
- * is also what starvation looks like. Drop that test and the first rollover eats every wild Gu.
+ * <p>Static service called from the heartbeat ({@code PlayerTickEvents}) once a day with the elapsed
+ * day count. It forwards to {@link TendedGuItem#tickInContainer} for each refined Gu, and reports a
+ * starved Gu back through {@link TendedGuItem#starved} -- it never clears a slot itself, the container
+ * does.
+ *
+ * <p>⚠ Every reader here asks {@code refined()} first, because an unrefined Gu's hunger is zero and
+ * zero is also what starvation looks like. Drop that test and the first rollover eats every wild Gu.
+ * ⚠ The Vital slot write-back ({@code setVital}) runs EVEN WHEN nothing changed -- a single slot has
+ * no list, so the store loop's "write whole list" path does not cover it. ⚠ This is one of the three
+ * services that imports {@code item/**} on purpose; do not "fix" that import.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see ApertureStorageService
+ * @see TendedGuItem
  */
 public final class ApertureStorageTick {
 

@@ -32,11 +32,23 @@ import net.minecraft.world.item.ItemStack;
 /**
  * The one cross-domain lifecycle service: birth, sleep, death, clone, respawn, and a full reset.
  *
- * <p>⚠ What a clone inherits is decided here and nowhere else. There is deliberately no per-domain copy
- * hook, because a death-copy and a reset cannot both be the last write.
+ * <p>It is the single place that decides what a clone inherits, because a death-copy and a
+ * keepInventory-off {@code resetAll} cannot both be the last write. Every domain service is called
+ * from here for the refresh that does not ride a clone -- {@link HealthService}, {@link AttackService}
+ * and {@link StaminaService} all re-run on join, clone and reset.
+ *
+ * <p>⚠ The {@code Player} (not {@code ServerPlayer}) signature on {@code copy}/{@code onBirth}/
+ * {@code resetAll} is the one carve-out from this project's read-{@code Player}/write-{@code ServerPlayer}
+ * rule: during {@code PlayerEvent.Clone} the fresh entity is typed {@code Player}. Never copy that
+ * widening into a domain service. ⚠ {@code copy} must carry {@code BORN} or the next login after any
+ * death rolls a second brilliance. ⚠ A new way to die needs a line in {@code onRespawn} -- the un-fire
+ * there returns things BARE (soul 1, mind 0), never a value the lethal check would fire on.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see ApertureService
+ * @see BodyService
  */
 public final class PlayerDataService {
 

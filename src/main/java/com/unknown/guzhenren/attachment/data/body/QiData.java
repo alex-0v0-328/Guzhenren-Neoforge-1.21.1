@@ -14,12 +14,20 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Qi [气] holdings, sparse: a kind missing from the map is simply one the player is not holding.
  *
+ * <p>Immutable record attachment keyed {@code qi_data}; {@link QiService} is the only writer. Each entry
+ * is a {@link QiEntry} -- a time anchor, not a running total -- so the live amount is always derived
+ * from the current tick by {@code current(kind, now)}.
+ *
  * <p>⚠ Every read takes the current tick, because an entry anchors a moment rather than a balance. A
- * reader without it would report an amount that has already drained away.
+ * reader without it would report an amount that has already drained away. ⚠ {@code holding()} returns
+ * false for untimed kinds (they never expire), which is why a "currently holding" check is not the same
+ * as "amount > 0" for timed kinds past their hold.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  * @see QiEntry
+ * @see QiService
  */
 public record QiData(Map<QiKind, QiEntry> entries) {
 

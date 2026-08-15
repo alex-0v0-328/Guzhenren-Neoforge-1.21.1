@@ -9,10 +9,15 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 /**
  * Writes an item model per registered item, dispatching on the item's class.
  *
+ * <p>Extends {@link net.neoforged.neoforge.client.model.generators.ItemModelProvider}. Iterates every
+ * registered item and calls {@code basicItem} on it. The texture existence check means a missing PNG
+ * fails datagen instead of shipping as a missing-texture item.
+ *
  * <p>⚠ It checks that the texture is really there, so a missing PNG fails datagen instead of shipping
  * as a missing-texture item nobody notices until they open the tab.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public class ModItemModelProvider extends ItemModelProvider {

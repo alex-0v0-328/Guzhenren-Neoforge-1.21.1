@@ -30,11 +30,18 @@ import org.jetbrains.annotations.Nullable;
 /**
  * One Gu recipe [蛊方]: what it eats, what it yields, and the windows the ritual runs through.
  *
+ * <p>Implements {@link net.minecraft.world.item.crafting.Recipe} for {@link GuRecipeInput}. The
+ * ingredients and their cell positions are parallel lists (SHAPED and exact -- no mirroring, no
+ * rotation); the window list's length IS the stage count. The serializer, the recipe type, and the
+ * matching logic all live here.
+ *
  * <p>⚠ A recipe index means the same thing on both sides only because the listing sorts by recipe id.
  * The recipe manager's own order guarantees nothing at all.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.menu.RefinementMenu
  */
 public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, List<ItemStack> results,
                        long essencePerSecond, long soulPerSecond, List<Integer> windows, int baseSuccess)

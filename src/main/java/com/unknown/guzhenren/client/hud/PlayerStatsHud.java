@@ -18,13 +18,19 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The top-left readout: the realm line, then one bar per pool.
+ * The top-left HUD readout: the realm line, then one bar per pool.
  *
- * <p>⚠ Every phrase it draws comes from the shared display text and is never built here, so the HUD
- * and the info command cannot word the same fact two different ways.
+ * <p>Implements {@link net.minecraft.client.gui.LayeredDraw.Layer}; registered above
+ * {@code VanillaGuiLayers.HOTBAR} in
+ * {@link com.unknown.guzhenren.client.ClientEvents}. Draws the title line (realm + title + aptitude +
+ * physique) then bars in order: essence, distilled, stamina, soul, gap, lifespan/age. Hidden with
+ * {@code hideGui}, in spectator, and under F3. Every phrase comes from
+ * {@link com.unknown.guzhenren.display.ModDisplayText} so the HUD and the info command cannot diverge.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.display.ModDisplayText
  */
 public final class PlayerStatsHud implements LayeredDraw.Layer {
 

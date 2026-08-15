@@ -11,11 +11,17 @@ import net.minecraft.commands.Commands;
 /**
  * The wisdom cells under {@code /gzr mind}, spelled out one literal at a time.
  *
+ * <p>Iterates {@link com.unknown.guzhenren.custom.enums.wisdom.WisdomType} and builds a cell per type,
+ * each offering {@code current}/{@code max} with {@code set}/{@code add}/{@code sub}/{@code refill}.
+ * All writes delegate to {@link com.unknown.guzhenren.attachment.service.mind.MindService}.
+ *
  * <p>⚠ They are literals rather than a single enum argument so that brilliance [才情] can sit beside
  * them as a sibling. Tidying this into one enum argument takes that away.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.sub.mind.CmdMind
  */
 public final class CmdWisdom {
 

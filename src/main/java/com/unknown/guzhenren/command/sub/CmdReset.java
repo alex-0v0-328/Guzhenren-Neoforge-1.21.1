@@ -10,8 +10,14 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * {@code /gzr reset}: puts a player back to what they were born as.
  *
+ * <p>Delegates to {@link com.unknown.guzhenren.attachment.PlayerDataService#resetAll} and then calls
+ * {@link com.unknown.guzhenren.command.ModCommandSupport#refreshCommands}, because the reset flips the
+ * awakened gate and the client must see the updated tree.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.sub.aperture.CmdAwaken
  */
 public final class CmdReset {
 

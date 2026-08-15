@@ -14,11 +14,26 @@ import net.minecraft.world.entity.player.Player;
 /**
  * The only writer of Body [肉身] state, and the home of every life-form [生命形态] transition.
  *
+ * <p>Static service over the {@code body_data} attachment; reads take {@link Player}, writes take
+ * {@link ServerPlayer}. Owns two clocks with two anchors: {@code tickAging} keeps {@code lastDayIndex}
+ * and returns DAYS for the Gu-hunger walks; {@code tickLifespan} keeps {@code lastBilledTick} and
+ * bills lifespan. {@code setLifeForm} no-ops when unchanged so the zombie's 寿元=1 is never re-written
+ * over a recovering zombie.
+ *
  * <p>⚠ {@code tickAging} returns how many days it just billed, and that count is often far more than
- * one -- an offline stretch or a {@code /time} jump arrives as a single call.
+ * one -- an offline stretch or a {@code /time} jump arrives as a single call; the return drives three
+ * day-clock walks, so swallowing it would starve every Gu at once. ⚠ 寿元 is SPENT through
+ * {@link TimeFlowService#perStep} -- hand-rolling the rate here once made it run BACKWARDS, into a
+ * pure longevity buff. Only {@code InfoModel} may read {@code rate()} to print it. ⚠ The anchor is
+ * {@code dayTime}, not {@code gameTime}, so {@code /time add} still ages him; time running backwards
+ * re-anchors and bills nothing -- one {@code <} is the whole guard, on BOTH clocks. ⚠ Every caller
+ * speaks YEARS; only this file knows parts exist.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see TimeFlowService
+ * @see AttackService
  */
 public final class BodyService {
 

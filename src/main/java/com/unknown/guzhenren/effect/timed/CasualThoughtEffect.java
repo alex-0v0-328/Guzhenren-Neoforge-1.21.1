@@ -12,12 +12,20 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
- * The Casual Gu [随意蛊] effect: each second for ten seconds it adds a random amount of natural thoughts.
+ * The Casual Gu [随意蛊] effect: each second for ten seconds it adds a random amount of natural
+ * thoughts [念] to the mind ocean [脑海].
  *
- * <p>⚠ One effect, two grades -- amplifier is the rank's tier, and the random range widens with it.
+ * <p>Timed effects own their truth on vanilla's timer. One effect, two grades — the amplifier is
+ * the rank's tier, and the {@code RANGES} table widens with it. Thoughts land through {@link
+ * com.unknown.guzhenren.attachment.service.mind.MindService#addThoughts} tagged {@code NATURAL}.
+ *
+ * <p>⚠ {@code applyEffectTick} must {@code return true} — returning false lets vanilla remove the
+ * effect on the spot.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.mind.MindService
  */
 public class CasualThoughtEffect extends MobEffect {
 

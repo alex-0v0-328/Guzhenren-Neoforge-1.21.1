@@ -9,11 +9,17 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Where a Dao mark [道痕] or speck [碎屑] came from, so a quantity can later be revoked exactly.
  *
- * <p>☠ Only a Gu names a source tag; a command books 自然 [NATURAL] and nothing else. A hand-written
- * tag cannot be told from an earned one, and that is how a race mark was forged onto a foreign path.
+ * <p>Closed vocabulary enum: each constant names its {@link GuPath} owner (or {@code null} for
+ * {@code NATURAL}/{@code RACE}), and no sibling mod may add a tag. That closure is what lets
+ * {@code PathEntry} keep a plain {@code EnumMap} keyed by it.
+ *
+ * <p>☠ Only a Gu names a source tag; a command books {@code NATURAL} and nothing else. A hand-written
+ * tag cannot be told from an earned one, and that is how a race mark was once forged onto a foreign path.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see GuPath
  */
 public enum MarkTag implements StringRepresentable, EnumTranslatable {
 

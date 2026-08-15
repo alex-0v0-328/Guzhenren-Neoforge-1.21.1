@@ -6,10 +6,19 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 
 /**
- * The timed buff of the Flower Boar Gu [花豕蛊]: plain added attack damage, no cost on the way out.
+ * The timed buff of the Flower Boar Gu [花豕蛊]: plain added attack damage for sixty seconds, no
+ * cost on the way out.
+ *
+ * <p>Timed effects own their truth on vanilla's {@link net.minecraft.world.effect.MobEffect} timer —
+ * unlike pool effects, they are not rebuilt every heartbeat. The bonus goes through {@link
+ * com.unknown.guzhenren.effect.AttackContributor} so the attack total stays one number.
+ *
+ * <p>⚠ 碎屑 is zero — a timed buff alters nothing permanently, and that is the final answer.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.effect.AttackContributor
  */
 public class FlowerBoarGuEffect extends MobEffect implements AttackContributor {
 

@@ -22,11 +22,19 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The container behind one aperture's [空窍] store, paged because the store itself is uncapped.
  *
+ * <p>Extends {@link net.minecraft.world.inventory.AbstractContainerMenu}. 54 slots per page, up to 32
+ * pages; the Vital Gu [本命蛊] slot sits outside the pager, past {@code imageWidth}. The save trigger
+ * is a container listener ({@code page.addListener(c -> save())}), not an override of
+ * {@code slotsChanged} -- that override is never called because {@code AbstractContainerMenu} is not a
+ * {@code ContainerListener}.
+ *
  * <p>⚠ It has to reload after the day-rollover walk, or an open menu saves its stale view back and
  * resurrects a Gu that starved a moment earlier.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService
  */
 public class ApertureStorageMenu extends AbstractContainerMenu {
 

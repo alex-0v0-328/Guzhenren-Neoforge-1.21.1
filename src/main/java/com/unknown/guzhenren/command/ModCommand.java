@@ -16,10 +16,17 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 /**
- * The root of {@code /gzr}, assembling every subcommand under it.
+ * The root of {@code /guzhenren} (alias {@code /gzr}), assembling every subcommand under it.
+ *
+ * <p>Registers the literal {@code guzhenren} with permission level 2, then attaches the six domain
+ * branches ({@link com.unknown.guzhenren.command.sub.CmdInfo}, {@code CmdAwaken}, {@code CmdReset},
+ * {@code CmdAperture}, {@code CmdBody}, {@code CmdMind}). The {@code gzr} alias is a
+ * {@code redirect} to that root, so everything typed after it parses into a child context.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.command.ModEnumArgument
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModCommand {

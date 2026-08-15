@@ -14,13 +14,20 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Primeval Elder Gu [元老蛊]: a vault for primeval stones that pays its own upkeep out of the vault.
+ * Primeval Elder Gu [元老蛊]: a vault for primeval stones [元石] that pays its own upkeep from the vault.
  *
- * <p>⚠ It declares no clock and never eats. Starving is unreachable for it by design, so do not
- * "fix" the missing hunger bar -- a failed refinement is the only thing that can destroy one.
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem} but declares no clock and never eats.
+ * Right click deposits every stone (free); sneak + right click withdraws a stack of 64 (costs 1 essence,
+ * charged). The stored-stones total rides {@link com.unknown.guzhenren.registry.ModDataComponents}, not
+ * {@code RefinedGuState}, because every tended Gu shares that record.
+ *
+ * <p>⚠ Starving is unreachable for it by design -- a failed refinement is the only thing that can
+ * destroy one. Do not "fix" the missing hunger bar.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.TendedGuItem
  */
 public class PrimevalElderGuItem extends TendedGuItem {
 

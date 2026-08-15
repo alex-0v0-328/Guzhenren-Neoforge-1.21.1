@@ -17,13 +17,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Hope Gu [希望蛊]: it awakens [开窍] an aperture, rolling the aptitude [资质] as its bar fills.
+ * Hope Gu [希望蛊]: the one Gu that awakens [开窍] an aperture, rolling the aptitude [资质] as its bar fills.
  *
- * <p>⚠ One-shot in behavior, but deliberately NOT a subclass of {@code OneShotGuItem}: that class
- * fixes the charge length, and this ritual bar needs a much longer one.
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.MortalGuItem} directly, not {@code OneShotGuItem},
+ * because the ritual bar needs a much longer charge than the one-shot template fixes. The rolled value
+ * lives in a {@link com.unknown.guzhenren.registry.ModDataComponents} component and is locked on first
+ * press; the service call goes through
+ * {@link com.unknown.guzhenren.attachment.service.aperture.ApertureService#awaken}.
+ *
+ * <p>⚠ One-shot in behavior but {@code stacksTo(1)}: a data component is shared by the whole stack, so
+ * stacking gives 64 copies of one single aptitude. Creative clears the component after use so a reset
+ * can re-roll.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.MortalGuItem
  */
 public class HopeGuItem extends MortalGuItem {
 

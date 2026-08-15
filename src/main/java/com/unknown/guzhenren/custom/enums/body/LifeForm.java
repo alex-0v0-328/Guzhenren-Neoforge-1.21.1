@@ -8,10 +8,15 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Life form [生命形态]: the single value saying what the player currently is.
  *
- * <p>⚠ Ask the predicates here instead of comparing constants at the call site. Adding a form should
- * mean answering these questions once; a call site that compares constants just misses the new one.
+ * <p>Closed vocabulary enum on {@code BodyData}. It replaced the old scattered {@code LifeState} and
+ * {@code ApertureState} with one value that governs all. No sibling mod may add a form.
+ *
+ * <p>⚠ Ask the predicates here ({@code isAnyZombie()}, {@code ages()}, ...) instead of comparing
+ * constants at the call site. {@code DEAD} is momentary; respawning always returns {@code ALIVE}, so
+ * dying cures both {@code ZOMBIE} and {@code HALF_ZOMBIE}.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public enum LifeForm implements StringRepresentable, EnumTranslatable {

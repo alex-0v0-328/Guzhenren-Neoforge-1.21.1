@@ -12,11 +12,23 @@ import net.minecraft.world.item.ItemStack;
 /**
  * The only writer of what an Aperture [空窍] holds, including the Vital Gu [本命蛊] bound to each.
  *
- * <p>⚠ It reaches into the item package on purpose, against this project's usual direction: binding a
- * Vital Gu has to read that Gu's declared path. Do not "fix" those imports.
+ * <p>Static service over the {@code aperture_storage} attachment; reads take {@link Player}, writes
+ * take {@link ServerPlayer}. {@code setVital} also rewrites the aperture's primary path via
+ * {@link ApertureService#setPrimaryPath} -- binding a Gu IS what sets 主修 [primary path], because the
+ * store is not synced and the aperture is.
+ *
+ * <p>⚠ It reaches into the {@code item/} package on purpose ({@link GuItem}), against this project's
+ * usual dependency direction: binding a Vital Gu has to read that Gu's declared path. Do not "fix"
+ * those imports. ⚠ Writes NEVER go through {@link ApertureService#store} -- {@link HealthService#refresh}
+ * hangs off that, and moving one item must not recompute max health. ⚠ {@code setVital} runs on every
+ * menu click and every day tick, and {@code setPrimaryPath} no-ops when unchanged, so leaving that
+ * call in is free and removing it loses the path on rebind.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see ApertureService
+ * @see ApertureStorageTick
  */
 public final class ApertureStorageService {
 

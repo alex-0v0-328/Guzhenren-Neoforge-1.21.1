@@ -9,10 +9,15 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Brilliance [才情]: the grade deciding how fast thought [念] refills.
  *
- * <p>⚠ There is deliberately no NONE grade, because a mortal still thinks. The lowest grade is a real
- * value rather than an absence, and code reading it as "unset" stops a mortal thinking at all.
+ * <p>Closed vocabulary enum, rolled once at birth by {@code onBirth} and independent of aptitude.
+ * Rates 1/4/16/64/256 念/s with weights 15/25/25/25/10; {@code shift(int)} clamps at both ends.
+ * No sibling mod may add a grade.
+ *
+ * <p>⚠ There is deliberately no {@code NONE} grade, because a mortal still thinks. The lowest grade is
+ * a real value rather than an absence, and code reading it as "unset" stops a mortal thinking at all.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public enum Brilliance implements StringRepresentable, EnumTranslatable {

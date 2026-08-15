@@ -15,8 +15,15 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The Casual Gu [随意蛊]: a one-use wisdom Gu that floods the mind with random thoughts for ten seconds.
  *
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.ConsumedGuItem}, making it tended AND taken by its
+ * own use. The effect holder comes from registration; the amplifier is derived from the rank so a
+ * higher-rung Gu floods harder. The payout delegates to
+ * {@link com.unknown.guzhenren.registry.ModEffects#instance}.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.ConsumedGuItem
  */
 public class CasualGuItem extends ConsumedGuItem {
 

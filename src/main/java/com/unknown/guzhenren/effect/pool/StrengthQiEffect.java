@@ -8,13 +8,21 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
- * Strength Qi [力气], the pool effect that adds attack damage while it is held.
+ * Strength Qi [力气] effect — a pool projection of the 力气 held in {@link
+ * com.unknown.guzhenren.attachment.data.qi.QiData}, which adds attack damage while held.
  *
- * <p>⚠ It contributes through {@link com.unknown.guzhenren.effect.AttackContributor} rather than an
- * AttributeModifier, so what the body panel shows and what a hit actually deals stay one number.
+ * <p>Pool effects are rebuilt every heartbeat by {@code QiService.syncEffects}, so milk cannot cure
+ * them. It contributes through {@link com.unknown.guzhenren.effect.AttackContributor} rather than
+ * an {@link net.minecraft.world.entity.ai.attributes.AttributeModifier}, so what the body panel
+ * shows and what a hit actually deals stay one number.
+ *
+ * <p>⚠ The {@code ATTACK_BONUS} ladder {0.25, 1, 4, 16, 64} must be exactly representable as a
+ * {@code double} — power-of-two denominators only, no float dust.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.effect.AttackContributor
  */
 public class StrengthQiEffect extends MobEffect implements AttackContributor {
 
