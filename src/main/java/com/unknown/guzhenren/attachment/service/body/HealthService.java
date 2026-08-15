@@ -9,13 +9,25 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 /**
- * Max health as an AttributeModifier derived from rank, which is why it does not ride a clone.
+ * Max health as a transient {@link AttributeModifier} derived from rank.
  *
- * <p>⚠ Transient, and a no-op when the rank has not moved. Lowering the cap must also clamp current
- * health down -- the one line {@link AttackService} does not need.
+ * <p>Static service; fires from {@link ApertureService#store} on every aperture write, plus login,
+ * clone and reset (a modifier does not ride a clone). The modifier is keyed to the rank's
+ * {@code getMaxHealth()} minus vanilla's 20, so a mortal ({@code NONE}) reads bonus 0 and the service
+ * no-ops.
+ *
+ * <p>⚠ The modifier MUST stay transient. A permanent one is saved into attribute NBT and then fights
+ * the next login, stacking itself on top of what was already stored there. ⚠ {@code refresh} is a
+ * no-op when the bonus has not moved -- it is called from every aperture write, so skipping the no-op
+ * check would re-issue the modifier twice a second forever. ⚠ Lowering the cap must also clamp
+ * current health down (the last line) -- {@link AttackService} does not need that, because attack has
+ * no "current" to overflow.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see AttackService
+ * @see ApertureService
  */
 public final class HealthService {
 
@@ -24,7 +36,7 @@ public final class HealthService {
     public static final double VANILLA_MAX_HEALTH = 20.0D;
 
     private static final ResourceLocation MODIFIER_ID =
-            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "rank_max_health");
+            Guzhenren.id("rank_max_health");
 
     public static void refresh(ServerPlayer player) {
         AttributeInstance instance = player.getAttribute(Attributes.MAX_HEALTH);

@@ -10,15 +10,22 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Client intent: strike the aperture wall [冲击窍壁] and take whatever the roll gives.
  *
+ * <p>A zero-byte singleton payload -- it carries no data at all, only the button press. The server
+ * handler in {@link com.unknown.guzhenren.network.ModPayloads} delegates to
+ * {@link com.unknown.guzhenren.attachment.service.aperture.NourishService}. Client intent is the one
+ * direction attachment sync cannot carry; no player data travels upstream.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.network.ModPayloads
  */
 public record ImpactApertureWallPayload() implements CustomPacketPayload {
 
     public static final ImpactApertureWallPayload INSTANCE = new ImpactApertureWallPayload();
 
     public static final Type<ImpactApertureWallPayload> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "impact_aperture_wall"));
+            Guzhenren.id("impact_aperture_wall"));
 
     public static final StreamCodec<ByteBuf, ImpactApertureWallPayload> STREAM_CODEC =
             StreamCodec.unit(INSTANCE);

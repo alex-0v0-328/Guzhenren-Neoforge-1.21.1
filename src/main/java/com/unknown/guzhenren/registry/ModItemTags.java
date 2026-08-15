@@ -9,7 +9,12 @@ import net.minecraft.world.item.Item;
 /**
  * The item tags this mod declares, most of them the larders a Gu feeds from.
  *
+ * <p>Tag-key holder (not a DeferredRegister): each {@link TagKey} is a feed larder named after the Gu
+ * family it feeds ({@code boar_feed}, {@code liquor_feed}, ...). A datapack retunes membership; the key
+ * is the contract.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public final class ModItemTags {
@@ -37,6 +42,6 @@ public final class ModItemTags {
     public static final TagKey<Item> CASUAL_FEED = key("casual_feed");
 
     private static TagKey<Item> key(String name) {
-        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, name));
+        return TagKey.create(Registries.ITEM, Guzhenren.id(name));
     }
 }

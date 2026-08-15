@@ -23,16 +23,25 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
- * The one-second heartbeat: a straight run of steps that most of the player's state depends on.
+ * The one-second heartbeat: a straight run of fifteen steps that most of the player's state depends on.
  *
- * <p>⚠ Their ORDER is load-bearing and nothing in the code admits it -- most steps read what an
- * earlier one just wrote. The dependency of each step is written out in CLAUDE.md. Reorder nothing blind.
+ * <p>Every step runs inside {@code tickCount % Ticks.SECOND == 0}, and most read what an earlier one
+ * just wrote — aging feeds the day-clock walks, {@code syncEffects} feeds {@code tickDeathQi} and
+ * {@code regenStep}, {@code tickHalfZombie} feeds attack and regen. {@link
+ * com.unknown.guzhenren.attachment.PlayerDataService} owns the lifecycle; this file owns the cadence.
+ *
+ * <p>⚠ The step ORDER is load-bearing and nothing in the code admits it. Reorder nothing blind;
+ * a new step must declare which existing one it follows and why. {@code checkLethalState} runs last
+ * and returns after the first hit, so the three deaths have a fixed precedence: 寿元 → 魂魄 → 脑海.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.body.BodyService
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerTickEvents {
@@ -40,6 +49,7 @@ public final class PlayerTickEvents {
     private PlayerTickEvents() {}
 
     private static final int FULL_HUNGER = 20;
+    private static final boolean HAS_CUSTOMPLAYER = ModList.get().isLoaded("customplayer");
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
@@ -51,7 +61,7 @@ public final class PlayerTickEvents {
         long days = BodyService.tickAging(player);
         TendedGuItem.tickCarried(player, days);
         ApertureStorageTick.tickStored(player, days);
-        PartStorageTick.tickInstalled(player, days);
+        if (HAS_CUSTOMPLAYER) PartStorageTick.tickInstalled(player, days);
 
         if (days > 0L && player.containerMenu instanceof ApertureStorageMenu menu) menu.reload();
 

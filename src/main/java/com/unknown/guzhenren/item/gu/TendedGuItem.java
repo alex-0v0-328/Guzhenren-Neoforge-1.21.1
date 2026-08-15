@@ -28,11 +28,21 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A tended Gu [需照顾]: wild, then refined [炼化], then fed and used, all on one shared state record.
  *
+ * <p>The middle class between {@link MortalGuItem} and every leaf that needs feeding. A leaf answers
+ * two hooks -- {@code payoutGate} and {@code payout} -- plus any limit it bends; every number comes
+ * from its {@link GuSpec}. Owns the charge ladder (5/10/20 tick via {@code useChargeByGap}), the
+ * channeling [灌注] loop, the hunger/health billing, the cooldown stamps, and the day-rollover
+ * container walk ({@code tickInContainer} / {@code tickCarried}).
+ *
  * <p>⚠ The billing step runs decay, then auto-feed, then warn. Nothing in the code makes that order
  * look load-bearing, and swapping any two of them changes which Gu survive a day.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see GuSpec
+ * @see GuClock
+ * @see RefinedGuState
  */
 public abstract class TendedGuItem extends MortalGuItem {
 
@@ -83,9 +93,12 @@ public abstract class TendedGuItem extends MortalGuItem {
     //endregion
 
     //region 蛊虫生命值 [Gu health] -- stored as damage TAKEN, so an untouched 野生 Gu reads as full
-    public static final int HEALTH_PER_RANK = 32;
+    public static final int HEALTH_PER_RANK = 12;
 
-    public int maxHealth() {return HEALTH_PER_RANK * rank().ordinal();}
+    public int maxHealth() {
+        int health = spec.maxHealth();
+        return health > 0 ? health : HEALTH_PER_RANK;
+    }
     public int health(ItemStack stack) {return maxHealth() - state(stack).damageTaken();}
 
     public boolean damageKills(ServerPlayer holder, ItemStack stack, int amount) {

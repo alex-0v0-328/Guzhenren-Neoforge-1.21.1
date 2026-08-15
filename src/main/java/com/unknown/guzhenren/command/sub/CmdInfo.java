@@ -22,11 +22,17 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * {@code /gzr info}: prints what a player is, from the same rows the G panel draws.
  *
+ * <p>Reads the shared {@link com.unknown.guzhenren.display.InfoModel} so the command and the screen
+ * cannot word the same fact two different ways. Five sections mirror the G-panel tabs (aperture,
+ * body, soul, path, mind); the bare form defaults to {@code aperture} on self.
+ *
  * <p>⚠ The target list hangs off each section, so the bare command means the sender and a name after
  * it means that player. Lifting the target a level up would change what the bare form does.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.display.InfoModel
  */
 public final class CmdInfo {
 
@@ -110,8 +116,8 @@ public final class CmdInfo {
 
     private static MutableComponent pathLine(GuPath path, PathEntry entry) {
         MutableComponent line = key("path_entry", enumName(path.getTranslationKey()),
-                enumName(entry.attainment().getTranslationKey()), entry.mark());
-        if (entry.speck() > 0L) line.append(key("path_speck", entry.speck()));
+                enumName(entry.attainment().getTranslationKey()), entry.markTotal());
+        if (entry.speckTotal() > 0L) line.append(key("path_speck", entry.speckTotal()));
         return line;
     }
 

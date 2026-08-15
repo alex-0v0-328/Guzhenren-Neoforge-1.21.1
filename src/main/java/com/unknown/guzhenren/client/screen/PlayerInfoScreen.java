@@ -31,11 +31,19 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The G panel: every tab of what a player is, read straight off the synced attachments.
  *
+ * <p>Extends {@link net.minecraft.client.gui.screens.Screen} (no menu behind it). Seven tabs:
+ * 空窍, 肉身, 魂魄, 流派造诣, 脑海, 空窍存储, 炼蛊. The last two open a container via a client-intent
+ * payload instead of drawing rows. All row content comes from
+ * {@link com.unknown.guzhenren.display.InfoModel}, shared with {@code /gzr info}, so the two surfaces
+ * cannot diverge.
+ *
  * <p>⚠ A plain screen with no menu behind it, so it has no container channel to send an intent over.
  * That absence is the whole reason a client-intent payload exists at all.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.display.InfoModel
  */
 public final class PlayerInfoScreen extends Screen {
 
@@ -471,9 +479,9 @@ public final class PlayerInfoScreen extends Screen {
 
     private static MutableComponent pathValue(PathEntry entry) {
         MutableComponent value = Component.translatable("guzhenren.screen.path_value",
-                name(entry.attainment().getTranslationKey()), entry.mark());
-        if (entry.speck() > 0L) {
-            value.append(Component.translatable("guzhenren.command.info.path_speck", entry.speck()));
+                name(entry.attainment().getTranslationKey()), entry.markTotal());
+        if (entry.speckTotal() > 0L) {
+            value.append(Component.translatable("guzhenren.command.info.path_speck", entry.speckTotal()));
         }
         return value;
     }

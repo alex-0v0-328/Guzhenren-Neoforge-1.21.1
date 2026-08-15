@@ -13,11 +13,23 @@ import net.minecraft.world.entity.player.Player;
 /**
  * The only writer of Path [流派] progress: attainment, Dao marks [道痕] and specks [碎屑].
  *
- * <p>⚠ Every write names a MarkTag, and one owned by a different path is dropped silently by the
- * record. A write with the wrong tag looks like it worked and did nothing at all.
+ * <p>Static service over the {@code path_data} attachment; reads take {@link Player}, writes take
+ * {@link ServerPlayer}. Every write names a {@link MarkTag}, and the record drops a tag owned by a
+ * different path -- this is the one door that keeps a foreign tag out of a path's entry.
+ *
+ * <p>⚠ Every write names a {@link MarkTag}, and one owned by a different path is dropped SILENTLY by
+ * the record. A write with the wrong tag looks like it worked and did nothing at all -- there is no
+ * log, no exception. ⚠ The command path writes {@code NATURAL} and takes NO tag argument -- 力道's
+ * four and {@code RACE} are earned, and a hand-written one cannot be told from them; do not re-add a
+ * tag argument or a gate enum. ⚠ {@code attainment} is a GRADE, so a race grant that shifts it up is
+ * never "set" -- it MOVES, and the revoke shifts back down; nothing can tell a granted master from an
+ * earned one.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see PathData
+ * @see PathEntry
  */
 public final class PathService {
 
@@ -26,8 +38,8 @@ public final class PathService {
     public static PathData get(Player player) {return player.getData(ModAttachments.PATH);}
     public static PathEntry entry(Player p, GuPath path) {return get(p).get(path);}
     public static GuAttainment attainment(Player p, GuPath path) {return entry(p, path).attainment();}
-    public static long mark(Player p, GuPath path) {return entry(p, path).mark();}
-    public static long speck(Player p, GuPath path) {return entry(p, path).speck();}
+    public static long mark(Player p, GuPath path) {return entry(p, path).markTotal();}
+    public static long speck(Player p, GuPath path) {return entry(p, path).speckTotal();}
     public static long mark(Player p, GuPath path, MarkTag t) {return entry(p, path).mark(t);}
     public static long speck(Player p, GuPath path, MarkTag t) {return entry(p, path).speck(t);}
 

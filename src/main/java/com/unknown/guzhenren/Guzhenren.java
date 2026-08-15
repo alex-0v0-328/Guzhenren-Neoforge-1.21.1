@@ -9,6 +9,7 @@ import com.unknown.guzhenren.registry.ModEntityTypes;
 import com.unknown.guzhenren.registry.ModItems;
 import com.unknown.guzhenren.registry.ModMenus;
 import com.unknown.guzhenren.registry.ModRecipes;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -17,7 +18,13 @@ import org.slf4j.Logger;
 /**
  * Mod entry point: builds every registry holder and hands them to the mod event bus.
  *
+ * <p>Holds the {@code MOD_ID} constant and the {@link #id} helper used across the codebase for
+ * {@link ResourceLocation} creation. The constructor wires eight {@code DeferredRegister} holders
+ * (attachments, data components, effects, entities, items, creative tabs, menus, recipes) to the
+ * mod event bus in the order NeoForge requires.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 @Mod(Guzhenren.MOD_ID)
@@ -25,6 +32,7 @@ public class Guzhenren {
 
     public static final String MOD_ID = "guzhenren";
     public static final Logger LOGGER = LogUtils.getLogger();
+    public static ResourceLocation id(String path) {return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);}
 
     public Guzhenren(IEventBus modEventBus, ModContainer modContainer) {
         ModAttachments.register(modEventBus);

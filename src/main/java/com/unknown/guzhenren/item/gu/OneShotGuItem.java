@@ -8,20 +8,21 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A one-shot Gu [一次性]: refining and using are one act, so it carries no state and it stacks.
+ * A one-shot Gu [一次性]: refining and using are one instant act, so it carries no state and it stacks.
  *
- * <p>⚠ Its charge length is fixed here. A Gu whose ritual needs a longer bar cannot extend this class
- * and has to sit directly under {@link MortalGuItem} instead.
+ * <p>Extends {@link MortalGuItem} with {@code useDurationTicks = 0} (instant) and a fixed 10-tick
+ * cooldown. The gate checks essence against {@code refineCost}; {@code apply} pays the cost and fires
+ * {@code useApply} in one step. Hope Gu [希望蛊] is the exception: {@code stacksTo(1)} and an 80-tick
+ * ritual, handled by its own leaf class.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see MortalGuItem
  */
 public abstract class OneShotGuItem extends MortalGuItem {
 
     private static final String TOOLTIP_REFINE_COST = "guzhenren.item.gu.refine_cost";
-
-    public static final int REFINE_TICKS = 20;
-    private static final int STEP_TICKS = 5;
 
     protected OneShotGuItem(Properties properties, GuSpec spec) {
         super(properties, spec);
@@ -48,15 +49,6 @@ public abstract class OneShotGuItem extends MortalGuItem {
     //endregion
 
     //region display
-    @Override
-    public Component chargeCaption(ItemStack stack, int remainingTicks) {return refineCaptionPlain();}
-
-    @Override
-    public Float chargeFraction(ItemStack stack, int remainingTicks) {
-        int steps = Math.ceilDiv(REFINE_TICKS - remainingTicks, STEP_TICKS);
-        return steps * STEP_TICKS / (float) REFINE_TICKS;
-    }
-
     @Override
     protected @Nullable MutableComponent progressLine(ItemStack stack) {
         return refineCost() > 0 ? Component.translatable(TOOLTIP_REFINE_COST, refineCost()) : null;

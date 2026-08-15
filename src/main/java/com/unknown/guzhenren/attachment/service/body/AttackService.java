@@ -15,14 +15,27 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * The only thing in the mod that touches ATTACK_DAMAGE -- {@code bonus()} is the whole sum.
+ * The only thing in the mod that touches the {@code ATTACK_DAMAGE} attribute -- {@code bonus()} is the
+ * whole sum.
  *
- * <p>⚠ The modifier must stay transient. A permanent one is saved into attribute NBT and then fights
- * the next login, stacking itself on top of what was already stored there.
+ * <p>Static service; {@code bonus()} walks {@code getActiveEffects()} for every {@link AttackContributor}
+ * (力道 timed effects), plus the beast strengths, the usable-jin ramp, and the zombie tier bonus.
+ * {@code refresh} writes the single transient modifier; it fires on login, clone, reset, the heartbeat,
+ * and every {@link StrengthService#store} -- a modifier does not ride a clone.
+ *
+ * <p>⚠ The modifier MUST stay transient -- a permanent one is saved into attribute NBT and then fights
+ * the next login, stacking itself on top of what was already stored. ⚠ No effect may declare its own
+ * {@code addAttributeModifier} -- that would double the bonus, because {@code bonus()} already counts
+ * it via {@link AttackContributor#attackBonus}. ⚠ The zombie bonus rides {@code BodyData.zombieTier},
+ * NOT a MobEffect -- permanent 僵 has no effect to hang it on; a command-made zombie (tier -1) gets
+ * NO attack. ⚠ Reading the raw {@code ATTACK_DAMAGE} attribute is NOT the answer -- it counts the held
+ * weapon, which is not a 肉身 fact.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  * @see HealthService
+ * @see StrengthService
  */
 public final class AttackService {
 
@@ -31,7 +44,7 @@ public final class AttackService {
     public static final double VANILLA_ATTACK_DAMAGE = 1.0D;
 
     private static final ResourceLocation MODIFIER_ID =
-            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "strength_attack_damage");
+            Guzhenren.id("strength_attack_damage");
 
     public static final double ZOMBIE_ATTACK_BASE = 5.0D;
 

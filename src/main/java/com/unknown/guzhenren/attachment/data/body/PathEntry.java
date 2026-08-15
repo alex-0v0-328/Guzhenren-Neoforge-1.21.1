@@ -14,13 +14,23 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 /**
- * One Path's [流派] standing: how far it is cultivated, plus the tagged tallies that got it there.
+ * One Path's [流派] standing: its attainment grade, plus the tagged tallies that got it there.
  *
- * <p>⚠ {@code mark()} and {@code speck()} are sums over the tag maps and are never stored: a breakdown
- * and a total cannot contradict each other when only the breakdown exists.
+ * <p>Leaf record nested inside {@link PathData}; immutable. Carries two sparse {@link MarkTag}-keyed
+ * maps -- {@code marks} (道痕, the coarse unit) and {@code specks} (碎屑, the fine unit) -- each pruned
+ * of zero-or-below entries by the compact constructor.
+ *
+ * <p>⚠ {@code markTotal()} and {@code speckTotal()} are sums over the tag maps and are NEVER stored:
+ * a breakdown and a total cannot contradict each other when only the breakdown exists. ⚠
+ * {@code MARK_PER_SPECK} is the future mark⇄speck ratio with no caller yet; do not wire a converter
+ * until a Gu or item triggers it. ⚠ {@code retainingTagsFor} drops tags that do not fit the path --
+ * this is the seam {@link PathData} uses to keep a foreign tag out.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see PathData
+ * @see com.unknown.guzhenren.attachment.service.body.PathService
  */
 public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<MarkTag, Long> specks) {
 
@@ -48,8 +58,8 @@ public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<M
         specks = normalized(specks);
     }
 
-    public long mark() {return sum(marks);}
-    public long speck() {return sum(specks);}
+    public long markTotal() {return sum(marks);}
+    public long speckTotal() {return sum(specks);}
     public long mark(MarkTag tag) {return marks.getOrDefault(tag, 0L);}
     public long speck(MarkTag tag) {return specks.getOrDefault(tag, 0L);}
     public PathEntry withAttainment(GuAttainment v) {return new PathEntry(v, marks, specks);}

@@ -9,13 +9,21 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * One Gu's numbers, given as a chain at registration so that a registration reads as a table row.
+ * One Gu's numbers, given as a builder chain at registration so that a registration reads as a table row.
  *
- * <p>⚠ {@code validate()} runs at registration and refuses to start the game, naming the Gu, when
- * those numbers do not divide evenly. It is the first line of defense; never route around it.
+ * <p>The single source of truth for every Gu's numerical identity: refine cost, channel/cost-per-use,
+ * speck rate and tag, hunger bar geometry, feed/dense tags, cooldown, and max health. Stored on
+ * {@link MortalGuItem} at construction; read by {@link TendedGuItem}, {@link GuClock}, and the
+ * tooltip/HUD renderers.
+ *
+ * <p>⚠ {@link #validate} runs at registration and refuses to start the game, naming the Gu, when
+ * the channel numbers do not divide evenly. It is the first line of defense; never route around it.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see MortalGuItem
+ * @see GuClock
  */
 public final class GuSpec {
 
@@ -41,6 +49,8 @@ public final class GuSpec {
     private int denseUnits;
 
     private int useCooldownTicks;
+
+    private int maxHealth;
 
     private GuSpec(Rank rank, GuPath path) {
         this.rank = rank;
@@ -110,6 +120,11 @@ public final class GuSpec {
         this.useCooldownTicks = ticks;
         return this;
     }
+
+    public GuSpec maxHealth(int health) {
+        this.maxHealth = health;
+        return this;
+    }
     //endregion
 
     //region what the base classes read
@@ -121,6 +136,7 @@ public final class GuSpec {
     public int essencePerSpeck() {return essencePerSpeck;}
     public MarkTag speckTag() {return speckTag;}
     public int useCooldownTicks() {return useCooldownTicks;}
+    public int maxHealth() {return maxHealth;}
 
     public int unitsPerHealth() {return unitsPerHunger;}
 

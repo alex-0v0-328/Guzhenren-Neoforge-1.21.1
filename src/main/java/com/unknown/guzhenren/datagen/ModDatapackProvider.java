@@ -26,10 +26,16 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 /**
  * The single provider for every datapack registry this mod writes.
  *
+ * <p>Extends {@link net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider}. Builds damage
+ * types and biome modifiers in one {@code RegistrySetBuilder}. The tag providers take
+ * {@code getRegistryProvider()} from this instance, not the plain lookup, so the tag pass sees the
+ * types this run generates.
+ *
  * <p>⚠ There can only be one. The builtin-entries provider reports a fixed name, so a second instance
  * fails datagen outright; add a registry to this one's builder instead.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
@@ -54,7 +60,7 @@ public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
     //region Biome modifiers [生态修改] -- where a wild Gu [野生蛊虫] spawns
     private static final ResourceKey<BiomeModifier> SPAWN_HOPE_GU = ResourceKey.create(
             NeoForgeRegistries.Keys.BIOME_MODIFIERS,
-            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "spawn_hope_gu"));
+            Guzhenren.id("spawn_hope_gu"));
 
     private static final int SPAWN_WEIGHT = 8;
     private static final int PACK_MINIMUM = 1;

@@ -47,6 +47,7 @@ authors="Unknown"
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Mod Name: Guzhenren
+Tags: Single-player, Hardcore, Survival, RPG
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
@@ -88,12 +89,12 @@ config="${mod_id}.mixins.json"
     ordering="NONE"
     side="BOTH"
 
-# Optional integrations. Neither has to be installed; both load before us when they are.
-# The prerequisite mod. REQUIRED, not optional: the body it defines is what this mod's parts install
-# into. ordering=AFTER so its registries exist before ours touch them.
+# Optional integrations. None has to be installed; all load before us when they are.
+# CustomPlayer: the body this mod's parts install into. Optional now; body-part Gu ticking
+# is guarded by a ModList check.
 [[dependencies.${mod_id}]]
     modId="customplayer"
-    type="required"
+    type="optional"
     versionRange="[1.0.0,)"
     ordering="AFTER"
     side="BOTH"

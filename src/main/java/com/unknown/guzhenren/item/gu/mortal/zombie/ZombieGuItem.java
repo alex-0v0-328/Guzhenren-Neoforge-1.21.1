@@ -10,29 +10,31 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The shared class behind every zombie Gu [僵尸蛊]; the form's length and health come from registration.
+ * The shared class behind every zombie Gu [僵尸蛊]; the form's length comes from registration.
+ *
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. Nine Gu register against this one
+ * class (二转..五转). The gate refuses only "already 僵"; the payout delegates to
+ * {@link com.unknown.guzhenren.attachment.service.body.BodyService} to enter half-zombie or, on a
+ * relapse, turn permanently 僵.
  *
  * <p>⚠ Using one again too soon is not refused -- it is the penalty, and it makes the form permanent.
  * That branch leaves early, so anything both outcomes need has to sit ahead of it.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.item.gu.TendedGuItem
  */
 public class ZombieGuItem extends TendedGuItem {
 
     private static final String FAILED_ALREADY_ZOMBIE = "guzhenren.item.failed.zombie_already";
 
-    private final int maxHealth;
     private final int halfZombieTicks;
 
-    public ZombieGuItem(Properties properties, int maxHealth, int halfZombieTicks, GuSpec spec) {
+    public ZombieGuItem(Properties properties, int halfZombieTicks, GuSpec spec) {
         super(properties, spec);
-        this.maxHealth = maxHealth;
         this.halfZombieTicks = halfZombieTicks;
     }
-
-    @Override
-    public int maxHealth() {return maxHealth;}
 
     private int rung() {return rank().ordinal() - Rank.TWO.ordinal();}
 

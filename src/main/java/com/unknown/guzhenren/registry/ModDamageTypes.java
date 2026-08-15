@@ -11,10 +11,15 @@ import net.minecraft.world.entity.Entity;
 /**
  * The keys of this mod's damage types.
  *
- * <p>⚠ Damage types live in a datapack registry rather than a deferred one, so this file owns only
- * the keys; the JSON is written at datagen time by a provider that does not exist at runtime.
+ * <p>Resource-key holder (not a DeferredRegister): damage types live in a datapack registry, so this
+ * file owns only the {@link ResourceKey}s; the JSON is written at datagen time by a provider that does
+ * not exist at runtime. {@code source(entity, type)} is the one factory.
+ *
+ * <p>⚠ Four types, all carrying the same six tags (five {@code BYPASSES_*} plus {@code NO_KNOCKBACK})
+ * but deliberately NOT {@code BYPASSES_INVULNERABILITY} -- creative stays unkillable.
  *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
  */
 public final class ModDamageTypes {
@@ -37,6 +42,6 @@ public final class ModDamageTypes {
 
     private static ResourceKey<DamageType> key(String name) {
         return ResourceKey.create(Registries.DAMAGE_TYPE,
-                ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, name));
+                Guzhenren.id(name));
     }
 }

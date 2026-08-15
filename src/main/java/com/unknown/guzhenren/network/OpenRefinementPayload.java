@@ -10,15 +10,22 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Client intent: open the refinement [炼蛊] menu.
  *
+ * <p>A zero-byte singleton payload -- it carries no data at all, only the button press. The server
+ * handler in {@link com.unknown.guzhenren.network.ModPayloads} opens the
+ * {@link com.unknown.guzhenren.menu.RefinementMenu}. Client intent is the one direction attachment
+ * sync cannot carry; no player data travels upstream.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.network.ModPayloads
  */
 public record OpenRefinementPayload() implements CustomPacketPayload {
 
     public static final OpenRefinementPayload INSTANCE = new OpenRefinementPayload();
 
     public static final Type<OpenRefinementPayload> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "open_refinement"));
+            Guzhenren.id("open_refinement"));
 
     public static final StreamCodec<ByteBuf, OpenRefinementPayload> STREAM_CODEC =
             StreamCodec.unit(INSTANCE);

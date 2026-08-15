@@ -12,8 +12,16 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  * Shared layout for an effect icon drawn from a texture: slot centring, the HUD/inventory render hooks,
  * and the one abstract seam -- which texture this instance wears.
  *
+ * <p>Implements {@link net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions}.
+ * The two default render methods (HUD and inventory) both delegate to {@code textureFor}, so a new
+ * effect icon strategy is one class implementing that seam. All icons are 16×16, centred with a 1px
+ * inset.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.client.GradedEffectIcon
+ * @see com.unknown.guzhenren.client.ItemEffectIcon
  */
 interface EffectIconLayout extends IClientMobEffectExtensions {
 
@@ -26,7 +34,7 @@ interface EffectIconLayout extends IClientMobEffectExtensions {
     String textureFor(MobEffectInstance instance);
 
     private void draw(GuiGraphics g, MobEffectInstance instance, int x, int y) {
-        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID,
+        ResourceLocation texture = Guzhenren.id(
                 "textures/" + textureFor(instance) + ".png");
         g.blit(texture, x, y, 0, 0.0F, 0.0F, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
     }

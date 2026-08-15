@@ -25,8 +25,16 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 /**
  * Every client-side registration this mod makes: HUD layers, key mappings, screens and renderers.
  *
+ * <p>Annotated {@code @EventBusSubscriber(Dist.CLIENT)}. Registers three GUI layers
+ * ({@link com.unknown.guzhenren.client.hud.PlayerStatsHud},
+ * {@link com.unknown.guzhenren.client.hud.ChargeHud},
+ * {@link com.unknown.guzhenren.client.hud.NourishHud}), the key mapping for the G panel, the menu
+ * screens for the two containers, and the {@code NoopRenderer} for wild Gu entities.
+ *
  * @author Alex
+ * @version 1.0.0
  * @since 1.0.0
+ * @see com.unknown.guzhenren.client.ModKeyMappings
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID, value = Dist.CLIENT)
 public final class ClientEvents {
@@ -34,13 +42,13 @@ public final class ClientEvents {
     private ClientEvents() {}
 
     private static final ResourceLocation PLAYER_STATS =
-            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "player_stats");
+            Guzhenren.id("player_stats");
 
     private static final ResourceLocation CHARGE =
-            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "charge");
+            Guzhenren.id("charge");
 
     private static final ResourceLocation NOURISH =
-            ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "nourish");
+            Guzhenren.id("nourish");
 
     @SubscribeEvent
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
