@@ -107,7 +107,7 @@ public final class PlayerTickEvents {
             return;
         }
         player.addEffect(new MobEffectInstance(
-                ModEffects.HALF_ZOMBIE, (int) BodyService.halfZombieTicksLeft(player), 0, true, false));
+                ModEffects.HALF_ZOMBIE, (int) BodyService.halfZombieTicksLeft(player), 0, false, false));
     }
 
     private static void closeDistilling(ServerPlayer player) {

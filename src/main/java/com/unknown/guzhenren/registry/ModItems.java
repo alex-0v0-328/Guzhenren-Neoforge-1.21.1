@@ -19,10 +19,12 @@ import com.unknown.guzhenren.item.gu.mortal.PrimevalElderGuItem;
 import com.unknown.guzhenren.item.gu.mortal.RelicsGuItem;
 import com.unknown.guzhenren.item.gu.mortal.VitalityLeafGuItem;
 import com.unknown.guzhenren.item.gu.mortal.liquor.LiquorWormItem;
+import com.unknown.guzhenren.item.gu.mortal.soul.GutsGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.AllOutEffortGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.BeastStrengthGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.HumanStrengthGuItem;
 import com.unknown.guzhenren.item.gu.mortal.time.WatchGuItem;
+import com.unknown.guzhenren.item.gu.mortal.wisdom.CasualGuItem;
 import com.unknown.guzhenren.item.gu.mortal.wisdom.MaliciousThoughtGuItem;
 import com.unknown.guzhenren.item.gu.mortal.zombie.ZombieGuItem;
 import com.unknown.guzhenren.item.material.LiquorItem;
@@ -74,33 +76,33 @@ public final class ModItems {
     public static final DeferredItem<Item> COPPER_RELICS_GU = ITEMS.register("copper_relics_gu",
             () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.ONE, GuPath.HEAVEN).refine(1)));
     public static final DeferredItem<Item> STEEL_RELICS_GU = ITEMS.register("steel_relics_gu",
-            () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.TWO, GuPath.HEAVEN).refine(10)));
+            () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.TWO, GuPath.HEAVEN).refine(12)));
     public static final DeferredItem<Item> SILVER_RELICS_GU = ITEMS.register("silver_relics_gu",
-            () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.THREE, GuPath.HEAVEN).refine(100)));
+            () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.THREE, GuPath.HEAVEN).refine(120)));
     public static final DeferredItem<Item> GOLD_RELICS_GU = ITEMS.register("gold_relics_gu",
-            () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.FOUR, GuPath.HEAVEN).refine(1_000)));
+            () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.FOUR, GuPath.HEAVEN).refine(1_200)));
     public static final DeferredItem<Item> CRYSTAL_RELICS_GU = ITEMS.register("crystal_relics_gu",
-            () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.FIVE, GuPath.HEAVEN).refine(10_000)));
+            () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.FIVE, GuPath.HEAVEN).refine(12_000)));
     //endregion
 
     //region 兽力虚影流 -- one round of 3,600 buys a beast's strength, held once ever
     public static final DeferredItem<Item> WHITE_BOAR_GU = ITEMS.register("white_boar_gu",
             () -> new BeastStrengthGuItem(tended(), BeastStrength.WHITE_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
-                    .refine(1_000)
+                    .refine(1_200)
                     .channel(3_600)
                     .speckEvery(600, BeastStrength.WHITE_BOAR.getMarkTag())
                     .hungerBar(18, 3).hungerEvery(100)
                     .feed(ModItemTags.BOAR_FEED, 1)));
     public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
             () -> new BeastStrengthGuItem(tended(), BeastStrength.BLACK_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
-                    .refine(1_000)
+                    .refine(1_200)
                     .channel(3_600)
                     .speckEvery(600, BeastStrength.BLACK_BOAR.getMarkTag())
                     .hungerBar(18, 3).hungerEvery(100)
                     .feed(ModItemTags.BOAR_FEED, 1)));
     public static final DeferredItem<Item> BEAR_STRENGTH_GU = ITEMS.register("bear_strength_gu",
             () -> new BeastStrengthGuItem(tended(), BeastStrength.BEAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
-                    .refine(1_000)
+                    .refine(1_200)
                     .channel(3_600)
                     .speckEvery(600, BeastStrength.BEAR.getMarkTag())
                     .hungerBar(18, 3).hungerEvery(100)
@@ -111,7 +113,7 @@ public final class ModItems {
     public static final DeferredItem<Item> FLOWER_BOAR_GU = ITEMS.register("flower_boar_gu",
             () -> new BuffGuItem(tended(), ModEffects.FLOWER_BOAR_GU, FlowerBoarGuEffect.DURATION_TICKS,
                     GuSpec.of(Rank.ONE, GuPath.STRENGTH)
-                            .refine(1_000)
+                            .refine(1_200)
                             .costPerUse(20)
                             .hungerBar(9, 3).hungerPerUse(3)
                             .feed(ModItemTags.BOAR_FEED, 1)
@@ -120,7 +122,7 @@ public final class ModItems {
             () -> new BuffGuItem(tended(), ModEffects.DRAGONPILL_CRICKET_GU,
                     DragonpillCricketGuEffect.DURATION_TICKS,
                     GuSpec.of(Rank.ONE, GuPath.STRENGTH)
-                            .refine(1_000)
+                            .refine(1_200)
                             .costPerUse(20)
                             .hungerBar(8, 3).hungerPerUse(1)
                             .feed(ModItemTags.RABBIT_FEED, 1)
@@ -130,7 +132,7 @@ public final class ModItems {
                     () -> new BuffGuItem(tended(), ModEffects.BRUTE_FORCE_LONGHORN_BEETLE_GU,
                             BruteForceLonghornBeetleGuEffect.DURATION_TICKS,
                             GuSpec.of(Rank.ONE, GuPath.STRENGTH)
-                                    .refine(1_000)
+                                    .refine(1_200)
                                     .costPerUse(20)
                                     .hungerBar(8, 3).hungerPerUse(1)
                                     .feed(ModItemTags.BEEF_FEED, 1)
@@ -140,7 +142,7 @@ public final class ModItems {
     //region 人力钧力流 -- one class, the kind at registration; one round is one layer
     public static final DeferredItem<Item> JIN_STRENGTH_GU = ITEMS.register("jin_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.JIN, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
-                    .refine(1_000)
+                    .refine(1_200)
                     .channel(3_600)
                     .speckEvery(3_600, MarkTag.STRENGTH_HUMAN)
                     .hungerBar(36, 3).hungerEvery(200)
@@ -148,7 +150,7 @@ public final class ModItems {
                     .dense(ModItemTags.JIN_FEED_DENSE, 9)));
     public static final DeferredItem<Item> TENS_JIN_STRENGTH_GU = ITEMS.register("tens_jin_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.TEN_JIN, GuSpec.of(Rank.TWO, GuPath.STRENGTH)
-                    .refine(10_000)
+                    .refine(12_000)
                     .channel(36_000)
                     .speckEvery(3_600, MarkTag.STRENGTH_HUMAN)
                     .hungerBar(36, 9).hungerEvery(2_000)
@@ -156,7 +158,7 @@ public final class ModItems {
                     .dense(ModItemTags.JIN_FEED_DENSE, 9)));
     public static final DeferredItem<Item> JUN_STRENGTH_GU = ITEMS.register("jun_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.JUN, GuSpec.of(Rank.THREE, GuPath.STRENGTH)
-                    .refine(100_000)
+                    .refine(120_000)
                     .channel(72_000)
                     .speckEvery(2_400, MarkTag.STRENGTH_HUMAN)
                     .hungerBar(36, 9).hungerEvery(4_000)
@@ -164,7 +166,7 @@ public final class ModItems {
                     .dense(ModItemTags.JIN_FEED_SMELTED_DENSE, 9)));
     public static final DeferredItem<Item> TENS_JUN_STRENGTH_GU = ITEMS.register("tens_jun_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.TEN_JUN, GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
-                    .refine(1_000_000)
+                    .refine(1_200_000)
                     .channel(720_000)
                     .speckEvery(2_400, MarkTag.STRENGTH_HUMAN)
                     .hungerBar(36, 27).hungerEvery(40_000)
@@ -175,21 +177,21 @@ public final class ModItems {
     //region 全力以赴蛊 -- 上古力道; the only thing that unlocks a stockpiled 9999 斤
     public static final DeferredItem<Item> ALL_OUT_EFFORT_GU_3 = ITEMS.register("all_out_effort_gu_3",
             () -> new AllOutEffortGuItem(tended(), 60, GuSpec.of(Rank.THREE, GuPath.STRENGTH)
-                    .refine(160_000)
+                    .refine(120_000)
                     .costPerUse(2_000)
                     .hungerBar(20, 8).hungerPerUse(5)
                     .feed(ModItemTags.ALL_OUT_FEED, 5)
                     .cooldown(80 * Ticks.SECOND)));
     public static final DeferredItem<Item> ALL_OUT_EFFORT_GU_4 = ITEMS.register("all_out_effort_gu_4",
             () -> new AllOutEffortGuItem(tended(), 90, GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
-                    .refine(1_600_000)
+                    .refine(1_200_000)
                     .costPerUse(20_000)
                     .hungerBar(20, 12).hungerPerUse(4)
                     .feed(ModItemTags.ALL_OUT_FEED, 5)
                     .cooldown(100 * Ticks.SECOND)));
     public static final DeferredItem<Item> ALL_OUT_EFFORT_GU_5 = ITEMS.register("all_out_effort_gu_5",
             () -> new AllOutEffortGuItem(tended(), 120, GuSpec.of(Rank.FIVE, GuPath.STRENGTH)
-                    .refine(16_000_000)
+                    .refine(12_000_000)
                     .costPerUse(200_000)
                     .hungerBar(20, 16).hungerPerUse(2)
                     .feed(ModItemTags.ALL_OUT_FEED, 5)
@@ -199,20 +201,20 @@ public final class ModItems {
     //region Liquor Worm [酒虫] -- hunger bar 8 with 6 per use, and only its own rank can drive it
     public static final DeferredItem<Item> LIQUOR_WORM = ITEMS.register("liquor_worm",
             () -> new LiquorWormItem(tended(), GuSpec.of(Rank.ONE, GuPath.FOOD)
-                    .refine(1_600).costPerUse(20)
+                    .refine(1_200).costPerUse(20)
                     .hungerBar(8, 2).hungerPerUse(6).feed(ModItemTags.LIQUOR_FEED, 1)));
     public static final DeferredItem<Item> FOUR_FLAVORS_LIQUOR_WORM = ITEMS.register("four_flavors_liquor_worm",
             () -> new LiquorWormItem(tended(), GuSpec.of(Rank.TWO, GuPath.FOOD)
-                    .refine(16_000).costPerUse(200)
+                    .refine(12_000).costPerUse(200)
                     .hungerBar(8, 4).hungerPerUse(6).feed(ModItemTags.LIQUOR_FEED, 1)));
     public static final DeferredItem<Item> SEVEN_FRAGRANCES_LIQUOR_WORM = ITEMS.register(
             "seven_fragrances_liquor_worm",
             () -> new LiquorWormItem(tended(), GuSpec.of(Rank.THREE, GuPath.FOOD)
-                    .refine(160_000).costPerUse(2_000)
+                    .refine(120_000).costPerUse(2_000)
                     .hungerBar(8, 6).hungerPerUse(6).feed(ModItemTags.LIQUOR_FEED, 1)));
     public static final DeferredItem<Item> NINE_EYES_LIQUOR_WORM = ITEMS.register("nine_eyes_liquor_worm",
             () -> new LiquorWormItem(tended(), GuSpec.of(Rank.FOUR, GuPath.FOOD)
-                    .refine(1_600_000).costPerUse(20_000)
+                    .refine(1_200_000).costPerUse(20_000)
                     .hungerBar(8, 8).hungerPerUse(6).feed(ModItemTags.LIQUOR_FEED, 1)));
     //endregion
 
@@ -225,29 +227,29 @@ public final class ModItems {
                     .refine(100).costPerUse(1)));
     public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_3 = ITEMS.register("primeval_elder_gu_3",
             () -> new PrimevalElderGuItem(tended(), 100_000L, GuSpec.of(Rank.THREE, GuPath.SPACE)
-                    .refine(1_000).costPerUse(1)));
+                    .refine(1_200).costPerUse(1)));
     public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_4 = ITEMS.register("primeval_elder_gu_4",
             () -> new PrimevalElderGuItem(tended(), 1_000_000L, GuSpec.of(Rank.FOUR, GuPath.SPACE)
-                    .refine(10_000).costPerUse(1)));
+                    .refine(12_000).costPerUse(1)));
     public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_5 = ITEMS.register("primeval_elder_gu_5",
             () -> new PrimevalElderGuItem(tended(), 100_000_000L, GuSpec.of(Rank.FIVE, GuPath.SPACE)
-                    .refine(100_000).costPerUse(1)));
+                    .refine(120_000).costPerUse(1)));
     //endregion
 
     //region 僵尸蛊 [zombie Gu] -- 变化道; a timed 半生半僵, and a 5-minute window that makes it permanent
     public static final DeferredItem<Item> ROAMING_ZOMBIE_GU = ITEMS.register("roaming_zombie_gu",
             () -> new ZombieGuItem(tended(), 16, 2 * Ticks.MINUTE, GuSpec.of(Rank.TWO, GuPath.TRANSFORMATION)
-                    .refine(16_000).costPerUse(200)
+                    .refine(12_000).costPerUse(200)
                     .hungerBar(4, 2).hungerPerUse(2).feed(ModItemTags.ZOMBIE_FEED, 1)
                     .cooldown(Ticks.SECOND)));
     public static final DeferredItem<Item> HAIRY_ZOMBIE_GU = ITEMS.register("hairy_zombie_gu",
             () -> new ZombieGuItem(tended(), 16, 4 * Ticks.MINUTE, GuSpec.of(Rank.THREE, GuPath.TRANSFORMATION)
-                    .refine(160_000).costPerUse(2_000)
+                    .refine(120_000).costPerUse(2_000)
                     .hungerBar(8, 4).hungerPerUse(2).feed(ModItemTags.ZOMBIE_FEED, 1)
                     .cooldown(Ticks.SECOND)));
     public static final DeferredItem<Item> HOPPING_ZOMBIE_GU = ITEMS.register("hopping_zombie_gu",
             () -> new ZombieGuItem(tended(), 32, 6 * Ticks.MINUTE, GuSpec.of(Rank.FOUR, GuPath.TRANSFORMATION)
-                    .refine(1_600_000).costPerUse(20_000)
+                    .refine(1_200_000).costPerUse(20_000)
                     .hungerBar(16, 6).hungerPerUse(2).feed(ModItemTags.ZOMBIE_FEED, 1)
                     .cooldown(Ticks.SECOND)));
 
@@ -266,7 +268,7 @@ public final class ModItems {
 
     private static ZombieGuItem fifthRankZombieGu() {
         return new ZombieGuItem(tended(), 32, 8 * Ticks.MINUTE, GuSpec.of(Rank.FIVE, GuPath.TRANSFORMATION)
-                .refine(16_000_000).costPerUse(200_000)
+                .refine(12_000_000).costPerUse(200_000)
                 .hungerBar(16, 8).hungerPerUse(2).feed(ModItemTags.ZOMBIE_FEED, 1)
                 .cooldown(Ticks.SECOND));
     }
@@ -311,7 +313,29 @@ public final class ModItems {
                     GuSpec.of(Rank.FIVE, GuPath.WISDOM)
                             .refine(16_000_000).costPerUse(200_000)
                             .hungerBar(12, 4).hungerPerUse(0).feed(ModItemTags.MALICIOUS_THOUGHT_FEED, 1)
-                            .cooldown(Ticks.SECOND)));
+                             .cooldown(Ticks.SECOND)));
+    //endregion
+
+    //region 胆识蛊 [Guts Gu] -- 魂道; a one-shot Gu that raises the soul cap
+    public static final DeferredItem<Item> GUTS_GU = ITEMS.register("guts_gu",
+            () -> new GutsGuItem(oneShot(), GuSpec.of(Rank.ONE, GuPath.SOUL)));
+    //endregion
+
+    //region 随意蛊 [Casual Gu] -- 智道; ten seconds of random thoughts, taken by its use
+    public static final DeferredItem<Item> CASUAL_GU_1 = ITEMS.register("casual_gu_1",
+            () -> new CasualGuItem(tended(), ModEffects.CASUAL_GU, GuSpec.of(Rank.ONE, GuPath.WISDOM)
+                    .refine(1_600)
+                    .costPerUse(20)
+                    .hungerBar(9, 3).hungerPerUse(3)
+                    .feed(ModItemTags.CASUAL_FEED, 1)
+                    .cooldown(Ticks.SECOND)));
+    public static final DeferredItem<Item> CASUAL_GU_2 = ITEMS.register("casual_gu_2",
+            () -> new CasualGuItem(tended(), ModEffects.CASUAL_GU, GuSpec.of(Rank.TWO, GuPath.WISDOM)
+                    .refine(16_000)
+                    .costPerUse(200)
+                    .hungerBar(9, 3).hungerPerUse(3)
+                    .feed(ModItemTags.CASUAL_FEED, 1)
+                    .cooldown(Ticks.SECOND)));
     //endregion
 
     //region 蛊材 [Gu materials]

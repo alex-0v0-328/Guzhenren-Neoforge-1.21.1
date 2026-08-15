@@ -49,5 +49,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
 
         //  TODO(placeholder): dirt is a placeholder food for the Malicious Thought Gu, pending Alex's real food.
         tag(ModItemTags.MALICIOUS_THOUGHT_FEED).add(Items.DIRT);
+
+        tag(ModItemTags.CASUAL_FEED).add(Items.WHEAT_SEEDS);
     }
 }

@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.attachment.service.body;
 
+import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.body.QiData;
 import com.unknown.guzhenren.attachment.data.body.QiEntry;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
@@ -24,7 +25,7 @@ public final class QiService {
 
     private QiService() {}
 
-    private static final int EFFECT_REFRESH_TICKS = 40;
+    private static final int EFFECT_REFRESH_TICKS = 2 * Ticks.SECOND;
 
     public static QiData get(Player p) {return p.getData(ModAttachments.QI);}
     public static long current(Player p, QiKind kind) {return get(p).current(kind, now(p));}
@@ -78,7 +79,7 @@ public final class QiService {
                 : (int) Math.min(Integer.MAX_VALUE, entry.holdEndTick() - now + EFFECT_REFRESH_TICKS);
         if (current == null || current.getAmplifier() != tier
                 || current.getDuration() < EFFECT_REFRESH_TICKS) {
-            player.addEffect(new MobEffectInstance(effect, duration, tier));
+            player.addEffect(ModEffects.instance(effect, duration, tier));
         }
     }
 
@@ -90,7 +91,7 @@ public final class QiService {
             return;
         }
         if (current == null || current.getDuration() < EFFECT_REFRESH_TICKS) {
-            player.addEffect(new MobEffectInstance(ModEffects.DEATH_QI, 10 * EFFECT_REFRESH_TICKS, 0));
+            player.addEffect(ModEffects.instance(ModEffects.DEATH_QI, 10 * EFFECT_REFRESH_TICKS, 0));
         }
     }
     //endregion

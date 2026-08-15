@@ -2,6 +2,7 @@ package com.unknown.guzhenren.effect.timed;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.Ticks;
+import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -43,7 +44,7 @@ public class DragonpillCricketGuEffect extends MobEffect {
 
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, AFTERMATH_TICKS));
+        entity.addEffect(ModEffects.instance(MobEffects.WEAKNESS, AFTERMATH_TICKS));
         return true;
     }
 }

@@ -2,6 +2,7 @@ package com.unknown.guzhenren.effect.timed;
 
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.effect.AttackContributor;
+import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -38,7 +39,7 @@ public class BruteForceLonghornBeetleGuEffect extends MobEffect implements Attac
 
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, AFTERMATH_TICKS));
+        entity.addEffect(ModEffects.instance(MobEffects.WEAKNESS, AFTERMATH_TICKS));
         return true;
     }
 }

@@ -3,8 +3,8 @@
   "biomes": "#guzhenren:hope_gu_spawns",
   "spawners": {
     "type": "guzhenren:hope_gu_entity",
-    "maxCount": 4,
-    "minCount": 2,
+    "maxCount": 2,
+    "minCount": 1,
     "weight": 8
   }
 }

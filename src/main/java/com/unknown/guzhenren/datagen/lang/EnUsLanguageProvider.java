@@ -322,6 +322,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.MALICIOUS_THOUGHT_GU_3,           "Malicious Thought Gu III");
         addItem(ModItems.MALICIOUS_THOUGHT_GU_4,           "Malicious Thought Gu IV");
         addItem(ModItems.MALICIOUS_THOUGHT_GU_5,           "Malicious Thought Gu V");
+        addItem(ModItems.GUTS_GU,                          "Guts Gu");
+        addItem(ModItems.CASUAL_GU_1,                      "Casual Gu I");
+        addItem(ModItems.CASUAL_GU_2,                      "Casual Gu II");
         addItem(ModItems.PRIMEVAL_STONE,                   "Primeval Stone");
         addItem(ModItems.LIQUOR,                           "Liquor");
         addItem(ModItems.SOUR_LIQUOR,                      "Sour Liquor");
@@ -401,6 +404,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.half_zombie",                "Half-Zombie Effect");
         add("effect.guzhenren.second_watch_gu",            "Second Watch Gu Effect");
         add("effect.guzhenren.third_watch_gu",             "Third Watch Gu Effect");
+        add("effect.guzhenren.malicious_thought_gu",       "Malicious Thought Gu Effect");
+        add("effect.guzhenren.casual_gu",                  "Casual Gu Effect");
     }
     //endregion
 

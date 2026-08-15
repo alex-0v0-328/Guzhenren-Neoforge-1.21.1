@@ -20,7 +20,7 @@ public class VitalityLeafGuItem extends OneShotGuItem {
 
     private static final String FAILED_VITALITY_ACTIVE = "guzhenren.item.failed.vitality_active";
 
-    private static final int USE_COOLDOWN_TICKS = 20;
+    private static final int USE_COOLDOWN_TICKS = 10;
 
     public VitalityLeafGuItem(Properties properties, GuSpec spec) {
         super(properties, spec);
@@ -36,7 +36,7 @@ public class VitalityLeafGuItem extends OneShotGuItem {
 
     @Override
     protected int useApply(ServerPlayer player, ItemStack stack) {
-        player.addEffect(new MobEffectInstance(ModEffects.VITALITY_LEAF, VitalityLeafEffect.DURATION_TICKS));
+        player.addEffect(ModEffects.instance(ModEffects.VITALITY_LEAF, VitalityLeafEffect.DURATION_TICKS));
         return 1;
     }
 }

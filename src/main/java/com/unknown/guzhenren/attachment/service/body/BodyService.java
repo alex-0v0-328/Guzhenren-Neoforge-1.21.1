@@ -116,12 +116,12 @@ public final class BodyService {
                 .withDeathQiLifespanLost(body.deathQiLifespanLost() + years));
     }
 
-    public static long refundDeathQiDebt(ServerPlayer player, int numerator, int denominator) {
+    public static double refundDeathQiDebt(ServerPlayer player, int numerator, int denominator) {
         BodyData body = get(player);
-        long refund = body.deathQiLifespanLost() * numerator / denominator;
-        store(player, body.withLifespanParts(body.lifespanParts() + BodyData.parts(refund))
+        long refundParts = BodyData.parts(body.deathQiLifespanLost()) * numerator / denominator;
+        store(player, body.withLifespanParts(body.lifespanParts() + refundParts)
                 .withDeathQiLifespanLost(0L));
-        return refund;
+        return (double) refundParts / BodyData.PARTS_PER_YEAR;
     }
 
     public static void clearDeathQiDebt(ServerPlayer p) {store(p, get(p).withDeathQiLifespanLost(0L));}

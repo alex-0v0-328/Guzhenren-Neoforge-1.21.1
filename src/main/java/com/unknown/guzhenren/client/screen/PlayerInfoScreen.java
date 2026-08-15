@@ -60,7 +60,7 @@ public final class PlayerInfoScreen extends Screen {
     private static final int TAB_TEXT_DEAD = 0xFF6A6A6A;
 
     private static final int[] ACCENT =
-            {0xFF4FC3F7, 0xFFB388FF, 0xFFB388FF, 0xFFFF8A65, 0xFFFFD54F, 0xFF81C784, 0xFFA1887F};
+            {0xFF4FC3F7, 0xFFB388FF, 0xFFD388FF, 0xFFFF8A65, 0xFF4DD0E1, 0xFFFFD54F, 0xFF81C784};
 
     private static final String[] TAB_KEYS = {
             "guzhenren.screen.tab.aperture",

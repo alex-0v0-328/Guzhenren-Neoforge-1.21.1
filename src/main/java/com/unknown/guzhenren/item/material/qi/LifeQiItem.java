@@ -34,9 +34,9 @@ public class LifeQiItem extends QiMaterialItem {
         QiService.add(player, QiKind.DEATH, -qiAmount());
         if (remainder > 0L) QiService.add(player, QiKind.LIFE, remainder);
         if (QiService.current(player, QiKind.DEATH) <= 0L) {
-            long refund = BodyService.refundDeathQiDebt(player,
+            double refund = BodyService.refundDeathQiDebt(player,
                     DeathQiEffect.REFUND_NUMERATOR, DeathQiEffect.REFUND_DENOMINATOR);
-            if (refund > 0L) inform(player, CURED, refund);
+            if (refund > 0.0) inform(player, CURED, refund);
         }
         return 1;
     }

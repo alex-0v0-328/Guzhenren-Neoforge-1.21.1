@@ -41,7 +41,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int CELL = 16;
     private static final int INVENTORY_COLS = 9;
 
-    // Chrome the menu never places a Slot at, so it has no business knowing these.
     private static final int CRAFT_X = 140;
     private static final int CRAFT_Y = 76;
     private static final int CRAFT_W = 52;
@@ -56,7 +55,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int RECIPE_H = 20;
     private static final int LEGEND_Y = 142;
 
-    private static final int ACCENT = 0xFFA1887F;
+    private static final int ACCENT = 0xFF81C784;
     private static final int PANEL_FILL = 0xBF000000;
     private static final int BORDER = 0x66FFFFFF;
     private static final int SLOT_FILL = 0x33FFFFFF;
@@ -68,15 +67,15 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int BUTTON_DEAD = 0x14FFFFFF;
     private static final int SHORT_RED = 0x99FF5555;
     private static final int BAR_TRACK = 0x33000000;
-    private static final int BAR_WINDOW = 0xFFA1887F;
-    private static final int BAR_GAP = 0x66A1887F;
+    private static final int BAR_WINDOW = 0xFF81C784;
+    private static final int BAR_GAP = 0x6681C784;
     private static final int BAR_SHORT = 0xFFFF5555;
     private static final int PICK_FILL = 0xF0000000;
     private static final int GHOST_OVERLAY = 0x1AFFFFFF;
     private static final float GHOST_ALPHA = 0.35F;
     private static final int ESSENCE_FILL = 0xFF4FC3F7;
     private static final int DISTILLED_FILL = 0xFF1565C0;
-    private static final int SOUL_FILL = 0xFFB388FF;
+    private static final int SOUL_FILL = 0xFFD388FF;
 
     private static final int POOL_X = 18;
     private static final int POOL_W = 230;
@@ -201,7 +200,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     }
 
     //region the pools -- all three ride the synced attachments, so none of them needs a packet
-    //   one unit is a right-aligned 现值/上限 over a full-width bar; 蒸馏真元 takes a unit only when it exists
     private void renderPools(GuiGraphics g) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -267,6 +265,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
 
     @Override
     public void render(@NotNull GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        knownCache = null;
         super.render(g, mouseX, mouseY, partialTick);
         renderCraft(g, mouseX, mouseY);
         renderRecipe(g, mouseX, mouseY);
@@ -486,9 +485,14 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     //endregion
 
     //region the 蛊方 a player may attempt -- the client holds the whole synced table, so it needs no packet
-    private static List<RecipeHolder<GuRecipe>> known() {
-        ClientLevel level = Minecraft.getInstance().level;
-        return level == null ? List.of() : GuRecipe.known(level.getRecipeManager());
+    private @Nullable List<RecipeHolder<GuRecipe>> knownCache;
+
+    private List<RecipeHolder<GuRecipe>> known() {
+        if (knownCache == null) {
+            ClientLevel level = Minecraft.getInstance().level;
+            knownCache = level == null ? List.of() : GuRecipe.known(level.getRecipeManager());
+        }
+        return knownCache;
     }
 
     private @Nullable GuRecipe selectedRecipe() {

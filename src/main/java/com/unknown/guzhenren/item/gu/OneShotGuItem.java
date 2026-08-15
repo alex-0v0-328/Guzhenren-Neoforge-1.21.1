@@ -41,7 +41,10 @@ public abstract class OneShotGuItem extends MortalGuItem {
     }
 
     @Override
-    protected final int useDurationTicks(Player player, ItemStack stack) {return REFINE_TICKS;}
+    protected final int useDurationTicks(Player player, ItemStack stack) {return 0;}
+
+    @Override
+    protected int cooldownTicks(ItemStack stack) {return 10;}
     //endregion
 
     //region display

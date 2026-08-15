@@ -39,7 +39,7 @@ public class AllOutEffortGuItem extends TendedGuItem {
 
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
-        player.addEffect(new MobEffectInstance(ModEffects.ALL_OUT_EFFORT, effectSeconds * Ticks.SECOND, tier()));
+        player.addEffect(ModEffects.instance(ModEffects.ALL_OUT_EFFORT, effectSeconds * Ticks.SECOND, tier()));
         AttackService.refresh(player);
     }
 }

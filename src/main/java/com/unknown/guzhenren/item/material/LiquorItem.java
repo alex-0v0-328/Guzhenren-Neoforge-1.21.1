@@ -2,6 +2,7 @@ package com.unknown.guzhenren.item.material;
 
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -35,7 +36,7 @@ public class LiquorItem extends GuMaterialItem {
                 .nutrition(NUTRITION)
                 .saturationModifier(SATURATION)
                 .alwaysEdible()
-                .effect(() -> new MobEffectInstance(MobEffects.CONFUSION, NAUSEA_TICKS), NAUSEA_CHANCE)
+                .effect(() -> ModEffects.instance(MobEffects.CONFUSION, NAUSEA_TICKS), NAUSEA_CHANCE)
                 .build();
     }
 

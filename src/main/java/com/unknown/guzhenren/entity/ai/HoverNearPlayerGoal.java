@@ -16,11 +16,8 @@ import org.jetbrains.annotations.Nullable;
  * @author Alex
  * @since 1.0.0
  */
-//    ☠ This goal drives deltaMovement itself and NEVER paths. A mote flies in a straight line, so the
-//    navigation's path cache, stuck detector and canUpdatePath gates would all be obstacles, not help.
-public class HoverNearPlayerGoal extends Goal {
+    public class HoverNearPlayerGoal extends Goal {
 
-    //    ⚠ Walking is 4.3 blocks a second; below ~0.22 a tick the Gu can never close on a moving player.
     private static final double APPROACH_SPEED = 0.25;
     private static final double EASING = 0.25;
 
@@ -42,7 +39,6 @@ public class HoverNearPlayerGoal extends Goal {
         return target != null;
     }
 
-    //    ⚠ `seeks` is re-asked every tick, so a player who awakens mid-approach is dropped at once.
     @Override
     public boolean canContinueToUse() {
         return target != null && target.isAlive() && gu.seeks(target)
@@ -76,7 +72,6 @@ public class HoverNearPlayerGoal extends Goal {
         gu.setDeltaMovement(gu.getDeltaMovement().add(wanted.subtract(gu.getDeltaMovement()).scale(EASING)));
     }
 
-    //    A sine on the tick clock, never a random jitter -- jitter reads as stutter, a sine reads as alive.
     private void bob() {
         Vec3 movement = gu.getDeltaMovement();
         double lift = Math.sin(gu.tickCount * BOB_FREQUENCY) * BOB_AMPLITUDE;

@@ -28,7 +28,7 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     private static final int VITAL_SLOT_Y = 22;
     private static final String VITAL_KEY = "guzhenren.menu.vital";
 
-    private static final int ACCENT = 0xFF81C784;
+    private static final int ACCENT = 0xFFFFD54F;
     private static final int PANEL_FILL = 0xBF000000;
     private static final int BORDER = 0x66FFFFFF;
     private static final int SLOT_FILL = 0x33FFFFFF;

@@ -32,8 +32,6 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  * @author Alex
  * @since 1.0.0
  */
-//    ⚠ Every datapack registry this mod writes goes through THIS ONE provider. DatapackBuiltinEntriesProvider
-//    reports the fixed name "Registries", so a second instance fails the run with "Duplicate provider".
 public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
 
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
@@ -58,13 +56,9 @@ public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
             NeoForgeRegistries.Keys.BIOME_MODIFIERS,
             ResourceLocation.fromNamespaceAndPath(Guzhenren.MOD_ID, "spawn_hope_gu"));
 
-    //    ⚠ The pack size is what a player actually SEES: the category cap (15) bounds the total either way,
-    //    but a drift of 2..4 reads far denser than fifteen lone specks spread over 128 blocks.
-    //    ⚠ 4 is the ceiling -- Mob.getMaxSpawnClusterSize() truncates anything larger mid-spawn.
-    //    ⚠ Weight does nothing above sea level: bats never spawn there, so nothing shares the category.
     private static final int SPAWN_WEIGHT = 8;
-    private static final int PACK_MINIMUM = 2;
-    private static final int PACK_MAXIMUM = 4;
+    private static final int PACK_MINIMUM = 1;
+    private static final int PACK_MAXIMUM = 2;
 
     private static void biomeModifiers(BootstrapContext<BiomeModifier> context) {
         HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);

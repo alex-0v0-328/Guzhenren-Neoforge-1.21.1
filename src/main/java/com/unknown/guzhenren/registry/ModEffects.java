@@ -8,14 +8,17 @@ import com.unknown.guzhenren.effect.pool.LifeQiEffect;
 import com.unknown.guzhenren.effect.pool.StrengthQiEffect;
 import com.unknown.guzhenren.effect.timed.AllOutEffortEffect;
 import com.unknown.guzhenren.effect.timed.BruteForceLonghornBeetleGuEffect;
+import com.unknown.guzhenren.effect.timed.CasualThoughtEffect;
 import com.unknown.guzhenren.effect.timed.DragonpillCricketGuEffect;
 import com.unknown.guzhenren.effect.timed.FlowerBoarGuEffect;
 import com.unknown.guzhenren.effect.timed.LiquorWormEffect;
 import com.unknown.guzhenren.effect.timed.MaliciousThoughtEffect;
 import com.unknown.guzhenren.effect.timed.TimeFlowEffect;
 import com.unknown.guzhenren.effect.timed.VitalityLeafEffect;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -52,6 +55,7 @@ public final class ModEffects {
     private static final int TIME_FLOW_COLOR                      = 0x000000;
     //  TODO(color): placeholder pending Alex's pick.
     private static final int MALICIOUS_THOUGHT_COLOR              = 0x4A148C;
+    private static final int CASUAL_GU_COLOR                      = 0;
 
     public static final DeferredHolder<MobEffect, VitalityLeafEffect> VITALITY_LEAF = MOB_EFFECTS.register(
             "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, VITALITY_LEAF_COLOR));
@@ -101,6 +105,17 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, MaliciousThoughtEffect> MALICIOUS_THOUGHT_GU = MOB_EFFECTS.register(
             "malicious_thought_gu", () -> new MaliciousThoughtEffect(
                     MobEffectCategory.BENEFICIAL, MALICIOUS_THOUGHT_COLOR, new long[]{2L, 20L, 200L, 2_000L}));
+
+    public static final DeferredHolder<MobEffect, CasualThoughtEffect> CASUAL_GU = MOB_EFFECTS.register(
+            "casual_gu", () -> new CasualThoughtEffect(MobEffectCategory.BENEFICIAL, CASUAL_GU_COLOR));
+
+    public static MobEffectInstance instance(Holder<MobEffect> effect, int duration) {
+        return new MobEffectInstance(effect, duration, 0, false, true);
+    }
+
+    public static MobEffectInstance instance(Holder<MobEffect> effect, int duration, int amplifier) {
+        return new MobEffectInstance(effect, duration, amplifier, false, true);
+    }
 
     public static void register(IEventBus modEventBus) {
         MOB_EFFECTS.register(modEventBus);

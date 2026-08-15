@@ -322,6 +322,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.MALICIOUS_THOUGHT_GU_3,           "三转恶念蛊");
         addItem(ModItems.MALICIOUS_THOUGHT_GU_4,           "四转恶念蛊");
         addItem(ModItems.MALICIOUS_THOUGHT_GU_5,           "五转恶念蛊");
+        addItem(ModItems.GUTS_GU,                          "一转胆识蛊");
+        addItem(ModItems.CASUAL_GU_1,                      "一转随意蛊");
+        addItem(ModItems.CASUAL_GU_2,                      "二转随意蛊");
         addItem(ModItems.PRIMEVAL_STONE,                   "元石");
         addItem(ModItems.LIQUOR,                           "酒");
         addItem(ModItems.SOUR_LIQUOR,                      "酸酒");
@@ -401,6 +404,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.half_zombie",                "半生半僵效果");
         add("effect.guzhenren.second_watch_gu",            "两更蛊效果");
         add("effect.guzhenren.third_watch_gu",             "三更蛊效果");
+        add("effect.guzhenren.malicious_thought_gu",       "恶念蛊效果");
+        add("effect.guzhenren.casual_gu",                  "随意蛊效果");
     }
     //endregion
 

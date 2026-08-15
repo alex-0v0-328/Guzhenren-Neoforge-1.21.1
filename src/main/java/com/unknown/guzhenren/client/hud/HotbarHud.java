@@ -1,0 +1,46 @@
+package com.unknown.guzhenren.client.hud;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.network.chat.Component;
+
+/**
+ * Shared layout for the bars drawn over the hotbar: geometry, the baseline that armour and mounts move,
+ * and the three-fill draw every such bar reuses.
+ *
+ * @author Alex
+ * @since 1.0.0
+ */
+abstract class HotbarHud implements LayeredDraw.Layer {
+
+    static final int BAR_WIDTH = 182;
+    static final int BAR_HEIGHT = 5;
+    static final int TEXT_GAP = 3;
+    static final int NAME_GAP = 4;
+    static final int MIN_SHIFT = 59;
+    static final int CREATIVE_LIFT = 14;
+    static final int TRACK = 0xB0202020;
+    static final int BORDER = 0xC0000000;
+    static final int TEXT_COLOR = 0xFFFFFFFF;
+
+    static int barTop(Minecraft minecraft) {
+        Gui gui = minecraft.gui;
+        int shift = Math.max(Math.max(gui.leftHeight, gui.rightHeight), MIN_SHIFT);
+        int baseline = minecraft.getWindow().getGuiScaledHeight() - shift;
+        if (minecraft.gameMode != null && !minecraft.gameMode.canHurtPlayer()) baseline += CREATIVE_LIFT;
+        return baseline - NAME_GAP - BAR_HEIGHT;
+    }
+
+    static void drawBar(GuiGraphics g, int x, int y, float fraction, int fill) {
+        g.fill(x - 1, y - 1, x + BAR_WIDTH + 1, y + BAR_HEIGHT + 1, BORDER);
+        g.fill(x, y, x + BAR_WIDTH, y + BAR_HEIGHT, TRACK);
+        g.fill(x, y, x + Math.round(BAR_WIDTH * Math.clamp(fraction, 0.0F, 1.0F)), y + BAR_HEIGHT, fill);
+    }
+
+    static void drawLabel(GuiGraphics g, Minecraft mc, int x, int y, Component label) {
+        g.drawString(mc.font, label, x + (BAR_WIDTH - mc.font.width(label)) / 2,
+                y - TEXT_GAP - mc.font.lineHeight, TEXT_COLOR, true);
+    }
+}

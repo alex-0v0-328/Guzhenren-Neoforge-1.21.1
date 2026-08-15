@@ -42,6 +42,6 @@ public class LiquorWormItem extends TendedGuItem {
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
         EssenceService.beginDistilling(player);
-        player.addEffect(new MobEffectInstance(ModEffects.LIQUOR_WORM, Ticks.DAY, tier()));
+        player.addEffect(ModEffects.instance(ModEffects.LIQUOR_WORM, Ticks.DAY, tier()));
     }
 }

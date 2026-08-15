@@ -60,7 +60,6 @@ public final class ClientEvents {
         event.register(ModMenus.REFINEMENT_MENU.get(), RefinementScreen::new);
     }
 
-    //    NoopRenderer draws nothing at all -- the mote IS its particles. The hitbox is what stays clickable.
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntityTypes.HOPE_GU_ENTITY.get(), NoopRenderer::new);

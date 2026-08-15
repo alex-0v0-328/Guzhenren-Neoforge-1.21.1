@@ -6,6 +6,7 @@ import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
 import com.unknown.guzhenren.effect.timed.MaliciousThoughtEffect;
 import com.unknown.guzhenren.item.gu.ConsumedGuItem;
 import com.unknown.guzhenren.item.gu.GuSpec;
+import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
@@ -41,6 +42,6 @@ public class MaliciousThoughtGuItem extends ConsumedGuItem {
     protected void payout(ServerPlayer player, ItemStack stack) {
         MindService.addThoughts(player, immediateThoughts, ThoughtTag.EVIL);
         int amplifier = spec.rank().ordinal() - Rank.TWO.ordinal();
-        player.addEffect(new MobEffectInstance(effect, MaliciousThoughtEffect.DURATION_TICKS, amplifier));
+        player.addEffect(ModEffects.instance(effect, MaliciousThoughtEffect.DURATION_TICKS, amplifier));
     }
 }
