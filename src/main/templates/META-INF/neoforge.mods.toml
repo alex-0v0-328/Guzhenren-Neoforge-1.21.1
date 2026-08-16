@@ -90,15 +90,6 @@ config="${mod_id}.mixins.json"
     side="BOTH"
 
 # Optional integrations. None has to be installed; all load before us when they are.
-# CustomPlayer: the body this mod's parts install into. Optional now; body-part Gu ticking
-# is guarded by a ModList check.
-[[dependencies.${mod_id}]]
-    modId="customplayer"
-    type="optional"
-    versionRange="[1.0.0,)"
-    ordering="AFTER"
-    side="BOTH"
-
 [[dependencies.${mod_id}]]
     modId="jei"
     type="optional"

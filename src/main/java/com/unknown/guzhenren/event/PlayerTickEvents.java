@@ -10,7 +10,6 @@ import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
-import com.unknown.guzhenren.compat.customplayer.PartStorageTick;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.effect.pool.DeathQiEffect;
@@ -23,11 +22,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
- * The one-second heartbeat: a straight run of fifteen steps that most of the player's state depends on.
+ * The one-second heartbeat: a straight run of fourteen steps that most of the player's state depends on.
  *
  * <p>Every step runs inside {@code tickCount % Ticks.SECOND == 0}, and most read what an earlier one
  * just wrote — aging feeds the day-clock walks, {@code syncEffects} feeds {@code tickDeathQi} and
@@ -49,7 +47,6 @@ public final class PlayerTickEvents {
     private PlayerTickEvents() {}
 
     private static final int FULL_HUNGER = 20;
-    private static final boolean HAS_CUSTOMPLAYER = ModList.get().isLoaded("customplayer");
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
@@ -61,7 +58,6 @@ public final class PlayerTickEvents {
         long days = BodyService.tickAging(player);
         TendedGuItem.tickCarried(player, days);
         ApertureStorageTick.tickStored(player, days);
-        if (HAS_CUSTOMPLAYER) PartStorageTick.tickInstalled(player, days);
 
         if (days > 0L && player.containerMenu instanceof ApertureStorageMenu menu) menu.reload();
 

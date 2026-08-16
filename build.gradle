@@ -134,12 +134,6 @@ configurations {
 }
 
 dependencies {
-    // Optional integration: the body this mod's parts install into. API at compile time, full mod
-    // at runtime. localRuntime, never runtimeOnly -- a dependent must not inherit it.
-    // Resolved from the composite build declared in settings.gradle, not from a repository.
-    compileOnly "com.unknown.customplayer:customplayer:1.0.0"
-    localRuntime "com.unknown.customplayer:customplayer:1.0.0"
-
     // Both integrations are optional: the API at compile time, the full mod at runtime.
     // localRuntime, never runtimeOnly -- a dependent of this mod must not inherit them.
 

@@ -13,7 +13,6 @@
 | Parchment                    | `2024.11.17`                          |
 | Java                         | `21`                                  |
 | mod id / package             | `guzhenren` · `com.unknown.guzhenren` |
-| 必需依赖 <sub>required</sub> | `customplayer`                        |
 | 可选依赖 <sub>optional</sub> | `JEI` · `Curios`                      |
 
 ```
