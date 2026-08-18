@@ -112,17 +112,16 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
 
     private void renderPager(GuiGraphics g, int mouseX, int mouseY) {
         renderBack(g, mouseX, mouseY);
-        renderPageButton(g, mouseX, mouseY, prevX(), menu.pageIndex() > 0, "<");
-        renderPageButton(g, mouseX, mouseY, nextX(), menu.pageIndex() + 1 < menu.pageCount(), ">");
+        renderPageButton(g, mouseX, mouseY, prevX(), pagerBottomY(), menu.pageIndex() > 0, "<");
+        renderPageButton(g, mouseX, mouseY, nextX(), pagerBottomY(), menu.pageIndex() + 1 < menu.pageCount(), ">");
 
         Component page = Component.literal((menu.pageIndex() + 1) + " / " + menu.pageCount());
         g.drawString(font, page, labelX() + (PAGE_LABEL_W - font.width(page)) / 2,
-                pagerY() + (PAGE_BUTTON_H - font.lineHeight) / 2 + 1, TEXT, false);
+                pagerBottomY() + (PAGE_BUTTON_H - font.lineHeight) / 2 + 1, TEXT, false);
     }
 
-    private void renderPageButton(GuiGraphics g, int mouseX, int mouseY, int x, boolean live, String glyph) {
-        int y = pagerY();
-        boolean hover = live && inButton(mouseX, mouseY, x);
+    private void renderPageButton(GuiGraphics g, int mouseX, int mouseY, int x, int y, boolean live, String glyph) {
+        boolean hover = live && inButton(mouseX, mouseY, x, y);
         g.fill(x, y, x + PAGE_BUTTON_W, y + PAGE_BUTTON_H, live ? (hover ? BUTTON_HOVER : BUTTON_IDLE) : BUTTON_DEAD);
         g.drawString(font, glyph, x + (PAGE_BUTTON_W - font.width(glyph)) / 2,
                 y + (PAGE_BUTTON_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
@@ -138,21 +137,26 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     }
 
     private int pagerY() {return topPos + 3;}
+    private int pagerBottomY() {return topPos + imageHeight + 4;}
     private int backX() {return leftPos + 7;}
-    private int nextX() {return leftPos + imageWidth - 8 - PAGE_BUTTON_W;}
-    private int labelX() {return nextX() - PAGE_LABEL_W;}
-    private int prevX() {return labelX() - PAGE_BUTTON_W;}
+    private int prevX() {return leftPos + 7;}
+    private int labelX() {return prevX() + PAGE_BUTTON_W;}
+    private int nextX() {return labelX() + PAGE_LABEL_W;}
 
     private boolean inButton(double mx, double my, int x) {
-        return mx >= x && mx < x + PAGE_BUTTON_W && my >= pagerY() && my < pagerY() + PAGE_BUTTON_H;
+        return inButton(mx, my, x, pagerY());
+    }
+
+    private boolean inButton(double mx, double my, int x, int y) {
+        return mx >= x && mx < x + PAGE_BUTTON_W && my >= y && my < y + PAGE_BUTTON_H;
     }
 
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
         if (button == 0) {
             if (inButton(mx, my, backX())) return clickBack();
-            if (inButton(mx, my, prevX())) return clickPage(ApertureStorageMenu.BUTTON_PREV);
-            if (inButton(mx, my, nextX())) return clickPage(ApertureStorageMenu.BUTTON_NEXT);
+            if (inButton(mx, my, prevX(), pagerBottomY())) return clickPage(ApertureStorageMenu.BUTTON_PREV);
+            if (inButton(mx, my, nextX(), pagerBottomY())) return clickPage(ApertureStorageMenu.BUTTON_NEXT);
         }
         return super.mouseClicked(mx, my, button);
     }
