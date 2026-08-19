@@ -321,6 +321,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.PRIMEVAL_ELDER_GU_3,              "三转元老蛊");
         addItem(ModItems.PRIMEVAL_ELDER_GU_4,              "四转元老蛊");
         addItem(ModItems.PRIMEVAL_ELDER_GU_5,              "五转元老蛊");
+        addItem(ModItems.HEAVENLY_ESSENCE_TREASURE_LOTUS_GU,         "天元宝莲");
+        addItem(ModItems.HEAVENLY_ESSENCE_TREASURE_MONARCH_LOTUS_GU, "天元宝君莲");
+        addItem(ModItems.HEAVENLY_ESSENCE_TREASURE_KING_LOTUS_GU,    "天元宝王莲");
         addItem(ModItems.SECOND_WATCH_GU,                  "两更蛊");
         addItem(ModItems.THIRD_WATCH_GU,                   "三更蛊");
         addItem(ModItems.MALICIOUS_THOUGHT_GU_2,           "二转恶念蛊");
@@ -381,6 +384,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.all_out_active",        "全力未歇");
         add("guzhenren.item.failed.zombie_already",        "已成僵尸 无可再变");
         add("guzhenren.item.failed.gu_starving",           "蛊已太饿 需先喂食");
+        add("guzhenren.item.failed.no_use",                "此蛊无需使用");
 
         add("guzhenren.item.gu.invested",                  "已投入 %s/%s");
         add("guzhenren.item.gu.refine_progress",           "炼化 %s/%s");

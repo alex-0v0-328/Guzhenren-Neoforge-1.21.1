@@ -160,6 +160,12 @@ public class PrimevalElderGuItem extends TendedGuItem {
         if (taken > 0) setStored(stack, stored(stack) - taken);
         return taken;
     }
+
+    public int storeStones(ItemStack stack, int amount) {
+        int room = (int) Math.min(Math.max(0, amount), capacity - stored(stack));
+        if (room > 0) setStored(stack, stored(stack) + room);
+        return room;
+    }
     //endregion
 
     @Override

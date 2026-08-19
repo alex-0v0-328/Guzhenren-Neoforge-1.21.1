@@ -26,6 +26,7 @@ import com.unknown.guzhenren.item.gu.mortal.strength.HumanStrengthGuItem;
 import com.unknown.guzhenren.item.gu.mortal.time.WatchGuItem;
 import com.unknown.guzhenren.item.gu.mortal.wisdom.CasualGuItem;
 import com.unknown.guzhenren.item.gu.mortal.wisdom.MaliciousThoughtGuItem;
+import com.unknown.guzhenren.item.gu.mortal.wood.TreasureLotusGuItem;
 import com.unknown.guzhenren.item.gu.mortal.zombie.ZombieGuItem;
 import com.unknown.guzhenren.item.material.LiquorItem;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
@@ -236,6 +237,21 @@ public final class ModItems {
     public static final DeferredItem<Item> PRIMEVAL_ELDER_GU_5 = ITEMS.register("primeval_elder_gu_5",
             () -> new PrimevalElderGuItem(tended(), 100_000_000L, GuSpec.of(Rank.FIVE, GuPath.SPACE)
                     .refine(160_000).costPerUse(0)));
+    //endregion
+
+    //region 天元宝莲 [Treasure Lotus Gu] -- wood path; 5% essence per second and minted stones
+    public static final DeferredItem<Item> HEAVENLY_ESSENCE_TREASURE_LOTUS_GU = ITEMS.register(
+            "heavenly_essence_treasure_lotus_gu",
+            () -> new TreasureLotusGuItem(tended(), 1, 100, GuSpec.of(Rank.THREE, GuPath.WOOD)
+                    .refine(80_000).costPerUse(0)));
+    public static final DeferredItem<Item> HEAVENLY_ESSENCE_TREASURE_MONARCH_LOTUS_GU = ITEMS.register(
+            "heavenly_essence_treasure_monarch_lotus_gu",
+            () -> new TreasureLotusGuItem(tended(), 10, 1_000, GuSpec.of(Rank.FOUR, GuPath.WOOD)
+                    .refine(800_000).costPerUse(0)));
+    public static final DeferredItem<Item> HEAVENLY_ESSENCE_TREASURE_KING_LOTUS_GU = ITEMS.register(
+            "heavenly_essence_treasure_king_lotus_gu",
+            () -> new TreasureLotusGuItem(tended(), 100, 10_000, GuSpec.of(Rank.FIVE, GuPath.WOOD)
+                    .refine(8_000_000).costPerUse(0)));
     //endregion
 
     //region 僵尸蛊 [zombie Gu] -- 变化道; a timed 半生半僵, and a 5-minute window that makes it permanent

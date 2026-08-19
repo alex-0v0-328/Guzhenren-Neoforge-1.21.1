@@ -319,6 +319,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.PRIMEVAL_ELDER_GU_3,              "Primeval Elder Gu III");
         addItem(ModItems.PRIMEVAL_ELDER_GU_4,              "Primeval Elder Gu IV");
         addItem(ModItems.PRIMEVAL_ELDER_GU_5,              "Primeval Elder Gu V");
+        addItem(ModItems.HEAVENLY_ESSENCE_TREASURE_LOTUS_GU,         "Heavenly Essence Treasure Lotus Gu");
+        addItem(ModItems.HEAVENLY_ESSENCE_TREASURE_MONARCH_LOTUS_GU, "Heavenly Essence Treasure Monarch Lotus Gu");
+        addItem(ModItems.HEAVENLY_ESSENCE_TREASURE_KING_LOTUS_GU,    "Heavenly Essence Treasure King Lotus Gu");
         addItem(ModItems.SECOND_WATCH_GU,                  "Second Watch Gu");
         addItem(ModItems.THIRD_WATCH_GU,                   "Third Watch Gu");
         addItem(ModItems.MALICIOUS_THOUGHT_GU_2,           "Malicious Thought Gu II");
@@ -379,7 +382,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.all_out_active",        "The all-out effort has not yet passed");
         add("guzhenren.item.failed.zombie_already",        "Already a zombie, nothing left to turn");
         add("guzhenren.item.failed.gu_starving",           "This Gu is too hungry - feed it first");
-
+        add("guzhenren.item.failed.no_use",                "This Gu needs no use");
         add("guzhenren.item.gu.invested",                  "Invested %s/%s");
         add("guzhenren.item.gu.refine_progress",           "Refined %s/%s");
         add("guzhenren.item.gu.refine_cost",               "Refine %s");

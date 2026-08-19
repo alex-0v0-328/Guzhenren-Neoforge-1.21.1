@@ -16,7 +16,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * The item components this mod adds, for state belonging to one particular stack.
  *
  * <p>DeferredRegister holder: {@link RefinedGuState}, {@code VITAL_OWNER}, {@code STORED_STONES},
- * {@code REFINED_AT}, {@code AWAKEN_BASE}, {@code USED_AT} and {@code HUNGER_FED_AT}. A component here
+ * {@code REFINED_AT}, {@code AWAKEN_BASE}, {@code USED_AT}, {@code HUNGER_FED_AT} and
+ * {@code HEAL_BANK}. A component here
  * is for state that not every tended Gu shares; anything all of them carry belongs on the shared state
  * record instead.
  *
@@ -69,6 +70,11 @@ public final class ModDataComponents {
             DATA_COMPONENTS.registerComponentType("hunger_fed_at", builder -> builder
                     .persistent(Codec.LONG)
                     .networkSynchronized(ByteBufCodecs.VAR_LONG));
+
+    public static final Supplier<DataComponentType<Integer>> HEAL_BANK =
+            DATA_COMPONENTS.registerComponentType("heal_bank", builder -> builder
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT));
 
     public static void register(IEventBus modEventBus) {
         DATA_COMPONENTS.register(modEventBus);
