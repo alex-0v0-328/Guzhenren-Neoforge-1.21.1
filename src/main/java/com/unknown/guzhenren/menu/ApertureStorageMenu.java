@@ -135,11 +135,10 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         pageData.set(DATA_PAGE, at);
         pageData.set(DATA_PAGES, countPages());
 
-        List<ItemStack> items = ApertureStorageService.items(player, aperture);
         int from = at * PAGE_SIZE;
+        List<ItemStack> items = ApertureStorageService.page(player, aperture, from, PAGE_SIZE);
         for (int i = 0; i < PAGE_SIZE; i++) {
-            int slot = from + i;
-            page.setItem(i, slot < items.size() ? items.get(slot).copy() : ItemStack.EMPTY);
+            page.setItem(i, i < items.size() ? items.get(i) : ItemStack.EMPTY);
         }
         vital.setItem(0, ApertureStorageService.vital(player, aperture).copy());
         loading = false;
@@ -150,13 +149,23 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
 
         List<ItemStack> window = new ArrayList<>(PAGE_SIZE);
         for (int i = 0; i < PAGE_SIZE; i++) window.add(page.getItem(i).copy());
-        ApertureStorageService.setPage(server, aperture, pageIndex() * PAGE_SIZE, window);
+        int from = pageIndex() * PAGE_SIZE;
+        if (!ApertureStorageService.pageMatches(server, aperture, from, window)) {
+            ApertureStorageService.setPage(server, aperture, from, window);
+        }
 
         ItemStack bound = vital.getItem(0);
         if (!bound.isEmpty() && !GuItem.isVital(bound)) GuItem.bind(bound, server);
-        ApertureStorageService.setVital(server, aperture, bound.copy());
+        if (!same(bound, ApertureStorageService.vital(server, aperture))) {
+            ApertureStorageService.setVital(server, aperture, bound.copy());
+        }
 
         pageData.set(DATA_PAGES, countPages());
+    }
+
+    private static boolean same(ItemStack first, ItemStack second) {
+        return first.getCount() == second.getCount()
+                && ItemStack.isSameItemSameComponents(first, second);
     }
     //endregion
 

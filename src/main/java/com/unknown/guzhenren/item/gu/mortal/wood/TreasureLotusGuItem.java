@@ -8,6 +8,8 @@ import com.unknown.guzhenren.item.gu.TendedGuItem;
 import com.unknown.guzhenren.item.gu.mortal.PrimevalElderGuItem;
 import com.unknown.guzhenren.registry.ModDataComponents;
 import com.unknown.guzhenren.registry.ModItems;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -110,11 +112,23 @@ public class TreasureLotusGuItem extends TendedGuItem {
             left -= storeInElder(inventory.getItem(slot), left);
         }
         for (int aperture = 0; aperture < ApertureData.MAX_APERTURES && left > 0; aperture++) {
-            for (ItemStack stored : ApertureStorageService.items(player, aperture)) {
+            List<ItemStack> storedItems = new ArrayList<>(ApertureStorageService.items(player, aperture));
+            ItemStack vital = ApertureStorageService.vital(player, aperture);
+            boolean storedChanged = false;
+            for (ItemStack stored : storedItems) {
                 if (left <= 0) break;
-                left -= storeInElder(stored, left);
+                int moved = storeInElder(stored, left);
+                storedChanged |= moved > 0;
+                left -= moved;
             }
-            if (left > 0) left -= storeInElder(ApertureStorageService.vital(player, aperture), left);
+            if (storedChanged) ApertureStorageService.set(player, aperture, storedItems);
+            boolean vitalChanged = false;
+            if (left > 0) {
+                int moved = storeInElder(vital, left);
+                vitalChanged = moved > 0;
+                left -= moved;
+            }
+            if (vitalChanged) ApertureStorageService.setVital(player, aperture, vital);
         }
         return left;
     }

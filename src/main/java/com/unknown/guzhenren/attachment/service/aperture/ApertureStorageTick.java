@@ -49,11 +49,13 @@ public final class ApertureStorageTick {
             ItemStack stack = next.get(i);
             if (!(stack.getItem() instanceof TendedGuItem gu) || !gu.refined(stack)) continue;
 
-            changed = true;
-            if (TendedGuItem.tickInContainer(player, stack, days)) {
+            ItemStack before = stack.copy();
+            boolean starved = TendedGuItem.tickInContainer(player, stack, days);
+            if (starved) {
                 next.set(i, ItemStack.EMPTY);
                 TendedGuItem.starved(player, stack);
             }
+            changed |= starved || changed(before, stack);
         }
         if (changed) ApertureStorageService.set(player, aperture, next);
     }
@@ -62,11 +64,17 @@ public final class ApertureStorageTick {
         ItemStack stack = ApertureStorageService.vital(player, aperture);
         if (!(stack.getItem() instanceof TendedGuItem)) return;
 
+        ItemStack before = stack.copy();
         if (TendedGuItem.tickInContainer(player, stack, days)) {
             ApertureStorageService.setVital(player, aperture, ItemStack.EMPTY);
             TendedGuItem.starved(player, stack);
             return;
         }
-        ApertureStorageService.setVital(player, aperture, stack);
+        if (changed(before, stack)) ApertureStorageService.setVital(player, aperture, stack);
+    }
+
+    private static boolean changed(ItemStack before, ItemStack after) {
+        return before.getCount() != after.getCount()
+                || !ItemStack.isSameItemSameComponents(before, after);
     }
 }

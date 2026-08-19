@@ -123,7 +123,7 @@ public final class PlayerDataService {
 
     public static void copy(Player from, Player to) {
         to.setData(ModAttachments.APERTURE, from.getData(ModAttachments.APERTURE));
-        to.setData(ModAttachments.APERTURE_STORAGE, from.getData(ModAttachments.APERTURE_STORAGE));
+        to.setData(ModAttachments.APERTURE_STORAGE, from.getData(ModAttachments.APERTURE_STORAGE).copy());
         to.setData(ModAttachments.BODY, from.getData(ModAttachments.BODY));
         to.setData(ModAttachments.SOUL, from.getData(ModAttachments.SOUL));
         to.setData(ModAttachments.STAMINA, from.getData(ModAttachments.STAMINA));

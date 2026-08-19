@@ -41,29 +41,58 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
     public ApertureStorage {
         List<List<ItemStack>> kept = new ArrayList<>();
         for (int i = 0; i < Math.min(byAperture.size(), ApertureData.MAX_APERTURES); i++) {
-            List<ItemStack> items = new ArrayList<>(byAperture.get(i));
+            List<ItemStack> items = copyStacks(byAperture.get(i));
             while (!items.isEmpty() && items.getLast().isEmpty()) items.removeLast();
             kept.add(Collections.unmodifiableList(items));
         }
         while (!kept.isEmpty() && kept.getLast().isEmpty()) kept.removeLast();
         byAperture = Collections.unmodifiableList(kept);
 
-        List<ItemStack> bound = new ArrayList<>(
+        List<ItemStack> bound = copyStacks(
                 vital.subList(0, Math.min(vital.size(), ApertureData.MAX_APERTURES)));
         while (!bound.isEmpty() && bound.getLast().isEmpty()) bound.removeLast();
         vital = Collections.unmodifiableList(bound);
     }
 
     public List<ItemStack> get(int aperture) {
-        return aperture >= 0 && aperture < byAperture.size() ? byAperture.get(aperture) : List.of();
+        return aperture >= 0 && aperture < byAperture.size()
+                ? Collections.unmodifiableList(copyStacks(byAperture.get(aperture))) : List.of();
     }
 
     public ItemStack getVital(int aperture) {
-        return aperture >= 0 && aperture < vital.size() ? vital.get(aperture) : ItemStack.EMPTY;
+        return aperture >= 0 && aperture < vital.size() ? vital.get(aperture).copy() : ItemStack.EMPTY;
     }
 
-    public int count(int aperture) {return get(aperture).size();}
+    public int count(int aperture) {
+        return aperture >= 0 && aperture < byAperture.size() ? byAperture.get(aperture).size() : 0;
+    }
     public boolean isEmpty() {return byAperture.isEmpty() && vital.isEmpty();}
+
+    public List<ItemStack> page(int aperture, int from, int size) {
+        if (aperture < 0 || aperture >= byAperture.size() || from < 0 || size <= 0) {
+            return List.of();
+        }
+        List<ItemStack> stored = byAperture.get(aperture);
+        int to = Math.min(stored.size(), from + size);
+        return Collections.unmodifiableList(copyStacks(stored.subList(Math.min(from, to), to)));
+    }
+
+    public boolean matchesPage(int aperture, int from, List<ItemStack> page) {
+        if (from < 0) return false;
+        if (aperture < 0 || aperture >= byAperture.size()) {
+            for (ItemStack stack : page) if (!stack.isEmpty()) return false;
+            return true;
+        }
+
+        List<ItemStack> stored = byAperture.get(aperture);
+        for (int i = 0; i < page.size(); i++) {
+            ItemStack current = from + i < stored.size() ? stored.get(from + i) : ItemStack.EMPTY;
+            ItemStack wanted = page.get(i);
+            if (wanted.getCount() != current.getCount()
+                    || !ItemStack.isSameItemSameComponents(wanted, current)) return false;
+        }
+        return true;
+    }
 
     public ApertureStorage with(int aperture, List<ItemStack> items) {
         if (aperture < 0 || aperture >= ApertureData.MAX_APERTURES) return this;
@@ -74,6 +103,18 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
         return new ApertureStorage(next, vital);
     }
 
+    public ApertureStorage withPage(int aperture, int from, List<ItemStack> page) {
+        if (aperture < 0 || aperture >= ApertureData.MAX_APERTURES || from < 0) return this;
+
+        List<List<ItemStack>> next = new ArrayList<>(byAperture);
+        while (next.size() <= aperture) next.add(List.of());
+        List<ItemStack> all = new ArrayList<>(next.get(aperture));
+        while (all.size() < from + page.size()) all.add(ItemStack.EMPTY);
+        for (int i = 0; i < page.size(); i++) all.set(from + i, page.get(i));
+        next.set(aperture, all);
+        return new ApertureStorage(next, vital);
+    }
+
     public ApertureStorage withVital(int aperture, ItemStack stack) {
         if (aperture < 0 || aperture >= ApertureData.MAX_APERTURES) return this;
 
@@ -81,5 +122,13 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
         while (next.size() <= aperture) next.add(ItemStack.EMPTY);
         next.set(aperture, stack);
         return new ApertureStorage(byAperture, next);
+    }
+
+    public ApertureStorage copy() {return new ApertureStorage(byAperture, vital);}
+
+    private static List<ItemStack> copyStacks(List<ItemStack> stacks) {
+        List<ItemStack> copies = new ArrayList<>(stacks.size());
+        for (ItemStack stack : stacks) copies.add(stack.copy());
+        return copies;
     }
 }
