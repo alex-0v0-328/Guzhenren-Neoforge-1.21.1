@@ -169,7 +169,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.primary_path",    "主修流派  %s");
         add("guzhenren.command.info.secondary_path",  "辅修流派  %s");
         add("guzhenren.command.info.soul",            "玩家魂魄  %s / %s");
-        add("guzhenren.command.info.stamina",         "玩家耐力  %s / %s");
         add("guzhenren.command.info.lifespan",        "玩家寿元  %s");
         add("guzhenren.command.info.life_form",       "生命形态  %s");
         add("guzhenren.command.info.race",            "种族      %s");
@@ -185,7 +184,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.time",            "宙道造诣");
         add("guzhenren.command.info.time_entry",      "  时间流速  %s");
         add("guzhenren.command.info.capacity",        "肉身承受  %s / %s斤");
-        add("guzhenren.command.info.attack",          "肉身攻击  %s");
+        add("guzhenren.command.info.attack",          "裸身体攻击力  %s");
         add("guzhenren.command.info.brilliance",      "才情  %s");
         add("guzhenren.command.info.brilliance_rate", "%s个念头每秒");
         add("guzhenren.command.info.mind",            "脑海");
@@ -262,7 +261,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.race",           "种族");
         add("guzhenren.screen.label.wisdom",         "智道造诣");
         add("guzhenren.screen.label.soul",           "魂魄");
-        add("guzhenren.screen.label.stamina",        "耐力");
         add("guzhenren.screen.label.lifespan",       "寿元");
         add("guzhenren.screen.label.qi",             "气道造诣");
         add("guzhenren.screen.label.paths",          "流派造诣");
@@ -270,7 +268,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.time",           "宙道造诣");
         add("guzhenren.screen.label.time_flow",      "时间流速");
         add("guzhenren.screen.label.capacity",       "承受");
-        add("guzhenren.screen.label.attack",         "攻击力");
+        add("guzhenren.screen.label.attack",         "裸身体攻击力");
         add("guzhenren.screen.capacity",             "%s / %s斤");
         add("guzhenren.screen.label.brilliance",     "才情");
         add("guzhenren.screen.path_value",           "%s 道痕 %s");
@@ -362,8 +360,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.ESSENCE_QI_5,                     "五转元气");
         addItem(ModItems.DEATH_QI_5,                       "五转死气");
 
-        add("itemGroup.guzhenren.mortal_gu",               "凡蛊");
-        add("itemGroup.guzhenren.gu_material",             "蛊材");
+        add("itemGroup.guzhenren.mortal_gu",               "蛊真人 · 凡蛊");
+        add("itemGroup.guzhenren.gu_material",             "蛊真人 · 蛊材");
 
         add("guzhenren.item.failed.awakened",              "你已开窍");
         add("guzhenren.item.failed.unawakened",            "你未开窍");

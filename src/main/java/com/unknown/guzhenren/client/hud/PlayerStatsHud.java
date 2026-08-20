@@ -6,7 +6,6 @@ import com.unknown.guzhenren.attachment.data.body.SoulData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
-import com.unknown.guzhenren.attachment.service.body.StaminaService;
 import com.unknown.guzhenren.display.ModDisplayText;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -23,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>Implements {@link net.minecraft.client.gui.LayeredDraw.Layer}; registered above
  * {@code VanillaGuiLayers.HOTBAR} in
  * {@link com.unknown.guzhenren.client.ClientEvents}. Draws the title line (realm + title + aptitude +
- * physique) then bars in order: essence, distilled, stamina, soul, gap, lifespan/age. Hidden with
+ * physique) then bars in order: essence, distilled, soul, gap, lifespan/age. Hidden with
  * {@code hideGui}, in spectator, and under F3. Every phrase comes from
  * {@link com.unknown.guzhenren.display.ModDisplayText} so the HUD and the info command cannot diverge.
  *
@@ -50,8 +49,6 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
 
     private static final int ESSENCE_FILL = 0xFF4FC3F7;
     private static final int SOUL_FILL = 0xFFD388FF;
-    private static final int STAMINA_FILL = 0xFF2E7D32;
-
     private static final int DISTILLED_FILL = 0xFF1565C0;
     private static final int BAR_TRACK = 0xB0202020;
     private static final int BAR_BORDER = 0xC0000000;
@@ -83,9 +80,6 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
                 y += BAR_HEIGHT + ROW_GAP;
             }
         }
-
-        bar(graphics, font, y, StaminaService.current(player), StaminaService.max(player), STAMINA_FILL);
-        y += BAR_HEIGHT + ROW_GAP;
 
         bar(graphics, font, y, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);
         y += BAR_HEIGHT + GROUP_GAP;

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Aptitude [资质], derived from the aperture's base essence and never stored beside it.
  *
- * <p>Closed vocabulary enum: regen rate, stamina base and the roll weights all live here. {@code NONE}
+ * <p>Closed vocabulary enum: regen rate, Epic Fight stamina percentage and the roll weights all live here. {@code NONE}
  * is outside the settable range; {@code shift(int)} clamps at {@code EXTREME..FOURTH}. No sibling mod
  * may add a grade.
  *
@@ -24,13 +24,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public enum Talent implements StringRepresentable, EnumTranslatable {
 
-    EXTREME(100, 100, 10, 20, 150, 10),
-    FIRST  ( 80,  99, 20,  8, 120,  5),
-    SECOND ( 60,  79, 30,  4, 120,  5),
-    THIRD  ( 40,  59, 30,  2, 110,  5),
-    FOURTH ( 20,  39, 10,  1, 110,  5),
+    EXTREME(100, 100, 10, 20, 50),
+    FIRST  ( 80,  99, 20,  8, 20),
+    SECOND ( 60,  79, 30,  4, 20),
+    THIRD  ( 40,  59, 30,  2, 10),
+    FOURTH ( 20,  39, 10,  1, 10),
 
-    NONE   (  0,   0,  0,  0, 100,  5);
+    NONE   (  0,   0,  0,  0,  0);
 
     public static final Codec<Talent> CODEC = StringRepresentable.fromEnum(Talent::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.talent.";
@@ -42,24 +42,21 @@ public enum Talent implements StringRepresentable, EnumTranslatable {
     private final int maxPercent;
     private final int weight;
     private final int regenRate;
-    private final int staminaBase;
-    private final int staminaRegen;
+    private final int staminaMaxPercent;
 
-    Talent(int minPercent, int maxPercent, int weight, int regenRate, int staminaBase, int staminaRegen) {
+    Talent(int minPercent, int maxPercent, int weight, int regenRate, int staminaMaxPercent) {
         this.minPercent = minPercent;
         this.maxPercent = maxPercent;
         this.weight = weight;
         this.regenRate = regenRate;
-        this.staminaBase = staminaBase;
-        this.staminaRegen = staminaRegen;
+        this.staminaMaxPercent = staminaMaxPercent;
     }
 
     public int getMinPercent() {return minPercent;}
     public int getMaxPercent() {return maxPercent;}
     public int getWeight() {return weight;}
     public int getRegenRate() {return regenRate;}
-    public int getStaminaBase() {return staminaBase;}
-    public int getStaminaRegen() {return staminaRegen;}
+    public int getStaminaMaxPercent() {return staminaMaxPercent;}
 
     public Talent shift(int d) {return values()[Math.clamp(ordinal() - d, HIGHEST.ordinal(), LOWEST.ordinal())];}
     public static Talent[] settable() {return Arrays.copyOfRange(values(), HIGHEST.ordinal(), LOWEST.ordinal() + 1);}

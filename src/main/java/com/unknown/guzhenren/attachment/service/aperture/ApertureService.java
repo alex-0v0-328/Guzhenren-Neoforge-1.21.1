@@ -3,6 +3,7 @@ package com.unknown.guzhenren.attachment.service.aperture;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.body.HealthService;
+import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
@@ -23,7 +24,8 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Static service over the {@code aperture_data} attachment; reads take {@link Player}, writes take
  * {@link ServerPlayer}. Every write routes through {@code store}, which also fires
- * {@link HealthService#refresh} so max health never lags a rank change. {@code reconcileTalentPaths}
+ * {@link HealthService#refresh} and {@link EpicFightIntegration#refresh} so derived combat attributes
+ * never lag a rank or aptitude change. {@code reconcileTalentPaths}
  * is the one place {@code aperture/} writes {@code body/} -- it grants/revokes the ten-extreme talent
  * specks and the human qi.
  *
@@ -119,6 +121,7 @@ public final class ApertureService {
     private static void store(ServerPlayer p, ApertureData data) {
         p.setData(ModAttachments.APERTURE, data);
         HealthService.refresh(p);
+        EpicFightIntegration.refresh(p);
     }
 
     private static Aperture enforce(Aperture aperture) {

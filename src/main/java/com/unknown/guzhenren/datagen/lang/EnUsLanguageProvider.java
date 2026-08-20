@@ -167,7 +167,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.primary_path",    "Primary:     %s");
         add("guzhenren.command.info.secondary_path",  "Secondary:   %s");
         add("guzhenren.command.info.soul",            "Soul:        %s / %s");
-        add("guzhenren.command.info.stamina",         "Stamina:     %s / %s");
         add("guzhenren.command.info.lifespan",        "Lifespan:    %s");
         add("guzhenren.command.info.life_form",       "Life form:   %s");
         add("guzhenren.command.info.race",            "Race:        %s");
@@ -183,7 +182,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.time",            "Time Path:");
         add("guzhenren.command.info.time_entry",      "  Time Flow  %s");
         add("guzhenren.command.info.capacity",        "Bearing:     %s / %s jin");
-        add("guzhenren.command.info.attack",          "Attack:      %s");
+        add("guzhenren.command.info.attack",          "Bare-body attack: %s");
         add("guzhenren.command.info.brilliance",      "Brilliance:  %s");
         add("guzhenren.command.info.brilliance_rate", "%s thoughts/s");
         add("guzhenren.command.info.mind",            "Mind Ocean:");
@@ -260,7 +259,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.race",           "Race");
         add("guzhenren.screen.label.wisdom",         "Wisdom Path");
         add("guzhenren.screen.label.soul",           "Soul");
-        add("guzhenren.screen.label.stamina",        "Stamina");
         add("guzhenren.screen.label.lifespan",       "Lifespan");
         add("guzhenren.screen.label.qi",             "Qi Path");
         add("guzhenren.screen.label.paths",          "Paths");
@@ -268,7 +266,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.time",           "Time Path");
         add("guzhenren.screen.label.time_flow",      "Time Flow");
         add("guzhenren.screen.label.capacity",       "Bearing");
-        add("guzhenren.screen.label.attack",         "Attack");
+        add("guzhenren.screen.label.attack",         "Bare-body Attack");
         add("guzhenren.screen.capacity",             "%s / %s jin");
         add("guzhenren.screen.label.brilliance",     "Brilliance");
         add("guzhenren.screen.path_value",           "%s Marks %s");
@@ -360,8 +358,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.ESSENCE_QI_5,                     "Essence Qi V");
         addItem(ModItems.DEATH_QI_5,                       "Death Qi V");
 
-        add("itemGroup.guzhenren.mortal_gu",               "Mortal Gu");
-        add("itemGroup.guzhenren.gu_material",             "Gu Material");
+        add("itemGroup.guzhenren.mortal_gu",               "GZR · Mortal Gu");
+        add("itemGroup.guzhenren.gu_material",             "GZR · Gu Material");
 
         add("guzhenren.item.failed.awakened",              "You have already awakened");
         add("guzhenren.item.failed.unawakened",            "You have NOT awakened");

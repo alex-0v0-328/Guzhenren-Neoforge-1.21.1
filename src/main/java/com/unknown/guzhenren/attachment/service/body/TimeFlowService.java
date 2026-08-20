@@ -77,7 +77,7 @@ public final class TimeFlowService {
     /** A stretch he has to sit through: a press held down, a cooldown, a ritual waited out. */
     public static int waited(Player p, int ticks) {return waited(rate(p), ticks);}
 
-    /** What he earns or SPENDS in one step -- essence, thought, stamina, and the life it costs him. */
+    /** What he earns or SPENDS in one step -- essence, thought, and the life it costs him. */
     public static long perStep(Player p, long amount) {return perStep(rate(p), amount);}
     public static double perStep(Player p, double amount) {return perStep(rate(p), amount);}
 

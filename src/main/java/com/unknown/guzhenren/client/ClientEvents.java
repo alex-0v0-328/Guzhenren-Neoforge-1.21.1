@@ -7,6 +7,7 @@ import com.unknown.guzhenren.client.hud.PlayerStatsHud;
 import com.unknown.guzhenren.client.screen.ApertureStorageScreen;
 import com.unknown.guzhenren.client.screen.PlayerInfoScreen;
 import com.unknown.guzhenren.client.screen.RefinementScreen;
+import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.registry.ModEntityTypes;
 import com.unknown.guzhenren.registry.ModMenus;
 import net.minecraft.client.Minecraft;
@@ -21,6 +22,7 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 
 /**
  * Every client-side registration this mod makes: HUD layers, key mappings, screens and renderers.
@@ -77,6 +79,10 @@ public final class ClientEvents {
     public static void onClientTick(ClientTickEvent.Post event) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null) return;
+        if (minecraft.player.getMainHandItem().getItem() instanceof MortalGuItem) {
+            EpicFightCapabilities.getLocalPlayerPatchAsOptional(minecraft.player)
+                    .ifPresent(patch -> patch.toVanillaMode(true));
+        }
         while (ModKeyMappings.OPEN_INFO.consumeClick()) {
             if (minecraft.screen == null) minecraft.setScreen(new PlayerInfoScreen());
         }

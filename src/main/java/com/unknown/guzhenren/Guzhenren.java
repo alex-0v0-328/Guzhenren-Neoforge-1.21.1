@@ -1,6 +1,7 @@
 package com.unknown.guzhenren;
 
 import com.mojang.logging.LogUtils;
+import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.registry.ModAttachments;
 import com.unknown.guzhenren.registry.ModCreativeTabs;
 import com.unknown.guzhenren.registry.ModDataComponents;
@@ -43,5 +44,6 @@ public class Guzhenren {
         ModCreativeTabs.register(modEventBus);
         ModMenus.register(modEventBus);
         ModRecipes.register(modEventBus);
+        EpicFightIntegration.initialize();
     }
 }

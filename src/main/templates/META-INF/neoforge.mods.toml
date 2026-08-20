@@ -89,6 +89,13 @@ config="${mod_id}.mixins.json"
     ordering="NONE"
     side="BOTH"
 
+[[dependencies.${mod_id}]]
+    modId="epicfight"
+    type="required"
+    versionRange="[21.17.3,21.18)"
+    ordering="AFTER"
+    side="BOTH"
+
 # Optional integrations. None has to be installed; all load before us when they are.
 [[dependencies.${mod_id}]]
     modId="jei"

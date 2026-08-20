@@ -7,7 +7,6 @@ import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
 import com.unknown.guzhenren.attachment.data.body.QiData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
-import com.unknown.guzhenren.attachment.data.body.StaminaData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
@@ -17,7 +16,7 @@ import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.HealthService;
 import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
-import com.unknown.guzhenren.attachment.service.body.StaminaService;
+import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
@@ -35,7 +34,7 @@ import net.minecraft.world.item.ItemStack;
  * <p>It is the single place that decides what a clone inherits, because a death-copy and a
  * keepInventory-off {@code resetAll} cannot both be the last write. Every domain service is called
  * from here for the refresh that does not ride a clone -- {@link HealthService}, {@link AttackService}
- * and {@link StaminaService} all re-run on join, clone and reset.
+ * and {@link EpicFightIntegration} all re-run on join, clone and reset.
  *
  * <p>⚠ The {@code Player} (not {@code ServerPlayer}) signature on {@code copy}/{@code onBirth}/
  * {@code resetAll} is the one carve-out from this project's read-{@code Player}/write-{@code ServerPlayer}
@@ -57,11 +56,10 @@ public final class PlayerDataService {
     private PlayerDataService() {}
 
     public static void onJoin(ServerPlayer player) {
-        player.getData(ModAttachments.EXHAUSTION_SEEN)[0] = player.getFoodData().getExhaustionLevel();
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
         HealthService.refresh(player);
         AttackService.refresh(player);
-        StaminaService.refresh(player);
+        EpicFightIntegration.refresh(player);
     }
 
     public static void onBirth(Player player) {
@@ -88,7 +86,7 @@ public final class PlayerDataService {
         if (to instanceof ServerPlayer server) {
             HealthService.refresh(server);
             AttackService.refresh(server);
-            StaminaService.refresh(server);
+            EpicFightIntegration.refresh(server);
         }
     }
 
@@ -105,7 +103,6 @@ public final class PlayerDataService {
         }
         BodyService.clearDeathQiDebt(player);
         QiService.set(player, QiKind.DEATH, 0L);
-        StaminaService.refill(player);
     }
 
     public static void onVitalGuLost(ServerPlayer owner, ItemStack stack) {
@@ -126,7 +123,6 @@ public final class PlayerDataService {
         to.setData(ModAttachments.APERTURE_STORAGE, from.getData(ModAttachments.APERTURE_STORAGE).copy());
         to.setData(ModAttachments.BODY, from.getData(ModAttachments.BODY));
         to.setData(ModAttachments.SOUL, from.getData(ModAttachments.SOUL));
-        to.setData(ModAttachments.STAMINA, from.getData(ModAttachments.STAMINA));
         to.setData(ModAttachments.PATH, from.getData(ModAttachments.PATH));
         to.setData(ModAttachments.QI, from.getData(ModAttachments.QI));
         to.setData(ModAttachments.STRENGTH, from.getData(ModAttachments.STRENGTH));
@@ -139,7 +135,6 @@ public final class PlayerDataService {
         player.setData(ModAttachments.APERTURE, ApertureData.DEFAULT);
         player.setData(ModAttachments.APERTURE_STORAGE, ApertureStorage.DEFAULT);
         player.setData(ModAttachments.SOUL, SoulData.DEFAULT);
-        player.setData(ModAttachments.STAMINA, StaminaData.DEFAULT);
         player.setData(ModAttachments.PATH, PathData.DEFAULT);
         player.setData(ModAttachments.QI, QiData.DEFAULT);
         player.setData(ModAttachments.STRENGTH, StrengthData.DEFAULT);
@@ -153,7 +148,7 @@ public final class PlayerDataService {
         if (player instanceof ServerPlayer server) {
             HealthService.refresh(server);
             AttackService.refresh(server);
-            StaminaService.refill(server);
+            EpicFightIntegration.refresh(server);
         }
     }
 }

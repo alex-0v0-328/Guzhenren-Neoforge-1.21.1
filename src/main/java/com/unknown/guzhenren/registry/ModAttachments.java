@@ -9,7 +9,6 @@ import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.PathData;
 import com.unknown.guzhenren.attachment.data.body.QiData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
-import com.unknown.guzhenren.attachment.data.body.StaminaData;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import java.util.function.BiPredicate;
@@ -24,8 +23,8 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 /**
  * Every data attachment this mod puts on a player.
  *
- * <p>DeferredRegister holder: the ten record attachments (immutable, written only through their
- * service) plus the three scratch fields ({@code ESSENCE_CARRY}, {@code EXHAUSTION_SEEN}, {@code BORN}).
+ * <p>DeferredRegister holder: the nine record attachments (immutable, written only through their
+ * service) plus the two scratch fields ({@code ESSENCE_CARRY}, {@code BORN}).
  * Synced ones use {@code OWNER_ONLY}; the storage and scratch fields are sync-less.
  *
  * <p>⚠ A domain is not an attachment: the body is one domain across six. Never give an attachment the
@@ -80,15 +79,6 @@ public final class ModAttachments {
                     .serialize(SoulData.CODEC)
                     .sync(OWNER_ONLY, SoulData.STREAM_CODEC)
                     .build());
-
-    public static final Supplier<AttachmentType<StaminaData>> STAMINA = ATTACHMENT_TYPES.register(
-            "stamina_data", () -> AttachmentType.builder(() -> StaminaData.DEFAULT)
-                    .serialize(StaminaData.CODEC)
-                    .sync(OWNER_ONLY, StaminaData.STREAM_CODEC)
-                    .build());
-
-    public static final Supplier<AttachmentType<float[]>> EXHAUSTION_SEEN = ATTACHMENT_TYPES.register(
-            "exhaustion_seen", () -> AttachmentType.builder(() -> new float[1]).build());
 
     public static final Supplier<AttachmentType<PathData>> PATH = ATTACHMENT_TYPES.register(
             "path_data", () -> AttachmentType.builder(() -> PathData.DEFAULT)
