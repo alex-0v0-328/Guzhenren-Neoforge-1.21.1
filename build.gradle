@@ -134,9 +134,9 @@ configurations {
 }
 
 dependencies {
-    compileOnly files('../epic-fight-21.17.3.1-mc1.21.1-neoforge.jar')
-    localRuntime files('../epic-fight-21.17.3.1-mc1.21.1-neoforge.jar')
-    testRuntimeOnly files('../epic-fight-21.17.3.1-mc1.21.1-neoforge.jar')
+    compileOnly files('run/mods/epic-fight-21.17.3.1-mc1.21.1-neoforge.jar')
+    localRuntime files('run/mods/epic-fight-21.17.3.1-mc1.21.1-neoforge.jar')
+    testRuntimeOnly files('run/mods/epic-fight-21.17.3.1-mc1.21.1-neoforge.jar')
 
     // JEI. The neoforge-api pulls the common-api transitively; both are named anyway, to pin the version.
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
