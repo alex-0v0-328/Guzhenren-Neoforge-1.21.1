@@ -1,11 +1,12 @@
 package com.unknown.guzhenren.attachment.service.aperture;
 
+import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.body.HealthService;
-import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.attachment.service.body.QiService;
+import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
@@ -14,18 +15,29 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.registry.ModAttachments;
+import com.unknown.guzhenren.registry.ModDamageTypes;
 import java.util.List;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * The only writer of the Aperture [空窍] attachment: awakening [开窍], rank, stage, talent and paths.
  *
  * <p>Static service over the {@code aperture_data} attachment; reads take {@link Player}, writes take
- * {@link ServerPlayer}. Every write routes through {@code store}, which also fires
+ * {@link ServerPlayer}. Most writes route through {@code store}, which also fires
  * {@link HealthService#refresh} and {@link EpicFightIntegration#refresh} so derived combat attributes
- * never lag a rank or aptitude change. {@code reconcileTalentPaths}
+ * never lag a rank or aptitude change. Pressure writes are the exception because pressure does not
+ * affect derived combat attributes. {@code reconcileTalentPaths}
  * is the one place {@code aperture/} writes {@code body/} -- it grants/revokes the ten-extreme talent
  * specks and the human qi.
  *
@@ -80,6 +92,101 @@ public final class ApertureService {
     public static void shiftRank(ServerPlayer p, int d) {setRank(p, aperture(p).rank().shift(d));}
     public static void shiftStage(ServerPlayer p, int d) {setStage(p, aperture(p).stage().shift(d));}
     public static void shiftTalent(ServerPlayer p, int d) {setTalent(p, aperture(p).talent().shift(d));}
+
+    public static void setPressure(ServerPlayer player, int index, int value) {
+        Aperture current = aperture(player, index);
+        if (!current.isExtreme()) return;
+        long deadline = value == Aperture.PRESSURE_COUNTDOWN_START ? current.pressureDeadlineTick() : 0L;
+        if (value == Aperture.PRESSURE_COUNTDOWN_START && deadline == 0L) {
+            deadline = player.level().getGameTime() + Ticks.MINUTE;
+        }
+        if (current.pressure() == value && current.pressureDeadlineTick() == deadline) return;
+        setPressureState(player, index, value, deadline);
+    }
+
+    public static void tickPressure(ServerPlayer player) {
+        Aperture aperture = aperture(player, PRIMARY);
+        if (!aperture.isExtreme() || aperture.pressure() >= Aperture.MAX_PRESSURE) return;
+
+        if (aperture.pressure() < Aperture.PRESSURE_COUNTDOWN_START) {
+            if (player.tickCount % Ticks.MINUTE != 0) return;
+            int next = aperture.pressure() + 1;
+            long deadline = next == Aperture.PRESSURE_COUNTDOWN_START
+                    ? player.level().getGameTime() + Ticks.MINUTE : 0L;
+            setPressureState(player, PRIMARY, next, deadline);
+            return;
+        }
+
+        long deadline = aperture.pressureDeadlineTick();
+        if (deadline == 0L) {
+            setPressureState(player, PRIMARY, Aperture.PRESSURE_COUNTDOWN_START,
+                    player.level().getGameTime() + Ticks.MINUTE);
+            return;
+        }
+        if (player.level().getGameTime() >= deadline) setPressure(player, PRIMARY, Aperture.MAX_PRESSURE);
+    }
+
+    public static boolean pressureFull(Player player) {
+        Aperture aperture = aperture(player, PRIMARY);
+        return aperture.isExtreme() && aperture.pressure() >= Aperture.MAX_PRESSURE;
+    }
+
+    public static long pressureRemainingTicks(Player player) {
+        Aperture aperture = aperture(player, PRIMARY);
+        if (!aperture.isExtreme() || aperture.pressure() != Aperture.PRESSURE_COUNTDOWN_START
+                || aperture.pressureDeadlineTick() <= 0L) return 0L;
+        return Math.max(0L, aperture.pressureDeadlineTick() - player.level().getGameTime());
+    }
+
+    public static void detonatePressure(ServerPlayer player) {
+        setPressure(player, PRIMARY, 0);
+        DamageSource source = ModDamageTypes.source(player, ModDamageTypes.APERTURE_PRESSURE_EXPLOSION);
+
+        player.level().explode(null, source, pressureExplosionCalculator(player.getX(), player.getY(), player.getZ()),
+                player.getX(), player.getY(), player.getZ(), 64.0F,
+                false, Level.ExplosionInteraction.BLOCK);
+        if (!player.isDeadOrDying()) player.hurt(source, Float.MAX_VALUE);
+    }
+
+    private static ExplosionDamageCalculator pressureExplosionCalculator(double x, double y, double z) {
+        Vec3 center = new Vec3(x, y, z);
+        return new ExplosionDamageCalculator() {
+            private static final double RANGE_SQUARED = 64.0D * 64.0D;
+
+            @Override
+            public boolean shouldBlockExplode(Explosion explosion, BlockGetter level, BlockPos pos, BlockState state,
+                                              float power) {
+                return withinRange(explosion, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D)
+                        && super.shouldBlockExplode(explosion, level, pos, state, power);
+            }
+
+            @Override
+            public boolean shouldDamageEntity(Explosion explosion, Entity entity) {
+                return withinRange(entity.getX(), entity.getY(), entity.getZ())
+                        && super.shouldDamageEntity(explosion, entity);
+            }
+
+            @Override
+            public float getKnockbackMultiplier(Entity entity) {
+                return withinRange(entity.getX(), entity.getY(), entity.getZ())
+                        ? super.getKnockbackMultiplier(entity) : 0.0F;
+            }
+
+            private boolean withinRange(Explosion explosion, double px, double py, double pz) {
+                return withinRange(px, py, pz) && explosion.center().distanceToSqr(px, py, pz) <= RANGE_SQUARED;
+            }
+
+            private boolean withinRange(double px, double py, double pz) {
+                return center.distanceToSqr(px, py, pz) <= RANGE_SQUARED;
+            }
+        };
+    }
+
+    private static void setPressureState(ServerPlayer player, int index, int value, long deadline) {
+        Aperture current = aperture(player, index);
+        if (!current.isExtreme() || (current.pressure() == value && current.pressureDeadlineTick() == deadline)) return;
+        player.setData(ModAttachments.APERTURE, get(player).with(index, current.withPressureAndDeadline(value, deadline)));
+    }
 
     public static void setBaseEssence(ServerPlayer p, int v) {
         set(p, PRIMARY, aperture(p).withBaseEssence(Math.clamp(v, Aperture.MIN_BASE, Aperture.MAX_BASE)));

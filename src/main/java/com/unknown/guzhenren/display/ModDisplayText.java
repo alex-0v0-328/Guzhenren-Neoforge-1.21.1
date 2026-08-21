@@ -88,6 +88,17 @@ public final class ModDisplayText {
         return lifespan(body.lifespanYears(), body.ageYears());
     }
 
+    public static MutableComponent hudLifespan(BodyData body) {
+        return Component.translatable("guzhenren.display.lifespan",
+                String.format(Locale.ROOT, "%.1f", body.lifespanYears()),
+                String.format(Locale.ROOT, "%.0f", body.ageYears()));
+    }
+
+    public static String countdown(long remainingTicks) {
+        long seconds = (Math.max(0L, remainingTicks) + 19L) / 20L;
+        return String.format(Locale.ROOT, "%02d:%02d", seconds / 60L, seconds % 60L);
+    }
+
     private static String years(double v) {return String.format(Locale.ROOT, "%.2f", v);}
 
     public static MutableComponent realmAndTalent(Aperture a) {return realmTitle(a).append(GAP).append(talent(a));}

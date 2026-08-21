@@ -22,8 +22,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The container behind one aperture's [空窍] store, paged because the store itself is uncapped.
  *
- * <p>Extends {@link net.minecraft.world.inventory.AbstractContainerMenu}. 54 slots per page, up to 32
- * pages; the Vital Gu [本命蛊] slot sits outside the pager, past {@code imageWidth}. The save trigger
+ * <p>Extends {@link net.minecraft.world.inventory.AbstractContainerMenu}. 54 slots per page; the Vital
+ * Gu [本命蛊] slot sits outside the pager, past {@code imageWidth}. The save trigger
  * is a container listener ({@code page.addListener(c -> save())}), not an override of
  * {@code slotsChanged} -- that override is never called because {@code AbstractContainerMenu} is not a
  * {@code ContainerListener}.
@@ -42,8 +42,6 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
     public static final int ROWS = 6;
     public static final int PAGE_SIZE = COLS * ROWS;
 
-    public static final int MAX_PAGES = 32;
-
     public static final int VITAL_SLOT = PAGE_SIZE + 36;
 
     public static final int BUTTON_PREV = 0;
@@ -60,13 +58,14 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
 
     private static final int DATA_PAGE = 0;
     private static final int DATA_PAGES = 1;
+    private static final int DATA_LOAD = 2;
 
     private final Player player;
     private final int aperture;
     private final SimpleContainer page = new SimpleContainer(PAGE_SIZE);
     private final SimpleContainer vital = new SimpleContainer(1);
 
-    private final ContainerData pageData = new SimpleContainerData(2);
+    private final ContainerData pageData = new SimpleContainerData(3);
 
     private boolean loading;
 
@@ -101,10 +100,12 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
 
     public int pageIndex() {return pageData.get(DATA_PAGE);}
     public int pageCount() {return Math.max(1, pageData.get(DATA_PAGES));}
+    public int load() {return pageData.get(DATA_LOAD);}
     public int aperture() {return aperture;}
 
     private int countPages() {
-        return Math.min(MAX_PAGES, ApertureStorageService.count(player, aperture) / PAGE_SIZE + 1);
+        int count = ApertureStorageService.count(player, aperture);
+        return count / PAGE_SIZE + 1;
     }
 
     //region paging
@@ -131,9 +132,10 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
 
     private void load(int index) {
         loading = true;
-        int at = Math.max(0, index);
+        int at = Math.clamp(index, 0, countPages() - 1);
         pageData.set(DATA_PAGE, at);
         pageData.set(DATA_PAGES, countPages());
+        pageData.set(DATA_LOAD, ApertureStorageService.load(player, aperture));
 
         int from = at * PAGE_SIZE;
         List<ItemStack> items = ApertureStorageService.page(player, aperture, from, PAGE_SIZE);
@@ -151,16 +153,23 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         for (int i = 0; i < PAGE_SIZE; i++) window.add(page.getItem(i).copy());
         int from = pageIndex() * PAGE_SIZE;
         if (!ApertureStorageService.pageMatches(server, aperture, from, window)) {
-            ApertureStorageService.setPage(server, aperture, from, window);
+            if (!ApertureStorageService.setPage(server, aperture, from, window)) {
+                load(pageIndex());
+                return;
+            }
         }
 
         ItemStack bound = vital.getItem(0);
         if (!bound.isEmpty() && !GuItem.isVital(bound)) GuItem.bind(bound, server);
         if (!same(bound, ApertureStorageService.vital(server, aperture))) {
-            ApertureStorageService.setVital(server, aperture, bound.copy());
+            if (!ApertureStorageService.setVital(server, aperture, bound.copy())) {
+                load(pageIndex());
+                return;
+            }
         }
 
         pageData.set(DATA_PAGES, countPages());
+        pageData.set(DATA_LOAD, ApertureStorageService.load(server, aperture));
     }
 
     private static boolean same(ItemStack first, ItemStack second) {

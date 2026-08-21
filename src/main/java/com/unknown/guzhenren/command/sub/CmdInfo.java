@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.body.PathEntry;
 import com.unknown.guzhenren.command.ModCommandFeedback;
 import com.unknown.guzhenren.command.ModCommandSupport;
@@ -76,6 +77,7 @@ public final class CmdInfo {
             case InfoModel.Essence e -> key("essence", e.aperture().currentEssence(), e.aperture().maxEssence());
             case InfoModel.Distilled e -> key("distilled", e.aperture().distilledEssence(),
                     e.aperture().maxEssence());
+            case InfoModel.Pressure e -> key("pressure", e.aperture().pressure(), Aperture.MAX_PRESSURE);
             case InfoModel.PathChoice e -> key(e.primary() ? "primary_path" : "secondary_path",
                     ModDisplayText.path(e.path()));
 

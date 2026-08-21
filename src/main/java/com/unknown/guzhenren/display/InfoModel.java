@@ -66,6 +66,7 @@ public final class InfoModel {
     public record Talent(Aperture aperture, boolean awakened) implements Entry {}
     public record Essence(Aperture aperture) implements Entry {}
     public record Distilled(Aperture aperture) implements Entry {}
+    public record Pressure(Aperture aperture) implements Entry {}
     public record PathChoice(boolean primary, @Nullable GuPath path) implements Entry {}
     //endregion
 
@@ -99,22 +100,24 @@ public final class InfoModel {
         List<Row> rows = new ArrayList<>();
 
         if (data.count() <= 1) {
-            apertureBlock(rows, data.primary(), data.isAwakened(), 0);
+            apertureBlock(rows, data.primary(), data.isAwakened(), 0, true);
             return rows;
         }
         for (int i = 0; i < data.count(); i++) {
             rows.add(new Row(0, new ApertureIndex(i + 1)));
-            apertureBlock(rows, data.get(i), true, INDENT);
+            apertureBlock(rows, data.get(i), true, INDENT, i == ApertureData.PRIMARY);
         }
         return rows;
     }
 
-    private static void apertureBlock(List<Row> rows, Aperture aperture, boolean awakened, int indent) {
+    private static void apertureBlock(List<Row> rows, Aperture aperture, boolean awakened, int indent,
+                                      boolean pressure) {
         rows.add(new Row(indent, new Realm(aperture)));
         rows.add(new Row(indent, new Talent(aperture, awakened)));
         if (awakened) {
             rows.add(new Row(indent, new Essence(aperture)));
             if (aperture.distilledEssence() > 0L) rows.add(new Row(indent, new Distilled(aperture)));
+            if (pressure && aperture.isExtreme()) rows.add(new Row(indent, new Pressure(aperture)));
             rows.add(new Row(indent, new PathChoice(true, aperture.primaryPath())));
             rows.add(new Row(indent, new PathChoice(false, aperture.secondaryPath())));
         }

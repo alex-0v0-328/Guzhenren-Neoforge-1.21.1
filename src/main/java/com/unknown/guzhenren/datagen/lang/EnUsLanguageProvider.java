@@ -146,6 +146,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.hud.using",                            "Use %s/%s");
         add("guzhenren.hud.nourishing",                        "Nourishing %s%%");
         add("guzhenren.hud.nourish_starving",                  "Essence running dry %s%%");
+        add("guzhenren.hud.pressure",                          "Aperture Pressure %s%%");
+        add("guzhenren.hud.pressure_countdown",                "Aperture Pressure %s%% [%s]");
     }
     //endregion
 
@@ -164,6 +166,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.talent",          "Aptitude:    %s");
         add("guzhenren.command.info.essence",         "Essence:     %s / %s");
         add("guzhenren.command.info.distilled",       "Distilled:   %s / %s");
+        add("guzhenren.command.info.pressure",        "Pressure:    %s / %s%%");
         add("guzhenren.command.info.primary_path",    "Primary:     %s");
         add("guzhenren.command.info.secondary_path",  "Secondary:   %s");
         add("guzhenren.command.info.soul",            "Soul:        %s / %s");
@@ -267,7 +270,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.time_flow",      "Time Flow");
         add("guzhenren.screen.label.capacity",       "Bearing");
         add("guzhenren.screen.label.attack",         "Bare-body Attack");
+        add("guzhenren.screen.label.pressure",        "Aperture Pressure");
         add("guzhenren.screen.capacity",             "%s / %s jin");
+        add("guzhenren.menu.load",                   "Load %s / %s");
         add("guzhenren.screen.label.brilliance",     "Brilliance");
         add("guzhenren.screen.path_value",           "%s Marks %s");
     }
@@ -424,6 +429,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("death.attack.guzhenren.lifespan_exhausted",   "%1$s ran out of lifespan");
         add("death.attack.guzhenren.soul_collapse",        "%1$s suffered soul collapse");
         add("death.attack.guzhenren.mind_ocean_shattered", "%1$s shattered their Mind Ocean");
+        add("death.attack.guzhenren.aperture_pressure_explosion", "%1$s died in an aperture pressure explosion");
         add("death.attack.guzhenren.vital_gu_lost",        "%1$s lost their Vital Gu");
     }
     //endregion

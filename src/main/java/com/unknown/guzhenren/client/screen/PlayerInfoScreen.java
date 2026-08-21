@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.body.PathEntry;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
@@ -428,6 +429,8 @@ public final class PlayerInfoScreen extends Screen {
                     ModDisplayText.pool(e.aperture().currentEssence(), e.aperture().maxEssence())));
             case InfoModel.Distilled e -> new Row(indent, label("distilled"), Component.literal(
                     ModDisplayText.pool(e.aperture().distilledEssence(), e.aperture().maxEssence())));
+            case InfoModel.Pressure e -> new Row(indent, label("pressure"), Component.literal(
+                    ModDisplayText.pool(e.aperture().pressure(), Aperture.MAX_PRESSURE)));
 
             case InfoModel.PathChoice e -> e.primary()
                     ? new Row(indent, label("primary_path"), ModDisplayText.path(e.path()))

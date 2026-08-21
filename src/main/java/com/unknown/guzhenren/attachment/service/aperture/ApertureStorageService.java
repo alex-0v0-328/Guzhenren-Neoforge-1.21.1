@@ -1,7 +1,9 @@
 package com.unknown.guzhenren.attachment.service.aperture;
 
 import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
+import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.item.GuItem;
+import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.registry.ModAttachments;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,6 +35,8 @@ public final class ApertureStorageService {
 
     private ApertureStorageService() {}
 
+    public static final int MAX_LOAD = 256;
+
     public static ApertureStorage get(Player p) {return p.getData(ModAttachments.APERTURE_STORAGE);}
     public static List<ItemStack> items(Player p, int aperture) {return get(p).get(aperture);}
     public static List<ItemStack> page(Player p, int aperture, int from, int size) {
@@ -43,17 +47,63 @@ public final class ApertureStorageService {
     }
     public static int count(Player p, int aperture) {return get(p).count(aperture);}
     public static ItemStack vital(Player p, int aperture) {return get(p).getVital(aperture);}
+    public static int load(Player p, int aperture) {return load(p, get(p), aperture);}
 
-    public static void set(ServerPlayer p, int aperture, List<ItemStack> items) {
-        p.setData(ModAttachments.APERTURE_STORAGE, get(p).with(aperture, items));
+    public static boolean set(ServerPlayer p, int aperture, List<ItemStack> items) {
+        ApertureStorage current = get(p);
+        ApertureStorage next = current.with(aperture, items);
+        if (!canWrite(load(p, current, aperture), load(p, next, aperture))) return false;
+
+        p.setData(ModAttachments.APERTURE_STORAGE, next);
+        return true;
     }
 
-    public static void setVital(ServerPlayer p, int aperture, ItemStack stack) {
-        p.setData(ModAttachments.APERTURE_STORAGE, get(p).withVital(aperture, stack));
+    public static boolean setVital(ServerPlayer p, int aperture, ItemStack stack) {
+        ApertureStorage current = get(p);
+        ApertureStorage next = current.withVital(aperture, stack);
+        if (!canWrite(load(p, current, aperture), load(p, next, aperture))) return false;
+
+        p.setData(ModAttachments.APERTURE_STORAGE, next);
         if (stack.getItem() instanceof GuItem gu) ApertureService.setPrimaryPath(p, aperture, gu.path());
+        return true;
     }
 
-    public static void setPage(ServerPlayer p, int aperture, int from, List<ItemStack> page) {
-        p.setData(ModAttachments.APERTURE_STORAGE, get(p).withPage(aperture, from, page));
+    public static boolean setPage(ServerPlayer p, int aperture, int from, List<ItemStack> page) {
+        ApertureStorage current = get(p);
+        ApertureStorage next = current.withPage(aperture, from, page);
+        if (!canWrite(load(p, current, aperture), load(p, next, aperture))) return false;
+
+        p.setData(ModAttachments.APERTURE_STORAGE, next);
+        return true;
+    }
+
+    private static int load(Player p, ApertureStorage storage, int aperture) {
+        Rank holder = ApertureService.aperture(p, aperture).rank();
+        int total = 0;
+        if (aperture >= 0 && aperture < storage.byAperture().size()) {
+            total += load(holder, storage.byAperture().get(aperture));
+        }
+        if (aperture >= 0 && aperture < storage.vital().size()) {
+            total += cost(holder, storage.vital().get(aperture));
+        }
+        return total;
+    }
+
+    private static int load(Rank holder, List<ItemStack> stacks) {
+        int total = 0;
+        for (ItemStack stack : stacks) total += cost(holder, stack);
+        return total;
+    }
+
+    private static boolean canWrite(int current, int next) {
+        return current <= MAX_LOAD ? next <= MAX_LOAD : next <= current;
+    }
+
+    private static int cost(Rank holder, ItemStack stack) {
+        if (stack.isEmpty() || !(stack.getItem() instanceof MortalGuItem gu)) return 0;
+
+        int gap = gu.rank().ordinal() - holder.ordinal();
+        int perItem = gap < 0 ? 1 : gap == 0 ? 2 : 2 << gap;
+        return perItem * stack.getCount();
     }
 }

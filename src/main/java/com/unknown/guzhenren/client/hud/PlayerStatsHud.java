@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>Implements {@link net.minecraft.client.gui.LayeredDraw.Layer}; registered above
  * {@code VanillaGuiLayers.HOTBAR} in
  * {@link com.unknown.guzhenren.client.ClientEvents}. Draws the title line (realm + title + aptitude +
- * physique) then bars in order: essence, distilled, soul, gap, lifespan/age. Hidden with
+ * physique) then bars in order: essence, distilled, soul, gap, lifespan/age and pressure text. Hidden with
  * {@code hideGui}, in spectator, and under F3. Every phrase comes from
  * {@link com.unknown.guzhenren.display.ModDisplayText} so the HUD and the info command cannot diverge.
  *
@@ -79,12 +79,23 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
                 bar(graphics, font, y, aperture.distilledEssence(), aperture.maxEssence(), DISTILLED_FILL);
                 y += BAR_HEIGHT + ROW_GAP;
             }
+
         }
 
         bar(graphics, font, y, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);
         y += BAR_HEIGHT + GROUP_GAP;
 
-        line(graphics, font, y, Component.translatable("guzhenren.hud.lifespan", ModDisplayText.lifespan(body)));
+        line(graphics, font, y, Component.translatable("guzhenren.hud.lifespan", ModDisplayText.hudLifespan(body)));
+        y += TEXT_HEIGHT + ROW_GAP;
+
+        if (aperture.isExtreme()) {
+            Component pressure = aperture.pressure() == Aperture.PRESSURE_COUNTDOWN_START
+                    && aperture.pressureDeadlineTick() > 0L
+                    ? Component.translatable("guzhenren.hud.pressure_countdown", aperture.pressure(),
+                    ModDisplayText.countdown(ApertureService.pressureRemainingTicks(player)))
+                    : Component.translatable("guzhenren.hud.pressure", aperture.pressure());
+            line(graphics, font, y, pressure);
+        }
     }
 
     private static void line(GuiGraphics graphics, Font font, int y, Component text) {

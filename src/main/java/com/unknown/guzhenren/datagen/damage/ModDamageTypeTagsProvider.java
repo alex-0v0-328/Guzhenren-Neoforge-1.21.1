@@ -18,9 +18,10 @@ import org.jetbrains.annotations.Nullable;
  * Writes the damage type tags.
  *
  * <p>Extends {@link net.minecraft.data.tags.TagsProvider} for {@link net.minecraft.world.damagesource.DamageType}.
- * All four mod damage types carry the same six bypass tags (armor, effects, enchantments, resistance,
+ * All five mod damage types carry the same six bypass tags (armor, effects, enchantments, resistance,
  * shield, no knockback) but deliberately NOT {@code BYPASSES_INVULNERABILITY} -- creative stays
- * unkillable. Takes the datapack provider's registry lookup so it sees the types generated this run.
+ * unkillable. The aperture pressure explosion also carries {@code IS_EXPLOSION}. Takes the datapack
+ * provider's registry lookup so it sees the types generated this run.
  *
  * @author Alex
  * @version 1.0.0
@@ -43,12 +44,14 @@ public class ModDamageTypeTagsProvider extends TagsProvider<DamageType> {
         unstoppable(DamageTypeTags.BYPASSES_RESISTANCE);
         unstoppable(DamageTypeTags.BYPASSES_SHIELD);
         unstoppable(DamageTypeTags.NO_KNOCKBACK);
+        tag(DamageTypeTags.IS_EXPLOSION).add(ModDamageTypes.APERTURE_PRESSURE_EXPLOSION);
     }
 
     private void unstoppable(TagKey<DamageType> tag) {
         tag(tag).add(ModDamageTypes.LIFESPAN_EXHAUSTED,
                 ModDamageTypes.SOUL_COLLAPSE,
                 ModDamageTypes.MIND_OCEAN_SHATTERED,
+                ModDamageTypes.APERTURE_PRESSURE_EXPLOSION,
                 ModDamageTypes.VITAL_GU_LOST);
     }
 }

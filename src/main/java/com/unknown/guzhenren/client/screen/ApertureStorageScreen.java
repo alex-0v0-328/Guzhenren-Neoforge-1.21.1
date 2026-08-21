@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.client.screen;
 
+import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -47,6 +48,7 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     private static final int BACK_W = 16;
     private static final String BACK_GLYPH = "<-";
     private static final int TITLE_X_WITH_BACK = 26;
+    private static final String LOAD_KEY = "guzhenren.menu.load";
 
     public ApertureStorageScreen(ApertureStorageMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -118,6 +120,9 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
         Component page = Component.literal((menu.pageIndex() + 1) + " / " + menu.pageCount());
         g.drawString(font, page, labelX() + (PAGE_LABEL_W - font.width(page)) / 2,
                 pagerBottomY() + (PAGE_BUTTON_H - font.lineHeight) / 2 + 1, TEXT, false);
+
+        Component load = Component.translatable(LOAD_KEY, menu.load(), ApertureStorageService.MAX_LOAD);
+        g.drawString(font, load, leftPos + imageWidth - font.width(load), pagerBottomY() + 1, ACCENT, false);
     }
 
     private void renderPageButton(GuiGraphics g, int mouseX, int mouseY, int x, int y, boolean live, String glyph) {

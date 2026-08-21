@@ -148,6 +148,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.hud.using_plain",                      "使用中");
         add("guzhenren.hud.nourishing",                        "温养 %s%%");
         add("guzhenren.hud.nourish_starving",                  "真元将尽 %s%%");
+        add("guzhenren.hud.pressure",                          "空窍压力 %s%%");
+        add("guzhenren.hud.pressure_countdown",                "空窍压力 %s%% [%s]");
     }
     //endregion
 
@@ -166,6 +168,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.talent",          "玩家天赋  %s");
         add("guzhenren.command.info.essence",         "玩家真元  %s / %s");
         add("guzhenren.command.info.distilled",       "精炼真元  %s / %s");
+        add("guzhenren.command.info.pressure",        "空窍压力  %s / %s%%");
         add("guzhenren.command.info.primary_path",    "主修流派  %s");
         add("guzhenren.command.info.secondary_path",  "辅修流派  %s");
         add("guzhenren.command.info.soul",            "玩家魂魄  %s / %s");
@@ -269,7 +272,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.time_flow",      "时间流速");
         add("guzhenren.screen.label.capacity",       "承受");
         add("guzhenren.screen.label.attack",         "裸身体攻击力");
+        add("guzhenren.screen.label.pressure",        "空窍压力");
         add("guzhenren.screen.capacity",             "%s / %s斤");
+        add("guzhenren.menu.load",                   "空窍负担 %s / %s");
         add("guzhenren.screen.label.brilliance",     "才情");
         add("guzhenren.screen.path_value",           "%s 道痕 %s");
     }
@@ -427,6 +432,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("death.attack.guzhenren.lifespan_exhausted",   "%1$s 寿元耗尽而亡");
         add("death.attack.guzhenren.soul_collapse",        "%1$s 魂魄衰竭而亡");
         add("death.attack.guzhenren.mind_ocean_shattered", "%1$s 脑海炸裂而亡");
+        add("death.attack.guzhenren.aperture_pressure_explosion", "%1$s 空窍压力爆炸而亡");
         add("death.attack.guzhenren.vital_gu_lost",        "%1$s 本命蛊断绝而亡");
     }
     //endregion

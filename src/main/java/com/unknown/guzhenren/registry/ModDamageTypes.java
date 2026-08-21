@@ -15,8 +15,9 @@ import net.minecraft.world.entity.Entity;
  * file owns only the {@link ResourceKey}s; the JSON is written at datagen time by a provider that does
  * not exist at runtime. {@code source(entity, type)} is the one factory.
  *
- * <p>⚠ Four types, all carrying the same six tags (five {@code BYPASSES_*} plus {@code NO_KNOCKBACK})
- * but deliberately NOT {@code BYPASSES_INVULNERABILITY} -- creative stays unkillable.
+ * <p>⚠ Five types, all carrying the same six tags (five {@code BYPASSES_*} plus {@code NO_KNOCKBACK})
+ * but deliberately NOT {@code BYPASSES_INVULNERABILITY} -- creative stays unkillable. The aperture
+ * pressure explosion also carries {@code IS_EXPLOSION}.
  *
  * @author Alex
  * @version 1.0.0
@@ -31,6 +32,8 @@ public final class ModDamageTypes {
     public static final ResourceKey<DamageType> SOUL_COLLAPSE = key("soul_collapse");
 
     public static final ResourceKey<DamageType> MIND_OCEAN_SHATTERED = key("mind_ocean_shattered");
+
+    public static final ResourceKey<DamageType> APERTURE_PRESSURE_EXPLOSION = key("aperture_pressure_explosion");
 
     public static final ResourceKey<DamageType> VITAL_GU_LOST = key("vital_gu_lost");
 

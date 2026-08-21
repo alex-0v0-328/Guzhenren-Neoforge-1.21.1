@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.event;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageTick;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.attachment.service.aperture.NourishService;
@@ -25,7 +26,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
- * The one-second heartbeat: a straight run of fourteen steps that most of the player's state depends on.
+ * The one-second heartbeat: a straight run of ordered steps that most of the player's state depends on.
  *
  * <p>Every step runs inside {@code tickCount % Ticks.SECOND == 0}, and most read what an earlier one
  * just wrote — aging feeds the day-clock walks, {@code syncEffects} feeds {@code tickDeathQi} and
@@ -34,7 +35,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
  *
  * <p>⚠ The step ORDER is load-bearing and nothing in the code admits it. Reorder nothing blind;
  * a new step must declare which existing one it follows and why. {@code checkLethalState} runs last
- * and returns after the first hit, so the three deaths have a fixed precedence: 寿元 → 魂魄 → 脑海.
+ * and returns after the first hit, so the four deaths have a fixed precedence: 空窍压力 → 寿元 → 魂魄 → 脑海.
  *
  * @author Alex
  * @version 1.0.0
@@ -72,6 +73,7 @@ public final class PlayerTickEvents {
         EssenceService.regenStep(player);
         NourishService.tickNourish(player);
         MindService.regenStep(player);
+        ApertureService.tickPressure(player);
         checkLethalState(player);
     }
 
@@ -125,6 +127,10 @@ public final class PlayerTickEvents {
     private static void checkLethalState(ServerPlayer player) {
         if (player.isCreative() || player.isSpectator()) return;
 
+        if (ApertureService.pressureFull(player)) {
+            ApertureService.detonatePressure(player);
+            return;
+        }
         if (BodyService.get(player).isExhausted()) {
             player.hurt(ModDamageTypes.source(player, ModDamageTypes.LIFESPAN_EXHAUSTED), Float.MAX_VALUE);
             return;
