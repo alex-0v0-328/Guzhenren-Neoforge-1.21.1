@@ -28,6 +28,14 @@ jobs:
         working-directory: guzhenren-template-1.21.1
         run: chmod +x ./gradlew
 
+      - name: Download Epic Fight
+        working-directory: guzhenren-template-1.21.1
+        run: |
+          mkdir -p run/mods
+          epic_fight_file=epic-fight-21.17.3.1-mc1.21.1-neoforge.jar
+          epic_fight_url=$(curl --fail --silent https://api.modrinth.com/v2/version/8HHhJt6i | jq -er --arg file "$epic_fight_file" '.files[] | select(.filename == $file) | .url')
+          curl --fail --location --retry 3 "$epic_fight_url" -o "run/mods/$epic_fight_file"
+
       - name: Build with Gradle
         working-directory: guzhenren-template-1.21.1
         run: ./gradlew build
