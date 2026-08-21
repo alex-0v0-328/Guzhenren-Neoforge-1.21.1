@@ -41,7 +41,6 @@ public final class GuSpec {
     private int unitsPerHunger = 1;
     private int essencePerHunger;
     private int hungerPerUse = 1;
-    private int hungerRegainTicks;
 
     private @Nullable TagKey<Item> feedTag;
     private int feedUnits;
@@ -99,11 +98,6 @@ public final class GuSpec {
         return this;
     }
 
-    public GuSpec regainEvery(int ticks) {
-        this.hungerRegainTicks = ticks;
-        return this;
-    }
-
     public GuSpec feed(TagKey<Item> tag, int units) {
         this.feedTag = tag;
         this.feedUnits = units;
@@ -141,9 +135,6 @@ public final class GuSpec {
     public int unitsPerHealth() {return unitsPerHunger;}
 
     public GuClock buildClock() {
-        if (maxHunger > 0 && hungerRegainTicks > 0) {
-            return new GuClock.TimeFed(maxHunger, hungerRegainTicks, hungerPerUse);
-        }
         if (maxHunger > 0) {
             return new GuClock.HungerBar(maxHunger, unitsPerHunger, essencePerHunger, hungerPerUse);
         }
@@ -160,7 +151,6 @@ public final class GuSpec {
     public void validate(String id) {
         if (refineCost < 0) throw fault(id, "refine cost is negative");
         if (essencePerRound < 0) throw fault(id, "essence per round is negative");
-        if (hungerRegainTicks > 0 && maxHunger <= 0) throw fault(id, "regains hunger but has no bar");
 
         if (!channels) return;
 

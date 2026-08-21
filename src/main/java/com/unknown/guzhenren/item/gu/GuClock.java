@@ -7,10 +7,9 @@ import net.minecraft.world.item.ItemStack;
 /**
  * How a tended Gu [需照顾] is billed over time, and what it takes to keep one alive.
  *
- * <p>A sealed interface with three implementations: {@link HungerBar} (the boars, human-jun, buff Gu,
- * all-out-effort, liquor worm, zombies -- anyone with a bar that drains), {@link TimeFed} (reserved
- * for Gu whose feed material does not exist yet), and {@link NoClock} (primeval elder Gu -- never
- * hungry, never feeds). Built by {@link GuSpec#buildClock} at construction.
+ * <p>A sealed interface with two implementations: {@link HungerBar} (the boars, human-jun, buff Gu,
+ * all-out-effort, liquor worm, zombies -- anyone with a bar that drains), and {@link NoClock} (primeval
+ * elder Gu -- never hungry, never feeds). Built by {@link GuSpec#buildClock} at construction.
  *
  * <p>⚠ "Hungry" means only that the next day rollover will kill it, and the threshold is flat at 1
  * for every Gu on a bar. It must never be scaled to the size of the meal.
@@ -118,78 +117,6 @@ public sealed interface GuClock {
         public boolean spendWasForced(ItemStack stack) {
             boolean forced = hunger(stack) <= 0;
             setHunger(stack, hunger(stack) - Math.max(1, perUse));
-            return forced;
-        }
-
-        @Override
-        public boolean barVisible(ItemStack stack) {return hunger(stack) < max;}
-
-        @Override
-        public float barFraction(ItemStack stack) {return hunger(stack) / (float) max;}
-    }
-    //endregion
-
-    //region 按时间回饱食 [time-fed] -- a path whose Gu material does not exist yet feeds its Gu on time
-    record TimeFed(int max, int ticksPerPoint, int perUse) implements GuClock {
-
-        private static int hunger(ItemStack stack) {return TendedGuItem.state(stack).hunger();}
-
-        private void setHunger(ItemStack stack, int value) {
-            RefinedGuState s = TendedGuItem.state(stack);
-            stack.set(ModDataComponents.REFINED_GU_STATE.get(), s.withHunger(Math.clamp(value, 0, max)));
-        }
-
-        @Override
-        public void bind(ServerPlayer player, ItemStack stack) {
-            setHunger(stack, max);
-            stack.set(ModDataComponents.HUNGER_FED_AT.get(), player.level().getGameTime());
-        }
-
-        @Override
-        public boolean starves(ServerPlayer player, ItemStack stack, long days) {
-            int left = hunger(stack) + regained(player, stack) - (int) Math.min(days, max);
-            setHunger(stack, left);
-            return days > 0L && left <= 0 && !player.hasInfiniteMaterials();
-        }
-
-        private int regained(ServerPlayer player, ItemStack stack) {
-            Long fedAt = stack.get(ModDataComponents.HUNGER_FED_AT.get());
-            long now = player.level().getGameTime();
-            if (fedAt == null || now < fedAt) {
-                stack.set(ModDataComponents.HUNGER_FED_AT.get(), now);
-                return 0;
-            }
-            int points = (int) Math.min((now - fedAt) / ticksPerPoint, max);
-            if (points > 0) {
-                stack.set(ModDataComponents.HUNGER_FED_AT.get(), fedAt + (long) points * ticksPerPoint);
-            }
-            return points;
-        }
-
-        @Override
-        public boolean hungry(ServerPlayer player, ItemStack stack) {return hunger(stack) <= HUNGRY_THRESHOLD;}
-
-        @Override
-        public void warn(ServerPlayer player, ItemStack stack, long days) {
-            if (days > 0L) TendedGuItem.announceHungry(player, stack);
-        }
-
-        @Override
-        public boolean eat(TendedGuItem gu, ServerPlayer player, ItemStack stack, ItemStack food) {return false;}
-
-        @Override
-        public int essenceAboveHungerFloor(ItemStack stack) {return Integer.MAX_VALUE;}
-
-        @Override
-        public int essencePerHungerPoint() {return Integer.MAX_VALUE;}
-
-        @Override
-        public void billHungerForEssence(ItemStack stack, int from, int to) {}
-
-        @Override
-        public boolean spendWasForced(ItemStack stack) {
-            boolean forced = hunger(stack) <= 0;
-            if (perUse > 0) setHunger(stack, hunger(stack) - perUse);
             return forced;
         }
 

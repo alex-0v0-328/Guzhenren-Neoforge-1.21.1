@@ -1,7 +1,6 @@
 package com.unknown.guzhenren.effect.timed;
 
 import com.unknown.guzhenren.client.ItemEffectIcon;
-import com.unknown.guzhenren.effect.TimeFlowContributor;
 import java.util.function.Consumer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -12,9 +11,8 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  * world's by the declared rate.
  *
  * <p>Timed effects own their truth on vanilla's timer. One effect per Gu rather than a graded
- * family, precisely so two Watch Gu [更蛊] can be worn together and their rates add. Implements
- * {@link com.unknown.guzhenren.effect.TimeFlowContributor}; {@link
- * com.unknown.guzhenren.attachment.service.body.TimeFlowService} sums every contributor and derives
+ * family, precisely so two Watch Gu [更蛊] can be worn together and their rates add. {@link
+ * com.unknown.guzhenren.attachment.service.body.TimeFlowService} sums every time effect and derives
  * the specks [碎屑] under {@code MarkTag.TIME_FLOW} every heartbeat.
  *
  * <p>⚠ The effect's own remaining duration is WORLD time and is never hastened — five minutes is
@@ -24,10 +22,9 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  * @author Alex
  * @version 1.0.0
  * @since 1.0.0
- * @see com.unknown.guzhenren.effect.TimeFlowContributor
  * @see com.unknown.guzhenren.attachment.service.body.TimeFlowService
  */
-public class TimeFlowEffect extends MobEffect implements TimeFlowContributor {
+public class TimeFlowEffect extends MobEffect {
 
     private final int rate;
     private final long specks;
@@ -40,10 +37,8 @@ public class TimeFlowEffect extends MobEffect implements TimeFlowContributor {
         this.icon = icon;
     }
 
-    @Override
     public int timeRate(int amplifier) {return rate;}
 
-    @Override
     public long timeSpecks(int amplifier) {return specks;}
 
     @Override

@@ -2,7 +2,7 @@ package com.unknown.guzhenren.attachment.service.body;
 
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
-import com.unknown.guzhenren.effect.TimeFlowContributor;
+import com.unknown.guzhenren.effect.timed.TimeFlowEffect;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
  * comes to it.
  *
  * <p>Static service; {@code rate()} walks {@code getActiveEffects()} for every
- * {@link TimeFlowContributor} and sums, flooring at 1. {@code syncSpecks} is called from the heartbeat
+ * {@link TimeFlowEffect} and sums, flooring at 1. {@code syncSpecks} is called from the heartbeat
  * to keep the {@code TIME_FLOW} tag a projection of the running forms -- the only thing that revokes
  * 宙道 specks on expiry, milk, {@code /effect clear} and death (none of which fire a hook).
  *
@@ -29,7 +29,7 @@ import net.minecraft.world.entity.player.Player;
  * @version 1.0.0
  * @since 1.0.0
  * @see AttackService
- * @see TimeFlowContributor
+ * @see TimeFlowEffect
  */
 public final class TimeFlowService {
 
@@ -39,9 +39,10 @@ public final class TimeFlowService {
 
     public static int rate(Player player) {
         int rate = 0;
+        // TODO(refactor): restore a contributor interface when a second time-flow effect class exists.
         for (MobEffectInstance instance : player.getActiveEffects()) {
-            if (instance.getEffect().value() instanceof TimeFlowContributor contributor) {
-                rate += contributor.timeRate(instance.getAmplifier());
+            if (instance.getEffect().value() instanceof TimeFlowEffect effect) {
+                rate += effect.timeRate(instance.getAmplifier());
             }
         }
         if (rate < NORMAL_RATE) return NORMAL_RATE;
@@ -55,8 +56,8 @@ public final class TimeFlowService {
     public static long specks(Player player) {
         long total = 0L;
         for (MobEffectInstance instance : player.getActiveEffects()) {
-            if (instance.getEffect().value() instanceof TimeFlowContributor contributor) {
-                total += contributor.timeSpecks(instance.getAmplifier());
+            if (instance.getEffect().value() instanceof TimeFlowEffect effect) {
+                total += effect.timeSpecks(instance.getAmplifier());
             }
         }
         return total;

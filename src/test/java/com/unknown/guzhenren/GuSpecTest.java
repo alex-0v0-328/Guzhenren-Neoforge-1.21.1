@@ -63,18 +63,6 @@ class GuSpecTest {
     }
 
     @Test
-    @DisplayName("a Gu that regains hunger on time still has to declare the bar it regains onto")
-    void regainNeedsABar() {
-        assertDoesNotThrow(() -> GuSpec.of(Rank.FOUR, GuPath.TIME)
-                .refine(1_600_000).costPerUse(20_000)
-                .hungerBar(12, 1).hungerPerUse(0).regainEvery(2_000)
-                .validate("second_watch_gu"));
-        assertThrows(IllegalStateException.class, () -> GuSpec.of(Rank.FOUR, GuPath.TIME)
-                .refine(1_600_000).costPerUse(20_000).regainEvery(2_000)
-                .validate("no_bar_to_regain_onto"));
-    }
-
-    @Test
     @DisplayName("negative prices are refused on either shape")
     void negativePricesAreRefused() {
         assertThrows(IllegalStateException.class,

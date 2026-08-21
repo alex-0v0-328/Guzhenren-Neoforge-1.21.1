@@ -22,8 +22,7 @@ import net.minecraft.network.codec.StreamCodec;
  *
  * <p>⚠ {@code markTotal()} and {@code speckTotal()} are sums over the tag maps and are NEVER stored:
  * a breakdown and a total cannot contradict each other when only the breakdown exists. ⚠
- * {@code MARK_PER_SPECK} is the future mark⇄speck ratio with no caller yet; do not wire a converter
- * until a Gu or item triggers it. ⚠ {@code retainingTagsFor} drops tags that do not fit the path --
+ * {@code retainingTagsFor} drops tags that do not fit the path --
  * this is the seam {@link PathData} uses to keep a foreign tag out.
  *
  * @author Alex
@@ -35,9 +34,6 @@ import net.minecraft.network.codec.StreamCodec;
 public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks, Map<MarkTag, Long> specks) {
 
     public static final PathEntry DEFAULT = new PathEntry(GuAttainment.NONE, Map.of(), Map.of());
-
-    //     TODO(convert): mark <-> speck at 1:10000 -- no caller yet; it needs a Gu or item to trigger it.
-    public static final long MARK_PER_SPECK = 10_000L;
 
     private static final Codec<Map<MarkTag, Long>> TAGS = Codec.unboundedMap(MarkTag.CODEC, Codec.LONG);
 
