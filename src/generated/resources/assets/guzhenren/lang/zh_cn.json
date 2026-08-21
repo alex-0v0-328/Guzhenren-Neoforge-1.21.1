@@ -3,6 +3,7 @@
   "death.attack.guzhenren.lifespan_exhausted": "%1$s 寿元耗尽而亡",
   "death.attack.guzhenren.mind_ocean_shattered": "%1$s 脑海炸裂而亡",
   "death.attack.guzhenren.soul_collapse": "%1$s 魂魄衰竭而亡",
+  "death.attack.guzhenren.ten_extreme_disaster": "%1$s 被十绝天灾波及而亡",
   "death.attack.guzhenren.vital_gu_lost": "%1$s 本命蛊断绝而亡",
   "effect.guzhenren.all_out_effort": "全力以赴蛊效果",
   "effect.guzhenren.brute_force_longhorn_beetle_gu": "蛮力天牛蛊效果",
@@ -81,6 +82,8 @@
   "guzhenren.display.gu_material": "蛊材",
   "guzhenren.display.lifespan": "%s [%s岁]",
   "guzhenren.display.none": "[无]",
+  "guzhenren.display.path_marks": " 道痕%s",
+  "guzhenren.display.path_specks": " 碎屑%s",
   "guzhenren.display.physique": "[%s]",
   "guzhenren.display.realm": "%s%s",
   "guzhenren.display.realm_title": "%s%s",
@@ -481,8 +484,9 @@
   "item.guzhenren.thousands_lifespan_gu": "千年寿蛊",
   "item.guzhenren.vitality_leaf_gu": "生机叶蛊",
   "item.guzhenren.white_boar_gu": "白豕蛊",
-  "itemGroup.guzhenren.gu_material": "蛊真人 · 蛊材",
-  "itemGroup.guzhenren.mortal_gu": "蛊真人 · 凡蛊",
+  "itemGroup.guzhenren.gu_material": "蛊材",
+  "itemGroup.guzhenren.mortal_gu": "凡蛊",
+  "itemGroup.guzhenren.strength_mortal_gu": "力道凡蛊",
   "key.categories.guzhenren": "蛊真人",
   "key.guzhenren.open_info": "打开信息面板"
 }

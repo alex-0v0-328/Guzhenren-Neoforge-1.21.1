@@ -5,10 +5,8 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
-import com.unknown.guzhenren.attachment.data.body.PathEntry;
 import com.unknown.guzhenren.command.ModCommandFeedback;
 import com.unknown.guzhenren.command.ModCommandSupport;
-import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.InfoModel;
 import com.unknown.guzhenren.display.ModDisplayText;
 import java.util.List;
@@ -87,7 +85,7 @@ public final class CmdInfo {
                     .append(muted(enumName(e.soul().tier().getTranslationKey())));
             case InfoModel.Lifespan e -> key("lifespan", ModDisplayText.lifespan(e.lifespan(), e.age()));
             case InfoModel.PathsHeader e -> header("paths", e.empty());
-            case InfoModel.PathRow e -> pathLine(e.path(), e.entry());
+            case InfoModel.PathRow e -> ModDisplayText.pathLine(e.path(), e.entry());
             case InfoModel.QiHeader ignored -> key("qi");
             case InfoModel.QiRow e -> key("qi_entry", enumName(e.kind().getTranslationKey()), e.amount());
             case InfoModel.TimeHeader ignored -> key("time");
@@ -113,13 +111,6 @@ public final class CmdInfo {
         MutableComponent talent = ModDisplayText.talent(e.aperture());
         if (e.awakened()) talent.append(muted(ModDisplayText.baseFraction(e.aperture().baseEssence())));
         return key("talent", talent);
-    }
-
-    private static MutableComponent pathLine(GuPath path, PathEntry entry) {
-        MutableComponent line = key("path_entry", enumName(path.getTranslationKey()),
-                enumName(entry.attainment().getTranslationKey()), entry.markTotal());
-        if (entry.speckTotal() > 0L) line.append(key("path_speck", entry.speckTotal()));
-        return line;
     }
 
     private static MutableComponent header(String id, boolean empty) {

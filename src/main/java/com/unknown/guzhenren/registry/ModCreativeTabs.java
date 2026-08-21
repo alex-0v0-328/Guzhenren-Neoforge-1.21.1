@@ -1,11 +1,13 @@
 package com.unknown.guzhenren.registry;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.item.material.GuMaterialItem;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -15,11 +17,12 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 /**
  * The creative tabs, filled by dispatching on the item's class.
  *
- * <p>DeferredRegister holder: two tabs ({@code mortal_gu}, {@code gu_material}), populated by
+ * <p>DeferredRegister holder: three tabs ({@code mortal_gu}, {@code gu_material},
+ * {@code strength_mortal_gu}), populated by
  * {@code instanceof} on {@link MortalGuItem} / {@link GuMaterialItem}. An item extending neither middle
  * class lands in no tab at all.
  *
- * <p>⚠ That miss is silent: nothing fails and nothing warns, the item simply never appears. The two
+ * <p>⚠ That miss is silent: nothing fails and nothing warns, the item simply never appears. The three
  * tab constants stay unused by the language provider (it has no creative-tab overload).
  *
  * @author Alex
@@ -34,10 +37,14 @@ public final class ModCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Guzhenren.MOD_ID);
 
+    private static final ResourceLocation EPIC_FIGHT_ITEMS =
+            ResourceLocation.fromNamespaceAndPath("epicfight", "items");
+
     public static final Supplier<CreativeModeTab> MORTAL_GU = CREATIVE_MODE_TABS.register("mortal_gu",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.guzhenren.mortal_gu"))
                     .icon(() -> new ItemStack(ModItems.HOPE_GU.get()))
+                    .withTabsBefore(Guzhenren.id("gu_material"))
                     .displayItems((parameters, output) -> accept(output, MortalGuItem.class))
                     .build());
 
@@ -45,13 +52,29 @@ public final class ModCreativeTabs {
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.guzhenren.gu_material"))
                     .icon(() -> new ItemStack(ModItems.PRIMEVAL_STONE.get()))
+                    .withTabsBefore(EPIC_FIGHT_ITEMS)
                     .displayItems((parameters, output) -> accept(output, GuMaterialItem.class))
+                    .build());
+
+    public static final Supplier<CreativeModeTab> STRENGTH_MORTAL_GU = CREATIVE_MODE_TABS.register(
+            "strength_mortal_gu", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.guzhenren.strength_mortal_gu"))
+                    .icon(() -> new ItemStack(ModItems.FLOWER_BOAR_GU.get()))
+                    .withTabsBefore(Guzhenren.id("mortal_gu"))
+                    .displayItems((parameters, output) -> acceptStrength(output))
                     .build());
 
     private static void accept(CreativeModeTab.Output output, Class<? extends Item> branch) {
         for (var entry : ModItems.ITEMS.getEntries()) {
             Item item = entry.get();
             if (branch.isInstance(item)) output.accept(item);
+        }
+    }
+
+    private static void acceptStrength(CreativeModeTab.Output output) {
+        for (var entry : ModItems.ITEMS.getEntries()) {
+            Item item = entry.get();
+            if (item instanceof MortalGuItem gu && gu.path() == GuPath.STRENGTH) output.accept(item);
         }
     }
 

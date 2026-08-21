@@ -19,15 +19,14 @@ import com.unknown.guzhenren.registry.ModDamageTypes;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -59,6 +58,7 @@ public final class ApertureService {
     private ApertureService() {}
 
     public static final int PRIMARY = ApertureData.PRIMARY;
+    private static final int PRESSURE_PER_MINUTE = 2;
 
     public static final long TALENT_SPECK_TOTAL = 5000L;
     public static final long TALENT_HUMAN_QI = 100L;
@@ -98,10 +98,16 @@ public final class ApertureService {
         if (!current.isExtreme()) return;
         long deadline = value == Aperture.PRESSURE_COUNTDOWN_START ? current.pressureDeadlineTick() : 0L;
         if (value == Aperture.PRESSURE_COUNTDOWN_START && deadline == 0L) {
-            deadline = player.level().getGameTime() + Ticks.MINUTE;
+            deadline = player.level().getGameTime() + Ticks.HALF_MINUTE;
         }
         if (current.pressure() == value && current.pressureDeadlineTick() == deadline) return;
         setPressureState(player, index, value, deadline);
+    }
+
+    public static void relievePressure(ServerPlayer player, int amount) {
+        Aperture current = aperture(player, PRIMARY);
+        if (!current.isExtreme()) return;
+        setPressure(player, PRIMARY, Math.max(0, current.pressure() - amount));
     }
 
     public static void tickPressure(ServerPlayer player) {
@@ -110,9 +116,10 @@ public final class ApertureService {
 
         if (aperture.pressure() < Aperture.PRESSURE_COUNTDOWN_START) {
             if (player.tickCount % Ticks.MINUTE != 0) return;
-            int next = aperture.pressure() + 1;
+            int next = Math.min(Aperture.PRESSURE_COUNTDOWN_START,
+                    aperture.pressure() + PRESSURE_PER_MINUTE);
             long deadline = next == Aperture.PRESSURE_COUNTDOWN_START
-                    ? player.level().getGameTime() + Ticks.MINUTE : 0L;
+                    ? player.level().getGameTime() + Ticks.HALF_MINUTE : 0L;
             setPressureState(player, PRIMARY, next, deadline);
             return;
         }
@@ -120,7 +127,7 @@ public final class ApertureService {
         long deadline = aperture.pressureDeadlineTick();
         if (deadline == 0L) {
             setPressureState(player, PRIMARY, Aperture.PRESSURE_COUNTDOWN_START,
-                    player.level().getGameTime() + Ticks.MINUTE);
+                    player.level().getGameTime() + Ticks.HALF_MINUTE);
             return;
         }
         if (player.level().getGameTime() >= deadline) setPressure(player, PRIMARY, Aperture.MAX_PRESSURE);
@@ -139,46 +146,71 @@ public final class ApertureService {
     }
 
     public static void detonatePressure(ServerPlayer player) {
+        Aperture aperture = aperture(player);
+        int radius = pressureExplosionRadius(aperture.rank());
+        double x = player.getX();
+        double y = player.getY();
+        double z = player.getZ();
         setPressure(player, PRIMARY, 0);
         DamageSource source = ModDamageTypes.source(player, ModDamageTypes.APERTURE_PRESSURE_EXPLOSION);
+        Level level = player.level();
+        level.explode(null, source, null, x, y, z, 0.0F, false, Level.ExplosionInteraction.NONE);
+        clearPressureSphere(level, x, y, z, radius, floorBlock(aperture.extremePhysique()));
 
-        player.level().explode(null, source, pressureExplosionCalculator(player.getX(), player.getY(), player.getZ()),
-                player.getX(), player.getY(), player.getZ(), 64.0F,
-                false, Level.ExplosionInteraction.BLOCK);
+        DamageSource disaster = ModDamageTypes.source(player, ModDamageTypes.TEN_EXTREME_DISASTER);
+        double radiusSquared = radius * (double) radius;
+        AABB bounds = new AABB(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius);
+        for (Entity entity : level.getEntities(player, bounds, Entity::isAlive)) {
+            if (entity.distanceToSqr(x, y, z) <= radiusSquared) entity.hurt(disaster, 10_000.0F);
+        }
         if (!player.isDeadOrDying()) player.hurt(source, Float.MAX_VALUE);
     }
 
-    private static ExplosionDamageCalculator pressureExplosionCalculator(double x, double y, double z) {
-        Vec3 center = new Vec3(x, y, z);
-        return new ExplosionDamageCalculator() {
-            private static final double RANGE_SQUARED = 64.0D * 64.0D;
+    private static int pressureExplosionRadius(Rank rank) {
+        return 16 * Math.clamp(rank.ordinal(), Rank.LOWEST.ordinal(), Rank.HIGHEST.ordinal());
+    }
 
-            @Override
-            public boolean shouldBlockExplode(Explosion explosion, BlockGetter level, BlockPos pos, BlockState state,
-                                              float power) {
-                return withinRange(explosion, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D)
-                        && super.shouldBlockExplode(explosion, level, pos, state, power);
-            }
+    private static void clearPressureSphere(Level level, double x, double y, double z, int radius,
+                                            @Nullable Block floorBlock) {
+        int minX = Mth.floor(x - radius);
+        int maxX = Mth.floor(x + radius);
+        int minY = Math.max(level.getMinBuildHeight(), Mth.floor(y - radius));
+        int maxY = Math.min(level.getMaxBuildHeight() - 1, Mth.floor(y + radius));
+        int minZ = Mth.floor(z - radius);
+        int maxZ = Mth.floor(z + radius);
+        double radiusSquared = radius * (double) radius;
 
-            @Override
-            public boolean shouldDamageEntity(Explosion explosion, Entity entity) {
-                return withinRange(entity.getX(), entity.getY(), entity.getZ())
-                        && super.shouldDamageEntity(explosion, entity);
-            }
+        for (BlockPos pos : BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ)) {
+            double dx = pos.getX() + 0.5D - x;
+            double dy = pos.getY() + 0.5D - y;
+            double dz = pos.getZ() + 0.5D - z;
+            if (dx * dx + dy * dy + dz * dz > radiusSquared) continue;
+            if (!level.getBlockState(pos).isAir()) level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        }
 
-            @Override
-            public float getKnockbackMultiplier(Entity entity) {
-                return withinRange(entity.getX(), entity.getY(), entity.getZ())
-                        ? super.getKnockbackMultiplier(entity) : 0.0F;
+        if (floorBlock == null) return;
+        for (int blockX = minX; blockX <= maxX; blockX++) {
+            double dx = blockX + 0.5D - x;
+            for (int blockZ = minZ; blockZ <= maxZ; blockZ++) {
+                double dz = blockZ + 0.5D - z;
+                double horizontalSquared = dx * dx + dz * dz;
+                if (horizontalSquared > radiusSquared) continue;
+                int floorY = (int) Math.ceil(y - Math.sqrt(radiusSquared - horizontalSquared) - 0.5D) - 1;
+                if (floorY < level.getMinBuildHeight() || floorY >= level.getMaxBuildHeight()) continue;
+                BlockPos floorPos = new BlockPos(blockX, floorY, blockZ);
+                if (!level.getBlockState(floorPos).isAir()) {
+                    level.setBlock(floorPos, floorBlock.defaultBlockState(), Block.UPDATE_ALL);
+                }
             }
+        }
+    }
 
-            private boolean withinRange(Explosion explosion, double px, double py, double pz) {
-                return withinRange(px, py, pz) && explosion.center().distanceToSqr(px, py, pz) <= RANGE_SQUARED;
-            }
-
-            private boolean withinRange(double px, double py, double pz) {
-                return center.distanceToSqr(px, py, pz) <= RANGE_SQUARED;
-            }
+    private static @Nullable Block floorBlock(ExtremePhysique physique) {
+        return switch (physique) {
+            case NORTHERN_DARK_ICE_SOUL -> Blocks.ICE;
+            case BLAZING_GLORY_LIGHTNING_BRILLIANCE -> Blocks.MAGMA_BLOCK;
+            case MYRIAD_GOLD_WONDROUS_ESSENCE -> Blocks.GOLD_BLOCK;
+            default -> null;
         };
     }
 

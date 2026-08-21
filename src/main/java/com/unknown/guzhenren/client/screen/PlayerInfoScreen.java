@@ -1,9 +1,7 @@
 package com.unknown.guzhenren.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
-import com.unknown.guzhenren.attachment.data.body.PathEntry;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import com.unknown.guzhenren.client.ModKeyMappings;
@@ -412,7 +410,19 @@ public final class PlayerInfoScreen extends Screen {
         };
 
         List<Row> rows = new ArrayList<>(model.size());
-        for (InfoModel.Row row : model) {
+        for (int i = 0; i < model.size(); i++) {
+            InfoModel.Row row = model.get(i);
+            if (activeTab == TAB_PATH && row.entry() instanceof InfoModel.PathRow first) {
+                Row left = draw(row.indent(), first);
+                if (i + 1 < model.size() && model.get(i + 1).entry() instanceof InfoModel.PathRow second) {
+                    Row right = draw(model.get(i + 1).indent(), second);
+                    rows.add(new Row(row.indent(), left.label(), right.label()));
+                    i++;
+                } else {
+                    rows.add(left);
+                }
+                continue;
+            }
             Row drawn = draw(row.indent(), row.entry());
             if (drawn != null) rows.add(drawn);
         }
@@ -430,7 +440,7 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.Distilled e -> new Row(indent, label("distilled"), Component.literal(
                     ModDisplayText.pool(e.aperture().distilledEssence(), e.aperture().maxEssence())));
             case InfoModel.Pressure e -> new Row(indent, label("pressure"), Component.literal(
-                    ModDisplayText.pool(e.aperture().pressure(), Aperture.MAX_PRESSURE)));
+                    e.aperture().pressure() + "%"));
 
             case InfoModel.PathChoice e -> e.primary()
                     ? new Row(indent, label("primary_path"), ModDisplayText.path(e.path()))
@@ -445,7 +455,7 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.Lifespan e -> new Row(indent, label("lifespan"),
                     ModDisplayText.lifespan(e.lifespan(), e.age()));
             case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
-            case InfoModel.PathRow e -> new Row(indent, name(e.path().getTranslationKey()), pathValue(e.entry()));
+            case InfoModel.PathRow e -> new Row(indent, ModDisplayText.pathLine(e.path(), e.entry()), Component.empty());
             case InfoModel.QiHeader ignored -> new Row(indent, label("qi"), null);
             case InfoModel.QiRow e -> new Row(indent, name(e.kind().getTranslationKey()),
                     Component.literal(String.valueOf(e.amount())));
@@ -476,15 +486,6 @@ public final class PlayerInfoScreen extends Screen {
         MutableComponent talent = ModDisplayText.talent(e.aperture());
         if (e.awakened()) talent.append(detail(ModDisplayText.baseFraction(e.aperture().baseEssence())));
         return talent;
-    }
-
-    private static MutableComponent pathValue(PathEntry entry) {
-        MutableComponent value = Component.translatable("guzhenren.screen.path_value",
-                name(entry.attainment().getTranslationKey()), entry.markTotal());
-        if (entry.speckTotal() > 0L) {
-            value.append(Component.translatable("guzhenren.command.info.path_speck", entry.speckTotal()));
-        }
-        return value;
     }
 
     private static MutableComponent name(String key) {return Component.translatable(key);}

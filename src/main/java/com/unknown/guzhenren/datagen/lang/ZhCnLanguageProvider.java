@@ -277,6 +277,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.menu.load",                   "空窍负担 %s / %s");
         add("guzhenren.screen.label.brilliance",     "才情");
         add("guzhenren.screen.path_value",           "%s 道痕 %s");
+        add("guzhenren.display.path_marks",          " 道痕%s");
+        add("guzhenren.display.path_specks",         " 碎屑%s");
     }
     //endregion
 
@@ -365,8 +367,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.ESSENCE_QI_5,                     "五转元气");
         addItem(ModItems.DEATH_QI_5,                       "五转死气");
 
-        add("itemGroup.guzhenren.mortal_gu",               "蛊真人 · 凡蛊");
-        add("itemGroup.guzhenren.gu_material",             "蛊真人 · 蛊材");
+        add("itemGroup.guzhenren.mortal_gu",               "凡蛊");
+        add("itemGroup.guzhenren.gu_material",             "蛊材");
+        add("itemGroup.guzhenren.strength_mortal_gu",       "力道凡蛊");
 
         add("guzhenren.item.failed.awakened",              "你已开窍");
         add("guzhenren.item.failed.unawakened",            "你未开窍");
@@ -433,6 +436,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("death.attack.guzhenren.soul_collapse",        "%1$s 魂魄衰竭而亡");
         add("death.attack.guzhenren.mind_ocean_shattered", "%1$s 脑海炸裂而亡");
         add("death.attack.guzhenren.aperture_pressure_explosion", "%1$s 空窍压力爆炸而亡");
+        add("death.attack.guzhenren.ten_extreme_disaster", "%1$s 被十绝天灾波及而亡");
         add("death.attack.guzhenren.vital_gu_lost",        "%1$s 本命蛊断绝而亡");
     }
     //endregion

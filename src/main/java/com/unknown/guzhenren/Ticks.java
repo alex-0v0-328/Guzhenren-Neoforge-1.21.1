@@ -4,6 +4,7 @@ package com.unknown.guzhenren;
  * Every unit of time this mod speaks, in ticks.
  *
  * <p>The sole source of time constants for the entire mod: {@code SECOND 20}, {@code MINUTE 1200},
+ * {@code HALF_MINUTE 600},
  * {@code DAY 24000}, {@code HALF_DAY 12000}. There is no config in this mod, and there must never be
  * one -- a server owner who "configured" a day to 5000 would only desync aging, regen and feeding from
  * the day/night cycle. Never declare a second {@code 24000} anywhere else; use this class.
@@ -22,6 +23,7 @@ public final class Ticks {
     public static final int SECOND = 20;
     public static final int HALF_SECOND = SECOND / 2;
     public static final int MINUTE = 60 * SECOND;
+    public static final int HALF_MINUTE = MINUTE / 2;
 
     public static final int DAY = 24000;
     public static final int HALF_DAY = DAY / 2;

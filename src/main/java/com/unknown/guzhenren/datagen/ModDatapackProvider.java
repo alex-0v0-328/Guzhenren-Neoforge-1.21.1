@@ -55,6 +55,8 @@ public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
         context.register(ModDamageTypes.MIND_OCEAN_SHATTERED, new DamageType("guzhenren.mind_ocean_shattered", 0.0F));
         context.register(ModDamageTypes.APERTURE_PRESSURE_EXPLOSION,
                 new DamageType("guzhenren.aperture_pressure_explosion", 0.0F));
+        context.register(ModDamageTypes.TEN_EXTREME_DISASTER,
+                new DamageType("guzhenren.ten_extreme_disaster", 0.0F));
         context.register(ModDamageTypes.VITAL_GU_LOST, new DamageType("guzhenren.vital_gu_lost", 0.0F));
     }
     //endregion

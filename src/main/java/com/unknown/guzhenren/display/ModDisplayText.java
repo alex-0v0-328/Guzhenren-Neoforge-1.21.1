@@ -2,10 +2,12 @@ package com.unknown.guzhenren.display;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
+import com.unknown.guzhenren.attachment.data.body.PathEntry;
 import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
+import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import java.util.Locale;
@@ -74,6 +76,20 @@ public final class ModDisplayText {
         return path == null
                 ? Component.translatable("guzhenren.display.none")
                 : Component.translatable(path.getTranslationKey());
+    }
+
+    public static MutableComponent pathLine(GuPath path, PathEntry entry) {
+        MutableComponent line = path(path);
+        if (entry.attainment() != GuAttainment.NONE) {
+            line.append(" ").append(Component.translatable(entry.attainment().getTranslationKey()));
+        }
+        if (entry.markTotal() > 0L) {
+            line.append(Component.translatable("guzhenren.display.path_marks", entry.markTotal()));
+        }
+        if (entry.speckTotal() > 0L) {
+            line.append(Component.translatable("guzhenren.display.path_specks", entry.speckTotal()));
+        }
+        return line;
     }
 
     /**

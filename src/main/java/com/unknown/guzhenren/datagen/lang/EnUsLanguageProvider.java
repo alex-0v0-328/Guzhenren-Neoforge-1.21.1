@@ -275,6 +275,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.menu.load",                   "Load %s / %s");
         add("guzhenren.screen.label.brilliance",     "Brilliance");
         add("guzhenren.screen.path_value",           "%s Marks %s");
+        add("guzhenren.display.path_marks",          " Marks %s");
+        add("guzhenren.display.path_specks",         " Specks %s");
     }
     //endregion
 
@@ -363,8 +365,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.ESSENCE_QI_5,                     "Essence Qi V");
         addItem(ModItems.DEATH_QI_5,                       "Death Qi V");
 
-        add("itemGroup.guzhenren.mortal_gu",               "GZR · Mortal Gu");
-        add("itemGroup.guzhenren.gu_material",             "GZR · Gu Material");
+        add("itemGroup.guzhenren.mortal_gu",               "Mortal Gu");
+        add("itemGroup.guzhenren.gu_material",             "Gu Material");
+        add("itemGroup.guzhenren.strength_mortal_gu",       "GZR-Strength Mortal Gu");
 
         add("guzhenren.item.failed.awakened",              "You have already awakened");
         add("guzhenren.item.failed.unawakened",            "You have NOT awakened");
@@ -430,6 +433,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("death.attack.guzhenren.soul_collapse",        "%1$s suffered soul collapse");
         add("death.attack.guzhenren.mind_ocean_shattered", "%1$s shattered their Mind Ocean");
         add("death.attack.guzhenren.aperture_pressure_explosion", "%1$s died in an aperture pressure explosion");
+        add("death.attack.guzhenren.ten_extreme_disaster", "%1$s was killed by a Ten-Extreme disaster");
         add("death.attack.guzhenren.vital_gu_lost",        "%1$s lost their Vital Gu");
     }
     //endregion

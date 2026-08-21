@@ -138,6 +138,7 @@ public final class NourishService {
             return false;
         }
         ApertureService.setStage(player, stage.shift(1));
+        ApertureService.relievePressure(player, 20);
         store(player, NourishData.DEFAULT);
         player.displayClientMessage(Component.translatable(STAGE_UP), true);
         return false;
@@ -166,6 +167,7 @@ public final class NourishService {
             case SUCCESS -> {
                 ApertureService.setRank(player, a.rank().shift(1));
                 ApertureService.setStage(player, Stage.LOWEST);
+                ApertureService.relievePressure(player, 50);
                 say(player, IMPACT_SUCCESS);
             }
             case HOLD -> say(player, IMPACT_HOLD);

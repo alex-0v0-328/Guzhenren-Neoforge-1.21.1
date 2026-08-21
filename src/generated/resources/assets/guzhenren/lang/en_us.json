@@ -3,6 +3,7 @@
   "death.attack.guzhenren.lifespan_exhausted": "%1$s ran out of lifespan",
   "death.attack.guzhenren.mind_ocean_shattered": "%1$s shattered their Mind Ocean",
   "death.attack.guzhenren.soul_collapse": "%1$s suffered soul collapse",
+  "death.attack.guzhenren.ten_extreme_disaster": "%1$s was killed by a Ten-Extreme disaster",
   "death.attack.guzhenren.vital_gu_lost": "%1$s lost their Vital Gu",
   "effect.guzhenren.all_out_effort": "All-Out Effort Gu Effect",
   "effect.guzhenren.brute_force_longhorn_beetle_gu": "Brute Force Longhorn Beetle Gu Effect",
@@ -81,6 +82,8 @@
   "guzhenren.display.gu_material": "Gu Material",
   "guzhenren.display.lifespan": "%s [age %s]",
   "guzhenren.display.none": "[NONE]",
+  "guzhenren.display.path_marks": " Marks %s",
+  "guzhenren.display.path_specks": " Specks %s",
   "guzhenren.display.physique": "[%s]",
   "guzhenren.display.realm": "%s %s",
   "guzhenren.display.realm_title": "%s %s",
@@ -481,8 +484,9 @@
   "item.guzhenren.thousands_lifespan_gu": "Thousands Years Lifespan Gu",
   "item.guzhenren.vitality_leaf_gu": "Vitality Leaf Gu",
   "item.guzhenren.white_boar_gu": "White Boar Gu",
-  "itemGroup.guzhenren.gu_material": "GZR · Gu Material",
-  "itemGroup.guzhenren.mortal_gu": "GZR · Mortal Gu",
+  "itemGroup.guzhenren.gu_material": "Gu Material",
+  "itemGroup.guzhenren.mortal_gu": "Mortal Gu",
+  "itemGroup.guzhenren.strength_mortal_gu": "GZR-Strength Mortal Gu",
   "key.categories.guzhenren": "Guzhenren",
   "key.guzhenren.open_info": "Open Info Panel"
 }
