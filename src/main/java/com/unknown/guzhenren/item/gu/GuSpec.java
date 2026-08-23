@@ -47,7 +47,8 @@ public final class GuSpec {
     private @Nullable TagKey<Item> denseTag;
     private int denseUnits;
 
-    private int useCooldownTicks;
+    private int effectCooldownTicks;
+    private int itemCooldownTicks;
 
     private int maxHealth;
 
@@ -111,7 +112,14 @@ public final class GuSpec {
     }
 
     public GuSpec cooldown(int ticks) {
-        this.useCooldownTicks = ticks;
+        this.effectCooldownTicks = ticks;
+        this.itemCooldownTicks = ticks;
+        return this;
+    }
+
+    public GuSpec cooldown(int effectTicks, int itemTicks) {
+        this.effectCooldownTicks = effectTicks;
+        this.itemCooldownTicks = itemTicks;
         return this;
     }
 
@@ -129,7 +137,8 @@ public final class GuSpec {
     public boolean channels() {return channels;}
     public int essencePerSpeck() {return essencePerSpeck;}
     public MarkTag speckTag() {return speckTag;}
-    public int useCooldownTicks() {return useCooldownTicks;}
+    public int effectCooldownTicks() {return effectCooldownTicks;}
+    public int itemCooldownTicks() {return itemCooldownTicks;}
     public int maxHealth() {return maxHealth;}
 
     public int unitsPerHealth() {return unitsPerHunger;}

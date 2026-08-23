@@ -147,8 +147,6 @@ public abstract class TendedGuItem extends MortalGuItem {
     //endregion
 
     //region refining [炼化] -- paid in instalments; what it buys is a lasting bond
-    public static final int REFINE_DONE_COOLDOWN_TICKS = Ticks.SECOND;
-
     private void refineStep(ServerPlayer player, ItemStack stack, int invest) {
         RefinedGuState s = state(stack);
         int next = s.refineProgress() + invest;
@@ -279,8 +277,8 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     private void grant(ServerPlayer player, ItemStack stack) {
         payout(player, stack);
-        if (spec.useCooldownTicks() > 0) {
-            stack.set(ModDataComponents.USED_AT.get(), cooldownStamp(player, spec.useCooldownTicks()));
+        if (spec.effectCooldownTicks() > 0) {
+            stack.set(ModDataComponents.USED_AT.get(), cooldownStamp(player, spec.effectCooldownTicks()));
         }
     }
     //endregion
@@ -307,12 +305,14 @@ public abstract class TendedGuItem extends MortalGuItem {
     }
 
     private int useCooldownLeft(Player p, ItemStack s) {
-        return cooldownLeft(p, s.get(ModDataComponents.USED_AT.get()), spec.useCooldownTicks());
+        return cooldownLeft(p, s.get(ModDataComponents.USED_AT.get()), spec.effectCooldownTicks());
     }
 
     private @Nullable Refusal cooldownRefusal(Player player, ItemStack stack) {
         int left = useCooldownLeft(player, stack);
         if (left <= 0) return null;
+
+        if (allowsUseDuringEffectCooldown()) return null;
 
         if (player instanceof ServerPlayer server) server.getCooldowns().addCooldown(this, left);
         long seconds = (left + Ticks.SECOND - 1) / Ticks.SECOND;
@@ -322,7 +322,7 @@ public abstract class TendedGuItem extends MortalGuItem {
     @Override
     protected void spend(ServerPlayer player, ItemStack stack, int count) {
         super.spend(player, stack, count);
-        int left = Math.max(useCooldownLeft(player, stack),
+        int left = Math.max(TimeFlowService.waited(player, spec.itemCooldownTicks()),
                 cooldownLeft(player, stack.get(ModDataComponents.REFINED_AT.get()), REFINE_DONE_COOLDOWN_TICKS));
         if (left > 0) player.getCooldowns().addCooldown(this, left);
     }
@@ -380,7 +380,7 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     protected int drive(ServerPlayer player, ItemStack stack) {
         EssenceService.consume(player, spec.essencePerRound());
-        boolean drivenOnAnEmptyBar = clock.spendWasForced(stack);
+        boolean drivenOnAnEmptyBar = clock.spendWasForced(stack, hungerCostMultiplier(player, stack));
         paySpecksCrossed(player, 0, spec.essencePerRound());
         grant(player, stack);
 
@@ -413,6 +413,22 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     protected boolean holdingFood(Player player, ItemStack stack) {
         return refined(stack) && feedUnits(player.getOffhandItem()) > 0;
+    }
+
+    protected boolean allowsUseDuringEffectCooldown() {return false;}
+    protected int hungerCostMultiplier(Player player, ItemStack stack) {return 1;}
+
+    protected final int effectCooldownLeft(Player player, ItemStack stack) {
+        return cooldownLeft(player, stack.get(ModDataComponents.USED_AT.get()), spec.effectCooldownTicks());
+    }
+
+    public final boolean autoUse(ServerPlayer player, ItemStack stack) {
+        if (!refined(stack) || spec.channels() || player.getCooldowns().isOnCooldown(this)) return false;
+        if (essenceGate(player, useThreshold(stack), FAILED_ESSENCE) != null
+                || cooldownRefusal(player, stack) != null
+                || useGate(player, stack) != null) return false;
+        spend(player, stack, useApply(player, stack));
+        return true;
     }
 
     protected void eat(ServerPlayer player, ItemStack stack) {

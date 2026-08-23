@@ -294,6 +294,14 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.BEAR_STRENGTH_GU,                 "Bear Strength Gu");
         addItem(ModItems.DRAGONPILL_CRICKET_GU,            "Dragonpill Cricket Gu");
         addItem(ModItems.BRUTE_FORCE_LONGHORN_BEETLE_GU,   "Brute Force Longhorn Beetle Gu");
+        addItem(ModItems.HORIZONTAL_CRASH_GU,       "Horizontal Crash Gu");
+        addItem(ModItems.VERTICAL_CRASH_GU,         "Vertical Crash Gu");
+        addItem(ModItems.CHARGING_CRASH_GU_4,       "Charging Crash Gu IV");
+        addItem(ModItems.CHARGING_CRASH_GU_5,       "Charging Crash Gu V");
+        addItem(ModItems.SELF_RELIANCE_GU_2,        "Self Reliance Gu II");
+        addItem(ModItems.SELF_RELIANCE_GU_3,        "Self Reliance Gu III");
+        addItem(ModItems.SELF_RELIANCE_GU_4,        "Self Reliance Gu IV");
+        addItem(ModItems.HARDSHIP_STRENGTH_GU,      "Hardship Strength Gu");
         addItem(ModItems.ALL_OUT_EFFORT_GU_3,              "All-Out Effort Gu III");
         addItem(ModItems.ALL_OUT_EFFORT_GU_4,              "All-Out Effort Gu IV");
         addItem(ModItems.ALL_OUT_EFFORT_GU_5,              "All-Out Effort Gu V");
@@ -412,6 +420,11 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.flower_boar_gu",             "Flower Boar Gu Effect");
         add("effect.guzhenren.dragonpill_cricket_gu",      "Dragonpill Cricket Gu Effect");
         add("effect.guzhenren.brute_force_longhorn_beetle_gu", "Brute Force Longhorn Beetle Gu Effect");
+        add("effect.guzhenren.horizontal_crash_gu", "Horizontal Crash Gu Effect");
+        add("effect.guzhenren.vertical_crash_gu",   "Vertical Crash Gu Effect");
+        add("effect.guzhenren.charging_crash_gu",   "Charging Crash Gu Effect");
+        add("effect.guzhenren.self_reliance_gu",    "Self Reliance Gu Effect");
+        add("effect.guzhenren.hardship_strength_gu", "Hardship Strength Gu Effect");
         add("effect.guzhenren.all_out_effort",             "All-Out Effort Gu Effect");
         add("effect.guzhenren.half_zombie",                "Half-Zombie Effect");
         add("effect.guzhenren.second_watch_gu",            "Second Watch Gu Effect");

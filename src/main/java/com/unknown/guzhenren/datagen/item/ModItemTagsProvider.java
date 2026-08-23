@@ -39,6 +39,9 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         tag(ModItemTags.BEAR_FEED).add(Items.HONEY_BOTTLE);
         tag(ModItemTags.BEEF_FEED).add(Items.BEEF);
         tag(ModItemTags.RABBIT_FEED).add(Items.RABBIT);
+        tag(ModItemTags.ANVIL_FEED).add(Items.ANVIL);
+        tag(ModItemTags.COBBLESTONE_FEED).add(Items.COBBLESTONE);
+        tag(ModItemTags.POTATO_FEED).add(Items.POTATO);
 
         tag(ModItemTags.JIN_FEED).add(Items.RAW_IRON);
         tag(ModItemTags.JIN_FEED_DENSE).add(Items.RAW_IRON_BLOCK);

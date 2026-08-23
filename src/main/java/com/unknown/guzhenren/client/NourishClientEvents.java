@@ -2,7 +2,9 @@ package com.unknown.guzhenren.client;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.service.aperture.NourishService;
+import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -44,6 +46,20 @@ public final class NourishClientEvents {
         input.right = false;
         input.jumping = false;
         input.shiftKeyDown = false;
+    }
+
+    @SubscribeEvent
+    public static void onCrashInput(MovementInputUpdateEvent event) {
+        if (!(event.getEntity() instanceof net.minecraft.client.player.LocalPlayer player)
+                || !Screen.hasAltDown()) return;
+
+        boolean horizontal = player.hasEffect(ModEffects.HORIZONTAL_CRASH_GU)
+                || player.hasEffect(ModEffects.CHARGING_CRASH_GU);
+        boolean vertical = player.hasEffect(ModEffects.VERTICAL_CRASH_GU)
+                || player.hasEffect(ModEffects.CHARGING_CRASH_GU);
+        Input input = event.getInput();
+        if (horizontal) input.leftImpulse *= 3.0F;
+        if (vertical) input.forwardImpulse *= 3.0F;
     }
 
     @SubscribeEvent

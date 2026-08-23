@@ -9,10 +9,13 @@ import com.unknown.guzhenren.effect.pool.StrengthQiEffect;
 import com.unknown.guzhenren.effect.timed.AllOutEffortEffect;
 import com.unknown.guzhenren.effect.timed.BruteForceLonghornBeetleGuEffect;
 import com.unknown.guzhenren.effect.timed.CasualThoughtEffect;
+import com.unknown.guzhenren.effect.timed.CrashGuEffect;
 import com.unknown.guzhenren.effect.timed.DragonpillCricketGuEffect;
 import com.unknown.guzhenren.effect.timed.FlowerBoarGuEffect;
+import com.unknown.guzhenren.effect.timed.HardshipStrengthGuEffect;
 import com.unknown.guzhenren.effect.timed.LiquorWormEffect;
 import com.unknown.guzhenren.effect.timed.MaliciousThoughtEffect;
+import com.unknown.guzhenren.effect.timed.SelfRelianceGuEffect;
 import com.unknown.guzhenren.effect.timed.TimeFlowEffect;
 import com.unknown.guzhenren.effect.timed.VitalityLeafEffect;
 import net.minecraft.core.Holder;
@@ -54,6 +57,8 @@ public final class ModEffects {
     private static final int ALL_OUT_EFFORT_COLOR                 = 0xFF8A65;
     private static final int DRAGONPILL_CRICKET_GU_COLOR          = 0xCDDC39;
     private static final int BRUTE_FORCE_LONGHORN_BEETLE_GU_COLOR = 0x455A64;
+    private static final int CRASH_GU_COLOR                        = 0xFFB300;
+    private static final int SELF_RELIANCE_GU_COLOR                = 0x66BB6A;
     private static final int STRENGTH_QI_COLOR                    = 0xFF7043;
     private static final int HALF_ZOMBIE_COLOR                    = 0x546E7A;
     /** Alex's ruling: black, and it stands for every Time Path effect that follows, not just these two. */
@@ -93,6 +98,27 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, BruteForceLonghornBeetleGuEffect> BRUTE_FORCE_LONGHORN_BEETLE_GU =
             MOB_EFFECTS.register("brute_force_longhorn_beetle_gu", () -> new BruteForceLonghornBeetleGuEffect(
                     MobEffectCategory.BENEFICIAL, BRUTE_FORCE_LONGHORN_BEETLE_GU_COLOR));
+
+    public static final DeferredHolder<MobEffect, CrashGuEffect> HORIZONTAL_CRASH_GU = MOB_EFFECTS.register(
+            "horizontal_crash_gu", () -> new CrashGuEffect(MobEffectCategory.BENEFICIAL, CRASH_GU_COLOR,
+                    CrashGuEffect.HORIZONTAL));
+
+    public static final DeferredHolder<MobEffect, CrashGuEffect> VERTICAL_CRASH_GU = MOB_EFFECTS.register(
+            "vertical_crash_gu", () -> new CrashGuEffect(MobEffectCategory.BENEFICIAL, CRASH_GU_COLOR,
+                    CrashGuEffect.VERTICAL));
+
+    public static final DeferredHolder<MobEffect, CrashGuEffect> CHARGING_CRASH_GU =
+            MOB_EFFECTS.register("charging_crash_gu", () -> new CrashGuEffect(
+                    MobEffectCategory.BENEFICIAL, CRASH_GU_COLOR,
+                    CrashGuEffect.HORIZONTAL | CrashGuEffect.VERTICAL));
+
+    public static final DeferredHolder<MobEffect, SelfRelianceGuEffect> SELF_RELIANCE_GU = MOB_EFFECTS.register(
+            "self_reliance_gu", () -> new SelfRelianceGuEffect(
+                    MobEffectCategory.BENEFICIAL, SELF_RELIANCE_GU_COLOR));
+
+    public static final DeferredHolder<MobEffect, HardshipStrengthGuEffect> HARDSHIP_STRENGTH_GU =
+            MOB_EFFECTS.register("hardship_strength_gu", () -> new HardshipStrengthGuEffect(
+                    MobEffectCategory.BENEFICIAL, ALL_OUT_EFFORT_COLOR));
 
     public static final DeferredHolder<MobEffect, HalfZombieEffect> HALF_ZOMBIE = MOB_EFFECTS.register(
             "half_zombie", () -> new HalfZombieEffect(MobEffectCategory.NEUTRAL, HALF_ZOMBIE_COLOR));

@@ -63,6 +63,9 @@ public class HopeGuItem extends MortalGuItem {
     protected final int useDurationTicks(Player player, ItemStack stack) {return RITUAL_TICKS;}
 
     @Override
+    protected int cooldownTicks(ItemStack stack) {return REFINE_DONE_COOLDOWN_TICKS;}
+
+    @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack,
                           int remaining) {
         if (remaining != RITUAL_TICKS || !(entity instanceof ServerPlayer)) return;

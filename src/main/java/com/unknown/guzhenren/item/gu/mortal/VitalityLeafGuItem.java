@@ -27,14 +27,9 @@ public class VitalityLeafGuItem extends OneShotGuItem {
 
     private static final String FAILED_VITALITY_ACTIVE = "guzhenren.item.failed.vitality_active";
 
-    private static final int USE_COOLDOWN_TICKS = 10;
-
     public VitalityLeafGuItem(Properties properties, GuSpec spec) {
         super(properties, spec);
     }
-
-    @Override
-    protected int cooldownTicks(ItemStack stack) {return USE_COOLDOWN_TICKS;}
 
     @Override
     protected @Nullable Refusal useGate(Player player, ItemStack stack) {

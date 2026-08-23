@@ -29,11 +29,18 @@ public class BuffGuItem extends TendedGuItem {
 
     private final Holder<MobEffect> buff;
     private final int durationTicks;
+    private final int amplifier;
 
     public BuffGuItem(Properties properties, Holder<MobEffect> buff, int durationTicks, GuSpec spec) {
+        this(properties, buff, durationTicks, 0, spec);
+    }
+
+    public BuffGuItem(Properties properties, Holder<MobEffect> buff, int durationTicks, int amplifier,
+                      GuSpec spec) {
         super(properties, spec);
         this.buff = buff;
         this.durationTicks = durationTicks;
+        this.amplifier = amplifier;
     }
 
     @Override
@@ -41,6 +48,28 @@ public class BuffGuItem extends TendedGuItem {
 
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
-        player.addEffect(ModEffects.instance(buff, durationTicks));
+        MobEffectInstance current = player.getEffect(buff);
+        if (current != null && amplifier < current.getAmplifier()) return;
+
+        int duration = current == null ? durationTicks : nextDuration(current.getDuration(),
+                current.getAmplifier(), durationTicks, amplifier, effectCooldownLeft(player, stack) > 0);
+        if (current != null) player.removeEffect(buff);
+        player.addEffect(ModEffects.instance(buff, duration, amplifier));
+    }
+
+    static int nextDuration(int currentDuration, int currentAmplifier, int addedDuration, int addedAmplifier,
+                            boolean accumulates) {
+        if (addedAmplifier < currentAmplifier) return currentDuration;
+        if (addedAmplifier > currentAmplifier) return addedDuration;
+        if (!accumulates) return Math.max(currentDuration, addedDuration);
+        return (int) Math.min(Integer.MAX_VALUE, (long) currentDuration + addedDuration);
+    }
+
+    @Override
+    protected boolean allowsUseDuringEffectCooldown() {return true;}
+
+    @Override
+    protected int hungerCostMultiplier(Player player, ItemStack stack) {
+        return effectCooldownLeft(player, stack) > 0 ? 2 : 1;
     }
 }

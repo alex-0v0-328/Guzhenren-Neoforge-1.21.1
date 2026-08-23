@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.item.gu;
 
+import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.item.GuItem;
@@ -31,6 +32,8 @@ import org.jetbrains.annotations.Nullable;
  * @see GuSpec
  */
 public abstract class MortalGuItem extends GuItem {
+
+    public static final int REFINE_DONE_COOLDOWN_TICKS = 2 * Ticks.SECOND;
 
     private static final String KIND_KEY = "guzhenren.display.gu";
 

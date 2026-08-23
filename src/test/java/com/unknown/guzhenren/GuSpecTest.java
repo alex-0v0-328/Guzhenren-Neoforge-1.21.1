@@ -70,4 +70,12 @@ class GuSpecTest {
         assertThrows(IllegalStateException.class,
                 () -> GuSpec.of(Rank.ONE, GuPath.STRENGTH).costPerUse(-1).validate("negative_use"));
     }
+
+    @Test
+    @DisplayName("effect and item cooldowns can be configured independently")
+    void cooldownsAreIndependent() {
+        GuSpec spec = GuSpec.of(Rank.THREE, GuPath.STRENGTH).cooldown(600, 20);
+        assertTrue(spec.effectCooldownTicks() == 600);
+        assertTrue(spec.itemCooldownTicks() == 20);
+    }
 }

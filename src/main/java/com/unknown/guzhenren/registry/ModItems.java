@@ -9,8 +9,10 @@ import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.effect.timed.BruteForceLonghornBeetleGuEffect;
+import com.unknown.guzhenren.effect.timed.CrashGuEffect;
 import com.unknown.guzhenren.effect.timed.DragonpillCricketGuEffect;
 import com.unknown.guzhenren.effect.timed.FlowerBoarGuEffect;
+import com.unknown.guzhenren.effect.timed.HardshipStrengthGuEffect;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.mortal.BuffGuItem;
 import com.unknown.guzhenren.item.gu.mortal.HopeGuItem;
@@ -23,6 +25,7 @@ import com.unknown.guzhenren.item.gu.mortal.soul.GutsGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.AllOutEffortGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.BeastStrengthGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.HumanStrengthGuItem;
+import com.unknown.guzhenren.item.gu.mortal.strength.SelfRelianceGuItem;
 import com.unknown.guzhenren.item.gu.mortal.time.WatchGuItem;
 import com.unknown.guzhenren.item.gu.mortal.wisdom.CasualGuItem;
 import com.unknown.guzhenren.item.gu.mortal.wisdom.MaliciousThoughtGuItem;
@@ -124,7 +127,7 @@ public final class ModItems {
                             .costPerUse(16)
                             .hungerBar(12, 1).hungerPerUse(4)
                             .feed(ModItemTags.BOAR_FEED, 1)
-                            .cooldown(2 * Ticks.MINUTE)));
+                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
     public static final DeferredItem<Item> DRAGONPILL_CRICKET_GU = ITEMS.register("dragonpill_cricket_gu",
             () -> new BuffGuItem(tended(), ModEffects.DRAGONPILL_CRICKET_GU,
                     DragonpillCricketGuEffect.DURATION_TICKS,
@@ -133,7 +136,7 @@ public final class ModItems {
                             .costPerUse(16)
                             .hungerBar(12, 1).hungerPerUse(4)
                             .feed(ModItemTags.RABBIT_FEED, 1)
-                            .cooldown(Ticks.MINUTE)));
+                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
     public static final DeferredItem<Item> BRUTE_FORCE_LONGHORN_BEETLE_GU =
             ITEMS.register("brute_force_longhorn_beetle_gu",
                     () -> new BuffGuItem(tended(), ModEffects.BRUTE_FORCE_LONGHORN_BEETLE_GU,
@@ -143,7 +146,58 @@ public final class ModItems {
                                     .costPerUse(16)
                                     .hungerBar(12, 1).hungerPerUse(4)
                                     .feed(ModItemTags.BEEF_FEED, 1)
-                                    .cooldown(Ticks.MINUTE)));
+                                    .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+
+    public static final DeferredItem<Item> HORIZONTAL_CRASH_GU = ITEMS.register("horizontal_crash_gu",
+            () -> new BuffGuItem(tended(), ModEffects.HORIZONTAL_CRASH_GU, CrashGuEffect.duration(30),
+                    GuSpec.of(Rank.THREE, GuPath.STRENGTH)
+                            .refine(80_000).costPerUse(1_600)
+                            .hungerBar(12, 1).hungerPerUse(4).feed(ModItemTags.ANVIL_FEED, 1)
+                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+    public static final DeferredItem<Item> VERTICAL_CRASH_GU = ITEMS.register("vertical_crash_gu",
+            () -> new BuffGuItem(tended(), ModEffects.VERTICAL_CRASH_GU, CrashGuEffect.duration(30),
+                    GuSpec.of(Rank.THREE, GuPath.STRENGTH)
+                            .refine(80_000).costPerUse(1_600)
+                            .hungerBar(12, 1).hungerPerUse(4).feed(ModItemTags.ANVIL_FEED, 1)
+                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+    public static final DeferredItem<Item> CHARGING_CRASH_GU_4 = ITEMS.register("charging_crash_gu_4",
+            () -> new BuffGuItem(tended(), ModEffects.CHARGING_CRASH_GU,
+                    CrashGuEffect.duration(30), 3, GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
+                            .refine(800_000).costPerUse(16_000)
+                            .hungerBar(12, 2).hungerPerUse(4).feed(ModItemTags.ANVIL_FEED, 1)
+                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+    public static final DeferredItem<Item> CHARGING_CRASH_GU_5 = ITEMS.register("charging_crash_gu_5",
+            () -> new BuffGuItem(tended(), ModEffects.CHARGING_CRASH_GU,
+                    CrashGuEffect.duration(60), 4, GuSpec.of(Rank.FIVE, GuPath.STRENGTH)
+                            .refine(8_000_000).costPerUse(160_000)
+                            .hungerBar(12, 3).hungerPerUse(4).feed(ModItemTags.ANVIL_FEED, 1)
+                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+
+    public static final DeferredItem<Item> SELF_RELIANCE_GU_2 = ITEMS.register("self_reliance_gu_2",
+            () -> new SelfRelianceGuItem(tended(), 30 * Ticks.SECOND, 1,
+                    GuSpec.of(Rank.TWO, GuPath.STRENGTH)
+                            .refine(8_000).costPerUse(160)
+                            .hungerBar(12, 4).hungerPerUse(4).feed(ModItemTags.COBBLESTONE_FEED, 1)
+                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+    public static final DeferredItem<Item> SELF_RELIANCE_GU_3 = ITEMS.register("self_reliance_gu_3",
+            () -> new SelfRelianceGuItem(tended(), 60 * Ticks.SECOND, 2,
+                    GuSpec.of(Rank.THREE, GuPath.STRENGTH)
+                            .refine(80_000).costPerUse(1_600)
+                            .hungerBar(12, 8).hungerPerUse(4).feed(ModItemTags.COBBLESTONE_FEED, 1)
+                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+    public static final DeferredItem<Item> SELF_RELIANCE_GU_4 = ITEMS.register("self_reliance_gu_4",
+            () -> new SelfRelianceGuItem(tended(), 120 * Ticks.SECOND, 3,
+                    GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
+                            .refine(800_000).costPerUse(16_000)
+                            .hungerBar(12, 12).hungerPerUse(4).feed(ModItemTags.COBBLESTONE_FEED, 1)
+                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+    public static final DeferredItem<Item> HARDSHIP_STRENGTH_GU = ITEMS.register("hardship_strength_gu",
+            () -> new BuffGuItem(tended(), ModEffects.HARDSHIP_STRENGTH_GU,
+                    HardshipStrengthGuEffect.DURATION_TICKS,
+                    GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
+                            .refine(800_000).costPerUse(16_000)
+                            .hungerBar(12, 12).hungerPerUse(4).feed(ModItemTags.POTATO_FEED, 1)
+                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
     //endregion
 
     //region 人力钧力流 -- one class, the kind at registration; one round is one layer

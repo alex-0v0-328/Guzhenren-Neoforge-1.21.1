@@ -2,15 +2,18 @@ package com.unknown.guzhenren.compat;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
+import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.entity.HopeGuEntity;
+import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import yesman.epicfight.api.event.EpicFightEventHooks;
+import yesman.epicfight.api.event.types.player.ComboAttackEvent;
 import yesman.epicfight.api.event.types.player.SetTargetEvent;
 import yesman.epicfight.api.event.types.player.SkillConsumeEvent;
 import yesman.epicfight.registry.entries.EpicFightAttributes;
@@ -18,7 +21,8 @@ import yesman.epicfight.skill.Skill;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 
 /**
- * The one required Epic Fight bridge: aptitude cap, undead free skill use, and Hope Gu target exclusion.
+ * The one required Epic Fight bridge: aptitude cap, undead free skill use, attack refresh, and Hope Gu
+ * target exclusion.
  *
  * <p>The old GZR stamina attachment, sprint gate, jump bill, hunger exhaustion surcharge and client mixin are
  * deliberately absent. Epic Fight owns current stamina, regeneration, HUD and all ordinary consumption.
@@ -35,6 +39,7 @@ public final class EpicFightIntegration {
 
     public static void initialize() {
         EpicFightEventHooks.Player.CONSUME_SKILL.registerEvent(EpicFightIntegration::onSkillConsume, Guzhenren.MOD_ID);
+        EpicFightEventHooks.Player.COMBO_ATTACK.registerEvent(EpicFightIntegration::onComboAttack, Guzhenren.MOD_ID);
         EpicFightEventHooks.Player.SET_TARGET.registerEvent(EpicFightIntegration::onSetTarget, Guzhenren.MOD_ID);
     }
 
@@ -68,6 +73,11 @@ public final class EpicFightIntegration {
                 && !BodyService.lifeForm(player).spendsStamina()) {
             event.setAmount(0.0F);
         }
+    }
+
+    private static void onComboAttack(ComboAttackEvent event) {
+        ServerPlayer player = event.getPlayerPatch().getOriginal();
+        if (player.hasEffect(ModEffects.HARDSHIP_STRENGTH_GU)) AttackService.refresh(player);
     }
 
     private static void onSetTarget(SetTargetEvent event) {

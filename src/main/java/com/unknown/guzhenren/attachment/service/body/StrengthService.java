@@ -47,7 +47,21 @@ public final class StrengthService {
 
     //region what the body can actually bring to bear [承受上限]
     public static int capacity(Player p) {
-        return ApertureService.aperture(p).extremePhysique().getStrengthCapacity();
+        int base = ApertureService.aperture(p).extremePhysique().getStrengthCapacity();
+        if (!p.hasEffect(ModEffects.HARDSHIP_STRENGTH_GU)) return base;
+
+        double healthFraction = (double) p.getHealth() / p.getMaxHealth();
+        return base + hardshipCapacityBonus(healthFraction);
+    }
+
+    public static int hardshipCapacityBonus(double healthFraction) {
+        if (healthFraction > 0.6D) return 0;
+        if (healthFraction > 0.5D) return 20;
+        if (healthFraction > 0.4D) return 40;
+        if (healthFraction > 0.3D) return 60;
+        if (healthFraction > 0.2D) return 80;
+        if (healthFraction > 0.1D) return 100;
+        return 120;
     }
 
     public static boolean isUnleashed(Player p) {return p.hasEffect(ModEffects.ALL_OUT_EFFORT);}

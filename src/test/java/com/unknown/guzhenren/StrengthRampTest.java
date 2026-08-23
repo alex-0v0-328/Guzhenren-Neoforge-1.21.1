@@ -47,6 +47,35 @@ class StrengthRampTest {
     }
 
     @Test
+    @DisplayName("Hardship Strength Gu adds 20 capacity at every crossed health band")
+    void hardshipStrengthBands() {
+        assertEquals(0, StrengthService.hardshipCapacityBonus(0.6001D));
+        assertEquals(20, StrengthService.hardshipCapacityBonus(0.6D));
+        assertEquals(40, StrengthService.hardshipCapacityBonus(0.5D));
+        assertEquals(60, StrengthService.hardshipCapacityBonus(0.4D));
+        assertEquals(80, StrengthService.hardshipCapacityBonus(0.3D));
+        assertEquals(100, StrengthService.hardshipCapacityBonus(0.2D));
+        assertEquals(120, StrengthService.hardshipCapacityBonus(0.1D));
+        assertEquals(120, StrengthService.hardshipCapacityBonus(0.05D));
+        assertEquals(120, StrengthService.hardshipCapacityBonus(0.0D));
+    }
+
+    @Test
+    @DisplayName("Hardship Strength Gu moves the existing ramp instead of bypassing it")
+    void hardshipStrengthMovesTheRamp() {
+        int capacityAtFivePercent = MORTAL_CAPACITY + StrengthService.hardshipCapacityBonus(0.05D);
+        int greatStrengthCapacityAtFivePercent =
+                GREAT_STRENGTH_CAPACITY + StrengthService.hardshipCapacityBonus(0.05D);
+        assertEquals(220, StrengthService.usableJin(capacityAtFivePercent, 220));
+        assertEquals(230, StrengthService.usableJin(capacityAtFivePercent, 1210));
+        assertEquals(240, StrengthService.usableJin(capacityAtFivePercent, 2200));
+        assertEquals(240, StrengthService.usableJin(capacityAtFivePercent, 9999));
+        assertEquals(420, StrengthService.usableJin(greatStrengthCapacityAtFivePercent, 420));
+        assertEquals(440, StrengthService.usableJin(greatStrengthCapacityAtFivePercent, 4200));
+        assertEquals(440, StrengthService.usableJin(greatStrengthCapacityAtFivePercent, 9999));
+    }
+
+    @Test
     @DisplayName("the ramp never goes backwards as 斤 accumulate")
     void theRampIsMonotonic() {
         int previous = 0;

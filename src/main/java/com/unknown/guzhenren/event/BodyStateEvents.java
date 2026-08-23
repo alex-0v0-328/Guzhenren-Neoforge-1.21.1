@@ -3,6 +3,7 @@ package com.unknown.guzhenren.event;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
+import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -10,16 +11,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 
 /**
- * The vanilla moments body [肉身] state answers: breathing, and any add/remove/expire of a {@link
- * net.minecraft.world.effect.MobEffect}.
+ * Reacts to the vanilla moments that change body [肉身] behavior: breathing, attacks, and effects.
  *
- * <p>{@code onBreathe} lets an undead life form breathe underwater — {@link
- * com.unknown.guzhenren.attachment.service.body.BodyService#lifeForm} decides who. The three
- * {@link net.neoforged.neoforge.event.entity.living.MobEffectEvent} hooks each call {@link
- * com.unknown.guzhenren.attachment.service.body.AttackService#refresh} so the attack total
- * recomputes the instant an effect arrives or leaves.
+ * <p>{@code onBreathe} lets an undead life form breathe underwater. Effect changes refresh the
+ * attack total immediately; {@code onAttack} refreshes the health-based Hardship Strength Gu
+ * capacity before vanilla reads attack damage.
  *
  * <p>⚠ Left to the heartbeat alone the attack row would lag by up to a second, which is visible on
  * the panel.
@@ -50,6 +49,12 @@ public final class BodyStateEvents {
 
     @SubscribeEvent
     public static void onEffectExpired(MobEffectEvent.Expired event) {refreshAttack(event.getEntity());}
+
+    @SubscribeEvent
+    public static void onAttack(AttackEntityEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player
+                && player.hasEffect(ModEffects.HARDSHIP_STRENGTH_GU)) AttackService.refresh(player);
+    }
 
     private static void refreshAttack(LivingEntity entity) {
         if (entity instanceof ServerPlayer player) AttackService.refresh(player);

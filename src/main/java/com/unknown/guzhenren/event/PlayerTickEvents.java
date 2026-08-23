@@ -15,6 +15,7 @@ import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.effect.pool.DeathQiEffect;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
+import com.unknown.guzhenren.item.gu.mortal.strength.SelfRelianceGuItem;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import com.unknown.guzhenren.registry.ModDamageTypes;
 import com.unknown.guzhenren.registry.ModEffects;
@@ -73,6 +74,7 @@ public final class PlayerTickEvents {
         EssenceService.regenStep(player);
         NourishService.tickNourish(player);
         MindService.regenStep(player);
+        SelfRelianceGuItem.tryAutoUse(player);
         ApertureService.tickPressure(player);
         checkLethalState(player);
     }

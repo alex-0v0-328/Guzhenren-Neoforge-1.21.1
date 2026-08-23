@@ -10,8 +10,9 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A one-shot Gu [一次性]: refining and using are one instant act, so it carries no state and it stacks.
  *
- * <p>Extends {@link MortalGuItem} with {@code useDurationTicks = 0} (instant) and a fixed 10-tick
- * cooldown. The gate checks essence against {@code refineCost}; {@code apply} pays the cost and fires
+ * <p>Extends {@link MortalGuItem} with {@code useDurationTicks = 0} (instant) and the shared
+ * two-second post-refinement cooldown. The gate checks essence against {@code refineCost};
+ * {@code apply} pays the cost and fires
  * {@code useApply} in one step. Hope Gu [希望蛊] is the exception: {@code stacksTo(1)} and an 80-tick
  * ritual, handled by its own leaf class.
  *
@@ -45,7 +46,7 @@ public abstract class OneShotGuItem extends MortalGuItem {
     protected final int useDurationTicks(Player player, ItemStack stack) {return 0;}
 
     @Override
-    protected int cooldownTicks(ItemStack stack) {return 10;}
+    protected int cooldownTicks(ItemStack stack) {return REFINE_DONE_COOLDOWN_TICKS;}
     //endregion
 
     //region display

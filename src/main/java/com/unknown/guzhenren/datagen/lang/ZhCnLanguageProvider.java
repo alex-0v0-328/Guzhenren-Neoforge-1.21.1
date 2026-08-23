@@ -296,6 +296,14 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.BEAR_STRENGTH_GU,                 "熊力蛊");
         addItem(ModItems.DRAGONPILL_CRICKET_GU,            "龙丸蛐蛐蛊");
         addItem(ModItems.BRUTE_FORCE_LONGHORN_BEETLE_GU,   "蛮力天牛蛊");
+        addItem(ModItems.HORIZONTAL_CRASH_GU,       "横冲蛊");
+        addItem(ModItems.VERTICAL_CRASH_GU,         "直撞蛊");
+        addItem(ModItems.CHARGING_CRASH_GU_4,       "四转横冲直撞蛊");
+        addItem(ModItems.CHARGING_CRASH_GU_5,       "五转横冲直撞蛊");
+        addItem(ModItems.SELF_RELIANCE_GU_2,                "二转自力更生蛊");
+        addItem(ModItems.SELF_RELIANCE_GU_3,                "三转自力更生蛊");
+        addItem(ModItems.SELF_RELIANCE_GU_4,                "四转自力更生蛊");
+        addItem(ModItems.HARDSHIP_STRENGTH_GU,              "苦力蛊");
         addItem(ModItems.ALL_OUT_EFFORT_GU_3,              "三转全力以赴蛊");
         addItem(ModItems.ALL_OUT_EFFORT_GU_4,              "四转全力以赴蛊");
         addItem(ModItems.ALL_OUT_EFFORT_GU_5,              "五转全力以赴蛊");
@@ -415,6 +423,11 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("effect.guzhenren.flower_boar_gu",             "花豕蛊效果");
         add("effect.guzhenren.dragonpill_cricket_gu",      "龙丸蛐蛐蛊效果");
         add("effect.guzhenren.brute_force_longhorn_beetle_gu", "蛮力天牛蛊效果");
+        add("effect.guzhenren.horizontal_crash_gu", "横冲蛊效果");
+        add("effect.guzhenren.vertical_crash_gu",   "直撞蛊效果");
+        add("effect.guzhenren.charging_crash_gu",   "横冲直撞蛊效果");
+        add("effect.guzhenren.self_reliance_gu",    "自力更生蛊效果");
+        add("effect.guzhenren.hardship_strength_gu", "苦力蛊效果");
         add("effect.guzhenren.all_out_effort",             "全力以赴蛊效果");
         add("effect.guzhenren.half_zombie",                "半生半僵效果");
         add("effect.guzhenren.second_watch_gu",            "两更蛊效果");

@@ -40,6 +40,8 @@ public sealed interface GuClock {
 
     boolean spendWasForced(ItemStack stack);
 
+    default boolean spendWasForced(ItemStack stack, int multiplier) {return spendWasForced(stack);}
+
     boolean barVisible(ItemStack stack);
     float barFraction(ItemStack stack);
 
@@ -115,8 +117,13 @@ public sealed interface GuClock {
 
         @Override
         public boolean spendWasForced(ItemStack stack) {
+            return spendWasForced(stack, 1);
+        }
+
+        @Override
+        public boolean spendWasForced(ItemStack stack, int multiplier) {
             boolean forced = hunger(stack) <= 0;
-            setHunger(stack, hunger(stack) - Math.max(1, perUse));
+            setHunger(stack, hunger(stack) - Math.max(1, perUse * multiplier));
             return forced;
         }
 
