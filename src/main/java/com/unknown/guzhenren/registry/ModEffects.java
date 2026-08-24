@@ -31,8 +31,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * Every MobEffect this mod registers, one constant per effect.
  *
  * <p>DeferredRegister holder: grades that exclude each other are ONE effect with an amplifier; members
- * meant to be worn TOGETHER get one effect each (the two Watch Gu, so their rates add). Every color is
- * Alex's pick and is never derived from anything.
+ * meant to be worn TOGETHER get one effect each (the two Watch Gu, so their rates add). Every effect uses
+ * white particles, including effects granted by Gu materials.
  *
  * <p>⚠ Since 2026-08-14 every effect is built through {@code instance}, which sets
  * {@code showParticles=false, showIcon=true}; the color only feeds the {@link MobEffect} ctor.
@@ -48,97 +48,80 @@ public final class ModEffects {
     public static final DeferredRegister<MobEffect> MOB_EFFECTS =
             DeferredRegister.create(Registries.MOB_EFFECT, Guzhenren.MOD_ID);
 
-    private static final int VITALITY_LEAF_COLOR                  = 0x4CAF50;
-    private static final int LIQUOR_WORM_COLOR                    = 0x1565C0;
-    private static final int LIFE_QI_COLOR                        = 0x4CAF50;
-    private static final int ESSENCE_QI_COLOR                     = 0x4FC3F7;
-    private static final int DEATH_QI_COLOR                       = 0x800000;
-    private static final int FLOWER_BOAR_GU_COLOR                 = 0xF06292;
-    private static final int ALL_OUT_EFFORT_COLOR                 = 0xFF8A65;
-    private static final int DRAGONPILL_CRICKET_GU_COLOR          = 0xCDDC39;
-    private static final int BRUTE_FORCE_LONGHORN_BEETLE_GU_COLOR = 0x455A64;
-    private static final int CRASH_GU_COLOR                        = 0xFFB300;
-    private static final int SELF_RELIANCE_GU_COLOR                = 0x66BB6A;
-    private static final int STRENGTH_QI_COLOR                    = 0xFF7043;
-    private static final int HALF_ZOMBIE_COLOR                    = 0x546E7A;
-    /** Alex's ruling: black, and it stands for every Time Path effect that follows, not just these two. */
-    private static final int TIME_FLOW_COLOR                      = 0x000000;
-    //  TODO(color): placeholder pending Alex's pick.
-    private static final int MALICIOUS_THOUGHT_COLOR              = 0x4A148C;
-    private static final int CASUAL_GU_COLOR                      = 0;
+    static final int EFFECT_COLOR                                 = 0xFFFFFF;
 
     public static final DeferredHolder<MobEffect, VitalityLeafEffect> VITALITY_LEAF = MOB_EFFECTS.register(
-            "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, VITALITY_LEAF_COLOR));
+            "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, LiquorWormEffect> LIQUOR_WORM = MOB_EFFECTS.register(
-            "liquor_worm", () -> new LiquorWormEffect(MobEffectCategory.BENEFICIAL, LIQUOR_WORM_COLOR));
+            "liquor_worm", () -> new LiquorWormEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, LifeQiEffect> LIFE_QI = MOB_EFFECTS.register(
-            "life_qi", () -> new LifeQiEffect(MobEffectCategory.BENEFICIAL, LIFE_QI_COLOR));
+            "life_qi", () -> new LifeQiEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, EssenceQiEffect> ESSENCE_QI = MOB_EFFECTS.register(
-            "essence_qi", () -> new EssenceQiEffect(MobEffectCategory.BENEFICIAL, ESSENCE_QI_COLOR));
+            "essence_qi", () -> new EssenceQiEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, DeathQiEffect> DEATH_QI = MOB_EFFECTS.register(
-            "death_qi", () -> new DeathQiEffect(MobEffectCategory.HARMFUL, DEATH_QI_COLOR));
+            "death_qi", () -> new DeathQiEffect(MobEffectCategory.HARMFUL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, StrengthQiEffect> STRENGTH_QI = MOB_EFFECTS.register(
-            "strength_qi", () -> new StrengthQiEffect(MobEffectCategory.BENEFICIAL, STRENGTH_QI_COLOR));
+            "strength_qi", () -> new StrengthQiEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, FlowerBoarGuEffect> FLOWER_BOAR_GU = MOB_EFFECTS.register(
-            "flower_boar_gu", () -> new FlowerBoarGuEffect(MobEffectCategory.BENEFICIAL, FLOWER_BOAR_GU_COLOR));
+            "flower_boar_gu", () -> new FlowerBoarGuEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, AllOutEffortEffect> ALL_OUT_EFFORT = MOB_EFFECTS.register(
-            "all_out_effort", () -> new AllOutEffortEffect(MobEffectCategory.BENEFICIAL, ALL_OUT_EFFORT_COLOR));
+            "all_out_effort", () -> new AllOutEffortEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, DragonpillCricketGuEffect> DRAGONPILL_CRICKET_GU =
             MOB_EFFECTS.register("dragonpill_cricket_gu", () -> new DragonpillCricketGuEffect(
-                    MobEffectCategory.BENEFICIAL, DRAGONPILL_CRICKET_GU_COLOR));
+                    MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, BruteForceLonghornBeetleGuEffect> BRUTE_FORCE_LONGHORN_BEETLE_GU =
             MOB_EFFECTS.register("brute_force_longhorn_beetle_gu", () -> new BruteForceLonghornBeetleGuEffect(
-                    MobEffectCategory.BENEFICIAL, BRUTE_FORCE_LONGHORN_BEETLE_GU_COLOR));
+                    MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, CrashGuEffect> HORIZONTAL_CRASH_GU = MOB_EFFECTS.register(
-            "horizontal_crash_gu", () -> new CrashGuEffect(MobEffectCategory.BENEFICIAL, CRASH_GU_COLOR,
+            "horizontal_crash_gu", () -> new CrashGuEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
                     CrashGuEffect.HORIZONTAL));
 
     public static final DeferredHolder<MobEffect, CrashGuEffect> VERTICAL_CRASH_GU = MOB_EFFECTS.register(
-            "vertical_crash_gu", () -> new CrashGuEffect(MobEffectCategory.BENEFICIAL, CRASH_GU_COLOR,
+            "vertical_crash_gu", () -> new CrashGuEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
                     CrashGuEffect.VERTICAL));
 
     public static final DeferredHolder<MobEffect, CrashGuEffect> CHARGING_CRASH_GU =
             MOB_EFFECTS.register("charging_crash_gu", () -> new CrashGuEffect(
-                    MobEffectCategory.BENEFICIAL, CRASH_GU_COLOR,
+                    MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
                     CrashGuEffect.HORIZONTAL | CrashGuEffect.VERTICAL));
 
     public static final DeferredHolder<MobEffect, SelfRelianceGuEffect> SELF_RELIANCE_GU = MOB_EFFECTS.register(
             "self_reliance_gu", () -> new SelfRelianceGuEffect(
-                    MobEffectCategory.BENEFICIAL, SELF_RELIANCE_GU_COLOR));
+                    MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, HardshipStrengthGuEffect> HARDSHIP_STRENGTH_GU =
             MOB_EFFECTS.register("hardship_strength_gu", () -> new HardshipStrengthGuEffect(
-                    MobEffectCategory.BENEFICIAL, ALL_OUT_EFFORT_COLOR));
+                    MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, HalfZombieEffect> HALF_ZOMBIE = MOB_EFFECTS.register(
-            "half_zombie", () -> new HalfZombieEffect(MobEffectCategory.NEUTRAL, HALF_ZOMBIE_COLOR));
+            "half_zombie", () -> new HalfZombieEffect(MobEffectCategory.NEUTRAL, EFFECT_COLOR));
 
     //region 更蛊 [Watch Gu] -- one effect per Gu, so both can be worn at once and their rates add
     public static final DeferredHolder<MobEffect, TimeFlowEffect> SECOND_WATCH_GU = MOB_EFFECTS.register(
-            "second_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, TIME_FLOW_COLOR,
+            "second_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
                     2, 2_000L, "second_watch_gu"));
 
     public static final DeferredHolder<MobEffect, TimeFlowEffect> THIRD_WATCH_GU = MOB_EFFECTS.register(
-            "third_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, TIME_FLOW_COLOR,
+            "third_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
                     3, 3_000L, "third_watch_gu"));
     //endregion
 
     public static final DeferredHolder<MobEffect, MaliciousThoughtEffect> MALICIOUS_THOUGHT_GU = MOB_EFFECTS.register(
             "malicious_thought_gu", () -> new MaliciousThoughtEffect(
-                    MobEffectCategory.BENEFICIAL, MALICIOUS_THOUGHT_COLOR, new long[]{2L, 20L, 200L, 2_000L}));
+                    MobEffectCategory.BENEFICIAL, EFFECT_COLOR, new long[]{2L, 20L, 200L, 2_000L}));
 
     public static final DeferredHolder<MobEffect, CasualThoughtEffect> CASUAL_GU = MOB_EFFECTS.register(
-            "casual_gu", () -> new CasualThoughtEffect(MobEffectCategory.BENEFICIAL, CASUAL_GU_COLOR));
+            "casual_gu", () -> new CasualThoughtEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static MobEffectInstance instance(Holder<MobEffect> effect, int duration) {
         return new MobEffectInstance(effect, duration, 0, false, true);

@@ -126,7 +126,7 @@ public final class ModDisplayText {
     /** ⚠ The specks here are the Time Flow tag's own share, not the path's total; the list row holds that. */
     public static MutableComponent timeFlow(int rate, long specks) {
         MutableComponent line = Component.translatable("guzhenren.display.time.multiple." + rate);
-        if (specks > 0L) line.append(Component.translatable("guzhenren.command.info.path_speck", specks));
+        if (specks > 0L) line.append(Component.translatable("guzhenren.display.time.specks", specks));
         return line;
     }
 

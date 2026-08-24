@@ -126,8 +126,8 @@ public class RefinementMenu extends AbstractContainerMenu {
     private static final int DATA_SIZE = 10;
 
     private static final String FAILED_ESSENCE = "guzhenren.menu.refinement.essence";
-    private static final String FAILED_ROOM = "guzhenren.menu.refinement.room";
-    private static final String FAILED_AWAKENED = "guzhenren.menu.refinement.awakened";
+    private static final String FAILED_NO_ROOM = "guzhenren.menu.refinement.no_room";
+    private static final String FAILED_NOT_AWAKENED = "guzhenren.menu.refinement.not_awakened";
     private static final String LOST_STONES = "guzhenren.menu.refinement.lost_stones";
     private static final String LOST_ESSENCE = "guzhenren.menu.refinement.lost_essence";
     private static final String LOST_ROLL = "guzhenren.menu.refinement.lost_roll";
@@ -489,12 +489,12 @@ public class RefinementMenu extends AbstractContainerMenu {
 
     private boolean begin() {
         if (!(player instanceof ServerPlayer server) || running != null) return false;
-        if (!ApertureService.isAwakened(server)) return refuse(server, FAILED_AWAKENED);
+        if (!ApertureService.isAwakened(server)) return refuse(server, FAILED_NOT_AWAKENED);
 
         GuRecipe recipe = match();
         if (recipe == null || recipe.results().isEmpty() || recipe.windowCount() <= 0) return false;
         if (!affords(server, recipe)) return refuse(server, FAILED_ESSENCE, recipe.essenceToFinish());
-        if (freeOutputSlots() < recipe.results().size()) return refuse(server, FAILED_ROOM);
+        if (freeOutputSlots() < recipe.results().size()) return refuse(server, FAILED_NO_ROOM);
 
         int[] taken = recipe.claim(GuRecipeInput.of(input));
         if (taken == null) return false;

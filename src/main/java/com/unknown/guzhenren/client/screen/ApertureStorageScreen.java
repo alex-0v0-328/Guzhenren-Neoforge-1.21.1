@@ -48,7 +48,7 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     private static final int BACK_W = 16;
     private static final String BACK_GLYPH = "<-";
     private static final int TITLE_X_WITH_BACK = 26;
-    private static final String LOAD_KEY = "guzhenren.menu.load";
+    private static final String LOAD_KEY = "guzhenren.menu.aperture_load";
 
     public ApertureStorageScreen(ApertureStorageMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);

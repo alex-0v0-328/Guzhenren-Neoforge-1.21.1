@@ -439,7 +439,8 @@ public final class PlayerInfoScreen extends Screen {
                     ModDisplayText.pool(e.aperture().currentEssence(), e.aperture().maxEssence())));
             case InfoModel.Distilled e -> new Row(indent, label("distilled"), Component.literal(
                     ModDisplayText.pool(e.aperture().distilledEssence(), e.aperture().maxEssence())));
-            case InfoModel.Pressure e -> new Row(indent, label("pressure"), Component.literal(
+            case InfoModel.Pressure e -> new Row(indent,
+                    Component.translatable("guzhenren.screen.label.apreture_pressure"), Component.literal(
                     e.aperture().pressure() + "%"));
 
             case InfoModel.PathChoice e -> e.primary()
@@ -465,7 +466,8 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.StrengthHeader ignored -> new Row(indent, label("strength"), null);
             case InfoModel.StrengthRow e -> new Row(indent,
                     ModDisplayText.strengthLabel(name(e.branch().getTranslationKey()), e.totalJin()), e.reading());
-            case InfoModel.CapacityRow e -> new Row(indent, label("capacity"),
+            case InfoModel.CapacityRow e -> new Row(indent,
+                    Component.translatable("guzhenren.screen.lable.body_capacity"),
                     Component.translatable("guzhenren.screen.capacity", e.usable(), e.total()));
             case InfoModel.AttackRow e -> new Row(indent, label("attack"),
                     Component.literal(ModDisplayText.attackBonus(e.bonus())));

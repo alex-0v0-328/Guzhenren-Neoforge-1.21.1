@@ -8,11 +8,15 @@ import com.unknown.guzhenren.client.screen.ApertureStorageScreen;
 import com.unknown.guzhenren.client.screen.PlayerInfoScreen;
 import com.unknown.guzhenren.client.screen.RefinementScreen;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
+import com.unknown.guzhenren.network.CrashStepPayload;
 import com.unknown.guzhenren.registry.ModEntityTypes;
 import com.unknown.guzhenren.registry.ModMenus;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -22,6 +26,8 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.network.PacketDistributor;
+import yesman.epicfight.api.client.camera.EpicFightCameraAPI;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 
 /**
@@ -52,6 +58,11 @@ public final class ClientEvents {
     private static final ResourceLocation NOURISH =
             Guzhenren.id("nourish");
 
+    private static boolean previousUp;
+    private static boolean previousDown;
+    private static boolean previousLeft;
+    private static boolean previousRight;
+
     @SubscribeEvent
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, PLAYER_STATS, PlayerStatsHud.INSTANCE);
@@ -79,12 +90,41 @@ public final class ClientEvents {
     public static void onClientTick(ClientTickEvent.Post event) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null) return;
-        if (minecraft.player.getMainHandItem().getItem() instanceof MortalGuItem) {
+        boolean canCrashStep = canUseCrashStep(minecraft.player.getMainHandItem());
+        if (!canCrashStep) {
             EpicFightCapabilities.getLocalPlayerPatchAsOptional(minecraft.player)
                     .ifPresent(patch -> patch.toVanillaMode(true));
         }
         while (ModKeyMappings.OPEN_INFO.consumeClick()) {
             if (minecraft.screen == null) minecraft.setScreen(new PlayerInfoScreen());
         }
+
+        boolean up = minecraft.options.keyUp.isDown();
+        boolean down = minecraft.options.keyDown.isDown();
+        boolean left = minecraft.options.keyLeft.isDown();
+        boolean right = minecraft.options.keyRight.isDown();
+        boolean pressed = up && !previousUp || down && !previousDown
+                || left && !previousLeft || right && !previousRight;
+        if (canCrashStep && minecraft.screen == null && Screen.hasAltDown() && pressed) {
+            int vertical = up == down ? 0 : up ? 1 : -1;
+            int horizontal = left == right ? 0 : left ? 1 : -1;
+            if (vertical != 0 || horizontal != 0) {
+                EpicFightCapabilities.getLocalPlayerPatchAsOptional(minecraft.player)
+                        .ifPresent(patch -> patch.toEpicFightMode(true));
+                float cameraYRot = EpicFightCameraAPI.getInstance().getForwardYRot();
+                float yRot = Mth.wrapDegrees(cameraYRot
+                        - (90.0F * horizontal * (1 - Math.abs(vertical))
+                        + 45.0F * vertical * horizontal));
+                PacketDistributor.sendToServer(new CrashStepPayload(vertical, horizontal, yRot));
+            }
+        }
+        previousUp = up;
+        previousDown = down;
+        previousLeft = left;
+        previousRight = right;
+    }
+
+    public static boolean canUseCrashStep(ItemStack mainHand) {
+        return !(mainHand.getItem() instanceof MortalGuItem);
     }
 }

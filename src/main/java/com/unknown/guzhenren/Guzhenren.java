@@ -44,6 +44,7 @@ public class Guzhenren {
         ModCreativeTabs.register(modEventBus);
         ModMenus.register(modEventBus);
         ModRecipes.register(modEventBus);
+        modEventBus.addListener(EpicFightIntegration::onAnimationRegistry);
         EpicFightIntegration.initialize();
     }
 }

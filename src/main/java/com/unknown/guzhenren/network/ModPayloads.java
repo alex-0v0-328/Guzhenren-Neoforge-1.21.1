@@ -3,8 +3,11 @@ package com.unknown.guzhenren.network;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.NourishService;
+import com.unknown.guzhenren.compat.EpicFightIntegration;
+import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import com.unknown.guzhenren.menu.RefinementMenu;
+import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
@@ -17,10 +20,11 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 /**
  * Registers the client-intent payloads and handles each of them on the server.
  *
- * <p>Every payload in this mod is a client intent -- a G-panel button that attachment sync cannot
- * carry upstream. None carries player data; downstream player data always travels as synced state.
- * This class wires the five payloads to their server-side handlers: opening the two containers,
- * setting the secondary path, and the two cultivation actions.
+ * <p>Every payload in this mod is a client intent -- a G-panel button or movement input that
+ * attachment sync cannot carry upstream. None carries player data; downstream player data always
+ * travels as synced state.
+ * This class wires the six payloads to their server-side handlers: opening the two containers,
+ * setting the secondary path, and the three cultivation actions.
  *
  * <p>⚠ This is where a forged payload lands, so a gate that only grays out a button is not a gate.
  * Every refusal has to exist here as well as on the screen.
@@ -52,6 +56,8 @@ public final class ModPayloads {
                 ModPayloads::nourishAperture);
         registrar.playToServer(ImpactApertureWallPayload.TYPE, ImpactApertureWallPayload.STREAM_CODEC,
                 ModPayloads::impactApertureWall);
+        registrar.playToServer(CrashStepPayload.TYPE, CrashStepPayload.STREAM_CODEC,
+                ModPayloads::crashStep);
     }
 
     private static void nourishAperture(NourishAperturePayload payload, IPayloadContext context) {
@@ -66,6 +72,23 @@ public final class ModPayloads {
     private static void impactApertureWall(ImpactApertureWallPayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
         NourishService.impactWall(player);
+    }
+
+    private static void crashStep(CrashStepPayload payload, IPayloadContext context) {
+        if (!(context.player() instanceof ServerPlayer player)) return;
+
+        int vertical = payload.vertical();
+        int horizontal = payload.horizontal();
+        if (vertical < -1 || vertical > 1 || horizontal < -1 || horizontal > 1
+                || (vertical == 0 && horizontal == 0) || !Float.isFinite(payload.yRot())) return;
+        if (player.getMainHandItem().getItem() instanceof MortalGuItem) return;
+        if (NourishService.isCultivating(player)) return;
+        if (horizontal != 0 && !player.hasEffect(ModEffects.HORIZONTAL_CRASH_GU)
+                && !player.hasEffect(ModEffects.CHARGING_CRASH_GU)) return;
+        if (vertical != 0 && !player.hasEffect(ModEffects.VERTICAL_CRASH_GU)
+                && !player.hasEffect(ModEffects.CHARGING_CRASH_GU)) return;
+
+        EpicFightIntegration.crashStep(player, vertical, payload.yRot());
     }
 
     private static void openRefinement(OpenRefinementPayload payload, IPayloadContext context) {

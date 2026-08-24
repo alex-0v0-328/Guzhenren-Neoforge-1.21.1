@@ -91,9 +91,9 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         if (aperture.isExtreme()) {
             Component pressure = aperture.pressure() == Aperture.PRESSURE_COUNTDOWN_START
                     && aperture.pressureDeadlineTick() > 0L
-                    ? Component.translatable("guzhenren.hud.pressure_countdown", aperture.pressure(),
+                    ? Component.translatable("guzhenren.hud.aperture_pressure_cd", aperture.pressure(),
                     ModDisplayText.countdown(ApertureService.pressureRemainingTicks(player)))
-                    : Component.translatable("guzhenren.hud.pressure", aperture.pressure());
+                    : Component.translatable("guzhenren.hud.aperture_pressure", aperture.pressure());
             line(graphics, font, y, pressure);
         }
     }
