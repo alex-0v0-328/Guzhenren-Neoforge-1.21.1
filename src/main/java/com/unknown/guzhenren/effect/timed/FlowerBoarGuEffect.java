@@ -13,7 +13,7 @@ import net.minecraft.world.effect.MobEffectCategory;
  * unlike pool effects, they are not rebuilt every heartbeat. The bonus goes through {@link
  * com.unknown.guzhenren.effect.AttackContributor} so the attack total stays one number.
  *
- * <p>⚠ 碎屑 is zero — a timed buff alters nothing permanently, and that is the final answer.
+ * <p>A timed buff alters nothing permanently.
  *
  * @author Alex
  * @version 1.0.0

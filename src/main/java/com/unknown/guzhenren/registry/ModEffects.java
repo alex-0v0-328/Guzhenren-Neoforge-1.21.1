@@ -109,11 +109,11 @@ public final class ModEffects {
     //region 更蛊 [Watch Gu] -- one effect per Gu, so both can be worn at once and their rates add
     public static final DeferredHolder<MobEffect, TimeFlowEffect> SECOND_WATCH_GU = MOB_EFFECTS.register(
             "second_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
-                    2, 2_000L, "second_watch_gu"));
+                    2, "second_watch_gu"));
 
     public static final DeferredHolder<MobEffect, TimeFlowEffect> THIRD_WATCH_GU = MOB_EFFECTS.register(
             "third_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
-                    3, 3_000L, "third_watch_gu"));
+                    3, "third_watch_gu"));
     //endregion
 
     public static final DeferredHolder<MobEffect, MaliciousThoughtEffect> MALICIOUS_THOUGHT_GU = MOB_EFFECTS.register(

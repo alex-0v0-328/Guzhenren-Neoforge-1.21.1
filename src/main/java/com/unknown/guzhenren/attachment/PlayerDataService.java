@@ -57,6 +57,7 @@ public final class PlayerDataService {
 
     public static void onJoin(ServerPlayer player) {
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
+        ApertureService.syncTalentMarks(player);
         HealthService.refresh(player);
         AttackService.refresh(player);
         EpicFightIntegration.refresh(player);

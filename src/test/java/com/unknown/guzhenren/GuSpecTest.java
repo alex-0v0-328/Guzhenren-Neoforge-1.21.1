@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ class GuSpecTest {
         return GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                 .refine(1_000)
                 .channel(3_600)
-                .speckEvery(600, MarkTag.STRENGTH_BOAR)
                 .hungerBar(18, 3)
                 .hungerEvery(100);
     }
@@ -29,21 +27,12 @@ class GuSpecTest {
     }
 
     @Test
-    @DisplayName("an 即时 Gu is not asked for speck or hunger rates at all")
+    @DisplayName("an 即时 Gu is not asked for hunger rates")
     void instantGuIsNotChecked() {
         assertDoesNotThrow(() -> GuSpec.of(Rank.TWO, GuPath.TRANSFORMATION)
                 .refine(16_000).costPerUse(200)
                 .hungerBar(4, 2).hungerPerUse(2)
                 .validate("roaming_zombie_gu"));
-    }
-
-    @Test
-    @DisplayName("a round that does not divide by the speck rate is refused, and the message names the Gu")
-    void roundMustDivideBySpeckRate() {
-        GuSpec bad = channelling().speckEvery(700, MarkTag.STRENGTH_BOAR);
-        IllegalStateException thrown =
-                assertThrows(IllegalStateException.class, () -> bad.validate("white_boar_gu"));
-        assertTrue(thrown.getMessage().contains("white_boar_gu"), thrown.getMessage());
     }
 
     @Test
@@ -54,12 +43,10 @@ class GuSpecTest {
     }
 
     @Test
-    @DisplayName("a channel that pays no specks or costs no hunger is refused")
+    @DisplayName("a channel that costs no hunger is refused")
     void aChannelMustPaySomething() {
         assertThrows(IllegalStateException.class, () -> GuSpec.of(Rank.ONE, GuPath.STRENGTH)
-                .channel(3_600).hungerEvery(100).validate("no_specks"));
-        assertThrows(IllegalStateException.class, () -> GuSpec.of(Rank.ONE, GuPath.STRENGTH)
-                .channel(3_600).speckEvery(600, MarkTag.NATURAL).validate("no_hunger"));
+                .channel(3_600).validate("no_hunger"));
     }
 
     @Test

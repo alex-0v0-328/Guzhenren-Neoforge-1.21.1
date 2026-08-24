@@ -3,7 +3,6 @@ package com.unknown.guzhenren.item.gu;
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.PlayerDataService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
-import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.display.ModDisplayText;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
@@ -257,7 +256,6 @@ public abstract class TendedGuItem extends MortalGuItem {
         int pouredAfter = pouredBefore + amount;
 
         clock.billHungerForEssence(stack, pouredBefore, pouredAfter);
-        paySpecksCrossed(player, pouredBefore, pouredAfter);
         store(stack, state(stack).withInvested(pouredAfter));
 
         if (pouredAfter >= spec.essencePerRound()) {
@@ -265,14 +263,6 @@ public abstract class TendedGuItem extends MortalGuItem {
             store(stack, state(stack).withInvested(0));
             if (payoutGate(player, stack) != null) player.stopUsingItem();
         }
-    }
-
-    private void paySpecksCrossed(ServerPlayer player, int pouredBefore, int pouredAfter) {
-        int per = spec.essencePerSpeck();
-        if (per <= 0) return;
-
-        long crossed = pouredAfter / per - pouredBefore / per;
-        if (crossed > 0) PathService.addSpeck(player, path(), spec.speckTag(), crossed);
     }
 
     private void grant(ServerPlayer player, ItemStack stack) {
@@ -381,7 +371,6 @@ public abstract class TendedGuItem extends MortalGuItem {
     protected int drive(ServerPlayer player, ItemStack stack) {
         EssenceService.consume(player, spec.essencePerRound());
         boolean drivenOnAnEmptyBar = clock.spendWasForced(stack, hungerCostMultiplier(player, stack));
-        paySpecksCrossed(player, 0, spec.essencePerRound());
         grant(player, stack);
 
         if (drivenOnAnEmptyBar && !player.hasInfiniteMaterials()) {

@@ -15,7 +15,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  * com.unknown.guzhenren.attachment.service.body.StrengthService#usableJin}, so attack still comes
  * out of one formula rather than gaining a second source.
  *
- * <p>⚠ 碎屑 is zero — a timed buff alters nothing permanently. Re-using it while it runs is a
+ * <p>A timed buff alters nothing permanently. Re-using it while it runs is a
  * refusal ({@code all_out_active}).
  *
  * @author Alex

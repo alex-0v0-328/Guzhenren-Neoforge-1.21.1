@@ -9,7 +9,7 @@ import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.path.MarkTag;
+import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
 import java.util.Locale;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -24,8 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * this file. Brackets ({@code [无]}, {@code [太日阳莽体]}) are baked into the lang value, never assembled here.
  *
  * <p>⚠ Two decimals on lifespan, not one: a hundredth of a year is twelve real seconds, the coarsest
- * step the eye still reads as movement. The Time Flow specks here are the tag's own share, not the
- * path total.
+ * step the eye still reads as movement.
  *
  * @author Alex
  * @version 1.0.0
@@ -86,9 +85,6 @@ public final class ModDisplayText {
         if (entry.markTotal() > 0L) {
             line.append(Component.translatable("guzhenren.display.path_marks", entry.markTotal()));
         }
-        if (entry.speckTotal() > 0L) {
-            line.append(Component.translatable("guzhenren.display.path_specks", entry.speckTotal()));
-        }
         return line;
     }
 
@@ -123,11 +119,8 @@ public final class ModDisplayText {
 
     public static String attackBonus(double bonus) {return "+" + bonus;}
 
-    /** ⚠ The specks here are the Time Flow tag's own share, not the path's total; the list row holds that. */
-    public static MutableComponent timeFlow(int rate, long specks) {
-        MutableComponent line = Component.translatable("guzhenren.display.time.multiple." + rate);
-        if (specks > 0L) line.append(Component.translatable("guzhenren.display.time.specks", specks));
-        return line;
+    public static MutableComponent timeFlow(int rate) {
+        return Component.translatable("guzhenren.display.time.multiple." + rate);
     }
 
     public static MutableComponent beastStrengthLine(StrengthData data) {
@@ -136,10 +129,10 @@ public final class ModDisplayText {
         return line;
     }
 
-    private static Component beastReading(MarkTag family, int reading) {
+    private static Component beastReading(BeastStrengthFamily family, int reading) {
         return Component.translatable("guzhenren.display.strength.beast_reading",
                 Component.translatable("guzhenren.display.strength.beast_number." + reading),
-                Component.translatable("guzhenren.display.strength.beast." + family.getSerializedName()));
+                Component.translatable(family.getTranslationKey()));
     }
 
     public static MutableComponent humanStrengthLine(StrengthData data) {

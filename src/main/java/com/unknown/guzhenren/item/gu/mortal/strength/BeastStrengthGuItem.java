@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. The gate refuses a holder who already
  * carries that species; the apply delegates to
  * {@link com.unknown.guzhenren.attachment.service.body.StrengthService#grant}. A species declares its
- * own tag and worth on the enum, so adding one never touches this class.
+ * own family and worth on the enum, so adding one never touches this class.
  *
  * <p>⚠ If an edit here starts to look necessary, a number has been put in the wrong place.
  *

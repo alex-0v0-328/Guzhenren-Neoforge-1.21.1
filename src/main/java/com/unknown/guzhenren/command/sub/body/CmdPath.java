@@ -15,10 +15,10 @@ import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
- * {@code /gzr path}: reads and writes attainment [造诣], marks [道痕] and specks [碎屑].
+ * {@code /gzr body path}: writes attainment [造诣] and marks [道痕].
  *
  * <p>Uses {@link com.unknown.guzhenren.command.ModEnumArgument} for the path argument, then offers
- * {@code set}/{@code add}/{@code sub} for mark and speck and {@code set}/{@code up}/{@code down} for
+ * {@code set}/{@code add}/{@code sub} for marks and {@code set}/{@code up}/{@code down} for
  * attainment. All writes delegate to {@link com.unknown.guzhenren.attachment.service.body.PathService}.
  *
  * <p>☠ A command books 自然 [NATURAL] and can name no other tag. A hand-written source tag cannot be
@@ -39,7 +39,6 @@ public final class CmdPath {
         return Commands.literal("path")
                 .then(ModEnumArgument.arg(ARG_PATH, GuPath.values())
                         .then(tally("mark",  PathService::setMark,  PathService::addMark))
-                        .then(tally("speck", PathService::setSpeck, PathService::addSpeck))
                         .then(attainment()));
     }
 

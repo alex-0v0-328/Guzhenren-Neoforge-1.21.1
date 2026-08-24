@@ -4,7 +4,6 @@ import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
@@ -100,21 +99,18 @@ public final class ModItems {
             () -> new BeastStrengthGuItem(tended(), BeastStrength.WHITE_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                     .refine(800)
                     .channel(3_600)
-                    .speckEvery(600, BeastStrength.WHITE_BOAR.getMarkTag())
                     .hungerBar(36, 1).hungerEvery(100)
                     .feed(ModItemTags.BOAR_FEED, 1)));
     public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
             () -> new BeastStrengthGuItem(tended(), BeastStrength.BLACK_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                     .refine(800)
                     .channel(3_600)
-                    .speckEvery(600, BeastStrength.BLACK_BOAR.getMarkTag())
                     .hungerBar(36, 1).hungerEvery(100)
                     .feed(ModItemTags.BOAR_FEED, 1)));
     public static final DeferredItem<Item> BEAR_STRENGTH_GU = ITEMS.register("bear_strength_gu",
             () -> new BeastStrengthGuItem(tended(), BeastStrength.BEAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                     .refine(800)
                     .channel(3_600)
-                    .speckEvery(600, BeastStrength.BEAR.getMarkTag())
                     .hungerBar(36, 1).hungerEvery(100)
                     .feed(ModItemTags.BEAR_FEED, 1)));
     //endregion
@@ -205,28 +201,24 @@ public final class ModItems {
             () -> new HumanStrengthGuItem(tended(), HumanStrength.JIN, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                     .refine(800)
                     .channel(3_600)
-                    .speckEvery(3_600, MarkTag.STRENGTH_HUMAN)
                     .hungerBar(36, 1).hungerEvery(300)
                     .feed(ModItemTags.JIN_FEED, 1)));
     public static final DeferredItem<Item> TENS_JIN_STRENGTH_GU = ITEMS.register("tens_jin_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.TEN_JIN, GuSpec.of(Rank.TWO, GuPath.STRENGTH)
                     .refine(8_000)
                     .channel(36_000)
-                    .speckEvery(3_600, MarkTag.STRENGTH_HUMAN)
                     .hungerBar(36, 2).hungerEvery(3_000)
                     .feed(ModItemTags.JIN_FEED, 1)));
     public static final DeferredItem<Item> JUN_STRENGTH_GU = ITEMS.register("jun_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.JUN, GuSpec.of(Rank.THREE, GuPath.STRENGTH)
                     .refine(80_000)
                     .channel(72_000)
-                    .speckEvery(2_400, MarkTag.STRENGTH_HUMAN)
                     .hungerBar(36, 4).hungerEvery(6_000)
                     .feed(ModItemTags.JIN_FEED_SMELTED, 1)));
     public static final DeferredItem<Item> TENS_JUN_STRENGTH_GU = ITEMS.register("tens_jun_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.TEN_JUN, GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
                     .refine(800_000)
                     .channel(720_000)
-                    .speckEvery(2_400, MarkTag.STRENGTH_HUMAN)
                     .hungerBar(36, 8).hungerEvery(60_000)
                     .feed(ModItemTags.JIN_FEED_SMELTED, 1)));
     //endregion

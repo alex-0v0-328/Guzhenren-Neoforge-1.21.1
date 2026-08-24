@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
  * never lag a rank or aptitude change. Pressure writes are the exception because pressure does not
  * affect derived combat attributes. {@code reconcileTalentPaths}
  * is the one place {@code aperture/} writes {@code body/} -- it grants/revokes the ten-extreme talent
- * specks and the human qi.
+ * Dao marks and the human qi.
  *
  * <p>⚠ The physique-and-talent invariant is enforced here ({@code enforce}) rather than in the record,
  * because repairing it rolls a die and a compact constructor has to stay a pure function. ⚠ The
@@ -60,8 +60,23 @@ public final class ApertureService {
     public static final int PRIMARY = ApertureData.PRIMARY;
     private static final int PRESSURE_PER_MINUTE = 2;
 
-    public static final long TALENT_SPECK_TOTAL = 5000L;
+    public static final long TALENT_MARK_TOTAL = 1000L;
     public static final long TALENT_HUMAN_QI = 100L;
+
+    static long talentMarksPerPath(ExtremePhysique physique) {
+        int paths = physique.getTalentPaths().size();
+        return paths == 0 ? 0L : TALENT_MARK_TOTAL / paths;
+    }
+
+    public static void syncTalentMarks(ServerPlayer player) {
+        ExtremePhysique physique = aperture(player).extremePhysique();
+        long expected = talentMarksPerPath(physique);
+        for (GuPath path : physique.getTalentPaths()) {
+            if (PathService.mark(player, path, MarkTag.EXTREME_PHYSIQUE) != expected) {
+                PathService.setMark(player, path, MarkTag.EXTREME_PHYSIQUE, expected);
+            }
+        }
+    }
 
     public static ApertureData get(Player p) {return p.getData(ModAttachments.APERTURE);}
     public static Aperture aperture(Player p) {return get(p).primary();}
@@ -288,7 +303,7 @@ public final class ApertureService {
         if (paths.isEmpty()) return;
 
         QiService.add(player, QiKind.HUMAN, sign * TALENT_HUMAN_QI);
-        long speck = sign * (TALENT_SPECK_TOTAL / paths.size());
-        for (GuPath path : paths) PathService.addSpeck(player, path, MarkTag.NATURAL, speck);
+        long marks = sign * talentMarksPerPath(physique);
+        for (GuPath path : paths) PathService.addMark(player, path, MarkTag.EXTREME_PHYSIQUE, marks);
     }
 }

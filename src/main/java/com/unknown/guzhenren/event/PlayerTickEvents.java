@@ -9,7 +9,6 @@ import com.unknown.guzhenren.attachment.service.body.AttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
-import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
@@ -69,7 +68,6 @@ public final class PlayerTickEvents {
         QiService.syncEffects(player);
         tickDeathQi(player);
         AttackService.refresh(player);
-        TimeFlowService.syncSpecks(player);
         BodyService.tickLifespan(player);
         EssenceService.regenStep(player);
         NourishService.tickNourish(player);

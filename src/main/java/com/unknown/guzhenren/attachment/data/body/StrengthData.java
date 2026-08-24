@@ -2,8 +2,8 @@ package com.unknown.guzhenren.attachment.data.body;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
+import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.serialization.ModStreamCodecs;
@@ -29,7 +29,7 @@ import net.minecraft.network.codec.StreamCodec;
  * {@code EnumMap(Map)} copy constructor -- that one throws on the empty maps {@code DEFAULT} is built
  * from. Same shape for the {@link EnumSet}. ⚠ The four per-kind layer caps (9/9/30/30) sum to exactly
  * 9,999 jin; changing one constant breaks that identity. ⚠ {@code beastReadings()} groups by
- * {@code MarkTag}, not by species constant -- two boars share one tag and one bracket.
+ * {@code BeastStrengthFamily}, not by species constant -- two boars share one family and one bracket.
  *
  * @author Alex
  * @version 1.0.0
@@ -70,9 +70,9 @@ public record StrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Integer
     public StrengthData with(BeastStrength beast) {return rebuilt(beast, true);}
     public StrengthData without(BeastStrength beast) {return rebuilt(beast, false);}
 
-    public Map<MarkTag, Integer> beastReadings() {
-        Map<MarkTag, Integer> readings = new EnumMap<>(MarkTag.class);
-        for (BeastStrength beast : beasts) readings.merge(beast.getMarkTag(), beast.getReading(), Integer::sum);
+    public Map<BeastStrengthFamily, Integer> beastReadings() {
+        Map<BeastStrengthFamily, Integer> readings = new EnumMap<>(BeastStrengthFamily.class);
+        for (BeastStrength beast : beasts) readings.merge(beast.getFamily(), beast.getReading(), Integer::sum);
         return readings;
     }
 

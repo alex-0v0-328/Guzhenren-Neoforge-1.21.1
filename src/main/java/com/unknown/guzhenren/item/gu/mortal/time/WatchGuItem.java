@@ -16,10 +16,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.ConsumedGuItem}, making it tended AND taken by its
  * own use. Two rungs register against this one class (两更蛊 ×2 / 三更蛊 ×3); the effect holder and its
- * length come from registration, and the rate and speck it books live on the effect, not here.
+ * length come from registration, and the rate it books lives on the effect, not here.
  *
  * <p>⚠ It refuses nothing. Wearing two Watch Gu at once is the design, and their rates and their
- * specks both add.
+ * rates both add.
  *
  * @author Alex
  * @version 1.0.0

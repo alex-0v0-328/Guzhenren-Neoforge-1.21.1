@@ -12,12 +12,10 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  *
  * <p>Timed effects own their truth on vanilla's timer. One effect per Gu rather than a graded
  * family, precisely so two Watch Gu [更蛊] can be worn together and their rates add. {@link
- * com.unknown.guzhenren.attachment.service.body.TimeFlowService} sums every time effect and derives
- * the specks [碎屑] under {@code MarkTag.TIME_FLOW} every heartbeat.
+ * com.unknown.guzhenren.attachment.service.body.TimeFlowService} sums every time effect.
  *
  * <p>⚠ The effect's own remaining duration is WORLD time and is never hastened — five minutes is
- * five real minutes. Specks are lent and taken back on expiry, milk, {@code /effect clear} or death;
- * the tag has no writer and is derived by {@code syncSpecks}.
+ * five real minutes.
  *
  * @author Alex
  * @version 1.0.0
@@ -27,19 +25,15 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
 public class TimeFlowEffect extends MobEffect {
 
     private final int rate;
-    private final long specks;
     private final String icon;
 
-    public TimeFlowEffect(MobEffectCategory category, int color, int rate, long specks, String icon) {
+    public TimeFlowEffect(MobEffectCategory category, int color, int rate, String icon) {
         super(category, color);
         this.rate = rate;
-        this.specks = specks;
         this.icon = icon;
     }
 
     public int timeRate(int amplifier) {return rate;}
-
-    public long timeSpecks(int amplifier) {return specks;}
 
     @Override
     public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {

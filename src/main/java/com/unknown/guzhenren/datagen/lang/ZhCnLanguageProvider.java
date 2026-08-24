@@ -16,6 +16,7 @@ import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
+import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
@@ -92,12 +93,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.time.multiple.3",              "三倍");
         add("guzhenren.display.time.multiple.4",              "四倍");
         add("guzhenren.display.time.multiple.5",              "五倍");
-        add("guzhenren.display.time.specks",                  " 碎屑 %s");
         add("guzhenren.display.wild",                         "野生·%s");
         add("guzhenren.display.vital",                        "本命·%s");
         add("guzhenren.display.strength.beast_reading",       "[%s%s之力]");
-        add("guzhenren.display.strength.beast.strength_boar", "猪");
-        add("guzhenren.display.strength.beast.strength_bear", "熊");
         add("guzhenren.display.strength.beast_number.1",      "一");
         add("guzhenren.display.strength.beast_number.2",      "两");
         add("guzhenren.display.strength.beast_number.10",     "十");
@@ -276,7 +274,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.menu.aperture_load",          "空窍负担 %s / %s");
         add("guzhenren.screen.label.brilliance",     "才情");
         add("guzhenren.display.path_marks",          " 道痕%s");
-        add("guzhenren.display.path_specks",         " 碎屑%s");
     }
     //endregion
 
@@ -471,6 +468,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addBrilliance();
         addThoughtTag();
         addBeastStrength();
+        addBeastStrengthFamily();
         addStrengthBranch();
         addHumanStrength();
     }
@@ -584,10 +582,12 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     private void addMarkTag() {
         add(MarkTag.NATURAL,         "自然");
         add(MarkTag.RACE,            "种族");
-        add(MarkTag.STRENGTH_BEASTS, "兽力虚影流");
-        add(MarkTag.STRENGTH_BOAR,   "豕力");
-        add(MarkTag.STRENGTH_BEAR,   "熊力");
-        add(MarkTag.STRENGTH_HUMAN,  "人力钧力流");
+        add(MarkTag.EXTREME_PHYSIQUE, "十绝体质");
+    }
+
+    private void addBeastStrengthFamily() {
+        add(BeastStrengthFamily.BOAR, "猪");
+        add(BeastStrengthFamily.BEAR, "熊");
     }
 
     private void addQiKind() {

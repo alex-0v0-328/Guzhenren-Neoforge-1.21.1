@@ -462,7 +462,7 @@ public final class PlayerInfoScreen extends Screen {
                     Component.literal(String.valueOf(e.amount())));
             case InfoModel.TimeHeader ignored -> new Row(indent, label("time"), null);
             case InfoModel.TimeRow e -> new Row(indent, label("time_flow"),
-                    ModDisplayText.timeFlow(e.rate(), e.specks()));
+                    ModDisplayText.timeFlow(e.rate()));
             case InfoModel.StrengthHeader ignored -> new Row(indent, label("strength"), null);
             case InfoModel.StrengthRow e -> new Row(indent,
                     ModDisplayText.strengthLabel(name(e.branch().getTranslationKey()), e.totalJin()), e.reading());

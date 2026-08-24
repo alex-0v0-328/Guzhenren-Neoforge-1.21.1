@@ -2,7 +2,6 @@ package com.unknown.guzhenren.item.gu;
 
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * One Gu's numbers, given as a builder chain at registration so that a registration reads as a table row.
  *
  * <p>The single source of truth for every Gu's numerical identity: refine cost, channel/cost-per-use,
- * speck rate and tag, hunger bar geometry, feed/dense tags, cooldown, and max health. Stored on
+ * hunger bar geometry, feed/dense tags, cooldown, and max health. Stored on
  * {@link MortalGuItem} at construction; read by {@link TendedGuItem}, {@link GuClock}, and the
  * tooltip/HUD renderers.
  *
@@ -34,9 +33,6 @@ public final class GuSpec {
 
     private int essencePerRound;
     private boolean channels;
-    private int essencePerSpeck;
-    private MarkTag speckTag = MarkTag.NATURAL;
-
     private int maxHunger;
     private int unitsPerHunger = 1;
     private int essencePerHunger;
@@ -74,12 +70,6 @@ public final class GuSpec {
     public GuSpec costPerUse(int essence) {
         this.essencePerRound = essence;
         this.channels = false;
-        return this;
-    }
-
-    public GuSpec speckEvery(int essence, MarkTag tag) {
-        this.essencePerSpeck = essence;
-        this.speckTag = tag;
         return this;
     }
 
@@ -135,8 +125,6 @@ public final class GuSpec {
     public int refineCost() {return refineCost;}
     public int essencePerRound() {return essencePerRound;}
     public boolean channels() {return channels;}
-    public int essencePerSpeck() {return essencePerSpeck;}
-    public MarkTag speckTag() {return speckTag;}
     public int effectCooldownTicks() {return effectCooldownTicks;}
     public int itemCooldownTicks() {return itemCooldownTicks;}
     public int maxHealth() {return maxHealth;}
@@ -164,12 +152,7 @@ public final class GuSpec {
         if (!channels) return;
 
         if (essencePerRound <= 0) throw fault(id, "channels but pours nothing");
-        if (essencePerSpeck <= 0) throw fault(id, "channels but pays no specks");
         if (essencePerHunger <= 0) throw fault(id, "channels but costs no hunger");
-        if (essencePerRound % essencePerSpeck != 0) {
-            throw fault(id, "round %d does not divide by speck rate %d"
-                    .formatted(essencePerRound, essencePerSpeck));
-        }
         if (essencePerRound % essencePerHunger != 0) {
             throw fault(id, "round %d does not divide by hunger rate %d"
                     .formatted(essencePerRound, essencePerHunger));

@@ -20,7 +20,6 @@ import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
@@ -82,7 +81,7 @@ public final class InfoModel {
     public record StrengthHeader() implements Entry {}
     public record StrengthRow(StrengthBranch branch, int totalJin, Component reading) implements Entry {}
     public record TimeHeader() implements Entry {}
-    public record TimeRow(int rate, long specks) implements Entry {}
+    public record TimeRow(int rate) implements Entry {}
     public record CapacityRow(int usable, int total) implements Entry {}
     public record AttackRow(double bonus) implements Entry {}
     public record WisdomHeader() implements Entry {}
@@ -159,8 +158,7 @@ public final class InfoModel {
         if (rate <= TimeFlowService.NORMAL_RATE) return;
 
         rows.add(new Row(0, new TimeHeader()));
-        rows.add(new Row(INDENT,
-                new TimeRow(rate, PathService.speck(player, GuPath.TIME, MarkTag.TIME_FLOW))));
+        rows.add(new Row(INDENT, new TimeRow(rate)));
     }
 
     private static void paths(List<Row> rows, Player player) {

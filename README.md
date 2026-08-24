@@ -36,7 +36,7 @@
 | `ApertureData`                         | 空窍：转数、阶段、资质、体质、真元池 <sub>rank, stage, talent, physique, essence</sub>            |
 | `BodyData`                             | 生命形态、种族、年龄与寿元、死气欠账 <sub>life form, race, age & lifespan, death-qi debt</sub>    |
 | `SoulData` · `StaminaData`             | 魂魄、耐力 <sub>soul, stamina</sub>                                                               |
-| `PathData`                             | 33 条流派的道痕/碎屑，每笔带来源 tag <sub>Dao marks and specks, each tagged with its source</sub> |
+| `PathData`                             | 33 条流派的道痕，每笔带来源 tag <sub>Dao marks, each tagged with its source</sub>                  |
 | `QiData` · `StrengthData` · `MindData` | 八种气、力道三分支、念/意/情 <sub>qi, strength branches, mind pools</sub>                         |
 | `NourishData` · `ApertureStorage`      | 修炼进度、空窍内的蛊虫仓 <sub>cultivation progress, Gu storage</sub>                              |
 

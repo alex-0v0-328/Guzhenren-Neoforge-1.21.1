@@ -4,17 +4,12 @@ import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
- * Where a Dao mark [道痕] or speck [碎屑] came from, so a quantity can later be revoked exactly.
+ * Where a Dao mark [道痕] came from, so a quantity can later be revoked exactly.
  *
- * <p>Closed vocabulary enum: each constant names its {@link GuPath} owner (or {@code null} for
- * {@code NATURAL}/{@code RACE}), and no sibling mod may add a tag. That closure is what lets
+ * <p>Closed vocabulary enum; no sibling mod may add a tag. That closure is what lets
  * {@code PathEntry} keep a plain {@code EnumMap} keyed by it.
- *
- * <p>☠ Only a Gu names a source tag; a command books {@code NATURAL} and nothing else. A hand-written
- * tag cannot be told from an earned one, and that is how a race mark was once forged onto a foreign path.
  *
  * @author Alex
  * @version 1.0.0
@@ -23,34 +18,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum MarkTag implements StringRepresentable, EnumTranslatable {
 
-    NATURAL        (null),
-
-    RACE           (null),
-
-    //  TODO(互斥): 兼修 penalty -- 1+1 should land near 1.5, not 2.  CLAUDE.md "Pending".
-    STRENGTH_BEASTS(GuPath.STRENGTH),
-    STRENGTH_BOAR  (GuPath.STRENGTH),
-    STRENGTH_BEAR  (GuPath.STRENGTH),
-    STRENGTH_HUMAN (GuPath.STRENGTH),
-
-    TIME_FLOW      (GuPath.TIME);
+    NATURAL,
+    RACE,
+    EXTREME_PHYSIQUE;
 
     public static final Codec<MarkTag> CODEC = StringRepresentable.fromEnum(MarkTag::values);
     private static final String KEY_PREFIX = "guzhenren.enum.path.tag.";
-
-    private final @Nullable GuPath owner;
-
-    MarkTag(@Nullable GuPath owner) {this.owner = owner;}
-
-    public boolean fitsOn(GuPath path) {return owner == null || owner == path;}
-    public @Nullable GuPath owner() {return owner;}
-
-    public @Nullable MarkTag parent() {
-        return switch (this) {
-            case STRENGTH_BOAR, STRENGTH_BEAR -> STRENGTH_BEASTS;
-            default -> null;
-        };
-    }
 
     @Override
     public @NotNull String getSerializedName() {return name().toLowerCase();}

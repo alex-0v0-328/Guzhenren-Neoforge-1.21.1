@@ -16,6 +16,7 @@ import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
+import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
@@ -90,12 +91,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.time.multiple.3",              "x3");
         add("guzhenren.display.time.multiple.4",              "x4");
         add("guzhenren.display.time.multiple.5",              "x5");
-        add("guzhenren.display.time.specks",                  " Specks %s");
         add("guzhenren.display.wild",                         "Wild %s");
         add("guzhenren.display.vital",                        "Vital %s");
         add("guzhenren.display.strength.beast_reading",       "[%s %s Strength]");
-        add("guzhenren.display.strength.beast.strength_boar", "Boar");
-        add("guzhenren.display.strength.beast.strength_bear", "Bear");
         add("guzhenren.display.strength.beast_number.1",      "One");
         add("guzhenren.display.strength.beast_number.2",      "Two");
         add("guzhenren.display.strength.beast_number.10",     "Ten");
@@ -273,7 +271,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.menu.aperture_load",          "Load %s / %s");
         add("guzhenren.screen.label.brilliance",     "Brilliance");
         add("guzhenren.display.path_marks",          " Marks %s");
-        add("guzhenren.display.path_specks",         " Specks %s");
     }
     //endregion
 
@@ -467,6 +464,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addBrilliance();
         addThoughtTag();
         addBeastStrength();
+        addBeastStrengthFamily();
         addStrengthBranch();
         addHumanStrength();
     }
@@ -580,10 +578,12 @@ public class EnUsLanguageProvider extends LanguageProvider {
     private void addMarkTag() {
         add(MarkTag.NATURAL,         "Natural");
         add(MarkTag.RACE,            "Race");
-        add(MarkTag.STRENGTH_BEASTS, "Beast Strength Phantom Branch");
-        add(MarkTag.STRENGTH_BOAR,   "Boar Strength");
-        add(MarkTag.STRENGTH_BEAR,   "Bear Strength");
-        add(MarkTag.STRENGTH_HUMAN,  "Human Jun Strength Branch");
+        add(MarkTag.EXTREME_PHYSIQUE, "Ten-Extremes Physique");
+    }
+
+    private void addBeastStrengthFamily() {
+        add(BeastStrengthFamily.BOAR, "Boar");
+        add(BeastStrengthFamily.BEAR, "Bear");
     }
 
     private void addQiKind() {

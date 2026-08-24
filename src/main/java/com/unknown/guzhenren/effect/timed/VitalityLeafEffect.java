@@ -12,7 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
  * unlike pool effects, they are not rebuilt every heartbeat, so milk does cure them. Re-using the
  * Gu while this effect runs is a refusal ({@code vitality_active}).
  *
- * <p>⚠ 碎屑 is zero — a timed buff alters nothing permanently.
+ * <p>A timed buff alters nothing permanently.
  *
  * @author Alex
  * @version 1.0.0

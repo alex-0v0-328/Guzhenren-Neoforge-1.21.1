@@ -13,11 +13,8 @@ import net.minecraft.network.codec.StreamCodec;
  * Path [流派] progress, sparse: a path missing from the map is simply one nobody has walked.
  *
  * <p>Immutable record attachment keyed {@code path_data}; {@link PathService} is the only writer. Each
- * value is a {@link PathEntry}, and the compact constructor runs {@link PathEntry#retainingTagsFor} on
- * every entry so no writer can file a {@link MarkTag} under a path it does not belong to.
- *
- * <p>⚠ That tag-drop is SILENT: a write with the wrong tag looks like it worked and did nothing at all.
- * ⚠ A default {@link PathEntry} (no attainment, no marks, no specks) is pruned out of the map entirely,
+ * value is a {@link PathEntry}. ⚠ A default {@link PathEntry} (no attainment, no marks) is pruned out of
+ * the map entirely,
  * so a path that has been fully revoked simply disappears -- do not read "absent" as "never touched".
  *
  * @author Alex
@@ -39,8 +36,7 @@ public record PathData(Map<GuPath, PathEntry> entries) {
     public PathData {
         Map<GuPath, PathEntry> pruned = new EnumMap<>(GuPath.class);
         entries.forEach((path, entry) -> {
-            PathEntry kept = entry.retainingTagsFor(path);
-            if (!kept.isDefault()) pruned.put(path, kept);
+            if (!entry.isDefault()) pruned.put(path, entry);
         });
         entries = Collections.unmodifiableMap(pruned);
     }
