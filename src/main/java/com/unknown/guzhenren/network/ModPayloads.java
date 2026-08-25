@@ -31,9 +31,10 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.client.screen.PlayerInfoScreen
+ * @since 1.0.0
  */
+
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModPayloads {
 

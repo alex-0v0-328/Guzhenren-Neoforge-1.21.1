@@ -24,9 +24,10 @@ import net.minecraft.server.level.ServerPlayer;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.command.ModEnumArgument
+ * @since 1.0.0
  */
+
 public final class CmdQi {
 
     private CmdQi() {}

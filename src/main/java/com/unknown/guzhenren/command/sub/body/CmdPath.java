@@ -21,14 +21,15 @@ import net.minecraft.server.level.ServerPlayer;
  * {@code set}/{@code add}/{@code sub} for marks and {@code set}/{@code up}/{@code down} for
  * attainment. All writes delegate to {@link com.unknown.guzhenren.attachment.service.body.PathService}.
  *
- * <p>☠ A command books 自然 [NATURAL] and can name no other tag. A hand-written source tag cannot be
+ * <p>☠ A command books 自然 [NATURAL] and can name no other tag. A handwritten source tag cannot be
  * told from what a Gu laid down, and that is how a race mark was forged onto a path no race revokes.
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.command.ModEnumArgument
+ * @since 1.0.0
  */
+
 public final class CmdPath {
 
     private CmdPath() {}
@@ -38,7 +39,7 @@ public final class CmdPath {
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("path")
                 .then(ModEnumArgument.arg(ARG_PATH, GuPath.values())
-                        .then(tally("mark",  PathService::setMark,  PathService::addMark))
+                        .then(tally("mark", PathService::setMark, PathService::addMark))
                         .then(attainment()));
     }
 

@@ -12,17 +12,19 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * Path [流派] progress, sparse: a path missing from the map is simply one nobody has walked.
  *
- * <p>Immutable record attachment keyed {@code path_data}; {@link PathService} is the only writer. Each
- * value is a {@link PathEntry}. ⚠ A default {@link PathEntry} (no attainment, no marks) is pruned out of
- * the map entirely,
- * so a path that has been fully revoked simply disappears -- do not read "absent" as "never touched".
+ * <p>Immutable record attachment keyed {@code path_data}; {@link
+ * com.unknown.guzhenren.attachment.service.body.PathService} is the only writer. Each value is a
+ * {@link PathEntry}. ⚠ A default {@link PathEntry} (no attainment, no marks) is pruned out of the map
+ * entirely, so a path that has been fully revoked simply disappears -- do not read "absent" as
+ * "never touched".
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see PathEntry
  * @see com.unknown.guzhenren.attachment.service.body.PathService
+ * @since 1.0.0
  */
+
 public record PathData(Map<GuPath, PathEntry> entries) {
 
     public static final PathData DEFAULT = new PathData(Map.of());

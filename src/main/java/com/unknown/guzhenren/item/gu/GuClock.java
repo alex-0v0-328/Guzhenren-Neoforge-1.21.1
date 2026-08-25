@@ -16,10 +16,11 @@ import net.minecraft.world.item.ItemStack;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see GuSpec
  * @see TendedGuItem
+ * @since 1.0.0
  */
+
 public sealed interface GuClock {
 
     void bind(ServerPlayer player, ItemStack stack);
@@ -137,16 +138,26 @@ public sealed interface GuClock {
 
     //region 无时钟 -- the "reusable, needs no feeding" cell, representable and unbuilt
     record NoClock() implements GuClock {
-        @Override public void bind(ServerPlayer player, ItemStack stack) {}
-        @Override public boolean starves(ServerPlayer player, ItemStack stack, long days) {return false;}
-        @Override public boolean hungry(ServerPlayer player, ItemStack stack) {return false;}
-        @Override public void warn(ServerPlayer player, ItemStack stack, long days) {}
-        @Override public int essenceAboveHungerFloor(ItemStack stack) {return Integer.MAX_VALUE;}
-        @Override public int essencePerHungerPoint() {return Integer.MAX_VALUE;}
-        @Override public void billHungerForEssence(ItemStack stack, int from, int to) {}
-        @Override public boolean spendWasForced(ItemStack stack) {return false;}
-        @Override public boolean barVisible(ItemStack stack) {return false;}
-        @Override public float barFraction(ItemStack stack) {return 0.0F;}
+        @Override
+        public void bind(ServerPlayer player, ItemStack stack) {}
+        @Override
+        public boolean starves(ServerPlayer player, ItemStack stack, long days) {return false;}
+        @Override
+        public boolean hungry(ServerPlayer player, ItemStack stack) {return false;}
+        @Override
+        public void warn(ServerPlayer player, ItemStack stack, long days) {}
+        @Override
+        public int essenceAboveHungerFloor(ItemStack stack) {return Integer.MAX_VALUE;}
+        @Override
+        public int essencePerHungerPoint() {return Integer.MAX_VALUE;}
+        @Override
+        public void billHungerForEssence(ItemStack stack, int from, int to) {}
+        @Override
+        public boolean spendWasForced(ItemStack stack) {return false;}
+        @Override
+        public boolean barVisible(ItemStack stack) {return false;}
+        @Override
+        public float barFraction(ItemStack stack) {return 0.0F;}
 
         @Override
         public boolean eat(TendedGuItem gu, ServerPlayer player, ItemStack stack, ItemStack food) {return false;}

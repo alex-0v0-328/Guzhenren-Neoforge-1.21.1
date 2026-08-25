@@ -22,9 +22,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.gu.TendedGuItem
+ * @since 1.0.0
  */
+
 public class BeastStrengthGuItem extends TendedGuItem {
 
     private static final String FAILED_STRENGTH_HELD = "guzhenren.item.failed.beast_strength_held";

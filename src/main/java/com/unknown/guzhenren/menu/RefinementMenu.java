@@ -10,8 +10,8 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.item.GuItem;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
-import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.item.gu.mortal.PrimevalElderGuItem;
+import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.recipe.GuRecipe;
 import com.unknown.guzhenren.recipe.GuRecipeInput;
 import com.unknown.guzhenren.registry.ModMenus;
@@ -48,9 +48,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.recipe.GuRecipe
+ * @since 1.0.0
  */
+
 public class RefinementMenu extends AbstractContainerMenu {
 
     public static final int SLOT = 18;
@@ -65,8 +66,8 @@ public class RefinementMenu extends AbstractContainerMenu {
     public static final int CORE_SIZE = CORE_COLS * CORE_ROWS;
     public static final int INPUT_SIZE = RING_SIZE + CORE_SIZE;
 
-    private static final int[] RING_COLS = {1, 2, 3,  0, 4,  0, 4,  0, 4,  1, 2, 3};
-    private static final int[] RING_ROWS = {0, 0, 0,  1, 1,  2, 2,  3, 3,  4, 4, 4};
+    private static final int[] RING_COLS = {1, 2, 3, 0, 4, 0, 4, 0, 4, 1, 2, 3};
+    private static final int[] RING_ROWS = {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4};
 
     public static final int INPUT_X = 18;
     public static final int INPUT_Y = 28;
@@ -578,7 +579,7 @@ public class RefinementMenu extends AbstractContainerMenu {
         boolean moved = index < INVENTORY_START
                 ? moveItemStackTo(stack, INVENTORY_START, slots.size(), true)
                 : moveItemStackTo(stack, STONE_SLOT, STONE_SLOT + 1, false)
-                        || moveItemStackTo(stack, 0, INPUT_SIZE, false);
+                || moveItemStackTo(stack, 0, INPUT_SIZE, false);
         if (!moved) return ItemStack.EMPTY;
 
         if (stack.isEmpty()) {

@@ -8,6 +8,20 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
+/**
+ * The Crash Gu family [横冲蛊 / 直撞蛊 / 横冲直撞蛊]: one class carrying all three dashes --
+ * horizontal, vertical, and the charging one that moves on both axes.
+ *
+ * <p>The class holds only the axis flags and the shared duration helper; the movement itself is
+ * reported by the client through {@link com.unknown.guzhenren.network.CrashStepPayload}. The
+ * charging shape grades its icon by rank because it spans ranks four and five.
+ *
+ * @author Alex
+ * @version 1.0.0
+ * @see com.unknown.guzhenren.network.CrashStepPayload
+ * @since 1.0.0
+ */
+
 public final class CrashGuEffect extends MobEffect {
 
     public static final int HORIZONTAL = 1;

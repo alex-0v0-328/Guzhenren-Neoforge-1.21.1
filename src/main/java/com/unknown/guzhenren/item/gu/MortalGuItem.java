@@ -1,7 +1,6 @@
 package com.unknown.guzhenren.item.gu;
 
 import com.unknown.guzhenren.Ticks;
-import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
@@ -30,9 +29,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see GuSpec
+ * @since 1.0.0
  */
+
 public abstract class MortalGuItem extends GuItem {
 
     public static final int REFINE_DONE_COOLDOWN_TICKS = 2 * Ticks.SECOND;

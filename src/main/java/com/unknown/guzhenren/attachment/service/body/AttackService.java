@@ -7,19 +7,20 @@ import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.effect.AttackContributor;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The only thing in the mod that touches the {@code ATTACK_DAMAGE} attribute -- {@code bonus()} is the
  * whole sum.
  *
  * <p>Static service; {@code bonus()} walks {@code getActiveEffects()} for every {@link AttackContributor}
- * (力道 timed effects), plus the beast strengths, the usable-jin ramp, and the zombie tier bonus.
+ * (力道 timed effects), plus the beast strengths [兽力], the usable-jin ramp, and the zombie [僵] tier bonus.
  * {@code refresh} writes the single transient modifier; it fires on login, clone, reset, the heartbeat,
  * and every {@link StrengthService#store} -- a modifier does not ride a clone.
  *
@@ -33,10 +34,11 @@ import net.minecraft.world.entity.player.Player;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see HealthService
  * @see StrengthService
+ * @since 1.0.0
  */
+
 public final class AttackService {
 
     private AttackService() {}
@@ -48,7 +50,7 @@ public final class AttackService {
 
     public static final double ZOMBIE_ATTACK_BASE = 5.0D;
 
-    public static double bonus(Player player) {
+    public static double bonus(@NotNull Player player) {
         StrengthData data = StrengthService.get(player);
         double total = 0.0D;
 
@@ -59,7 +61,7 @@ public final class AttackService {
                 + zombieBonus(player) + effectBonus(player);
     }
 
-    public static double effectBonus(Player player) {
+    public static double effectBonus(@NotNull Player player) {
         double total = 0.0D;
         for (MobEffectInstance instance : player.getActiveEffects()) {
             if (instance.getEffect().value() instanceof AttackContributor contributor) {
@@ -69,14 +71,14 @@ public final class AttackService {
         return total;
     }
 
-    public static double zombieBonus(Player player) {
+    public static double zombieBonus(@NotNull Player player) {
         BodyData body = BodyService.get(player);
         if (!body.lifeForm().isAnyZombie() || body.zombieTier() < 0) return 0.0D;
 
         return ZOMBIE_ATTACK_BASE * (1 << body.zombieTier());
     }
 
-    public static void refresh(ServerPlayer player) {
+    public static void refresh(@NotNull ServerPlayer player) {
         AttributeInstance instance = player.getAttribute(Attributes.ATTACK_DAMAGE);
         if (instance == null) return;
 

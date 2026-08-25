@@ -33,9 +33,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService
+ * @since 1.0.0
  */
+
 public class ApertureStorageMenu extends AbstractContainerMenu {
 
     public static final int COLS = 9;

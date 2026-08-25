@@ -18,9 +18,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see MortalGuItem
+ * @since 1.0.0
  */
+
 public abstract class OneShotGuItem extends MortalGuItem {
 
     private static final String TOOLTIP_REFINE_COST = "guzhenren.item.gu.refine_cost";

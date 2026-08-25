@@ -38,11 +38,12 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see GuSpec
  * @see GuClock
  * @see RefinedGuState
+ * @since 1.0.0
  */
+
 public abstract class TendedGuItem extends MortalGuItem {
 
     private static final String TOOLTIP_REFINE = "guzhenren.item.gu.refine_progress";
@@ -70,7 +71,9 @@ public abstract class TendedGuItem extends MortalGuItem {
     protected abstract void payout(ServerPlayer player, ItemStack stack);
     protected int feedUnits(ItemStack food) {return spec.feedUnits(food);}
 
-    /** ⚠ A Gu taken by its own use may never be bound: the slot would lose it on the very first click. */
+    /**
+     * ⚠ A Gu taken by its own use may never be bound: the slot would lose it on the very first click.
+     */
     public boolean canBeVital() {return true;}
     //endregion
 
@@ -169,6 +172,7 @@ public abstract class TendedGuItem extends MortalGuItem {
     private static final int POOL_PACED_STEP_TICKS = 5;
     private static final int POOL_PACED_STEPS = Ticks.SECOND / POOL_PACED_STEP_TICKS;
 
+    @SuppressWarnings("resource")
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack,
                           int remaining) {
@@ -433,7 +437,7 @@ public abstract class TendedGuItem extends MortalGuItem {
         if (!refined(stack)) return refineCaption(state(stack).refineProgress());
         return spec.channels()
                 ? Component.translatable(CAPTION_CHANNELING, state(stack).investedEssence(),
-                        spec.essencePerRound())
+                spec.essencePerRound())
                 : Component.translatable(CAPTION_USING_PLAIN);
     }
 

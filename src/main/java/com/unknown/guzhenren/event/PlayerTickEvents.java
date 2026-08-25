@@ -39,9 +39,10 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.body.BodyService
+ * @since 1.0.0
  */
+
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerTickEvents {
 

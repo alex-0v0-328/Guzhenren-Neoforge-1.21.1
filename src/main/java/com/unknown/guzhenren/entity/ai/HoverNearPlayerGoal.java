@@ -21,10 +21,11 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.entity.FlyingGuEntity
+ * @since 1.0.0
  */
-    public class HoverNearPlayerGoal extends Goal {
+
+public class HoverNearPlayerGoal extends Goal {
 
     private static final double APPROACH_SPEED = 0.25;
     private static final double EASING = 0.25;

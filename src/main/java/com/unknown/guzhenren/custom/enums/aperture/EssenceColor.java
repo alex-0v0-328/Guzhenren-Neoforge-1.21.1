@@ -6,7 +6,7 @@ import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The color name an essence [真元] bar takes at each rank, echoed by the Relics Gu [舍利蛊] names.
+ * The color name an essence [真元] bar takes at each rank [转数], echoed by the Relics Gu [舍利蛊] names.
  *
  * <p>Closed vocabulary enum carried by {@link Rank}; the bar is NOT tinted by it (one bar cycling ten
  * hues reads as status, not rank). No sibling mod may add a color.
@@ -16,9 +16,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see Rank
+ * @since 1.0.0
  */
+
 public enum EssenceColor implements StringRepresentable, EnumTranslatable {
 
     NONE,

@@ -2,7 +2,6 @@ package com.unknown.guzhenren.registry;
 
 import com.unknown.guzhenren.Guzhenren;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 
@@ -17,6 +16,7 @@ import net.minecraft.world.level.biome.Biome;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public final class ModBiomeTags {
 
     private ModBiomeTags() {}

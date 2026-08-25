@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public enum Stage implements StringRepresentable, EnumTranslatable {
 
     NONE(0),

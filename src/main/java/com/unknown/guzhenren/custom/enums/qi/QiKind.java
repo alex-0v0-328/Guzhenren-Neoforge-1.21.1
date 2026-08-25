@@ -19,16 +19,17 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public enum QiKind implements StringRepresentable, EnumTranslatable {
 
-    SWORD    ( 5 * Ticks.MINUTE,                 0),
-    STRENGTH (10 * Ticks.MINUTE,                 0),
-    LIFE     (                0, 2 * Ticks.MINUTE),
-    ESSENCE  (                0, 2 * Ticks.MINUTE),
-    DEATH    (                0,                 0),
-    HUMAN    (                0,                 0),
-    HEAVEN   (                0,                 0),
-    EARTH    (                0,                 0);
+    SWORD(5 * Ticks.MINUTE, 0),
+    STRENGTH(10 * Ticks.MINUTE, 0),
+    LIFE(0, 2 * Ticks.MINUTE),
+    ESSENCE(0, 2 * Ticks.MINUTE),
+    DEATH(0, 0),
+    HUMAN(0, 0),
+    HEAVEN(0, 0),
+    EARTH(0, 0);
 
     public static final Codec<QiKind> CODEC = StringRepresentable.fromEnum(QiKind::values);
     private static final String KEY_PREFIX = "guzhenren.enum.qi.";

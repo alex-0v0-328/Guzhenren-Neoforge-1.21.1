@@ -41,9 +41,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.display.InfoModel
+ * @since 1.0.0
  */
+
 public final class PlayerInfoScreen extends Screen {
 
     private static final float SCREEN_FRACTION = 0.80F;
@@ -79,23 +80,23 @@ public final class PlayerInfoScreen extends Screen {
             "guzhenren.screen.tab.refinement",
     };
 
-    private static final int BTN_H          = 20;
-    private static final int BTN_GAP        = 4;
-    private static final int BTN_IDLE       = 0x33FFFFFF;
-    private static final int BTN_HOVER      = 0x66FFFFFF;
-    private static final int BTN_DEAD       = 0x14FFFFFF;
-    private static final int BTN_PROGRESS   = 0x804FC3F7;
+    private static final int BTN_H = 20;
+    private static final int BTN_GAP = 4;
+    private static final int BTN_IDLE = 0x33FFFFFF;
+    private static final int BTN_HOVER = 0x66FFFFFF;
+    private static final int BTN_DEAD = 0x14FFFFFF;
+    private static final int BTN_PROGRESS = 0x804FC3F7;
 
-    private static final String KEY_NOURISH      = "guzhenren.screen.nourish";
+    private static final String KEY_NOURISH = "guzhenren.screen.nourish";
     private static final String KEY_NOURISH_STOP = "guzhenren.screen.nourish_stop";
-    private static final String KEY_IMPACT       = "guzhenren.screen.impact";
+    private static final String KEY_IMPACT = "guzhenren.screen.impact";
 
-    private static final int TAB_APERTURE   = 0;
-    private static final int TAB_BODY       = 1;
-    private static final int TAB_SOUL       = 2;
-    private static final int TAB_PATH       = 3;
-    private static final int TAB_MIND       = 4;
-    private static final int TAB_STORAGE    = 5;
+    private static final int TAB_APERTURE = 0;
+    private static final int TAB_BODY = 1;
+    private static final int TAB_SOUL = 2;
+    private static final int TAB_PATH = 3;
+    private static final int TAB_MIND = 4;
+    private static final int TAB_STORAGE = 5;
     private static final int TAB_REFINEMENT = 6;
 
     private static final int PICK_COLS = 4;
@@ -446,7 +447,7 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.PathChoice e -> e.primary()
                     ? new Row(indent, label("primary_path"), ModDisplayText.path(e.path()))
                     : new Row(indent, label("secondary_path"),
-                            ModDisplayText.path(e.path()).append(detail(pickHint())), true);
+                    ModDisplayText.path(e.path()).append(detail(pickHint())), true);
 
             case InfoModel.Form e -> new Row(indent, label("life_form"), name(e.form().getTranslationKey()));
             case InfoModel.RaceRow e -> new Row(indent, label("race"), name(e.race().getTranslationKey()));
@@ -456,15 +457,15 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.Lifespan e -> new Row(indent, label("lifespan"),
                     ModDisplayText.lifespan(e.lifespan(), e.age()));
             case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
-            case InfoModel.PathRow e -> new Row(indent, ModDisplayText.pathLine(e.path(), e.entry()), Component.empty());
+            case InfoModel.PathRow e ->
+                    new Row(indent, ModDisplayText.pathLine(e.path(), e.entry()), Component.empty());
             case InfoModel.QiPathAchieveHeader ignored -> new Row(indent, label("qi_path_achieve"), null);
             case InfoModel.QiKindRow e -> new Row(indent, name(e.kind().getTranslationKey()),
                     Component.literal(String.valueOf(e.amount())));
             case InfoModel.TimePathAchieveHeader ignored -> new Row(indent, label("time_path_achieve"), null);
             case InfoModel.TimeRateUpRow e -> new Row(indent, label("time_rate_up"),
                     ModDisplayText.timeRateUp(e.rate()));
-            case InfoModel.StrengthPathAchieveHeader ignored ->
-                    new Row(indent, label("strength_path_achieve"), null);
+            case InfoModel.StrengthPathAchieveHeader ignored -> new Row(indent, label("strength_path_achieve"), null);
             case InfoModel.StrengthPathBranchRow e -> new Row(indent,
                     ModDisplayText.strengthLabel(name(e.branch().getTranslationKey()), e.totalJin()), e.reading());
             case InfoModel.CapacityRow e -> new Row(indent,

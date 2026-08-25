@@ -5,7 +5,6 @@ import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.OneShotGuItem;
 import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -20,9 +19,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.gu.OneShotGuItem
+ * @since 1.0.0
  */
+
 public class VitalityLeafGuItem extends OneShotGuItem {
 
     private static final String FAILED_VITALITY_ACTIVE = "guzhenren.item.failed.vitality_active";

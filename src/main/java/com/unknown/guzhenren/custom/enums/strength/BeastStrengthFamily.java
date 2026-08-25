@@ -2,6 +2,19 @@ package com.unknown.guzhenren.custom.enums.strength;
 
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 
+/**
+ * The family a beast strength [兽力] belongs to: the two boars share one bracket, the bear owns the other.
+ *
+ * <p>Readings group by family rather than by species constant, so a second boar lands in the boar
+ * bracket instead of opening a new one.
+ *
+ * @author Alex
+ * @version 1.0.0
+ * @see BeastStrength
+ * @see com.unknown.guzhenren.attachment.data.body.StrengthData
+ * @since 1.0.0
+ */
+
 public enum BeastStrengthFamily implements EnumTranslatable {
 
     BOAR,

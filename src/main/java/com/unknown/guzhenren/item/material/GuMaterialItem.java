@@ -14,9 +14,10 @@ import com.unknown.guzhenren.item.GuItem;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.GuItem
+ * @since 1.0.0
  */
+
 public class GuMaterialItem extends GuItem {
 
     private static final String KIND_KEY = "guzhenren.display.gu_material";

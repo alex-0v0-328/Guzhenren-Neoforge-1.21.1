@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Treasure Lotus Gu [天元宝莲]: a passive that mints primeval stones [元石] and restores essence.
+ * Treasure Lotus Gu [天元宝莲]: a passive that mints primeval stones [元石] and restores essence [真元].
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem} but declares no clock -- it never
  * eats and never starves. The one-second heartbeat of {@code payOwnUpkeep} restores 5% of max
@@ -32,9 +32,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.gu.TendedGuItem
+ * @since 1.0.0
  */
+
 public class TreasureLotusGuItem extends TendedGuItem {
 
     private static final int ESSENCE_REGEN_PERCENT = 5;

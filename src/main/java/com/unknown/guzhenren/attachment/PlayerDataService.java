@@ -11,13 +11,13 @@ import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
-import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.AttackService;
+import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.HealthService;
 import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.attachment.service.body.SoulService;
-import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
@@ -27,6 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The one cross-domain lifecycle service: birth, sleep, death, clone, respawn, and a full reset.
@@ -45,17 +46,18 @@ import net.minecraft.world.item.ItemStack;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see ApertureService
  * @see BodyService
+ * @since 1.0.0
  */
+
 public final class PlayerDataService {
 
     private static final String VITAL_LOST = "guzhenren.item.gu.vital_lost";
 
     private PlayerDataService() {}
 
-    public static void onJoin(ServerPlayer player) {
+    public static void onJoin(@NotNull ServerPlayer player) {
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
         ApertureService.syncTalentMarks(player);
         HealthService.refresh(player);
@@ -63,22 +65,22 @@ public final class PlayerDataService {
         EpicFightIntegration.refresh(player);
     }
 
-    public static void onBirth(Player player) {
+    public static void onBirth(@NotNull Player player) {
         player.setData(ModAttachments.MIND, MindData.newborn());
         player.setData(ModAttachments.BORN, true);
     }
 
-    public static void onSleepComplete(ServerPlayer player) {
+    public static void onSleepComplete(@NotNull ServerPlayer player) {
         SoulService.refill(player);
         EssenceService.refill(player);
         MindService.onSleepComplete(player);
     }
 
-    public static void onDeath(ServerPlayer player) {
+    public static void onDeath(@NotNull ServerPlayer player) {
         BodyService.setLifeForm(player, LifeForm.DEAD);
     }
 
-    public static void onClone(Player from, Player to, boolean wasDeath, boolean keepInventory) {
+    public static void onClone(@NotNull Player from, @NotNull Player to, boolean wasDeath, boolean keepInventory) {
         if (wasDeath && !keepInventory) {
             resetAll(to);
         } else {
@@ -91,7 +93,7 @@ public final class PlayerDataService {
         }
     }
 
-    public static void onRespawn(ServerPlayer player) {
+    public static void onRespawn(@NotNull ServerPlayer player) {
         BodyService.revive(player);
         if (ApertureService.pressureFull(player)) ApertureService.setPressure(player, ApertureService.PRIMARY, 0);
         if (BodyService.get(player).isExhausted()) {
@@ -107,7 +109,7 @@ public final class PlayerDataService {
         QiService.set(player, QiKind.DEATH, 0L);
     }
 
-    public static void onVitalGuLost(ServerPlayer owner, ItemStack stack) {
+    public static void onVitalGuLost(@NotNull ServerPlayer owner, @NotNull ItemStack stack) {
         owner.sendSystemMessage(Component.translatable(VITAL_LOST, stack.getHoverName()));
 
         SoulService.setCurrent(owner, SoulService.get(owner).currentSoul() / 2L);
@@ -120,7 +122,7 @@ public final class PlayerDataService {
         ApertureService.setPrimaryPath(owner, ApertureService.PRIMARY, null);
     }
 
-    public static void copy(Player from, Player to) {
+    public static void copy(@NotNull Player from, @NotNull Player to) {
         to.setData(ModAttachments.APERTURE, from.getData(ModAttachments.APERTURE));
         to.setData(ModAttachments.APERTURE_STORAGE, from.getData(ModAttachments.APERTURE_STORAGE).copy());
         to.setData(ModAttachments.BODY, from.getData(ModAttachments.BODY));
@@ -133,7 +135,7 @@ public final class PlayerDataService {
         to.setData(ModAttachments.BORN, from.getData(ModAttachments.BORN));
     }
 
-    public static void resetAll(Player player) {
+    public static void resetAll(@NotNull Player player) {
         player.setData(ModAttachments.APERTURE, ApertureData.DEFAULT);
         player.setData(ModAttachments.APERTURE_STORAGE, ApertureStorage.DEFAULT);
         player.setData(ModAttachments.SOUL, SoulData.DEFAULT);

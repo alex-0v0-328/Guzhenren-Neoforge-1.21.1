@@ -41,6 +41,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public final class EpicFightIntegration {
 
     private static final ResourceLocation STAMINA_MODIFIER = Guzhenren.id("epic_fight_stamina");
@@ -69,6 +70,7 @@ public final class EpicFightIntegration {
 
     public static void crashStep(ServerPlayer player, int vertical, float yRot) {
         ServerPlayerPatch patch = EpicFightCapabilities.getServerPlayerPatch(player);
+        if (patch == null) return;
         if (!EpicFightSkills.STEP.get().isExecutableState(patch)) return;
 
         AnimationManager.AnimationAccessor<DodgeAnimation> animation = vertical < 0
@@ -122,14 +124,14 @@ public final class EpicFightIntegration {
     private static final class CrashAnimation extends DodgeAnimation {
 
         private CrashAnimation(float transitionTime, AnimationManager.AnimationAccessor<DodgeAnimation> accessor,
-                float width, float height, AssetAccessor<? extends Armature> armature) {
+                               float width, float height, AssetAccessor<? extends Armature> armature) {
             super(transitionTime, accessor, width, height, armature);
         }
 
         @Override
-        protected Vec3 getCoordVector(LivingEntityPatch<?> entitypatch,
-                AssetAccessor<? extends DynamicAnimation> animation) {
-            return super.getCoordVector(entitypatch, animation).scale(3.0D);
+        protected Vec3 getCoordVector(LivingEntityPatch<?> entityPatch,
+                                      AssetAccessor<? extends DynamicAnimation> animation) {
+            return super.getCoordVector(entityPatch, animation).scale(3.0D);
         }
     }
 }

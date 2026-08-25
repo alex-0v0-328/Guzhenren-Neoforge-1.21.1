@@ -31,9 +31,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.gu.MortalGuItem
+ * @since 1.0.0
  */
+
 public class HopeGuItem extends MortalGuItem {
 
     private static final String FAILED_AWAKENED = "guzhenren.item.failed.awakened";
@@ -65,6 +66,7 @@ public class HopeGuItem extends MortalGuItem {
     @Override
     protected int cooldownTicks(ItemStack stack) {return REFINE_DONE_COOLDOWN_TICKS;}
 
+    @SuppressWarnings("resource")
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack,
                           int remaining) {

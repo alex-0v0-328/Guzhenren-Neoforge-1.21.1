@@ -28,6 +28,7 @@ import org.slf4j.Logger;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 @Mod(Guzhenren.MOD_ID)
 public class Guzhenren {
 

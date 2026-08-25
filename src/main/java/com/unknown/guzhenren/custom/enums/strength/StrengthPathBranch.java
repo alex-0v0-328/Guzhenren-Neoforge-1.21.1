@@ -14,10 +14,11 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see HumanStrength
  * @see BeastStrength
+ * @since 1.0.0
  */
+
 public enum StrengthPathBranch implements StringRepresentable, EnumTranslatable {
 
     BEAST_STRENGTH_PHANTOM,

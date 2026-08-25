@@ -26,9 +26,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.gu.TendedGuItem
+ * @since 1.0.0
  */
+
 public class PrimevalElderGuItem extends TendedGuItem {
 
     private static final String FAILED_EMPTY = "guzhenren.item.failed.elder_gu_empty";
@@ -156,13 +157,13 @@ public class PrimevalElderGuItem extends TendedGuItem {
     }
 
     public int drawStones(ItemStack stack, int wanted) {
-        int taken = (int) Math.min(Math.max(0, wanted), stored(stack));
+        int taken = (int) Math.clamp(wanted, 0, stored(stack));
         if (taken > 0) setStored(stack, stored(stack) - taken);
         return taken;
     }
 
     public int storeStones(ItemStack stack, int amount) {
-        int room = (int) Math.min(Math.max(0, amount), capacity - stored(stack));
+        int room = (int) Math.clamp(amount, 0, capacity - stored(stack));
         if (room > 0) setStored(stack, stored(stack) + room);
         return room;
     }

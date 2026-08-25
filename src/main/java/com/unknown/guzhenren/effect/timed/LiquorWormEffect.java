@@ -21,9 +21,10 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.aperture.EssenceService
+ * @since 1.0.0
  */
+
 public class LiquorWormEffect extends MobEffect {
 
     public LiquorWormEffect(MobEffectCategory category, int color) {

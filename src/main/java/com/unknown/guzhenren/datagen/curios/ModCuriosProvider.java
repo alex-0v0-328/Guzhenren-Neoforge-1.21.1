@@ -21,6 +21,7 @@ import top.theillusivec4.curios.api.CuriosDataProvider;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public class ModCuriosProvider extends CuriosDataProvider {
 
     public ModCuriosProvider(PackOutput output, ExistingFileHelper fileHelper,

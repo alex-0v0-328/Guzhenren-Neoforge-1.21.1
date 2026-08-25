@@ -9,8 +9,8 @@ import com.unknown.guzhenren.client.screen.PlayerInfoScreen;
 import com.unknown.guzhenren.client.screen.RefinementScreen;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.network.CrashStepPayload;
-import com.unknown.guzhenren.registry.ModEntityTypes;
 import com.unknown.guzhenren.registry.ModEffects;
+import com.unknown.guzhenren.registry.ModEntityTypes;
 import com.unknown.guzhenren.registry.ModMenus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -42,9 +42,10 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.client.ModKeyMappings
+ * @since 1.0.0
  */
+
 @EventBusSubscriber(modid = Guzhenren.MOD_ID, value = Dist.CLIENT)
 public final class ClientEvents {
 

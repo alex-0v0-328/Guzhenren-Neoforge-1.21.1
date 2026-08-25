@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
  * Every reply a command sends, in one voice: plain for data, green for what changed, red for what did not.
  *
  * <p>The sole channel for command output. Color carries exactly one meaning -- the category of the
- * reply -- and never encodes a domain, a rank, or a severity. A red line still goes out through
+ * reply -- and never encodes a domain, a rank [转数], or a severity. A red line still goes out through
  * {@code sendSuccess}, never {@code sendFailure}, because a partial refusal is a result, not a
  * failure, and {@code sendFailure} drops the {@code [GZR]} tag.
  *
@@ -17,9 +17,10 @@ import net.minecraft.network.chat.Component;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.command.ModCommandSupport
+ * @since 1.0.0
  */
+
 public final class ModCommandFeedback {
 
     private ModCommandFeedback() {}

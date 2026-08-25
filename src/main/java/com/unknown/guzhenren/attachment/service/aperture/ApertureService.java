@@ -27,10 +27,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The only writer of the Aperture [空窍] attachment: awakening [开窍], rank, stage, talent and paths.
+ * The only writer of the Aperture [空窍] attachment: awakening [开窍], rank [转数], stage [阶段], talent
+ * [资质] and paths [流派].
  *
  * <p>Static service over the {@code aperture_data} attachment; reads take {@link Player}, writes take
  * {@link ServerPlayer}. Most writes route through {@code store}, which also fires
@@ -49,10 +51,11 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see ApertureData
  * @see EssenceService
+ * @since 1.0.0
  */
+
 public final class ApertureService {
 
     private ApertureService() {}
@@ -68,7 +71,7 @@ public final class ApertureService {
         return paths == 0 ? 0L : TALENT_MARK_TOTAL / paths;
     }
 
-    public static void syncTalentMarks(ServerPlayer player) {
+    public static void syncTalentMarks(@NotNull ServerPlayer player) {
         ExtremePhysique physique = aperture(player).extremePhysique();
         long expected = talentMarksPerPath(physique);
         for (GuPath path : physique.getTalentPaths()) {
@@ -78,37 +81,39 @@ public final class ApertureService {
         }
     }
 
-    public static ApertureData get(Player p) {return p.getData(ModAttachments.APERTURE);}
-    public static Aperture aperture(Player p) {return get(p).primary();}
-    public static Aperture aperture(Player p, int i) {return get(p).get(i);}
-    public static boolean isAwakened(Player p) {return get(p).isAwakened();}
-    public static Talent talent(Player p) {return aperture(p).talent();}
-    public static Rank rank(Player p) {return aperture(p).rank();}
-    public static Stage stage(Player p) {return aperture(p).stage();}
+    public static @NotNull ApertureData get(@NotNull Player p) {return p.getData(ModAttachments.APERTURE);}
+    public static @NotNull Aperture aperture(@NotNull Player p) {return get(p).primary();}
+    public static @NotNull Aperture aperture(@NotNull Player p, int i) {return get(p).get(i);}
+    public static boolean isAwakened(@NotNull Player p) {return get(p).isAwakened();}
+    public static @NotNull Talent talent(@NotNull Player p) {return aperture(p).talent();}
+    public static @NotNull Rank rank(@NotNull Player p) {return aperture(p).rank();}
+    public static @NotNull Stage stage(@NotNull Player p) {return aperture(p).stage();}
 
-    public static void setRank(ServerPlayer p, Rank v) {set(p, PRIMARY, aperture(p).withRank(v));}
-    public static void setStage(ServerPlayer p, Stage v) {set(p, PRIMARY, aperture(p).withStage(v));}
-    public static void addBaseEssence(ServerPlayer p, int d) {setBaseEssence(p, aperture(p).baseEssence() + d);}
+    public static void setRank(@NotNull ServerPlayer p, @NotNull Rank v) {set(p, PRIMARY, aperture(p).withRank(v));}
+    public static void setStage(@NotNull ServerPlayer p, @NotNull Stage v) {set(p, PRIMARY, aperture(p).withStage(v));}
+    public static void addBaseEssence(@NotNull ServerPlayer p, int d) {setBaseEssence(p, aperture(p).baseEssence() + d);}
 
-    public static void setTalent(ServerPlayer p, Talent v) {setBaseEssence(p, Talent.randomPercent(v));}
+    public static void setTalent(@NotNull ServerPlayer p, @NotNull Talent v) {
+        setBaseEssence(p, Talent.randomPercent(v));
+    }
 
-    public static void setPrimaryPath(ServerPlayer p, int index, @Nullable GuPath v) {
+    public static void setPrimaryPath(@NotNull ServerPlayer p, int index, @Nullable GuPath v) {
         Aperture aperture = aperture(p, index);
         if (aperture.primaryPath() == v) return;
         set(p, index, aperture.withPrimaryPath(v));
     }
 
-    public static void setSecondaryPath(ServerPlayer p, int index, @Nullable GuPath v) {
+    public static void setSecondaryPath(@NotNull ServerPlayer p, int index, @Nullable GuPath v) {
         Aperture aperture = aperture(p, index);
         if (aperture.secondaryPath() == v) return;
         set(p, index, aperture.withSecondaryPath(v));
     }
 
-    public static void shiftRank(ServerPlayer p, int d) {setRank(p, aperture(p).rank().shift(d));}
-    public static void shiftStage(ServerPlayer p, int d) {setStage(p, aperture(p).stage().shift(d));}
-    public static void shiftTalent(ServerPlayer p, int d) {setTalent(p, aperture(p).talent().shift(d));}
+    public static void shiftRank(@NotNull ServerPlayer p, int d) {setRank(p, aperture(p).rank().shift(d));}
+    public static void shiftStage(@NotNull ServerPlayer p, int d) {setStage(p, aperture(p).stage().shift(d));}
+    public static void shiftTalent(@NotNull ServerPlayer p, int d) {setTalent(p, aperture(p).talent().shift(d));}
 
-    public static void setPressure(ServerPlayer player, int index, int value) {
+    public static void setPressure(@NotNull ServerPlayer player, int index, int value) {
         Aperture current = aperture(player, index);
         if (!current.isExtreme()) return;
         long deadline = value == Aperture.PRESSURE_COUNTDOWN_START ? current.pressureDeadlineTick() : 0L;
@@ -119,13 +124,13 @@ public final class ApertureService {
         setPressureState(player, index, value, deadline);
     }
 
-    public static void relievePressure(ServerPlayer player, int amount) {
+    public static void relievePressure(@NotNull ServerPlayer player, int amount) {
         Aperture current = aperture(player, PRIMARY);
         if (!current.isExtreme()) return;
         setPressure(player, PRIMARY, Math.max(0, current.pressure() - amount));
     }
 
-    public static void tickPressure(ServerPlayer player) {
+    public static void tickPressure(@NotNull ServerPlayer player) {
         Aperture aperture = aperture(player, PRIMARY);
         if (!aperture.isExtreme() || aperture.pressure() >= Aperture.MAX_PRESSURE) return;
 
@@ -148,19 +153,19 @@ public final class ApertureService {
         if (player.level().getGameTime() >= deadline) setPressure(player, PRIMARY, Aperture.MAX_PRESSURE);
     }
 
-    public static boolean pressureFull(Player player) {
+    public static boolean pressureFull(@NotNull Player player) {
         Aperture aperture = aperture(player, PRIMARY);
         return aperture.isExtreme() && aperture.pressure() >= Aperture.MAX_PRESSURE;
     }
 
-    public static long pressureRemainingTicks(Player player) {
+    public static long pressureRemainingTicks(@NotNull Player player) {
         Aperture aperture = aperture(player, PRIMARY);
         if (!aperture.isExtreme() || aperture.pressure() != Aperture.PRESSURE_COUNTDOWN_START
                 || aperture.pressureDeadlineTick() <= 0L) return 0L;
         return Math.max(0L, aperture.pressureDeadlineTick() - player.level().getGameTime());
     }
 
-    public static void detonatePressure(ServerPlayer player) {
+    public static void detonatePressure(@NotNull ServerPlayer player) {
         Aperture aperture = aperture(player);
         int radius = pressureExplosionRadius(aperture.rank());
         double x = player.getX();
@@ -168,14 +173,13 @@ public final class ApertureService {
         double z = player.getZ();
         setPressure(player, PRIMARY, 0);
         DamageSource source = ModDamageTypes.source(player, ModDamageTypes.APERTURE_PRESSURE_EXPLOSION);
-        Level level = player.level();
-        level.explode(null, source, null, x, y, z, 0.0F, false, Level.ExplosionInteraction.NONE);
-        clearPressureSphere(level, x, y, z, radius, floorBlock(aperture.extremePhysique()));
+        player.level().explode(null, source, null, x, y, z, 0.0F, false, Level.ExplosionInteraction.NONE);
+        clearPressureSphere(player.level(), x, y, z, radius, floorBlock(aperture.extremePhysique()));
 
         DamageSource disaster = ModDamageTypes.source(player, ModDamageTypes.TEN_EXTREME_DISASTER);
         double radiusSquared = radius * (double) radius;
         AABB bounds = new AABB(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius);
-        for (Entity entity : level.getEntities(player, bounds, Entity::isAlive)) {
+        for (Entity entity : player.level().getEntities(player, bounds, Entity::isAlive)) {
             if (entity.distanceToSqr(x, y, z) <= radiusSquared) entity.hurt(disaster, 10_000.0F);
         }
         if (!player.isDeadOrDying()) player.hurt(source, Float.MAX_VALUE);
@@ -185,6 +189,7 @@ public final class ApertureService {
         return 16 * Math.clamp(rank.ordinal(), Rank.LOWEST.ordinal(), Rank.HIGHEST.ordinal());
     }
 
+    @SuppressWarnings("resource")
     private static void clearPressureSphere(Level level, double x, double y, double z, int radius,
                                             @Nullable Block floorBlock) {
         int minX = Mth.floor(x - radius);
@@ -200,7 +205,8 @@ public final class ApertureService {
             double dy = pos.getY() + 0.5D - y;
             double dz = pos.getZ() + 0.5D - z;
             if (dx * dx + dy * dy + dz * dz > radiusSquared) continue;
-            if (!level.getBlockState(pos).isAir()) level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            if (!level.getBlockState(pos).isAir())
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         }
 
         if (floorBlock == null) return;
@@ -235,11 +241,11 @@ public final class ApertureService {
         player.setData(ModAttachments.APERTURE, get(player).with(index, current.withPressureAndDeadline(value, deadline)));
     }
 
-    public static void setBaseEssence(ServerPlayer p, int v) {
+    public static void setBaseEssence(@NotNull ServerPlayer p, int v) {
         set(p, PRIMARY, aperture(p).withBaseEssence(Math.clamp(v, Aperture.MIN_BASE, Aperture.MAX_BASE)));
     }
 
-    public static void setExtremePhysique(ServerPlayer player, ExtremePhysique physique) {
+    public static void setExtremePhysique(@NotNull ServerPlayer player, @NotNull ExtremePhysique physique) {
         Aperture aperture = aperture(player);
 
         if (physique == ExtremePhysique.NONE) {
@@ -254,9 +260,9 @@ public final class ApertureService {
         set(player, PRIMARY, aperture);
     }
 
-    public static void awaken(ServerPlayer player) {open(player, Aperture.opened());}
+    public static void awaken(@NotNull ServerPlayer player) {open(player, Aperture.opened());}
 
-    public static void awaken(ServerPlayer player, int baseEssence) {
+    public static void awaken(@NotNull ServerPlayer player, int baseEssence) {
         open(player, Aperture.openedAt(baseEssence));
     }
 
@@ -266,7 +272,7 @@ public final class ApertureService {
         reconcileTalentPaths(player, before, aperture(player).extremePhysique());
     }
 
-    public static void set(ServerPlayer player, int index, Aperture aperture) {
+    public static void set(@NotNull ServerPlayer player, int index, @NotNull Aperture aperture) {
         ExtremePhysique before = index == PRIMARY ? aperture(player).extremePhysique() : null;
         store(player, get(player).with(index, enforce(aperture)));
         if (index == PRIMARY) reconcileTalentPaths(player, before, aperture(player).extremePhysique());

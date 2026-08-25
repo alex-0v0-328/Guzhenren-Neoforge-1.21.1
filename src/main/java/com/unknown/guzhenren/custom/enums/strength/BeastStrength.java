@@ -17,14 +17,15 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see MarkTag
+ * @since 1.0.0
  */
+
 public enum BeastStrength implements StringRepresentable, EnumTranslatable {
 
     WHITE_BOAR(BeastStrengthFamily.BOAR, 1, 3.0D),
     BLACK_BOAR(BeastStrengthFamily.BOAR, 1, 3.0D),
-    BEAR      (BeastStrengthFamily.BEAR, 1, 4.0D);
+    BEAR(BeastStrengthFamily.BEAR, 1, 4.0D);
 
     public static final Codec<BeastStrength> CODEC = StringRepresentable.fromEnum(BeastStrength::values);
     private static final String KEY_PREFIX = "guzhenren.enum.strength.beast_strength.";

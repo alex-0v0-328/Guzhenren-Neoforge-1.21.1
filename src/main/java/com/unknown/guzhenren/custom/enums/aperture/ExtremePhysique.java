@@ -21,23 +21,24 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see GuPath
+ * @since 1.0.0
  */
+
 public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
 
-    NONE                              (100,   0),
-    VERDANT_GREAT_SUN                 (100,  50, GuPath.SPACE),
-    DESOLATE_ANCIENT_MOON             (100,  50, GuPath.TIME),
-    NORTHERN_DARK_ICE_SOUL            (100,  50, GuPath.ICE_SNOW, GuPath.SOUL),
-    BOUNDLESS_FOREST_SAMSARA          (100,  50, GuPath.WOOD),
-    BLAZING_GLORY_LIGHTNING_BRILLIANCE(100,  50, GuPath.FIRE, GuPath.LIGHTNING),
-    MYRIAD_GOLD_WONDROUS_ESSENCE      (100,  50, GuPath.METAL),
-    GREAT_STRENGTH_TRUE_MARTIAL       (300, 150, GuPath.STRENGTH),
-    CAREFREE_WISDOM_HEART             (100,  50, GuPath.WISDOM),
-    PROFOUND_EARTH_ORIGIN             (100,  50, GuPath.EARTH),
-    UNIVERSE_GREAT_DERIVATION         (100,  50, GuPath.RULE),
-    PURE_DREAM_REALITY_SEEKER         (100,  50, GuPath.DREAM);
+    NONE(100, 0),
+    VERDANT_GREAT_SUN(100, 50, GuPath.SPACE),
+    DESOLATE_ANCIENT_MOON(100, 50, GuPath.TIME),
+    NORTHERN_DARK_ICE_SOUL(100, 50, GuPath.ICE_SNOW, GuPath.SOUL),
+    BOUNDLESS_FOREST_SAMSARA(100, 50, GuPath.WOOD),
+    BLAZING_GLORY_LIGHTNING_BRILLIANCE(100, 50, GuPath.FIRE, GuPath.LIGHTNING),
+    MYRIAD_GOLD_WONDROUS_ESSENCE(100, 50, GuPath.METAL),
+    GREAT_STRENGTH_TRUE_MARTIAL(300, 150, GuPath.STRENGTH),
+    CAREFREE_WISDOM_HEART(100, 50, GuPath.WISDOM),
+    PROFOUND_EARTH_ORIGIN(100, 50, GuPath.EARTH),
+    UNIVERSE_GREAT_DERIVATION(100, 50, GuPath.RULE),
+    PURE_DREAM_REALITY_SEEKER(100, 50, GuPath.DREAM);
 
     public static final Codec<ExtremePhysique> CODEC = StringRepresentable.fromEnum(ExtremePhysique::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.extreme_physique.";

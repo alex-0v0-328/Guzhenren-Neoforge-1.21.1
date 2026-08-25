@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
  * <p>Extends {@link com.unknown.guzhenren.item.material.qi.QiMaterialItem}. The apply overrides the
  * base to route the amount into {@link com.unknown.guzhenren.attachment.service.body.QiService} against
  * Death Qi first; only the excess reaches the Life Qi pool. When Death Qi clears to zero the lifespan
- * refund is handled by
+ * [寿元] refund is handled by
  * {@link com.unknown.guzhenren.attachment.service.body.BodyService#refundDeathQiDebt}.
  *
  * <p>⚠ Only clearing that debt outright refunds any of the burnt lifespan [寿元]; paying it partway
@@ -22,9 +22,10 @@ import net.minecraft.world.item.ItemStack;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.material.qi.QiMaterialItem
+ * @since 1.0.0
  */
+
 public class LifeQiItem extends QiMaterialItem {
 
     private static final String CURED = "guzhenren.item.death_qi_cured";

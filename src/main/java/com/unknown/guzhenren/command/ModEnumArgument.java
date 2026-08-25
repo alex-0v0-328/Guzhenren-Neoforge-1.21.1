@@ -27,9 +27,10 @@ import net.minecraft.util.StringRepresentable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.command.ModCommand
+ * @since 1.0.0
  */
+
 public final class ModEnumArgument {
 
     private ModEnumArgument() {}

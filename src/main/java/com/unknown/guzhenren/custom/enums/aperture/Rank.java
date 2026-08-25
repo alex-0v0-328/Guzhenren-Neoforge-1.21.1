@@ -19,22 +19,23 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see Title
+ * @since 1.0.0
  */
+
 public enum Rank implements StringRepresentable, EnumTranslatable {
 
-    NONE (      0L,  20, EssenceColor.NONE),
-    ONE  (      1L,  20, EssenceColor.GREEN_COPPER),
-    TWO  (     10L,  40, EssenceColor.RED_STEEL),
-    THREE(    100L,  60, EssenceColor.WHITE_SILVER),
-    FOUR (  1_000L,  80, EssenceColor.YELLOW_GOLDEN),
-    FIVE ( 10_000L, 100, EssenceColor.PURPLE_CRYSTAL),
+    NONE(0L, 20, EssenceColor.NONE),
+    ONE(1L, 20, EssenceColor.GREEN_COPPER),
+    TWO(10L, 40, EssenceColor.RED_STEEL),
+    THREE(100L, 60, EssenceColor.WHITE_SILVER),
+    FOUR(1_000L, 80, EssenceColor.YELLOW_GOLDEN),
+    FIVE(10_000L, 100, EssenceColor.PURPLE_CRYSTAL),
 
-    SIX  (      0L,   0, EssenceColor.GREEN_GRAPE),
-    SEVEN(      0L,   0, EssenceColor.RED_DATE),
-    EIGHT(      0L,   0, EssenceColor.WHITE_LITCHI),
-    NINE (      0L,   0, EssenceColor.YELLOW_APRICOT);
+    SIX(0L, 0, EssenceColor.GREEN_GRAPE),
+    SEVEN(0L, 0, EssenceColor.RED_DATE),
+    EIGHT(0L, 0, EssenceColor.WHITE_LITCHI),
+    NINE(0L, 0, EssenceColor.YELLOW_APRICOT);
 
     public static final Codec<Rank> CODEC = StringRepresentable.fromEnum(Rank::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.rank.";

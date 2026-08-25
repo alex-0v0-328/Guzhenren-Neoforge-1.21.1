@@ -39,9 +39,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.menu.RefinementMenu
+ * @since 1.0.0
  */
+
 public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
 
     private static final int SLOT = RefinementMenu.SLOT;
@@ -244,7 +245,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
             int seconds = (menu.phaseLeft() + 19) / 20;
             return menu.inWindow()
                     ? Component.translatable(WINDOW_KEY, shown, menu.stages(), seconds,
-                            menu.stonesIn(), menu.stonesNeeded())
+                    menu.stonesIn(), menu.stonesNeeded())
                     : Component.translatable(GAP_KEY, shown, menu.stages());
         }
         GuRecipe recipe = selectedRecipe();
@@ -495,6 +496,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     //region the 蛊方 a player may attempt -- the client holds the whole synced table, so it needs no packet
     private @Nullable List<RecipeHolder<GuRecipe>> knownCache;
 
+    @SuppressWarnings("resource")
     private List<RecipeHolder<GuRecipe>> known() {
         if (knownCache == null) {
             ClientLevel level = Minecraft.getInstance().level;

@@ -18,10 +18,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see ApertureStorageMenu
  * @see RefinementMenu
+ * @since 1.0.0
  */
+
 public final class ModMenus {
 
     private ModMenus() {}

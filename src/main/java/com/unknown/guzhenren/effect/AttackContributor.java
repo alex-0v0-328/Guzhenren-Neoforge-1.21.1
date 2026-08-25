@@ -13,9 +13,10 @@ package com.unknown.guzhenren.effect;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.body.AttackService
+ * @since 1.0.0
  */
+
 public interface AttackContributor {
 
     double attackBonus(int amplifier);

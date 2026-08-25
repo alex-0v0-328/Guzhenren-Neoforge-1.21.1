@@ -16,9 +16,10 @@ import net.minecraft.world.effect.MobEffectCategory;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.body.BodyService
+ * @since 1.0.0
  */
+
 public class HalfZombieEffect extends MobEffect {
 
     public HalfZombieEffect(MobEffectCategory category, int color) {

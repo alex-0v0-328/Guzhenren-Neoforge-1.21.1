@@ -9,7 +9,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
 
 /**
  * Strength Qi [力气] effect — a pool projection of the 力气 held in {@link
- * com.unknown.guzhenren.attachment.data.qi.QiData}, which adds attack damage while held.
+ * com.unknown.guzhenren.attachment.data.body.QiData}, which adds attack damage while held.
  *
  * <p>Pool effects are rebuilt every heartbeat by {@code QiService.syncEffects}, so milk cannot cure
  * them. It contributes through {@link com.unknown.guzhenren.effect.AttackContributor} rather than
@@ -21,9 +21,10 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.effect.AttackContributor
+ * @since 1.0.0
  */
+
 public class StrengthQiEffect extends MobEffect implements AttackContributor {
 
     private static final double[] ATTACK_BONUS = {0.25, 1.0, 4.0, 16.0, 64.0};

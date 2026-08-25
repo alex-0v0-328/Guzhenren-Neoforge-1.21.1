@@ -1,11 +1,9 @@
 package com.unknown.guzhenren.registry;
 
-import static com.unknown.guzhenren.custom.enums.path.GuPath.STRENGTH;
-
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
-import com.unknown.guzhenren.item.material.GuMaterialItem;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
+import com.unknown.guzhenren.item.material.GuMaterialItem;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
@@ -16,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import static com.unknown.guzhenren.custom.enums.path.GuPath.STRENGTH;
 
 /**
  * The creative tabs, filled by dispatching on the item's class and path.
@@ -30,9 +29,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see ModItems
+ * @since 1.0.0
  */
+
 public final class ModCreativeTabs {
 
     private ModCreativeTabs() {}

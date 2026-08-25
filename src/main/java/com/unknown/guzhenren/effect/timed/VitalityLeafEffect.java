@@ -18,6 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public class VitalityLeafEffect extends MobEffect {
 
     public static final int DURATION_TICKS = 640;

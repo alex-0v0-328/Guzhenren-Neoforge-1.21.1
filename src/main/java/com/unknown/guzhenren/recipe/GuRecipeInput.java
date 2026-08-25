@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * What the refinement [炼蛊] grid is holding, in the shape the recipe manager wants to see it.
@@ -15,9 +16,10 @@ import net.minecraft.world.item.crafting.RecipeInput;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.recipe.GuRecipe
+ * @since 1.0.0
  */
+
 public record GuRecipeInput(List<ItemStack> slots) implements RecipeInput {
 
     public static GuRecipeInput of(Container container) {
@@ -27,7 +29,7 @@ public record GuRecipeInput(List<ItemStack> slots) implements RecipeInput {
     }
 
     @Override
-    public ItemStack getItem(int index) {return slots.get(index);}
+    public @NotNull ItemStack getItem(int index) {return slots.get(index);}
     @Override
     public int size() {return slots.size();}
 }

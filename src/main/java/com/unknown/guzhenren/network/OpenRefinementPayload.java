@@ -4,7 +4,6 @@ import com.unknown.guzhenren.Guzhenren;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,9 +16,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.network.ModPayloads
+ * @since 1.0.0
  */
+
 public record OpenRefinementPayload() implements CustomPacketPayload {
 
     public static final OpenRefinementPayload INSTANCE = new OpenRefinementPayload();

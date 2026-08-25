@@ -24,6 +24,7 @@ import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 @EventBusSubscriber(modid = Guzhenren.MOD_ID, value = Dist.CLIENT)
 public final class NourishClientEvents {
 

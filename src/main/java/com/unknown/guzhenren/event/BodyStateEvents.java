@@ -25,9 +25,10 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.body.AttackService
+ * @since 1.0.0
  */
+
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class BodyStateEvents {
 

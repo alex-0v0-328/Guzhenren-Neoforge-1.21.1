@@ -33,6 +33,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class DataGenerators {
     private DataGenerators() {}

@@ -23,16 +23,18 @@ import net.minecraft.world.level.Level;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.entity.FlyingGuEntity
+ * @since 1.0.0
  */
+
 public class HopeGuEntity extends FlyingGuEntity {
 
-    private static final int  FADE_TICKS  = Ticks.MINUTE;
+    private static final int FADE_TICKS = Ticks.MINUTE;
     private static final long NOT_SIGHTED = -1L;
 
     private long fadeAtTick = NOT_SIGHTED;
 
+    @SuppressWarnings("resource")
     public HopeGuEntity(EntityType<? extends HopeGuEntity> type, Level level,
                         Supplier<Item> caughtGu, ParticleOptions motes) {
         super(type, level, caughtGu, motes);

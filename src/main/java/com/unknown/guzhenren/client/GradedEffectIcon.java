@@ -16,11 +16,13 @@ import net.minecraft.world.effect.MobEffectInstance;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.client.EffectIconLayout
  * @see com.unknown.guzhenren.client.ItemEffectIcon
+ * @since 1.0.0
  */
-public record GradedEffectIcon(String name, String directory, int lowestRank, int highestRank) implements EffectIconLayout {
+
+public record GradedEffectIcon(String name, String directory, int lowestRank,
+                               int highestRank) implements EffectIconLayout {
 
     public static GradedEffectIcon mobEffect(String name, int lowestRank, int highestRank) {
         return new GradedEffectIcon(name, "mob_effect", lowestRank, highestRank);

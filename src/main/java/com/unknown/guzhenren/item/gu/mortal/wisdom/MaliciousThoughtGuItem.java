@@ -10,7 +10,6 @@ import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -29,9 +28,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.gu.ConsumedGuItem
+ * @since 1.0.0
  */
+
 public class MaliciousThoughtGuItem extends ConsumedGuItem {
 
     private final Holder<MobEffect> effect;

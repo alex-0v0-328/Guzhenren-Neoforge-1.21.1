@@ -33,9 +33,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.recipe.GuRecipe
+ * @since 1.0.0
  */
+
 public class ModRecipeProvider extends RecipeProvider {
 
     private static final String FOLDER = "refinement/";
@@ -50,10 +51,10 @@ public class ModRecipeProvider extends RecipeProvider {
     protected void buildRecipes(@NotNull RecipeOutput output) {
         refinement(output, ModItems.FOUR_FLAVORS_LIQUOR_WORM, 1L, 1L, 50, List.of(16, 16, 16, 16),
                 Map.of('s', SizedIngredient.of(ModItems.SOUR_LIQUOR.get(), 1),
-                       'b', SizedIngredient.of(ModItems.BITTER_LIQUOR.get(), 1),
-                       'h', SizedIngredient.of(ModItems.SPICY_LIQUOR.get(), 1),
-                       'w', SizedIngredient.of(ModItems.SWEET_LIQUOR.get(), 1),
-                       'g', SizedIngredient.of(ModItems.LIQUOR_WORM.get(), 1)),
+                        'b', SizedIngredient.of(ModItems.BITTER_LIQUOR.get(), 1),
+                        'h', SizedIngredient.of(ModItems.SPICY_LIQUOR.get(), 1),
+                        'w', SizedIngredient.of(ModItems.SWEET_LIQUOR.get(), 1),
+                        'g', SizedIngredient.of(ModItems.LIQUOR_WORM.get(), 1)),
                 " .s. ",
                 ".....",
                 "bg.gh",
@@ -62,8 +63,8 @@ public class ModRecipeProvider extends RecipeProvider {
 
         refinement(output, ModItems.ALL_OUT_EFFORT_GU_4, 100L, 3L, 30, List.of(64, 64, 64, 64),
                 Map.of('I', SizedIngredient.of(Items.IRON_BLOCK, 4),
-                       'B', SizedIngredient.of(Items.GOLD_BLOCK, 2),
-                       'A', SizedIngredient.of(ModItems.ALL_OUT_EFFORT_GU_3.get(), 1)),
+                        'B', SizedIngredient.of(Items.GOLD_BLOCK, 2),
+                        'A', SizedIngredient.of(ModItems.ALL_OUT_EFFORT_GU_3.get(), 1)),
                 " .I. ",
                 "B...B",
                 "I.A.I",

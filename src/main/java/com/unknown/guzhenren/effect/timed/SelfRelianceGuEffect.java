@@ -8,6 +8,19 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
+/**
+ * Self-Reliance Gu [自力更生蛊] effect: a slow self-heal that only mends what sits below its grade's limit.
+ *
+ * <p>One pulse per second, healing {@code grade + 1} HP up to a limit between half and seventy
+ * percent of max health by grade. The item also drives itself at the brink -- see
+ * {@link com.unknown.guzhenren.item.gu.mortal.strength.SelfRelianceGuItem#tryAutoUse}.
+ *
+ * @author Alex
+ * @version 1.0.0
+ * @see com.unknown.guzhenren.item.gu.mortal.strength.SelfRelianceGuItem
+ * @since 1.0.0
+ */
+
 public final class SelfRelianceGuEffect extends MobEffect {
 
     public SelfRelianceGuEffect(MobEffectCategory category, int color) {

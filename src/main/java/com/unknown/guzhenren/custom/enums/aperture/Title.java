@@ -6,7 +6,7 @@ import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Title [称号], derived from the rank and never stored.
+ * Title [称号], derived from the rank [转数] and never stored.
  *
  * <p>Closed vocabulary enum: the only place the mortal-versus-immortal distinction still lives today.
  * {@code fromRank} maps {@code NONE} -> {@code MORTAL}, {@code ONE..FIVE} -> {@code GU_MASTER},
@@ -17,9 +17,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see Rank
+ * @since 1.0.0
  */
+
 public enum Title implements StringRepresentable, EnumTranslatable {
 
     MORTAL,

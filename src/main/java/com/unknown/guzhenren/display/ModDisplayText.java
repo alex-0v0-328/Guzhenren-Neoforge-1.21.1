@@ -13,7 +13,6 @@ import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
 import java.util.Locale;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -28,9 +27,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see InfoModel
+ * @since 1.0.0
  */
+
 public final class ModDisplayText {
 
     private ModDisplayText() {}

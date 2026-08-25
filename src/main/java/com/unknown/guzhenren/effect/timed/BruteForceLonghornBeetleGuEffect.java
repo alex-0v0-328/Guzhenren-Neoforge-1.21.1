@@ -5,7 +5,6 @@ import com.unknown.guzhenren.effect.AttackContributor;
 import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -22,9 +21,10 @@ import net.minecraft.world.entity.LivingEntity;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.effect.AttackContributor
+ * @since 1.0.0
  */
+
 public class BruteForceLonghornBeetleGuEffect extends MobEffect implements AttackContributor {
 
     public static final int DURATION_TICKS = 30 * Ticks.SECOND;

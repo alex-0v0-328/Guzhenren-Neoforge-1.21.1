@@ -4,12 +4,12 @@ import com.unknown.guzhenren.client.GradedEffectIcon;
 import java.util.function.Consumer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
  * Life Qi [生气] effect — a pool projection of the 生气 held in {@link
- * com.unknown.guzhenren.attachment.data.qi.QiData}, which heals the holder periodically.
+ * com.unknown.guzhenren.attachment.data.body.QiData}, which heals the holder periodically.
  *
  * <p>Pool effects are rebuilt every heartbeat by {@code QiService.syncEffects}, so milk cannot cure
  * them — the pool is the truth. The heal runs on vanilla's own {@code applyEffectTick} cadence
@@ -20,9 +20,10 @@ import net.minecraft.world.entity.LivingEntity;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.body.QiService
+ * @since 1.0.0
  */
+
 public class LifeQiEffect extends MobEffect {
 
     public static final int HEAL_INTERVAL_TICKS = 10;

@@ -20,28 +20,31 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see GuPath
+ * @since 1.0.0
  */
+
 public enum Race implements StringRepresentable, EnumTranslatable {
 
-    HUMAN       (null),
+    HUMAN(null),
 
-    HAIRY_MEN   (GuPath.REFINEMENT),
-    EGGMEN      (GuPath.SPACE),
-    ROCKMEN     (GuPath.EARTH),
-    FEATHERMEN  (GuPath.CLOUD),
-    INKMEN      (GuPath.INFORMATION),
-    MINIMEN     (GuPath.WOOD),
-    MERMEN      (GuPath.WATER),
-    BEASTMEN    (GuPath.TRANSFORMATION),
-    DRAGONMEN   (GuPath.ENSLAVEMENT),
-    MUSHROOMMEN (GuPath.POISON),
-    SNOWMEN     (GuPath.ICE_SNOW);
+    HAIRY_MEN(GuPath.REFINEMENT),
+    EGGMEN(GuPath.SPACE),
+    ROCKMEN(GuPath.EARTH),
+    FEATHERMEN(GuPath.CLOUD),
+    INKMEN(GuPath.INFORMATION),
+    MINIMEN(GuPath.WOOD),
+    MERMEN(GuPath.WATER),
+    BEASTMEN(GuPath.TRANSFORMATION),
+    DRAGONMEN(GuPath.ENSLAVEMENT),
+    MUSHROOMMEN(GuPath.POISON),
+    SNOWMEN(GuPath.ICE_SNOW);
 
     public static final long TALENT_MARKS = 10L;
 
-    /** How far the race moves its path's attainment. ⚠ A SHIFT, so leaving the race can undo it exactly. */
+    /**
+     * How far the race moves its path's attainment. ⚠ A SHIFT, so leaving the race can undo it exactly.
+     */
     public static final int TALENT_SHIFT = 1;
 
     public static final Codec<Race> CODEC = StringRepresentable.fromEnum(Race::values);

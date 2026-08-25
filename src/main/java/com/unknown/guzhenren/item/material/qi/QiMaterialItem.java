@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  * Gu material [蛊材] that turns into Qi [气] over a charged press, paid for tick by tick.
  *
  * <p>Extends {@link com.unknown.guzhenren.item.material.GuMaterialItem}. The {@link QiKind} comes from
- * registration; essence cost scales with the rank tier and is spread evenly across the charge ladder
+ * registration; essence [真元] cost scales with the rank [转数] tier and is spread evenly across the charge ladder
  * (5/10/20 ticks via {@code useChargeByGap}). The apply delegates to
  * {@link com.unknown.guzhenren.attachment.service.body.QiService#add}.
  *
@@ -29,9 +29,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.material.GuMaterialItem
+ * @since 1.0.0
  */
+
 public class QiMaterialItem extends GuMaterialItem {
 
     private static final String CHARGE_CAPTION = "guzhenren.hud.refining_plain";
@@ -64,6 +65,7 @@ public class QiMaterialItem extends GuMaterialItem {
                 : null;
     }
 
+    @SuppressWarnings("resource")
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack,
                           int remaining) {

@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The shared class behind the human-strength ladder; the rank and the kind come from registration.
+ * The shared class behind the human-strength [人力] ladder; the rank [转数] and the kind come from registration.
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. Four rungs register against this one
  * class (斤 / 十斤 / 钧 / 十钧). The gate refuses a holder who has maxed out that kind; the apply
@@ -23,9 +23,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.gu.TendedGuItem
+ * @since 1.0.0
  */
+
 public class HumanStrengthGuItem extends TendedGuItem {
 
     private static final String FAILED_LAYERS_FULL = "guzhenren.item.failed.human_strength_full";

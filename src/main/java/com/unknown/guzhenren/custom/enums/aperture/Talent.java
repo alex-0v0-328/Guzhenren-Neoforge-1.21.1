@@ -22,15 +22,16 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public enum Talent implements StringRepresentable, EnumTranslatable {
 
     EXTREME(100, 100, 10, 20, 50),
-    FIRST  ( 80,  99, 20,  8, 20),
-    SECOND ( 60,  79, 30,  4, 20),
-    THIRD  ( 40,  59, 30,  2, 10),
-    FOURTH ( 20,  39, 10,  1, 10),
+    FIRST(80, 99, 20, 8, 20),
+    SECOND(60, 79, 30, 4, 20),
+    THIRD(40, 59, 30, 2, 10),
+    FOURTH(20, 39, 10, 1, 10),
 
-    NONE   (  0,   0,  0,  0,  0);
+    NONE(0, 0, 0, 0, 0);
 
     public static final Codec<Talent> CODEC = StringRepresentable.fromEnum(Talent::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.talent.";

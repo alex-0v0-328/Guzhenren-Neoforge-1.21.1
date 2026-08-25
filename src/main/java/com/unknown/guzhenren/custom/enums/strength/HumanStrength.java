@@ -17,14 +17,15 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see StrengthPathBranch
+ * @since 1.0.0
  */
+
 public enum HumanStrength implements StringRepresentable, EnumTranslatable {
 
-    JIN    (  1,  9),
-    TEN_JIN( 10,  9),
-    JUN    ( 30, 30),
+    JIN(1, 9),
+    TEN_JIN(10, 9),
+    JUN(30, 30),
     TEN_JUN(300, 30);
 
     public static final Codec<HumanStrength> CODEC = StringRepresentable.fromEnum(HumanStrength::values);

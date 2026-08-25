@@ -19,9 +19,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.gu.OneShotGuItem
+ * @since 1.0.0
  */
+
 public class RelicsGuItem extends OneShotGuItem {
 
     private static final String FAILED_RANK_MISMATCH = "guzhenren.item.failed.rank_mismatch";

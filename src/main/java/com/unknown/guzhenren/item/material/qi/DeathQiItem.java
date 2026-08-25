@@ -19,9 +19,10 @@ import net.minecraft.world.item.ItemStack;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.material.qi.QiMaterialItem
+ * @since 1.0.0
  */
+
 public class DeathQiItem extends QiMaterialItem {
 
     public DeathQiItem(Properties properties, Rank rank) {

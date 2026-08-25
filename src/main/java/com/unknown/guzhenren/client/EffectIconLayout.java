@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Shared layout for an effect icon drawn from a texture: slot centring, the HUD/inventory render hooks,
@@ -19,10 +20,11 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.client.GradedEffectIcon
  * @see com.unknown.guzhenren.client.ItemEffectIcon
+ * @since 1.0.0
  */
+
 interface EffectIconLayout extends IClientMobEffectExtensions {
 
     int ICON_SIZE = 16;
@@ -40,7 +42,7 @@ interface EffectIconLayout extends IClientMobEffectExtensions {
     }
 
     @Override
-    default boolean renderGuiIcon(MobEffectInstance instance, Gui gui, GuiGraphics graphics,
+    default boolean renderGuiIcon(@NotNull MobEffectInstance instance, @NotNull Gui gui, GuiGraphics graphics,
                                   int x, int y, float z, float alpha) {
         graphics.setColor(1.0F, 1.0F, 1.0F, alpha);
         draw(graphics, instance, x + HUD_SLOT_X + CENTRE_IN_SLOT, y + HUD_SLOT_Y + CENTRE_IN_SLOT);
@@ -49,8 +51,9 @@ interface EffectIconLayout extends IClientMobEffectExtensions {
     }
 
     @Override
-    default boolean renderInventoryIcon(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen,
-                                        GuiGraphics graphics, int x, int y, int blitOffset) {
+    default boolean renderInventoryIcon(@NotNull MobEffectInstance instance,
+                                        @NotNull EffectRenderingInventoryScreen<?> screen,
+                                        @NotNull GuiGraphics graphics, int x, int y, int blitOffset) {
         draw(graphics, instance, x + CENTRE_IN_SLOT, y + INVENTORY_SLOT_Y + CENTRE_IN_SLOT);
         return true;
     }

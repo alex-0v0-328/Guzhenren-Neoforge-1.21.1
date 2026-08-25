@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Max health as a transient {@link AttributeModifier} derived from rank.
@@ -25,10 +26,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see AttackService
  * @see ApertureService
+ * @since 1.0.0
  */
+
 public final class HealthService {
 
     private HealthService() {}
@@ -38,7 +40,7 @@ public final class HealthService {
     private static final ResourceLocation MODIFIER_ID =
             Guzhenren.id("rank_max_health");
 
-    public static void refresh(ServerPlayer player) {
+    public static void refresh(@NotNull ServerPlayer player) {
         AttributeInstance instance = player.getAttribute(Attributes.MAX_HEALTH);
         if (instance == null) return;
 

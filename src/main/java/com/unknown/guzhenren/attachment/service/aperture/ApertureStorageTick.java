@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The day-rollover walk over Gu held inside apertures, both the stored ones and each Vital Gu [本命蛊].
@@ -23,15 +24,16 @@ import net.minecraft.world.item.ItemStack;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see ApertureStorageService
  * @see TendedGuItem
+ * @since 1.0.0
  */
+
 public final class ApertureStorageTick {
 
     private ApertureStorageTick() {}
 
-    public static void tickStored(ServerPlayer player, long days) {
+    public static void tickStored(@NotNull ServerPlayer player, long days) {
         for (int aperture = 0; aperture < ApertureData.MAX_APERTURES; aperture++) {
             tickStore(player, aperture, days);
             tickVital(player, aperture, days);

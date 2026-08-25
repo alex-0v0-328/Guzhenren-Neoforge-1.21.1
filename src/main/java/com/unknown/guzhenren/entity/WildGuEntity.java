@@ -25,13 +25,15 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.entity.FlyingGuEntity
+ * @since 1.0.0
  */
+
 public abstract class WildGuEntity extends PathfinderMob {
 
     private final Supplier<Item> caughtGu;
 
+    @SuppressWarnings("resource")
     protected WildGuEntity(EntityType<? extends WildGuEntity> type, Level level, Supplier<Item> caughtGu) {
         super(type, level);
         this.caughtGu = caughtGu;

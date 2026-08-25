@@ -13,9 +13,10 @@ import net.neoforged.fml.common.Mod;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see Guzhenren
+ * @since 1.0.0
  */
+
 @Mod(value = Guzhenren.MOD_ID, dist = Dist.CLIENT)
 public class GuzhenrenClient {
 

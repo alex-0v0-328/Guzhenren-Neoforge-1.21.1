@@ -21,8 +21,8 @@ import com.unknown.guzhenren.effect.timed.VitalityLeafEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -41,6 +41,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public final class ModEffects {
 
     private ModEffects() {}
@@ -48,7 +49,7 @@ public final class ModEffects {
     public static final DeferredRegister<MobEffect> MOB_EFFECTS =
             DeferredRegister.create(Registries.MOB_EFFECT, Guzhenren.MOD_ID);
 
-    static final int EFFECT_COLOR                                 = 0xFFFFFF;
+    static final int EFFECT_COLOR = 0xFFFFFF;
 
     public static final DeferredHolder<MobEffect, VitalityLeafEffect> VITALITY_LEAF = MOB_EFFECTS.register(
             "vitality_leaf", () -> new VitalityLeafEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));

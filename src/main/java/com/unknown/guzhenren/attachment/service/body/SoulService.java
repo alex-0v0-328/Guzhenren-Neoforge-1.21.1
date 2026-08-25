@@ -5,6 +5,7 @@ import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The only writer of Soul [魂魄], the one pool whose bottom is lethal.
@@ -23,25 +24,26 @@ import net.minecraft.world.entity.player.Player;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see SoulData
+ * @since 1.0.0
  */
+
 public final class SoulService {
 
     private SoulService() {}
 
-    public static SoulData get(Player player) {return player.getData(ModAttachments.SOUL);}
-    public static SoulTier tier(Player player) {return get(player).tier();}
+    public static @NotNull SoulData get(@NotNull Player player) {return player.getData(ModAttachments.SOUL);}
+    public static @NotNull SoulTier tier(@NotNull Player player) {return get(player).tier();}
 
-    public static void setMax(ServerPlayer p, long v) {store(p, get(p).withMaxSoul(v));}
-    public static void addMax(ServerPlayer p, long delta) {setMax(p, get(p).maxSoul() + delta);}
-    public static void setCurrent(ServerPlayer p, long v) {store(p, get(p).withCurrentSoul(v));}
-    public static void addCurrent(ServerPlayer p, long delta) {setCurrent(p, get(p).currentSoul() + delta);}
-    public static void refill(ServerPlayer p) {store(p, get(p).refilled());}
-    public static void revive(ServerPlayer p) {store(p, get(p).revived());}
+    public static void setMax(@NotNull ServerPlayer p, long v) {store(p, get(p).withMaxSoul(v));}
+    public static void addMax(@NotNull ServerPlayer p, long delta) {setMax(p, get(p).maxSoul() + delta);}
+    public static void setCurrent(@NotNull ServerPlayer p, long v) {store(p, get(p).withCurrentSoul(v));}
+    public static void addCurrent(@NotNull ServerPlayer p, long delta) {setCurrent(p, get(p).currentSoul() + delta);}
+    public static void refill(@NotNull ServerPlayer p) {store(p, get(p).refilled());}
+    public static void revive(@NotNull ServerPlayer p) {store(p, get(p).revived());}
     private static void store(ServerPlayer p, SoulData data) {p.setData(ModAttachments.SOUL, data);}
 
-    public static boolean consume(ServerPlayer player, long amount) {
+    public static boolean consume(@NotNull ServerPlayer player, long amount) {
         if (amount <= 0L) return true;
         SoulData soul = get(player);
         if (soul.currentSoul() < amount) return false;

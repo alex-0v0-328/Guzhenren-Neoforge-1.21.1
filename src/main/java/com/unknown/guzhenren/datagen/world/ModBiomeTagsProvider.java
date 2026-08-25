@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public class ModBiomeTagsProvider extends TagsProvider<Biome> {
 
     public ModBiomeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,

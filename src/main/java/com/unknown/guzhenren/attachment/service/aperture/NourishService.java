@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Nourishing the Aperture [温养空窍] and striking its wall [冲击窍壁] -- the only way a rank rises.
@@ -31,10 +32,11 @@ import net.minecraft.world.phys.Vec3;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see ApertureService
  * @see TimeFlowService
+ * @since 1.0.0
  */
+
 public final class NourishService {
 
     private NourishService() {}
@@ -44,7 +46,9 @@ public final class NourishService {
     public static final int BASE_LOSS_MIN = 1;
     public static final int BASE_LOSS_MAX = 5;
 
-    /** One strike costs one and a half of a Ten-Extremes peak pool, so no pool can ever hold it. */
+    /**
+     * One strike costs one and a half of a Ten-Extremes peak pool, so no pool can ever hold it.
+     */
     public static final long IMPACT_COST_PER_RANK_BASE = 1_200L;
 
     private static final String STARVED = "guzhenren.nourish.starved";
@@ -55,18 +59,20 @@ public final class NourishService {
     private static final String IMPACT_DROP_STAGE = "guzhenren.impact.drop_stage";
     private static final String IMPACT_DROP_BASE = "guzhenren.impact.drop_base";
 
-    /** What one strike against the aperture wall did. */
+    /**
+     * What one strike against the aperture wall did.
+     */
     public enum Outcome {SUCCESS, HOLD, DROP_STAGE, DROP_BASE}
 
-    public static NourishData get(Player p) {return p.getData(ModAttachments.NOURISH);}
-    public static boolean isCultivating(Player p) {return get(p).cultivating();}
-    public static float fraction(Player p) {return get(p).fraction();}
+    public static @NotNull NourishData get(@NotNull Player p) {return p.getData(ModAttachments.NOURISH);}
+    public static boolean isCultivating(@NotNull Player p) {return get(p).cultivating();}
+    public static float fraction(@NotNull Player p) {return get(p).fraction();}
 
     //region what the screen asks
-    public static boolean canNourish(Player p) {
+    public static boolean canNourish(@NotNull Player p) {
         return ApertureService.isAwakened(p) && !isCultivating(p) && !atCeiling(p) && !get(p).isFull();
     }
-    public static boolean canImpact(Player p) {
+    public static boolean canImpact(@NotNull Player p) {
         Aperture a = ApertureService.aperture(p);
         return ApertureService.isAwakened(p) && !isCultivating(p) && get(p).isFull()
                 && a.stage() == Stage.HIGHEST && a.rank() != Rank.HIGHEST;
@@ -77,21 +83,21 @@ public final class NourishService {
     }
     //endregion
 
-    public static long costPerSecond(Player p) {
+    public static long costPerSecond(@NotNull Player p) {
         long max = EssenceService.maxEssence(p);
         return Math.max(1L, (max + COST_DIVISOR - 1) / COST_DIVISOR);
     }
-    public static long impactCost(Player p) {
+    public static long impactCost(@NotNull Player p) {
         return IMPACT_COST_PER_RANK_BASE * ApertureService.aperture(p).rank().getRankBase();
     }
-    public static boolean canAffordImpact(Player p) {return PrimevalStoneItem.canAfford(p, impactCost(p));}
+    public static boolean canAffordImpact(@NotNull Player p) {return PrimevalStoneItem.canAfford(p, impactCost(p));}
 
-    public static void start(ServerPlayer player) {
+    public static void start(@NotNull ServerPlayer player) {
         if (!canNourish(player)) return;
         store(player, get(player).withCultivating(true).withStarvedSince(NourishData.NOT_STARVED));
     }
 
-    public static void cancel(ServerPlayer player) {
+    public static void cancel(@NotNull ServerPlayer player) {
         NourishData data = get(player);
         if (!data.cultivating()) return;
         store(player, data.withCultivating(false).withStarvedSince(NourishData.NOT_STARVED));
@@ -102,7 +108,7 @@ public final class NourishService {
      * ⚠ A hastened clock bills MORE seconds per heartbeat, never a bigger second. Scaling the progress
      * and the price instead would round the round's length off the pool it is defined to cost.
      */
-    public static void tickNourish(ServerPlayer player) {
+    public static void tickNourish(@NotNull ServerPlayer player) {
         for (int second = TimeFlowService.steps(player); second > 0; second--) {
             if (!nourishSecond(player)) return;
         }
@@ -151,7 +157,7 @@ public final class NourishService {
     //endregion
 
     //region striking the wall
-    public static void impactWall(ServerPlayer player) {
+    public static void impactWall(@NotNull ServerPlayer player) {
         if (!canImpact(player)) return;
         Aperture a = ApertureService.aperture(player);
         long cost = impactCost(player);
@@ -188,7 +194,7 @@ public final class NourishService {
      * The seam the unit tests pin: a roll of {@code 0..99} against the two outcome tables.
      * ☠ The two tables split at different points, and only the Ten-Extremes one can never lose base.
      */
-    public static Outcome resolve(int roll, boolean extreme) {
+    public static @NotNull Outcome resolve(int roll, boolean extreme) {
         if (extreme) {
             if (roll < 60) return Outcome.SUCCESS;
             if (roll < 85) return Outcome.HOLD;

@@ -17,21 +17,22 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see GuPath
+ * @since 1.0.0
  */
+
 public enum GuAttainment implements StringRepresentable, EnumTranslatable {
 
-    NONE                     (0,   0),
-    ORDINARY                 (1,   2),
-    QUASI_MASTER             (2,   5),
-    MASTER                   (3,  10),
-    QUASI_GRANDMASTER        (4,  20),
-    GRANDMASTER              (5,  40),
-    QUASI_GREAT_GRANDMASTER  (6,  50),
-    GREAT_GRANDMASTER        (7,  70),
-    QUASI_SUPREME_GRANDMASTER(8,  80),
-    SUPREME_GRANDMASTER      (9, 100);
+    NONE(0, 0),
+    ORDINARY(1, 2),
+    QUASI_MASTER(2, 5),
+    MASTER(3, 10),
+    QUASI_GRANDMASTER(4, 20),
+    GRANDMASTER(5, 40),
+    QUASI_GREAT_GRANDMASTER(6, 50),
+    GREAT_GRANDMASTER(7, 70),
+    QUASI_SUPREME_GRANDMASTER(8, 80),
+    SUPREME_GRANDMASTER(9, 100);
 
     public static final Codec<GuAttainment> CODEC = StringRepresentable.fromEnum(GuAttainment::values);
     private static final String KEY_PREFIX = "guzhenren.enum.path.attainment.";

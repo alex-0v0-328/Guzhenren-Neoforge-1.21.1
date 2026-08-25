@@ -46,53 +46,105 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see ModDisplayText
+ * @since 1.0.0
  */
+
 public final class InfoModel {
 
     private InfoModel() {}
 
     public static final int INDENT = 10;
 
-    public record Row(int indent, Entry entry) {}
+    public record Row(int indent, Entry entry) {
+    }
 
-    public sealed interface Entry {}
+    public sealed interface Entry {
+    }
 
     //region Aperture
-    public record ApertureIndex(int number) implements Entry {}
-    public record Realm(Aperture aperture) implements Entry {}
-    public record Talent(Aperture aperture, boolean awakened) implements Entry {}
-    public record Essence(Aperture aperture) implements Entry {}
-    public record Distilled(Aperture aperture) implements Entry {}
-    public record Pressure(Aperture aperture) implements Entry {}
-    public record PathChoice(boolean primary, @Nullable GuPath path) implements Entry {}
+    public record ApertureIndex(int number) implements Entry {
+    }
+
+    public record Realm(Aperture aperture) implements Entry {
+    }
+
+    public record Talent(Aperture aperture, boolean awakened) implements Entry {
+    }
+
+    public record Essence(Aperture aperture) implements Entry {
+    }
+
+    public record Distilled(Aperture aperture) implements Entry {
+    }
+
+    public record Pressure(Aperture aperture) implements Entry {
+    }
+
+    public record PathChoice(boolean primary, @Nullable GuPath path) implements Entry {
+    }
     //endregion
 
     //region Body
-    public record Form(LifeForm form) implements Entry {}
-    public record RaceRow(Race race) implements Entry {}
-    public record Soul(SoulData soul) implements Entry {}
-    public record Lifespan(double lifespan, double age) implements Entry {}
-    public record PathsHeader(boolean empty) implements Entry {}
-    public record PathRow(GuPath path, PathEntry entry) implements Entry {}
-    public record QiPathAchieveHeader() implements Entry {}
-    public record QiKindRow(QiKind kind, long amount) implements Entry {}
-    public record StrengthPathAchieveHeader() implements Entry {}
+    public record Form(LifeForm form) implements Entry {
+    }
+
+    public record RaceRow(Race race) implements Entry {
+    }
+
+    public record Soul(SoulData soul) implements Entry {
+    }
+
+    public record Lifespan(double lifespan, double age) implements Entry {
+    }
+
+    public record PathsHeader(boolean empty) implements Entry {
+    }
+
+    public record PathRow(GuPath path, PathEntry entry) implements Entry {
+    }
+
+    public record QiPathAchieveHeader() implements Entry {
+    }
+
+    public record QiKindRow(QiKind kind, long amount) implements Entry {
+    }
+
+    public record StrengthPathAchieveHeader() implements Entry {
+    }
+
     public record StrengthPathBranchRow(StrengthPathBranch branch, int totalJin,
-                                        Component reading) implements Entry {}
-    public record TimePathAchieveHeader() implements Entry {}
-    public record TimeRateUpRow(int rate) implements Entry {}
-    public record CapacityRow(int usable, int total) implements Entry {}
-    public record AttackRow(double bonus) implements Entry {}
-    public record WisdomPathAchieveHeader() implements Entry {}
-    public record ThoughtTagRow(ThoughtTag tag, long amount) implements Entry {}
+                                        Component reading) implements Entry {
+    }
+
+    public record TimePathAchieveHeader() implements Entry {
+    }
+
+    public record TimeRateUpRow(int rate) implements Entry {
+    }
+
+    public record CapacityRow(int usable, int total) implements Entry {
+    }
+
+    public record AttackRow(double bonus) implements Entry {
+    }
+
+    public record WisdomPathAchieveHeader() implements Entry {
+    }
+
+    public record ThoughtTagRow(ThoughtTag tag, long amount) implements Entry {
+    }
     //endregion
 
     //region Mind
-    public record BrillianceRow(Brilliance brilliance) implements Entry {}
-    public record MindHeader() implements Entry {}
-    public record MindRow(WisdomType type, MindPool pool) implements Entry {}
+    public record BrillianceRow(Brilliance brilliance) implements Entry {
+    }
+
+    public record MindHeader() implements Entry {
+    }
+
+    public record MindRow(WisdomType type, MindPool pool) implements Entry {
+    }
     //endregion
 
     public static List<Row> aperture(Player player) {

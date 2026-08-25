@@ -15,9 +15,10 @@ import net.minecraft.world.item.ItemStack;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.gu.OneShotGuItem
+ * @since 1.0.0
  */
+
 public class GutsGuItem extends OneShotGuItem {
 
     private static final int SOUL_BONUS = 10;

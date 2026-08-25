@@ -17,9 +17,10 @@ import net.minecraft.network.codec.StreamCodec;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see TendedGuItem
+ * @since 1.0.0
  */
+
 public record RefinedGuState(boolean refined, int refineProgress, int investedEssence, int hunger,
                              int damageTaken) {
 

@@ -12,9 +12,10 @@ import org.lwjgl.glfw.GLFW;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.client.screen.PlayerInfoScreen
+ * @since 1.0.0
  */
+
 public final class ModKeyMappings {
 
     private ModKeyMappings() {}

@@ -20,10 +20,11 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * Strength [力道]: the beast and human strengths a player has refined into themselves.
  *
- * <p>Immutable record attachment keyed {@code strength_data}; {@link StrengthService} is the only
- * writer. Two components: a {@link Set} of {@link BeastStrength} (one kind once ever) and a sparse
- * {@link Map} of {@link HumanStrength} to layer count. The compact ctor caps each human kind at its
- * own {@code getMaxLayers()} and prunes zero-or-below entries.
+ * <p>Immutable record attachment keyed {@code strength_data}; {@link
+ * com.unknown.guzhenren.attachment.service.body.StrengthService} is the only writer. Two components:
+ * a {@code Set} of {@link BeastStrength} (one kind once ever) and a sparse {@code Map} of
+ * {@link HumanStrength} to layer count. The compact ctor caps each human kind at its own
+ * {@code getMaxLayers()} and prunes zero-or-below entries.
  *
  * <p>⚠ The compact constructor must use {@code new EnumMap<>(Class)} plus {@code putAll}, never the
  * {@code EnumMap(Map)} copy constructor -- that one throws on the empty maps {@code DEFAULT} is built
@@ -33,9 +34,10 @@ import net.minecraft.network.codec.StreamCodec;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.body.StrengthService
+ * @since 1.0.0
  */
+
 public record StrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Integer> humanStrength) {
 
     public static final StrengthData DEFAULT = new StrengthData(Set.of(), Map.of());

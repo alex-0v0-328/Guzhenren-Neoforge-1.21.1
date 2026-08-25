@@ -16,9 +16,10 @@ import net.minecraft.commands.Commands;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.command.sub.mind.CmdWisdom
+ * @since 1.0.0
  */
+
 public final class CmdMind {
 
     private CmdMind() {}

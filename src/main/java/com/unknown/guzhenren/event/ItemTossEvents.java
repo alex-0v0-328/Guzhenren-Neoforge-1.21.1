@@ -17,9 +17,10 @@ import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.GuItem
+ * @since 1.0.0
  */
+
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ItemTossEvents {
 

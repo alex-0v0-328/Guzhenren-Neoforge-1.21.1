@@ -36,9 +36,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
+ * @see com.unknown.guzhenren.item.gu.MortalGuItem
  * @since 1.0.0
- * @see MortalGuItem
  */
+
 public abstract class GuItem extends Item {
 
     public static final int COOLDOWN_TICKS = 2;
@@ -60,7 +61,8 @@ public abstract class GuItem extends Item {
 
     protected int tier() {return rank.ordinal() - Rank.ONE.ordinal();}
 
-    public record Refusal(String key, Object... args) {}
+    public record Refusal(String key, Object... args) {
+    }
 
     //region 蓄力 [charge] -- paced by the holder's rank against this item's own, never by the stage
     public static final int USE_FAST_TICKS = 5;
@@ -105,6 +107,7 @@ public abstract class GuItem extends Item {
                 : InteractionResultHolder.fail(stack);
     }
 
+    @SuppressWarnings("resource")
     @Override
     public final @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
                                                                  @NotNull InteractionHand hand) {
@@ -126,6 +129,7 @@ public abstract class GuItem extends Item {
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
+    @SuppressWarnings("resource")
     @Override
     public final @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level level,
                                                     @NotNull LivingEntity entity) {

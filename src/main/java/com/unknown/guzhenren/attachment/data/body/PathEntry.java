@@ -24,10 +24,11 @@ import net.minecraft.network.codec.StreamCodec;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see PathData
  * @see com.unknown.guzhenren.attachment.service.body.PathService
+ * @since 1.0.0
  */
+
 public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks) {
 
     public static final PathEntry DEFAULT = new PathEntry(GuAttainment.NONE, Map.of());

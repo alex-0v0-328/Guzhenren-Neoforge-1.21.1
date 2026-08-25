@@ -16,9 +16,10 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * Mind [脑海]: the brilliance [才情] and the three thought [念] pools it drives.
  *
- * <p>Immutable record attachment keyed {@code mind_data}; {@link MindService} is the only writer. The
- * three pools live in a dense {@link EnumMap} over {@link WisdomType} -- a type missing from the map is
- * filled with {@link MindPool#of} by the compact constructor, so a reader never has to guard null.
+ * <p>Immutable record attachment keyed {@code mind_data}; {@link
+ * com.unknown.guzhenren.attachment.service.mind.MindService} is the only writer. The three pools live
+ * in a dense {@link EnumMap} over {@link WisdomType} -- a type missing from the map is filled with
+ * {@link MindPool#of} by the compact constructor, so a reader never has to guard null.
  *
  * <p>⚠ Brilliance lives here rather than in its own attachment precisely because it IS the regen rate
  * of these pools; kept apart, the rate and the pools it drives could drift. ⚠ The compact constructor
@@ -27,10 +28,11 @@ import net.minecraft.network.codec.StreamCodec;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see MindPool
- * @see MindService
+ * @see com.unknown.guzhenren.attachment.service.mind.MindService
+ * @since 1.0.0
  */
+
 public record MindData(Brilliance brilliance, Map<WisdomType, MindPool> pools, Map<ThoughtTag, Long> taggedThoughts) {
 
     public static final MindData DEFAULT = new MindData(Brilliance.ORDINARY, Map.of(), Map.of());

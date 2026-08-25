@@ -11,8 +11,9 @@ import net.minecraft.world.item.ItemStack;
  * The Gu kept inside each Aperture [空窍], including the Vital Gu [本命蛊] bound to that aperture.
  *
  * <p>Immutable record attachment keyed {@code aperture_storage}; serialized but NOT synced (the menu
- * reads it through slot channels). {@link ApertureStorageService} is the only writer. Two parallel
- * lists, one per aperture: the paged store and the single Vital slot.
+ * reads it through slot channels). {@link
+ * com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService} is the only writer. Two
+ * parallel lists, one per aperture: the paged store and the single Vital slot.
  *
  * <p>⚠ Serialized but NOT synced -- the client never receives this, so every reader has to be
  * server-side and anything a screen needs must travel by some other route. ⚠ Uses
@@ -23,10 +24,11 @@ import net.minecraft.world.item.ItemStack;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see ApertureData
- * @see ApertureStorageService
+ * @see com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService
+ * @since 1.0.0
  */
+
 public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> vital) {
 
     public static final ApertureStorage DEFAULT = new ApertureStorage(List.of(), List.of());

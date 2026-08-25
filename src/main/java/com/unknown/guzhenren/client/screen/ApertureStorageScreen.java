@@ -19,9 +19,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.menu.ApertureStorageMenu
+ * @since 1.0.0
  */
+
 public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStorageMenu> {
 
     private static final int SLOT = 18;

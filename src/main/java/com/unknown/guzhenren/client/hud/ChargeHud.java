@@ -23,9 +23,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.client.hud.HotbarHud
+ * @since 1.0.0
  */
+
 public final class ChargeHud extends HotbarHud {
 
     public static final ChargeHud INSTANCE = new ChargeHud();

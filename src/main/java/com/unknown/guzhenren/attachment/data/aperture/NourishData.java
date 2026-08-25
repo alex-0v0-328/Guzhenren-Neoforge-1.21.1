@@ -10,21 +10,25 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * Nourishing the Aperture [温养空窍]: whether the cultivation is running, and how far it has come.
  *
- * <p>Immutable record attachment keyed {@code nourish_data}; {@link NourishService} is the only writer.
- * Three components: a running flag, a 0..100 progress percent, and a starvation-since tick. Progress
+ * <p>Immutable record attachment keyed {@code nourish_data}; {@link
+ * com.unknown.guzhenren.attachment.service.aperture.NourishService} is the only writer. Three
+ * components: a running flag, a 0..100 progress percent, and a starvation-since tick. Progress
  * clamps to {@code [0, FULL]} in the compact ctor; the other two are stored verbatim.
  *
  * <p>⚠ {@code starvedSinceTick} defaults to {@code NOT_STARVED} (-1), never {@code 0} -- zero is a real
  * game time, so a fresh world would read as having been starved since the beginning of it. Same trap
  * as {@code halfZombieEndTick} and {@code USED_AT} on the Gu clock. ⚠ {@code isFull()} is the gate
- * that lets {@link NourishService#impactWall} fire, and the strike zeroes progress whether it succeeds
- * or fails -- that IS how "you must run a whole peak round again" is implemented, with no separate flag.
+ * that lets {@link
+ * com.unknown.guzhenren.attachment.service.aperture.NourishService#impactWall} fire, and the strike
+ * zeroes progress whether it succeeds or fails -- that IS how "you must run a whole peak round
+ * again" is implemented, with no separate flag.
  *
  * @author Alex
  * @version 1.0.0
+ * @see com.unknown.guzhenren.attachment.service.aperture.NourishService
  * @since 1.0.0
- * @see NourishService
  */
+
 public record NourishData(boolean cultivating, int progress, long starvedSinceTick) {
 
     public static final int FULL = 100;

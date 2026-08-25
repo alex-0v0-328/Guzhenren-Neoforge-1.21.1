@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The only writer of Qi [气] holdings, and where their MobEffects are rebuilt from the pool.
@@ -30,22 +31,25 @@ import net.minecraft.world.entity.player.Player;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see QiData
  * @see QiEntry
+ * @since 1.0.0
  */
+
 public final class QiService {
 
     private QiService() {}
 
     private static final int EFFECT_REFRESH_TICKS = 2 * Ticks.SECOND;
 
-    public static QiData get(Player p) {return p.getData(ModAttachments.QI);}
-    public static long current(Player p, QiKind kind) {return get(p).current(kind, now(p));}
+    public static @NotNull QiData get(@NotNull Player p) {return p.getData(ModAttachments.QI);}
+    public static long current(@NotNull Player p, @NotNull QiKind kind) {return get(p).current(kind, now(p));}
 
-    public static void add(ServerPlayer p, QiKind kind, long delta) {set(p, kind, current(p, kind) + delta);}
+    public static void add(@NotNull ServerPlayer p, @NotNull QiKind kind, long delta) {
+        set(p, kind, current(p, kind) + delta);
+    }
 
-    public static void set(ServerPlayer p, QiKind kind, long value) {
+    public static void set(@NotNull ServerPlayer p, @NotNull QiKind kind, long value) {
         long amount = Math.max(0L, value);
         long holdEnd = 0L;
         if (kind.isTimed() && amount > 0L) {
@@ -69,7 +73,7 @@ public final class QiService {
 
     //region effect projection -- the store is the truth, the MobEffect is its display
     //    TODO(decay): a kind past its hold reads NO effect while decaying -- per-tier falloff is his short-term TODO.
-    public static void syncEffects(ServerPlayer player) {
+    public static void syncEffects(@NotNull ServerPlayer player) {
         long now = now(player);
         syncGraded(player, QiKind.STRENGTH, ModEffects.STRENGTH_QI, now);
         syncGraded(player, QiKind.LIFE, ModEffects.LIFE_QI, now);

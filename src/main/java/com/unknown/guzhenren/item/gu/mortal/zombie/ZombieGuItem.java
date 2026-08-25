@@ -22,9 +22,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.gu.TendedGuItem
+ * @since 1.0.0
  */
+
 public class ZombieGuItem extends TendedGuItem {
 
     private static final String FAILED_ALREADY_ZOMBIE = "guzhenren.item.failed.zombie_already";

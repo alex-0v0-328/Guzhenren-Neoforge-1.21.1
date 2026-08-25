@@ -21,10 +21,11 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see MortalGuItem
  * @see GuClock
+ * @since 1.0.0
  */
+
 public final class GuSpec {
 
     private final Rank rank;

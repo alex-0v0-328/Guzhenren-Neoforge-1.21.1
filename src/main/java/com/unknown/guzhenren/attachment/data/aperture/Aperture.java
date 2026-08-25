@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * distilledEssence, pressure and the pressure deadline. The compact ctor is the only clamp -- it derives the cap and floors current
  * against it, and makes a secondary path equal to the primary one unrepresentable.
  *
- * <p>⚠ This record has TEN components, so its {@code STREAM_CODEC} is hand-written --
+ * <p>⚠ This record has TEN components, so its {@code STREAM_CODEC} is handwritten --
  * {@code StreamCodec.composite} stops at six, and the encode/decode order matches by hand with no
  * compile-time check. ⚠ {@code baseEssence} is clamped to {@code [MIN_BASE, MAX_BASE]} (20..100) when
  * positive; {@code 0} is reserved for {@code NONE} and {@code 1..19} is a hole, not a value. ⚠ The two
@@ -34,10 +34,11 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see ApertureData
- * @see ApertureService
+ * @see com.unknown.guzhenren.attachment.service.aperture.ApertureService
+ * @since 1.0.0
  */
+
 public record Aperture(
         Rank rank,
         Stage stage,

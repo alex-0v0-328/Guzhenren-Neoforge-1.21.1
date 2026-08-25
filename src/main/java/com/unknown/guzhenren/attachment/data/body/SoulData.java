@@ -10,9 +10,10 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * Soul [魂魄], the one pool that is lethal at the bottom.
  *
- * <p>Immutable record attachment keyed {@code soul_data}; {@link SoulService} is the only writer. The
- * compact constructor floors {@code maxSoul} at zero and clamps {@code currentSoul} to {@code [0, max]},
- * so a cap of 0 also lands current at 0 -- one check catches both.
+ * <p>Immutable record attachment keyed {@code soul_data}; {@link
+ * com.unknown.guzhenren.attachment.service.body.SoulService} is the only writer. The compact
+ * constructor floors {@code maxSoul} at zero and clamps {@code currentSoul} to {@code [0, max]}, so
+ * a cap of 0 also lands current at 0 -- one check catches both.
  *
  * <p>⚠ Its cap is STORED rather than derived, because nothing else determines it -- compare
  * Epic Fight stamina, whose current value and cap are owned by the combat system. ⚠
@@ -22,10 +23,11 @@ import net.minecraft.network.codec.StreamCodec;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
- * @see SoulService
+ * @see com.unknown.guzhenren.attachment.service.body.SoulService
  * @see com.unknown.guzhenren.custom.enums.soul.SoulTier
+ * @since 1.0.0
  */
+
 public record SoulData(long maxSoul, long currentSoul) {
 
     public static final long DEFAULT_MAX_SOUL = 100L;

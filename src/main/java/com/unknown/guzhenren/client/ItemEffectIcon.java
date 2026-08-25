@@ -14,10 +14,11 @@ import net.minecraft.world.effect.MobEffectInstance;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.client.EffectIconLayout
  * @see com.unknown.guzhenren.client.GradedEffectIcon
+ * @since 1.0.0
  */
+
 public record ItemEffectIcon(String item) implements EffectIconLayout {
 
     @Override

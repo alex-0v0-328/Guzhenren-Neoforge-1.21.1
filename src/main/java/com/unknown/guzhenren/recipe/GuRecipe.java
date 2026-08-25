@@ -40,9 +40,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.menu.RefinementMenu
+ * @since 1.0.0
  */
+
 public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, List<ItemStack> results,
                        long essencePerSecond, long soulPerSecond, List<Integer> windows, int baseSuccess)
         implements Recipe<GuRecipeInput> {
@@ -63,10 +64,11 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
             throw new IllegalArgumentException("every ingredient owns exactly one cell of the grid");
         }
         try {
-            int totalTicks = exactTotalTicks(windows.size());
-            long totalSeconds = totalTicks / Ticks.SECOND;
-            Math.multiplyExact(essencePerSecond, totalSeconds);
-            Math.multiplyExact(soulPerSecond, totalSeconds);
+            long totalSeconds = exactTotalTicks(windows.size()) / Ticks.SECOND;
+            if (Math.addExact(Math.multiplyExact(essencePerSecond, totalSeconds),
+                    Math.multiplyExact(soulPerSecond, totalSeconds)) < 0L) {
+                throw new ArithmeticException("combined cost overflow");
+            }
         } catch (ArithmeticException e) {
             throw new IllegalArgumentException("recipe runtime exceeds supported range", e);
         }
@@ -81,7 +83,6 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
     public int stonesFor(int window) {return windows.get(window);}
     public int totalSeconds() {return totalTicks() / Ticks.SECOND;}
     public long essenceToFinish() {return Math.multiplyExact(essencePerSecond, totalSeconds());}
-    public long soulToFinish() {return Math.multiplyExact(soulPerSecond, totalSeconds());}
 
     public int totalTicks() {
         return exactTotalTicks(windowCount());
@@ -192,12 +193,12 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
     public @NotNull RecipeType<?> getType() {return ModRecipes.REFINEMENT.get();}
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull GuRecipeInput in, HolderLookup.Provider r) {
+    public @NotNull ItemStack assemble(@NotNull GuRecipeInput in, HolderLookup.@NotNull Provider r) {
         return first().copy();
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.Provider registries) {return first();}
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {return first();}
 
     private ItemStack first() {return results.isEmpty() ? ItemStack.EMPTY : results.getFirst();}
 

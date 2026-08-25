@@ -14,9 +14,10 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.body.TimeFlowService
+ * @since 1.0.0
  */
+
 public class TimeRateUpEffect extends MobEffect {
 
     private final int ratePerLayer;
@@ -30,10 +31,8 @@ public class TimeRateUpEffect extends MobEffect {
         this.icon = icon;
     }
 
-    public int nextAmplifier(int amplifier) {return Math.min(Math.max(0, amplifier + 1), maxLayers - 1);}
-    public int timeRate(int amplifier) {
-        return ratePerLayer * Math.min(Math.max(1, amplifier + 1), maxLayers);
-    }
+    public int nextAmplifier(int amplifier) {return Math.clamp(amplifier + 1, 0, maxLayers - 1);}
+    public int timeRate(int amplifier) {return ratePerLayer * Math.clamp(amplifier + 1, 1, maxLayers);}
 
     @Override
     public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {

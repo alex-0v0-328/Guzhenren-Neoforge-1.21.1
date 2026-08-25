@@ -34,6 +34,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public final class ModAttachments {
 
     private ModAttachments() {}

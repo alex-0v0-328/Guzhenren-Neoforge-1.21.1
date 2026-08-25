@@ -24,9 +24,10 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.mind.MindService
+ * @since 1.0.0
  */
+
 public class CasualThoughtEffect extends MobEffect {
 
     public static final int DURATION_TICKS = 10 * Ticks.SECOND;

@@ -3,7 +3,6 @@ package com.unknown.guzhenren.item.material;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.registry.ModEffects;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
@@ -24,9 +23,10 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.material.GuMaterialItem
+ * @since 1.0.0
  */
+
 public class LiquorItem extends GuMaterialItem {
 
     private static final int NUTRITION = 1;

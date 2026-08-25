@@ -10,6 +10,7 @@ import com.unknown.guzhenren.registry.ModAttachments;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The only writer of Body [肉身] state, and the home of every life-form [生命形态] transition.
@@ -31,43 +32,44 @@ import net.minecraft.world.entity.player.Player;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see TimeFlowService
  * @see AttackService
+ * @since 1.0.0
  */
+
 public final class BodyService {
 
     private BodyService() {}
 
-    public static long dayIndex(MinecraftServer server) {
+    public static long dayIndex(@NotNull MinecraftServer server) {
         return server.overworld().getDayTime() / Ticks.DAY;
     }
 
-    public static BodyData get(Player p) {return p.getData(ModAttachments.BODY);}
-    public static LifeForm lifeForm(Player p) {return get(p).lifeForm();}
-    public static boolean isZombie(Player p) {return get(p).isZombie();}
-    public static boolean isHalfZombie(Player p) {return get(p).isHalfZombie();}
-    public static Race race(Player p) {return get(p).race();}
-    public static long now(Player p) {return p.level().getGameTime();}
+    public static @NotNull BodyData get(@NotNull Player p) {return p.getData(ModAttachments.BODY);}
+    public static @NotNull LifeForm lifeForm(@NotNull Player p) {return get(p).lifeForm();}
+    public static boolean isZombie(@NotNull Player p) {return get(p).isZombie();}
+    public static boolean isHalfZombie(@NotNull Player p) {return get(p).isHalfZombie();}
+    public static @NotNull Race race(@NotNull Player p) {return get(p).race();}
+    public static long now(@NotNull Player p) {return p.level().getGameTime();}
 
     private static void store(ServerPlayer p, BodyData data) {p.setData(ModAttachments.BODY, data);}
 
     //region 寿元与年龄 [lifespan and age] -- ⚠ every caller speaks YEARS; only this file knows about parts
-    public static void setAge(ServerPlayer p, long years) {store(p, get(p).withAgeParts(BodyData.parts(years)));}
-    public static void setLifespan(ServerPlayer p, long years) {
+    public static void setAge(@NotNull ServerPlayer p, long years) {store(p, get(p).withAgeParts(BodyData.parts(years)));}
+    public static void setLifespan(@NotNull ServerPlayer p, long years) {
         store(p, get(p).withLifespanParts(BodyData.parts(years)));
     }
 
-    public static void addAge(ServerPlayer p, long years) {
+    public static void addAge(@NotNull ServerPlayer p, long years) {
         store(p, get(p).withAgeParts(get(p).ageParts() + BodyData.parts(years)));
     }
-    public static void addLifespan(ServerPlayer p, long years) {
+    public static void addLifespan(@NotNull ServerPlayer p, long years) {
         store(p, get(p).withLifespanParts(get(p).lifespanParts() + BodyData.parts(years)));
     }
     //endregion
 
     //region Life form [生命形态] -- 生 / 死 / 僵 / 半生半僵
-    public static void setLifeForm(ServerPlayer player, LifeForm form) {
+    public static void setLifeForm(@NotNull ServerPlayer player, @NotNull LifeForm form) {
         BodyData body = get(player);
         if (body.lifeForm() == form) return;
 
@@ -76,12 +78,12 @@ public final class BodyService {
         AttackService.refresh(player);
     }
 
-    public static void revive(ServerPlayer player) {
+    public static void revive(@NotNull ServerPlayer player) {
         store(player, get(player).revived());
         AttackService.refresh(player);
     }
 
-    public static void enterHalfZombie(ServerPlayer player, int tier, int durationTicks) {
+    public static void enterHalfZombie(@NotNull ServerPlayer player, int tier, int durationTicks) {
         store(player, get(player)
                 .withLifeForm(LifeForm.HALF_ZOMBIE)
                 .withHalfZombieEndTick(now(player) + durationTicks)
@@ -89,7 +91,7 @@ public final class BodyService {
         AttackService.refresh(player);
     }
 
-    public static void turnZombie(ServerPlayer player, int tier) {
+    public static void turnZombie(@NotNull ServerPlayer player, int tier) {
         store(player, get(player)
                 .withLifeForm(LifeForm.ZOMBIE)
                 .withLifespanParts(BodyData.parts(BodyData.ZOMBIE_LIFESPAN))
@@ -97,13 +99,13 @@ public final class BodyService {
         AttackService.refresh(player);
     }
 
-    public static boolean wouldRelapse(Player p) {return get(p).withinRelapseWindow(now(p));}
-    public static long halfZombieTicksLeft(Player p) {return get(p).halfZombieTicksLeft(now(p));}
-    public static boolean halfZombieRanOut(Player p) {return get(p).halfZombieRanOut(now(p));}
+    public static boolean wouldRelapse(@NotNull Player p) {return get(p).withinRelapseWindow(now(p));}
+    public static long halfZombieTicksLeft(@NotNull Player p) {return get(p).halfZombieTicksLeft(now(p));}
+    public static boolean halfZombieRanOut(@NotNull Player p) {return get(p).halfZombieRanOut(now(p));}
     //endregion
 
     //region Race [种族]
-    public static void setRace(ServerPlayer player, Race race) {
+    public static void setRace(@NotNull ServerPlayer player, @NotNull Race race) {
         Race current = race(player);
         if (current == race) return;
 
@@ -130,13 +132,13 @@ public final class BodyService {
     //endregion
 
     //region Death Qi [死气] debt
-    public static void drainByDeathQi(ServerPlayer player, long years) {
+    public static void drainByDeathQi(@NotNull ServerPlayer player, long years) {
         BodyData body = get(player);
         store(player, body.withLifespanParts(body.lifespanParts() - BodyData.parts(years))
                 .withDeathQiLifespanLost(body.deathQiLifespanLost() + years));
     }
 
-    public static double refundDeathQiDebt(ServerPlayer player, int numerator, int denominator) {
+    public static double refundDeathQiDebt(@NotNull ServerPlayer player, int numerator, int denominator) {
         BodyData body = get(player);
         long refundParts = BodyData.parts(body.deathQiLifespanLost()) * numerator / denominator;
         store(player, body.withLifespanParts(body.lifespanParts() + refundParts)
@@ -144,14 +146,14 @@ public final class BodyService {
         return (double) refundParts / BodyData.PARTS_PER_YEAR;
     }
 
-    public static void clearDeathQiDebt(ServerPlayer p) {store(p, get(p).withDeathQiLifespanLost(0L));}
+    public static void clearDeathQiDebt(@NotNull ServerPlayer p) {store(p, get(p).withDeathQiLifespanLost(0L));}
     //endregion
 
     /**
      * ⚠ This counts DAYS for the three Gu-hunger walks and nothing else -- 寿元 left it for
      * {@code tickLifespan}, which bills every heartbeat instead of once a day.
      */
-    public static long tickAging(ServerPlayer player) {
+    public static long tickAging(@NotNull ServerPlayer player) {
         MinecraftServer server = player.getServer();
         if (server == null) return 0L;
 
@@ -175,7 +177,7 @@ public final class BodyService {
      * ⚠ The anchor is the world's {@code dayTime}, not {@code gameTime}, so {@code /time add} still ages
      * him. Time running backwards re-anchors and bills nothing, the same guard {@code tickAging} carries.
      */
-    public static void tickLifespan(ServerPlayer player) {
+    public static void tickLifespan(@NotNull ServerPlayer player) {
         MinecraftServer server = player.getServer();
         if (server == null) return;
 

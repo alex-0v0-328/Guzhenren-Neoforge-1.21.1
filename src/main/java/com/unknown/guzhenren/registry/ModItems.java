@@ -42,7 +42,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * Every item, and the only place a Gu's numbers actually live.
+ * Every item and the only place a Gu's numbers actually live.
  *
  * <p>DeferredRegister holder: the {@link GuSpec} chain on each registration IS the truth. A figure
  * written down anywhere else is a copy of it, and when the two disagree this file is the one that is
@@ -53,9 +53,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see GuSpec
+ * @since 1.0.0
  */
+
 public final class ModItems {
 
     private ModItems() {}
@@ -75,11 +76,11 @@ public final class ModItems {
             () -> new VitalityLeafGuItem(oneShot(), GuSpec.of(Rank.ONE, GuPath.WOOD)));
 
     public static final DeferredItem<Item> LIFESPAN_GU = ITEMS.register("lifespan_gu",
-            () -> new LifespanGuItem(oneShot(),    1,    9, GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
+            () -> new LifespanGuItem(oneShot(), 1, 9, GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
     public static final DeferredItem<Item> TENS_LIFESPAN_GU = ITEMS.register("tens_lifespan_gu",
-            () -> new LifespanGuItem(oneShot(),   10,   19, GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
+            () -> new LifespanGuItem(oneShot(), 10, 19, GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
     public static final DeferredItem<Item> HUNDREDS_LIFESPAN_GU = ITEMS.register("hundreds_lifespan_gu",
-            () -> new LifespanGuItem(oneShot(),  100,  199, GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
+            () -> new LifespanGuItem(oneShot(), 100, 199, GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
     public static final DeferredItem<Item> THOUSANDS_LIFESPAN_GU = ITEMS.register("thousands_lifespan_gu",
             () -> new LifespanGuItem(oneShot(), 1000, 1999, GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
 
@@ -165,15 +166,15 @@ public final class ModItems {
     public static final DeferredItem<Item> CHARGING_CRASH_GU_4 = ITEMS.register("charging_crash_gu_4",
             () -> new BuffGuItem(tended(), ModEffects.CHARGING_CRASH_GU,
                     CrashGuEffect.duration(30), 3, GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
-                            .refine(800_000).costPerUse(16_000)
-                            .hungerBar(12, 2).hungerPerUse(4).feed(ModItemTags.ANVIL_FEED, 1)
-                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+                    .refine(800_000).costPerUse(16_000)
+                    .hungerBar(12, 2).hungerPerUse(4).feed(ModItemTags.ANVIL_FEED, 1)
+                    .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
     public static final DeferredItem<Item> CHARGING_CRASH_GU_5 = ITEMS.register("charging_crash_gu_5",
             () -> new BuffGuItem(tended(), ModEffects.CHARGING_CRASH_GU,
                     CrashGuEffect.duration(60), 4, GuSpec.of(Rank.FIVE, GuPath.STRENGTH)
-                            .refine(8_000_000).costPerUse(160_000)
-                            .hungerBar(12, 3).hungerPerUse(4).feed(ModItemTags.ANVIL_FEED, 1)
-                            .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+                    .refine(8_000_000).costPerUse(160_000)
+                    .hungerBar(12, 3).hungerPerUse(4).feed(ModItemTags.ANVIL_FEED, 1)
+                    .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
 
     public static final DeferredItem<Item> SELF_RELIANCE_GU_2 = ITEMS.register("self_reliance_gu_2",
             () -> new SelfRelianceGuItem(tended(), 30 * Ticks.SECOND, 1,
@@ -328,17 +329,17 @@ public final class ModItems {
                     .cooldown(Ticks.SECOND)));
 
     public static final DeferredItem<Item> HEAVENLY_DEMON_ZOMBIE_GU = ITEMS.register("heavenly_demon_zombie_gu",
-            () -> fifthRankZombieGu());
+            ModItems::fifthRankZombieGu);
     public static final DeferredItem<Item> NIGHTMARE_ZOMBIE_GU = ITEMS.register("nightmare_zombie_gu",
-            () -> fifthRankZombieGu());
+            ModItems::fifthRankZombieGu);
     public static final DeferredItem<Item> ASURA_ZOMBIE_GU = ITEMS.register("asura_zombie_gu",
-            () -> fifthRankZombieGu());
+            ModItems::fifthRankZombieGu);
     public static final DeferredItem<Item> EARTH_CHIEF_ZOMBIE_GU = ITEMS.register("earth_chief_zombie_gu",
-            () -> fifthRankZombieGu());
+            ModItems::fifthRankZombieGu);
     public static final DeferredItem<Item> PLAGUE_ZOMBIE_GU = ITEMS.register("plague_zombie_gu",
-            () -> fifthRankZombieGu());
+            ModItems::fifthRankZombieGu);
     public static final DeferredItem<Item> BLOOD_WIGHT_GU = ITEMS.register("blood_wight_gu",
-            () -> fifthRankZombieGu());
+            ModItems::fifthRankZombieGu);
 
     private static ZombieGuItem fifthRankZombieGu() {
         return new ZombieGuItem(tended(), 8 * Ticks.MINUTE, GuSpec.of(Rank.FIVE, GuPath.TRANSFORMATION)

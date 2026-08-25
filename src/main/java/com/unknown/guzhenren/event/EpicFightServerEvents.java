@@ -7,7 +7,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import yesman.epicfight.world.gamerule.EpicFightGameRules;
 
-/** Sets Epic Fight's per-level skill-retention rule for every loaded server level. */
+/**
+ * Sets Epic Fight's per-level skill-retention rule for every loaded server level.
+ */
+
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class EpicFightServerEvents {
 

@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Extends {@link com.unknown.guzhenren.entity.WildGuEntity}. Uses a flying move control and flying
  * path navigation; the {@code HoverNearPlayerGoal} drives the movement vector directly. Spawns
- * fullbright {@code END_ROD} particles at one per tick. The {@code seeks} method is the one door for
+ * full bright {@code END_ROD} particles at one per tick. The {@code seeks} method is the one door for
  * "who does it fly toward"; the base wants anyone, a leaf narrows it.
  *
  * <p>⚠ {@code isNoGravity()} is a flat true on purpose. The flying move control only clears gravity
@@ -31,28 +31,30 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.entity.WildGuEntity
  * @see com.unknown.guzhenren.entity.ai.HoverNearPlayerGoal
+ * @since 1.0.0
  */
+
 public class FlyingGuEntity extends WildGuEntity {
 
     public static final double DETECT_RANGE = 12.0;
-    public static final double HOVER_RANGE  =  2.0;
+    public static final double HOVER_RANGE = 2.0;
 
-    private static final double FOLLOW_RANGE   = 16.0;
-    private static final double MAX_HEALTH     =  1.0;
-    private static final double FLYING_SPEED   =  0.1;
-    private static final double MOVEMENT_SPEED =  0.1;
-    private static final double WANDER_SPEED   =  1.0;
+    private static final double FOLLOW_RANGE = 16.0;
+    private static final double MAX_HEALTH = 1.0;
+    private static final double FLYING_SPEED = 0.1;
+    private static final double MOVEMENT_SPEED = 0.1;
+    private static final double WANDER_SPEED = 1.0;
 
-    private static final int    MOTES_PER_TICK = 1;
-    private static final double MOTE_SPREAD    = 0.25;
+    private static final int MOTES_PER_TICK = 1;
+    private static final double MOTE_SPREAD = 0.25;
 
     private static final int TURN_RATE = 20;
 
     private final ParticleOptions motes;
 
+    @SuppressWarnings("resource")
     public FlyingGuEntity(EntityType<? extends FlyingGuEntity> type, Level level,
                           Supplier<Item> caughtGu, ParticleOptions motes) {
         super(type, level, caughtGu);
@@ -62,10 +64,10 @@ public class FlyingGuEntity extends WildGuEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH,     MAX_HEALTH)
-                .add(Attributes.FLYING_SPEED,   FLYING_SPEED)
+                .add(Attributes.MAX_HEALTH, MAX_HEALTH)
+                .add(Attributes.FLYING_SPEED, FLYING_SPEED)
                 .add(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED)
-                .add(Attributes.FOLLOW_RANGE,   FOLLOW_RANGE);
+                .add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
     }
 
     @Override
@@ -86,6 +88,7 @@ public class FlyingGuEntity extends WildGuEntity {
     }
     //endregion
 
+    @SuppressWarnings("resource")
     @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
         FlyingPathNavigation navigation = new FlyingPathNavigation(this, level);
@@ -105,7 +108,8 @@ public class FlyingGuEntity extends WildGuEntity {
 
     private void spawnMotes() {
         for (int i = 0; i < MOTES_PER_TICK; i++) {
-            level().addParticle(motes, getRandomX(MOTE_SPREAD), getRandomY(), getRandomZ(MOTE_SPREAD), 0.0, 0.0, 0.0);
+            level().addParticle(motes, getRandomX(MOTE_SPREAD), getRandomY(), getRandomZ(MOTE_SPREAD),
+                    0.0, 0.0, 0.0);
         }
     }
 }

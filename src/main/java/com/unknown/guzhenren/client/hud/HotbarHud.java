@@ -17,10 +17,11 @@ import net.minecraft.network.chat.Component;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.client.hud.ChargeHud
  * @see com.unknown.guzhenren.client.hud.NourishHud
+ * @since 1.0.0
  */
+
 abstract class HotbarHud implements LayeredDraw.Layer {
 
     static final int BAR_WIDTH = 182;

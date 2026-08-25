@@ -15,10 +15,11 @@ import net.minecraft.world.item.ItemStack;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see TendedGuItem
  * @see OneShotGuItem
+ * @since 1.0.0
  */
+
 public abstract class ConsumedGuItem extends TendedGuItem {
 
     protected ConsumedGuItem(Properties properties, GuSpec spec) {

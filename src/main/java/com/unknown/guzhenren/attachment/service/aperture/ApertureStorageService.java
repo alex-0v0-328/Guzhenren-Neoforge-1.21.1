@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The only writer of what an Aperture [空窍] holds, including the Vital Gu [本命蛊] bound to each.
@@ -20,36 +21,38 @@ import net.minecraft.world.item.ItemStack;
  *
  * <p>⚠ It reaches into the {@code item/} package on purpose ({@link GuItem}), against this project's
  * usual dependency direction: binding a Vital Gu has to read that Gu's declared path. Do not "fix"
- * those imports. ⚠ Writes NEVER go through {@link ApertureService#store} -- {@link HealthService#refresh}
- * hangs off that, and moving one item must not recompute max health. ⚠ {@code setVital} runs on every
- * menu click and every day tick, and {@code setPrimaryPath} no-ops when unchanged, so leaving that
- * call in is free and removing it loses the path on rebind.
+ * those imports. ⚠ Writes NEVER go through {@link ApertureService#store} -- {@link
+ * com.unknown.guzhenren.attachment.service.body.HealthService#refresh} hangs off that, and moving one
+ * item must not recompute max health. ⚠ {@code setVital} runs on every menu click and every day tick,
+ * and {@code setPrimaryPath} no-ops when unchanged, so leaving that call in is free and removing it
+ * loses the path on rebind.
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see ApertureService
  * @see ApertureStorageTick
+ * @since 1.0.0
  */
+
 public final class ApertureStorageService {
 
     private ApertureStorageService() {}
 
     public static final int MAX_LOAD = 256;
 
-    public static ApertureStorage get(Player p) {return p.getData(ModAttachments.APERTURE_STORAGE);}
-    public static List<ItemStack> items(Player p, int aperture) {return get(p).get(aperture);}
-    public static List<ItemStack> page(Player p, int aperture, int from, int size) {
+    public static @NotNull ApertureStorage get(@NotNull Player p) {return p.getData(ModAttachments.APERTURE_STORAGE);}
+    public static @NotNull List<ItemStack> items(@NotNull Player p, int aperture) {return get(p).get(aperture);}
+    public static @NotNull List<ItemStack> page(@NotNull Player p, int aperture, int from, int size) {
         return get(p).page(aperture, from, size);
     }
-    public static boolean pageMatches(Player p, int aperture, int from, List<ItemStack> page) {
+    public static boolean pageMatches(@NotNull Player p, int aperture, int from, @NotNull List<ItemStack> page) {
         return get(p).matchesPage(aperture, from, page);
     }
-    public static int count(Player p, int aperture) {return get(p).count(aperture);}
-    public static ItemStack vital(Player p, int aperture) {return get(p).getVital(aperture);}
-    public static int load(Player p, int aperture) {return load(p, get(p), aperture);}
+    public static int count(@NotNull Player p, int aperture) {return get(p).count(aperture);}
+    public static @NotNull ItemStack vital(@NotNull Player p, int aperture) {return get(p).getVital(aperture);}
+    public static int load(@NotNull Player p, int aperture) {return load(p, get(p), aperture);}
 
-    public static boolean set(ServerPlayer p, int aperture, List<ItemStack> items) {
+    public static boolean set(@NotNull ServerPlayer p, int aperture, @NotNull List<ItemStack> items) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.with(aperture, items);
         if (!canWrite(load(p, current, aperture), load(p, next, aperture))) return false;
@@ -58,7 +61,7 @@ public final class ApertureStorageService {
         return true;
     }
 
-    public static boolean setVital(ServerPlayer p, int aperture, ItemStack stack) {
+    public static boolean setVital(@NotNull ServerPlayer p, int aperture, @NotNull ItemStack stack) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.withVital(aperture, stack);
         if (!canWrite(load(p, current, aperture), load(p, next, aperture))) return false;
@@ -68,7 +71,7 @@ public final class ApertureStorageService {
         return true;
     }
 
-    public static boolean setPage(ServerPlayer p, int aperture, int from, List<ItemStack> page) {
+    public static boolean setPage(@NotNull ServerPlayer p, int aperture, int from, @NotNull List<ItemStack> page) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.withPage(aperture, from, page);
         if (!canWrite(load(p, current, aperture), load(p, next, aperture))) return false;

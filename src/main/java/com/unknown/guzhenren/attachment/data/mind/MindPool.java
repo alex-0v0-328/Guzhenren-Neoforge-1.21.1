@@ -15,17 +15,19 @@ import net.minecraft.network.codec.StreamCodec;
  * {@code bufferUsed} when {@code current > max}.
  *
  * <p>⚠ This record does not clamp itself: it cannot know which wisdom type it belongs to, and only some
- * of them may burst past the cap, so the clamp lives in {@link MindService} -- every write passes
- * through there. ⚠ {@code burstAt()} divides before multiplying ({@code max / DENOM * NUMER}) so a huge
- * cap cannot overflow; do not "tidy" the order. ⚠ {@code slept()} restores only HALF the deficit when
- * the buffer was used -- never reduce {@code current}.
+ * of them may burst past the cap, so the clamp lives in {@link
+ * com.unknown.guzhenren.attachment.service.mind.MindService} -- every write passes through there. ⚠
+ * {@code burstAt()} divides before multiplying ({@code max / DENOM * NUMER}) so a huge cap cannot
+ * overflow; do not "tidy" the order. ⚠ {@code slept()} restores only HALF the deficit when the buffer
+ * was used -- never reduce {@code current}.
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see MindData
- * @see MindService
+ * @see com.unknown.guzhenren.attachment.service.mind.MindService
+ * @since 1.0.0
  */
+
 public record MindPool(long current, long max, boolean bufferUsed) {
 
     public static final Codec<MindPool> CODEC = RecordCodecBuilder.create(instance -> instance.group(

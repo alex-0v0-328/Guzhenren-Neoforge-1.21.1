@@ -14,16 +14,18 @@ import net.minecraft.network.codec.StreamCodec;
  * record carries no running counter and ticks nothing down itself.
  *
  * <p>⚠ A time anchor, not a running total -- nothing ticks it down, which is why it needs no clock of
- * its own. ⚠ Re-adding to a kind does not "take the higher grade": {@link QiService#set} re-anchors
- * the hold on the SUM, so a write path that re-applies the same kind restarts the hold full. ⚠ Both
- * fields are floored at 0 in the compact ctor; {@code holdEndTick == 0} is a valid (if unusual) value.
+ * its own. ⚠ Re-adding to a kind does not "take the higher grade": {@link
+ * com.unknown.guzhenren.attachment.service.body.QiService#set} re-anchors the hold on the SUM, so a
+ * write path that re-applies the same kind restarts the hold full. ⚠ Both fields are floored at 0 in
+ * the compact ctor; {@code holdEndTick == 0} is a valid (if unusual) value.
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see QiData
- * @see QiService
+ * @see com.unknown.guzhenren.attachment.service.body.QiService
+ * @since 1.0.0
  */
+
 public record QiEntry(long amount, long holdEndTick) {
 
     public static final Codec<QiEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(

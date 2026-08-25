@@ -19,9 +19,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see HopeGuEntity
+ * @since 1.0.0
  */
+
 public final class ModEntityTypes {
 
     private ModEntityTypes() {}
@@ -29,7 +30,7 @@ public final class ModEntityTypes {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
             DeferredRegister.create(Registries.ENTITY_TYPE, Guzhenren.MOD_ID);
 
-    private static final float MOTE_WIDTH  = 0.4F;
+    private static final float MOTE_WIDTH = 0.4F;
     private static final float MOTE_HEIGHT = 0.4F;
 
     private static final int TRACKING_CHUNKS = 8;
@@ -37,7 +38,7 @@ public final class ModEntityTypes {
     public static final DeferredHolder<EntityType<?>, EntityType<HopeGuEntity>> HOPE_GU_ENTITY =
             ENTITY_TYPES.register("hope_gu_entity", () -> EntityType.Builder
                     .<HopeGuEntity>of((type, level) ->
-                            new HopeGuEntity(type, level, ModItems.HOPE_GU, ParticleTypes.END_ROD),
+                                    new HopeGuEntity(type, level, ModItems.HOPE_GU, ParticleTypes.END_ROD),
                             MobCategory.AMBIENT)
                     .sized(MOTE_WIDTH, MOTE_HEIGHT)
                     .clientTrackingRange(TRACKING_CHUNKS)

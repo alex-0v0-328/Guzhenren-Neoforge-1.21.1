@@ -20,9 +20,10 @@ import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtension
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.attachment.service.body.StrengthService
+ * @since 1.0.0
  */
+
 public class AllOutEffortEffect extends MobEffect {
 
     public AllOutEffortEffect(MobEffectCategory category, int color) {

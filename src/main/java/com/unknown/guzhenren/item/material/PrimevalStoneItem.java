@@ -30,9 +30,10 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.item.material.GuMaterialItem
+ * @since 1.0.0
  */
+
 public class PrimevalStoneItem extends GuMaterialItem {
 
     private static final String FAILED_UNAWAKENED = "guzhenren.item.failed.unawakened";
@@ -84,7 +85,9 @@ public class PrimevalStoneItem extends GuMaterialItem {
         return EssenceService.maxEssence(p) * REFILL_UP_TO_PERCENT / 100L - EssenceService.currentEssence(p);
     }
 
-    /** Refills from carried stones, and only once the pool has fallen below the line. */
+    /**
+     * Refills from carried stones, and only once the pool has fallen below the line.
+     */
     public static void topUp(ServerPlayer player) {
         if (needsTopUp(player)) pourInto(player, topUpDeficit(player));
     }

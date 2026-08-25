@@ -33,9 +33,10 @@ import net.minecraft.util.StringRepresentable;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.command.ModCommandFeedback
+ * @since 1.0.0
  */
+
 public final class ModCommandSupport {
 
     private ModCommandSupport() {}

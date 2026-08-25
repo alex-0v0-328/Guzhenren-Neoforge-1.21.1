@@ -14,13 +14,14 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Body [肉身] state: what the player currently is, as opposed to what they can do.
  *
- * <p>Immutable record attachment keyed {@code body_data}; {@link BodyService} is the only writer. Nine
- * components: {@code lifeForm}, {@code race}, age/lifespan in parts (not years), two day-clock anchors,
- * the death-qi debt tally, the half-zombie end tick, the zombie tier, and the lifespan billing anchor.
+ * <p>Immutable record attachment keyed {@code body_data}; {@link
+ * com.unknown.guzhenren.attachment.service.body.BodyService} is the only writer. Nine components:
+ * {@code lifeForm}, {@code race}, age/lifespan in parts (not years), two day-clock anchors, the
+ * death-qi debt tally, the half-zombie end tick, the zombie tier, and the lifespan billing anchor.
  *
  * <p>⚠ {@code lifeForm} is the ONE life-state value -- it replaced two scattered ones, and nothing may
  * go back to inferring alive-or-dead by reading several fields. ⚠ This record has NINE components, so
- * its {@code STREAM_CODEC} is hand-written -- {@code StreamCodec.composite} stops at six, and the
+ * its {@code STREAM_CODEC} is handwritten -- {@code StreamCodec.composite} stops at six, and the
  * encode/decode order matches by hand with no compile-time check. ⚠ The time anchors default to
  * {@code UNTRACKED} (-1), never {@code 0}: zero is a real game time, so a fresh world would read as
  * "already started". ⚠ {@code lived()} moves age and lifespan together in one call -- they are never
@@ -28,10 +29,11 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
- * @see BodyService
+ * @see com.unknown.guzhenren.attachment.service.body.BodyService
  * @see com.unknown.guzhenren.custom.enums.body.LifeForm
+ * @since 1.0.0
  */
+
 public record BodyData(
         LifeForm lifeForm,
         Race race,
@@ -171,7 +173,9 @@ public record BodyData(
                 halfZombieEndTick, zombieTier, v);
     }
 
-    /** ⚠ The two move together and are never written apart: one is what he has spent, the other what is left. */
+    /**
+     * ⚠ The two move together and are never written apart: one is what he has spent, the other what is left.
+     */
     public BodyData lived(long parts, long billedTick) {
         return new BodyData(lifeForm, race, ageParts + parts, lifespanParts - parts, lastDayIndex,
                 deathQiLifespanLost, halfZombieEndTick, zombieTier, billedTick);

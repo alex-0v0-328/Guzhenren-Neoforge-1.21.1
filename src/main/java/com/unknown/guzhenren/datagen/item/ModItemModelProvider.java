@@ -20,6 +20,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public class ModItemModelProvider extends ItemModelProvider {
 
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {

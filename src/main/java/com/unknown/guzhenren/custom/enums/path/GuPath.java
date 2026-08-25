@@ -16,10 +16,11 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see MarkTag
  * @see GuAttainment
+ * @since 1.0.0
  */
+
 public enum GuPath implements StringRepresentable, EnumTranslatable {
 
     HEAVEN, RULE, SPACE, TIME, HUMAN,

@@ -7,14 +7,15 @@ import com.unknown.guzhenren.custom.enums.aperture.Rank;
  *
  * <p>One of two independent axes describing a {@link com.unknown.guzhenren.recipe.GuRecipe}; the other
  * is how many Gu went in ({@code composite}). They overlap without either containing the other: 合练
- * [Composite] need not raise the rank, and 升炼 [Ascendant] may use a single Gu. They must never be
+ * [Composite] need not raise the rank [转数], and 升炼 [Ascendant] may use a single Gu. They must never be
  * collapsed into one enum.
  *
  * @author Alex
  * @version 1.0.0
- * @since 1.0.0
  * @see com.unknown.guzhenren.recipe.GuRecipe
+ * @since 1.0.0
  */
+
 public enum RefinementMode {
     STANDARD,
     ASCENDANT,

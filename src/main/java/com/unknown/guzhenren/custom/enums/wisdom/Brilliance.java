@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 1.0.0
  * @since 1.0.0
  */
+
 public enum Brilliance implements StringRepresentable, EnumTranslatable {
 
     ORDINARY(1, 15),
