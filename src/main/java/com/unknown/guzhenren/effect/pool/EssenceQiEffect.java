@@ -1,10 +1,7 @@
 package com.unknown.guzhenren.effect.pool;
 
-import com.unknown.guzhenren.client.GradedEffectIcon;
-import java.util.function.Consumer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
  * Essence Qi [元气] effect — a pool projection of the 元气 held in {@link
@@ -33,10 +30,5 @@ public class EssenceQiEffect extends MobEffect {
 
     public static double bonus(int amplifier) {
         return REGEN_BONUS[Math.clamp(amplifier, 0, REGEN_BONUS.length - 1)];
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(GradedEffectIcon.mobEffect("essence_qi", 1, 5));
     }
 }

@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
  * and these despawn anyway.
  *
  * <p>⚠ It fades once any player has come into range, not once a particular one has. That sighting
- * starts a clock, and nothing restarts it afterwards.
+ * starts a clock, and nothing restarts it afterward.
  *
  * @author Alex
  * @version 1.0.0
@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
  * @since 1.0.0
  */
 
+@SuppressWarnings("resource")
 public class HopeGuEntity extends FlyingGuEntity {
 
     private static final int FADE_TICKS = Ticks.MINUTE;
@@ -34,7 +35,6 @@ public class HopeGuEntity extends FlyingGuEntity {
 
     private long fadeAtTick = NOT_SIGHTED;
 
-    @SuppressWarnings("resource")
     public HopeGuEntity(EntityType<? extends HopeGuEntity> type, Level level,
                         Supplier<Item> caughtGu, ParticleOptions motes) {
         super(type, level, caughtGu, motes);

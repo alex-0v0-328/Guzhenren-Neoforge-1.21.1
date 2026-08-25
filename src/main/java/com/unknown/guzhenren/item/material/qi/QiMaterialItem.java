@@ -65,7 +65,6 @@ public class QiMaterialItem extends GuMaterialItem {
                 : null;
     }
 
-    @SuppressWarnings("resource")
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack,
                           int remaining) {

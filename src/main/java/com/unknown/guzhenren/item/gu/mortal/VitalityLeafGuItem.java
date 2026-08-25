@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.OneShotGuItem}. The gate checks
  * {@code hasEffect(VITALITY_LEAF)} so a re-use while the effect runs is a refusal, not a refresh;
- * the apply hands the effect holder and its duration to
+ * to apply hands the effect holder and its duration to
  * {@link com.unknown.guzhenren.registry.ModEffects#instance}.
  *
  * @author Alex

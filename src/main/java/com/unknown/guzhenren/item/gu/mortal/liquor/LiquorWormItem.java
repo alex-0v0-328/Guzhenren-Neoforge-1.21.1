@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Liquor Worm [酒虫]: a tended Gu that distils ordinary essence [真元] into the distilled reserve, in phases.
+ * Liquor Worm [酒虫]: a tended Gu that distills ordinary essence [真元] into the distilled reserve, in phases.
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. Four rungs register against this one
  * class, each usable only at its own rank. The payout calls

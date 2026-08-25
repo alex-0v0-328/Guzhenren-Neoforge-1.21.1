@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  * One layer per grant is fixed by {@code LAYERS_PER_GRANT}.
  *
  * <p>⚠ What it grants rides the player rather than the stack, so a holder who has already maxed out
- * can hand the Gu to someone else and it goes on working for them.
+ * can hand the Gu to someone else, and it goes on working for them.
  *
  * @author Alex
  * @version 1.0.0

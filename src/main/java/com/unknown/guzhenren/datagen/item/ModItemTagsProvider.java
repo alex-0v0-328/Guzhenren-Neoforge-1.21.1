@@ -9,7 +9,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,9 +44,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         tag(ModItemTags.POTATO_FEED).add(Items.POTATO);
 
         tag(ModItemTags.JIN_FEED).add(Items.RAW_IRON);
-        tag(ModItemTags.JIN_FEED_DENSE).add(Items.RAW_IRON_BLOCK);
         tag(ModItemTags.JIN_FEED_SMELTED).add(Items.IRON_INGOT);
-        tag(ModItemTags.JIN_FEED_SMELTED_DENSE).add(Items.IRON_BLOCK);
 
         tag(ModItemTags.LIQUOR_FEED).add(ModItems.LIQUOR.get(), ModItems.SOUR_LIQUOR.get(),
                 ModItems.SWEET_LIQUOR.get(), ModItems.BITTER_LIQUOR.get(), ModItems.SPICY_LIQUOR.get());

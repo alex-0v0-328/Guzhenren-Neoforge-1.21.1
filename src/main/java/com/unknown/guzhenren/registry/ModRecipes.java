@@ -32,7 +32,7 @@ public final class ModRecipes {
             DeferredRegister.create(Registries.RECIPE_SERIALIZER, Guzhenren.MOD_ID);
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<GuRecipe>> REFINEMENT =
-            RECIPE_TYPES.register("refinement", id -> RecipeType.simple(id));
+            RECIPE_TYPES.register("refinement", RecipeType::simple);
 
     public static final DeferredHolder<RecipeSerializer<?>, GuRecipe.Serializer> REFINEMENT_SERIALIZER =
             RECIPE_SERIALIZERS.register("refinement", id -> new GuRecipe.Serializer());

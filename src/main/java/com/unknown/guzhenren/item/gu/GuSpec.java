@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  * One Gu's numbers, given as a builder chain at registration so that a registration reads as a table row.
  *
  * <p>The single source of truth for every Gu's numerical identity: refine cost, channel/cost-per-use,
- * hunger bar geometry, feed/dense tags, cooldown, and max health. Stored on
+ * hunger bar geometry, feed tags, cooldown, and max health. Stored on
  * {@link MortalGuItem} at construction; read by {@link TendedGuItem}, {@link GuClock}, and the
  * tooltip/HUD renderers.
  *
@@ -43,8 +43,6 @@ public final class GuSpec {
 
     private @Nullable TagKey<Item> feedTag;
     private int feedUnits;
-    private @Nullable TagKey<Item> denseTag;
-    private int denseUnits;
 
     private int effectCooldownTicks;
     private int itemCooldownTicks;
@@ -98,12 +96,6 @@ public final class GuSpec {
         return this;
     }
 
-    public GuSpec dense(TagKey<Item> tag, int units) {
-        this.denseTag = tag;
-        this.denseUnits = units;
-        return this;
-    }
-
     public GuSpec cooldown(int ticks) {
         this.effectCooldownTicks = ticks;
         this.itemCooldownTicks = ticks;
@@ -113,11 +105,6 @@ public final class GuSpec {
     public GuSpec cooldown(int effectTicks, int itemTicks) {
         this.effectCooldownTicks = effectTicks;
         this.itemCooldownTicks = itemTicks;
-        return this;
-    }
-
-    public GuSpec maxHealth(int health) {
-        this.maxHealth = health;
         return this;
     }
 
@@ -148,7 +135,6 @@ public final class GuSpec {
     }
 
     public int feedUnits(ItemStack food) {
-        if (denseTag != null && food.is(denseTag)) return denseUnits;
         return feedTag != null && food.is(feedTag) ? feedUnits : 0;
     }
     //endregion
@@ -160,7 +146,7 @@ public final class GuSpec {
 
         if (!channels) return;
 
-        if (essencePerRound <= 0) throw fault(id, "channels but pours nothing");
+        if (essencePerRound == 0) throw fault(id, "channels but pours nothing");
         if (essencePerHunger <= 0) throw fault(id, "channels but costs no hunger");
         if (essencePerRound % essencePerHunger != 0) {
             throw fault(id, "round %d does not divide by hunger rate %d"

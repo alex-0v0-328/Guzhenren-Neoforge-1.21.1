@@ -17,7 +17,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
  *
  * <p>This file holds no decisions of its own; a handler that starts deciding for itself is how two
  * of them come to disagree about what a respawn keeps. {@code keepInventory} is read off the
- * {@link net.minecraft.server.MinecraftServer}'s gamerules, never {@code level()}, and passed into
+ * {@link net.minecraft.server.MinecraftServer}'s game rules, never {@code level()}, and passed into
  * {@code onClone} which is the single place a death-copy and a reset are settled.
  *
  * <p>⚠ {@code onWakeUp} guards on {@code wakeImmediately} / {@code updateLevel} / {@code

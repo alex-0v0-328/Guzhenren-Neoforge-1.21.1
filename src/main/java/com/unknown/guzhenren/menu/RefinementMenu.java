@@ -246,7 +246,7 @@ public class RefinementMenu extends AbstractContainerMenu {
     }
     //endregion
 
-    //region 自动填充 [auto-fill] -- picking a 蛊方 pulls what the bag can cover into the cells it names
+    //region 自动填充 [autofill] -- picking a 蛊方 pulls what the bag can cover into the cells it names
     private void fill(GuRecipe recipe) {
         for (int n = 0; n < recipe.ingredients().size(); n++) {
             int slot = recipe.slots().get(n);

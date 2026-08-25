@@ -141,9 +141,9 @@ public abstract class TendedGuItem extends MortalGuItem {
     }
 
     public static void returnEmptyContainers(ServerPlayer player, ItemStack food, int eaten) {
-        if (!food.getItem().hasCraftingRemainingItem()) return;
+        if (!food.hasCraftingRemainingItem()) return;
 
-        ItemStack empties = new ItemStack(food.getItem().getCraftingRemainingItem(), eaten);
+        ItemStack empties = food.getCraftingRemainingItem().copyWithCount(eaten);
         if (!player.getInventory().add(empties)) player.drop(empties, false);
     }
     //endregion
@@ -172,7 +172,6 @@ public abstract class TendedGuItem extends MortalGuItem {
     private static final int POOL_PACED_STEP_TICKS = 5;
     private static final int POOL_PACED_STEPS = Ticks.SECOND / POOL_PACED_STEP_TICKS;
 
-    @SuppressWarnings("resource")
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack,
                           int remaining) {

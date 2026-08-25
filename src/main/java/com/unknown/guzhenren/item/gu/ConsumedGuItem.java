@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
  * A tended Gu [需照顾] that its own use takes: cared for like any other, and gone once driven.
  *
  * <p>Extends {@link TendedGuItem} to override {@code drive} so it returns 1, making the base's own
- * {@code spend} shrink the stack. The third answer to "is it still there afterwards" (after
+ * {@code spend} shrink the stack. The third answer to "is it still there afterward" (after
  * {@link OneShotGuItem} and a plain tended Gu), so the Vital [本命] slot asks {@code canBeVital}
  * rather than testing the class.
  *

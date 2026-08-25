@@ -1,10 +1,7 @@
 package com.unknown.guzhenren.effect.timed;
 
-import com.unknown.guzhenren.client.GradedEffectIcon;
-import java.util.function.Consumer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
  * The effect worn while a Liquor Worm [酒虫] is in its distilling phase — a marker for the vanilla
@@ -29,10 +26,5 @@ public class LiquorWormEffect extends MobEffect {
 
     public LiquorWormEffect(MobEffectCategory category, int color) {
         super(category, color);
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(GradedEffectIcon.mobEffect("liquor_worm", 1, 4));
     }
 }

@@ -52,6 +52,6 @@ public final class EntityRegistrationEvents {
 
     private static boolean onTheSurface(EntityType<HopeGuEntity> type, ServerLevelAccessor level,
                                         MobSpawnType reason, BlockPos pos, RandomSource random) {
-        return pos.getY() >= level.getSeaLevel();
+        return pos.getY() >= level.getLevel().getSeaLevel();
     }
 }

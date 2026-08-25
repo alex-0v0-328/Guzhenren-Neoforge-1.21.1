@@ -30,9 +30,7 @@ public final class ModItemTags {
     public static final TagKey<Item> POTATO_FEED = key("potato_feed");
 
     public static final TagKey<Item> JIN_FEED = key("jin_feed");
-    public static final TagKey<Item> JIN_FEED_DENSE = key("jin_feed_dense");
     public static final TagKey<Item> JIN_FEED_SMELTED = key("jin_feed_smelted");
-    public static final TagKey<Item> JIN_FEED_SMELTED_DENSE = key("jin_feed_smelted_dense");
 
     public static final TagKey<Item> LIQUOR_FEED = key("liquor_feed");
 

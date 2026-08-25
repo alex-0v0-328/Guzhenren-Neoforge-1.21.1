@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>Extends {@link com.unknown.guzhenren.item.material.GuMaterialItem}. It earns a leaf class only
  * because it is drunk rather than eaten -- the {@code FoodProperties} builder needs a
  * {@link net.minecraft.world.item.UseAnim#DRINK} animation and a nausea chance. Five registrations
- * (酒 plus four flavours) use this one class; the flavours exist because the 四味酒虫 recipe takes one
+ * (酒 plus four flavors) use this one class; the flavors exist because the 四味酒虫 recipe takes one
  * of each.
  *
  * <p>⚠ {@code FoodProperties.Builder.effect} must take a {@code Supplier} -- the effect holder resolves

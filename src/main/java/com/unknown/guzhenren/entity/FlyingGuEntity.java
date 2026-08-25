@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
  * @since 1.0.0
  */
 
+@SuppressWarnings("resource")
 public class FlyingGuEntity extends WildGuEntity {
 
     public static final double DETECT_RANGE = 12.0;
@@ -54,7 +55,6 @@ public class FlyingGuEntity extends WildGuEntity {
 
     private final ParticleOptions motes;
 
-    @SuppressWarnings("resource")
     public FlyingGuEntity(EntityType<? extends FlyingGuEntity> type, Level level,
                           Supplier<Item> caughtGu, ParticleOptions motes) {
         super(type, level, caughtGu);
@@ -88,7 +88,6 @@ public class FlyingGuEntity extends WildGuEntity {
     }
     //endregion
 
-    @SuppressWarnings("resource")
     @Override
     protected @NotNull PathNavigation createNavigation(@NotNull Level level) {
         FlyingPathNavigation navigation = new FlyingPathNavigation(this, level);

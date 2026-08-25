@@ -8,7 +8,7 @@ import com.unknown.guzhenren.client.screen.ApertureStorageScreen;
 import com.unknown.guzhenren.client.screen.PlayerInfoScreen;
 import com.unknown.guzhenren.client.screen.RefinementScreen;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
-import com.unknown.guzhenren.network.CrashStepPayload;
+import com.unknown.guzhenren.network.payload.CrashStepPayload;
 import com.unknown.guzhenren.registry.ModEffects;
 import com.unknown.guzhenren.registry.ModEntityTypes;
 import com.unknown.guzhenren.registry.ModMenus;

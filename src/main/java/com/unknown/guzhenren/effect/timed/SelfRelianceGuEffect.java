@@ -1,12 +1,9 @@
 package com.unknown.guzhenren.effect.timed;
 
 import com.unknown.guzhenren.Ticks;
-import com.unknown.guzhenren.client.GradedEffectIcon;
-import java.util.function.Consumer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
  * Self-Reliance Gu [自力更生蛊] effect: a slow self-heal that only mends what sits below its grade's limit.
@@ -38,10 +35,5 @@ public final class SelfRelianceGuEffect extends MobEffect {
         float limit = entity.getMaxHealth() * (0.5F + tier * 0.1F);
         if (entity.getHealth() < limit) entity.heal(Math.min(tier + 1.0F, limit - entity.getHealth()));
         return true;
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(GradedEffectIcon.item("self_reliance_gu", 2, 4));
     }
 }

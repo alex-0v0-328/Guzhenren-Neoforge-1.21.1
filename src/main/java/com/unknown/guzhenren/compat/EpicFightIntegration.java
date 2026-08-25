@@ -7,6 +7,7 @@ import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.entity.HopeGuEntity;
 import com.unknown.guzhenren.registry.ModEffects;
+import java.util.Objects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -94,7 +95,7 @@ public final class EpicFightIntegration {
             instance.addTransientModifier(new AttributeModifier(STAMINA_MODIFIER, bonus,
                     AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         }
-        EpicFightCapabilities.getServerPlayerPatch(player).clampMaxAttributes();
+        Objects.requireNonNull(EpicFightCapabilities.getServerPlayerPatch(player)).clampMaxAttributes();
     }
 
     private static int staminaMaxPercent(ServerPlayer player) {

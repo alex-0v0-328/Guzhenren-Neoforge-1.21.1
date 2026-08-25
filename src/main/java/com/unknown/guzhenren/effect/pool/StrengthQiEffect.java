@@ -1,11 +1,8 @@
 package com.unknown.guzhenren.effect.pool;
 
-import com.unknown.guzhenren.client.GradedEffectIcon;
 import com.unknown.guzhenren.effect.AttackContributor;
-import java.util.function.Consumer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
  * Strength Qi [力气] effect — a pool projection of the 力气 held in {@link
@@ -36,10 +33,5 @@ public class StrengthQiEffect extends MobEffect implements AttackContributor {
     @Override
     public double attackBonus(int amplifier) {
         return ATTACK_BONUS[Math.clamp(amplifier, 0, ATTACK_BONUS.length - 1)];
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(GradedEffectIcon.mobEffect("strength_qi", 1, 5));
     }
 }

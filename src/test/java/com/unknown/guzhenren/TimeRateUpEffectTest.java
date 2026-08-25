@@ -44,7 +44,6 @@ class TimeRateUpEffectTest {
     }
 
     private static TimeRateUpEffect effect(int ratePerLayer, int maxLayers) {
-        return new TimeRateUpEffect(MobEffectCategory.BENEFICIAL, 0xFFFFFF,
-                ratePerLayer, maxLayers, "test");
+        return new TimeRateUpEffect(MobEffectCategory.BENEFICIAL, 0xFFFFFF, ratePerLayer, maxLayers);
     }
 }

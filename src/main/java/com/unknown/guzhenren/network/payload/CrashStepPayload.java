@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.network;
+package com.unknown.guzhenren.network.payload;
 
 import com.unknown.guzhenren.Guzhenren;
 import io.netty.buffer.ByteBuf;

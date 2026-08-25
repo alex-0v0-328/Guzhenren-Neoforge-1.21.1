@@ -1,11 +1,8 @@
 package com.unknown.guzhenren.effect.pool;
 
-import com.unknown.guzhenren.client.GradedEffectIcon;
-import java.util.function.Consumer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
 /**
  * Life Qi [生气] effect — a pool projection of the 生气 held in {@link
@@ -41,10 +38,5 @@ public class LifeQiEffect extends MobEffect {
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         entity.heal(amplifier + 1.0F);
         return true;
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
-        consumer.accept(GradedEffectIcon.mobEffect("life_qi", 1, 5));
     }
 }

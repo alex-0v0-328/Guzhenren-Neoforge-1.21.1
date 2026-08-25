@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Extends {@link Item} to add the four right-click templates a leaf fills: plain use, sneak use,
  * charge pacing, and Vital Gu [本命蛊] binding. The charge duration is paced by the gap between the
- * holder's rank and the item's own via {@code chargeByGap}, never by the stage.
+ * holder's rank and the item's own via {@code useChargeByGap}, never by the stage.
  *
  * <p>⚠ The four hooks ({@code gate}, {@code apply}, {@code useDurationTicks}, {@code hasSneakUse}) are
  * re-read in both {@code use} and {@code finishUsingItem}, so leaving or entering a crouch mid-charge
@@ -70,12 +70,11 @@ public abstract class GuItem extends Item {
     public static final int USE_SLOW_TICKS = 20;
 
     protected int rankGap(Player p) {return ApertureService.rank(p).ordinal() - rank.ordinal();}
-    protected int useChargeByGap(Player p) {return chargeByGap(p, USE_FAST_TICKS, USE_SAME_TICKS, USE_SLOW_TICKS);}
 
-    protected int chargeByGap(Player player, int fast, int same, int slow) {
+    protected int useChargeByGap(Player player) {
         int gap = rankGap(player);
-        if (gap > 0) return TimeFlowService.waited(player, fast);
-        return TimeFlowService.waited(player, gap == 0 ? same : slow);
+        if (gap > 0) return TimeFlowService.waited(player, USE_FAST_TICKS);
+        return TimeFlowService.waited(player, gap == 0 ? USE_SAME_TICKS : USE_SLOW_TICKS);
     }
     //endregion
 
@@ -107,7 +106,6 @@ public abstract class GuItem extends Item {
                 : InteractionResultHolder.fail(stack);
     }
 
-    @SuppressWarnings("resource")
     @Override
     public final @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
                                                                  @NotNull InteractionHand hand) {
@@ -129,7 +127,6 @@ public abstract class GuItem extends Item {
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
-    @SuppressWarnings("resource")
     @Override
     public final @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level level,
                                                     @NotNull LivingEntity entity) {

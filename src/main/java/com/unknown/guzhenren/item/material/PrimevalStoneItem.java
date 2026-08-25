@@ -94,12 +94,11 @@ public class PrimevalStoneItem extends GuMaterialItem {
     //endregion
 
     //region sourcing stones for something else -- the walk lives here, not in a service
-    public static long pourInto(ServerPlayer player, long wanted) {
+    public static void pourInto(ServerPlayer player, long wanted) {
         long each = essencePerStone();
-        if (wanted <= 0L || each <= 0L) return 0L;
+        if (wanted <= 0L || each <= 0L) return;
         int taken = draw(player, (int) Math.min(Integer.MAX_VALUE, (wanted + each - 1) / each));
         if (taken > 0) EssenceService.add(player, taken * each);
-        return taken * each;
     }
 
     private static int draw(ServerPlayer player, int wanted) {
