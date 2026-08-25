@@ -51,8 +51,24 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
     public static final int GAP_TICKS = 2 * Ticks.SECOND;
 
     public GuRecipe {
+        if (essencePerSecond < 0L) throw new IllegalArgumentException("essencePerSecond must be non-negative");
+        if (soulPerSecond < 0L) throw new IllegalArgumentException("soulPerSecond must be non-negative");
+        if (windows.stream().anyMatch(window -> window < 0)) {
+            throw new IllegalArgumentException("windows must be non-negative");
+        }
+        if (baseSuccess < 0 || baseSuccess > 100) {
+            throw new IllegalArgumentException("baseSuccess must be 0..100");
+        }
         if (ingredients.size() != slots.size()) {
             throw new IllegalArgumentException("every ingredient owns exactly one cell of the grid");
+        }
+        try {
+            int totalTicks = exactTotalTicks(windows.size());
+            long totalSeconds = totalTicks / Ticks.SECOND;
+            Math.multiplyExact(essencePerSecond, totalSeconds);
+            Math.multiplyExact(soulPerSecond, totalSeconds);
+        } catch (ArithmeticException e) {
+            throw new IllegalArgumentException("recipe runtime exceeds supported range", e);
         }
     }
 
@@ -64,11 +80,16 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
     public int windowCount() {return windows.size();}
     public int stonesFor(int window) {return windows.get(window);}
     public int totalSeconds() {return totalTicks() / Ticks.SECOND;}
-    public long essenceToFinish() {return essencePerSecond * totalSeconds();}
-    public long soulToFinish() {return soulPerSecond * totalSeconds();}
+    public long essenceToFinish() {return Math.multiplyExact(essencePerSecond, totalSeconds());}
+    public long soulToFinish() {return Math.multiplyExact(soulPerSecond, totalSeconds());}
 
     public int totalTicks() {
-        return windowCount() * WINDOW_TICKS + Math.max(0, windowCount() - 1) * GAP_TICKS;
+        return exactTotalTicks(windowCount());
+    }
+
+    private static int exactTotalTicks(int windows) {
+        return Math.addExact(Math.multiplyExact(windows, WINDOW_TICKS),
+                Math.multiplyExact(Math.max(0, windows - 1), GAP_TICKS));
     }
     //endregion
 

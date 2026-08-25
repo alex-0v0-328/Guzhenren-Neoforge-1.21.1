@@ -27,7 +27,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  * service) plus the two scratch fields ({@code ESSENCE_CARRY}, {@code BORN}).
  * Synced ones use {@code OWNER_ONLY}; the storage and scratch fields are sync-less.
  *
- * <p>⚠ A domain is not an attachment: the body is one domain across six. Never give an attachment the
+ * <p>⚠ A domain is not an attachment: the body is one domain across five. Never give an attachment the
  * bare domain word -- {@code qi}/{@code soul}/{@code strength} are also {@code GuPath} names.
  *
  * @author Alex

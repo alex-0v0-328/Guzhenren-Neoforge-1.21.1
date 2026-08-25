@@ -131,13 +131,18 @@ public final class InfoModel {
         rows.add(new Row(0, new Form(body.lifeForm())));
         rows.add(new Row(0, new RaceRow(body.race())));
         rows.add(new Row(0, new Lifespan(body.lifespanYears(), body.ageYears())));
-        if (strength.isEmpty()) return rows;
-
-        if (strength.hasPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)) {
+        if (!strength.isEmpty() && strength.hasPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)) {
             rows.add(new Row(0, new CapacityRow(StrengthService.usableJin(player), strength.totalJin())));
         }
-        rows.add(new Row(0, new AttackRow(AttackService.bonus(player))));
+        double attackBonus = AttackService.bonus(player);
+        if (shouldShowAttackRow(strength.isEmpty(), attackBonus)) {
+            rows.add(new Row(0, new AttackRow(attackBonus)));
+        }
         return rows;
+    }
+
+    static boolean shouldShowAttackRow(boolean strengthEmpty, double attackBonus) {
+        return !strengthEmpty || attackBonus != 0.0D;
     }
 
     public static List<Row> soul(Player player) {

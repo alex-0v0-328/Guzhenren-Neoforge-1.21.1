@@ -76,6 +76,11 @@ public final class BodyService {
         AttackService.refresh(player);
     }
 
+    public static void revive(ServerPlayer player) {
+        store(player, get(player).revived());
+        AttackService.refresh(player);
+    }
+
     public static void enterHalfZombie(ServerPlayer player, int tier, int durationTicks) {
         store(player, get(player)
                 .withLifeForm(LifeForm.HALF_ZOMBIE)

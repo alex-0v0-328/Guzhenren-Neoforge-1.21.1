@@ -112,6 +112,7 @@ public record BodyData(
     public BodyData {
         ageParts = Math.max(0L, ageParts);
         deathQiLifespanLost = Math.max(0L, deathQiLifespanLost);
+        if (!lifeForm.isAnyZombie()) zombieTier = NO_ZOMBIE_TIER;
     }
 
     public boolean isExhausted() {return lifespanParts <= 0L;}
@@ -130,7 +131,12 @@ public record BodyData(
 
     public BodyData withLifeForm(LifeForm v) {
         return new BodyData(v, race, ageParts, lifespanParts, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier, lastBilledTick);
+                halfZombieEndTick, v.isAnyZombie() ? zombieTier : NO_ZOMBIE_TIER, lastBilledTick);
+    }
+
+    public BodyData revived() {
+        return new BodyData(LifeForm.ALIVE, race, ageParts, lifespanParts, lastDayIndex, deathQiLifespanLost,
+                UNTRACKED, NO_ZOMBIE_TIER, lastBilledTick);
     }
     public BodyData withRace(Race v) {
         return new BodyData(lifeForm, v, ageParts, lifespanParts, lastDayIndex, deathQiLifespanLost,

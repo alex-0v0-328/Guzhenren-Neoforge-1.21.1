@@ -17,8 +17,8 @@ import org.jetbrains.annotations.Nullable;
  * Primeval Elder Gu [元老蛊]: a vault for primeval stones [元石] that pays its own upkeep from the vault.
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem} but declares no clock and never eats.
- * Right click deposits every stone (free); sneak + right click withdraws a stack of 64 (costs 1 essence,
- * charged). The stored-stones total rides {@link com.unknown.guzhenren.registry.ModDataComponents}, not
+ * Right click deposits every stone (free); sneak + right click withdraws a stack of 64 (free). The
+ * stored-stones total rides {@link com.unknown.guzhenren.registry.ModDataComponents}, not
  * {@code RefinedGuState}, because every tended Gu shares that record.
  *
  * <p>⚠ Starving is unreachable for it by design -- a failed refinement is the only thing that can

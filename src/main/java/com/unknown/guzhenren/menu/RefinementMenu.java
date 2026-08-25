@@ -240,7 +240,8 @@ public class RefinementMenu extends AbstractContainerMenu {
     }
 
     private static long threshold(GuRecipe recipe) {
-        return recipe.essenceToFinish() * OPENING_PERCENT / 100L;
+        long essence = recipe.essenceToFinish();
+        return essence / 100L * OPENING_PERCENT + essence % 100L * OPENING_PERCENT / 100L;
     }
     //endregion
 

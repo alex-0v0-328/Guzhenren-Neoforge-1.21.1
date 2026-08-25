@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  * Writes the biome tags deciding where a wild Gu [野生蛊虫] may spawn.
  *
  * <p>Extends {@link net.minecraft.data.tags.TagsProvider} for {@link net.minecraft.world.level.biome.Biome}.
- * Lists all 41 land biomes one by one under {@code hope_gu_spawns}; must NOT collapse to
+ * Lists all 39 land biomes one by one under {@code hope_gu_spawns}; must NOT collapse to
  * {@code #minecraft:is_overworld} because that carries the oceans, whose surface sits at sea level.
  *
  * @author Alex
@@ -78,8 +78,6 @@ public class ModBiomeTagsProvider extends TagsProvider<Biome> {
                 .add(Biomes.SWAMP)
                 .add(Biomes.MANGROVE_SWAMP)
 
-                .add(Biomes.RIVER)
-                .add(Biomes.FROZEN_RIVER)
                 .add(Biomes.BEACH)
                 .add(Biomes.SNOWY_BEACH)
                 .add(Biomes.STONY_SHORE)

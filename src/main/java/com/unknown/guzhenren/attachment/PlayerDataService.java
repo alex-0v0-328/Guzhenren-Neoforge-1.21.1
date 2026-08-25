@@ -92,7 +92,7 @@ public final class PlayerDataService {
     }
 
     public static void onRespawn(ServerPlayer player) {
-        BodyService.setLifeForm(player, LifeForm.ALIVE);
+        BodyService.revive(player);
         if (ApertureService.pressureFull(player)) ApertureService.setPressure(player, ApertureService.PRIMARY, 0);
         if (BodyService.get(player).isExhausted()) {
             BodyService.setLifespan(player, BodyData.DEFAULT_LIFESPAN);

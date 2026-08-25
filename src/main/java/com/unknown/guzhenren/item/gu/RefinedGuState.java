@@ -9,10 +9,8 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * The per-stack state a tended Gu [需照顾] carries: how far refined, how well fed, how badly hurt.
  *
- * <p>An immutable record stored on the {@code REFINED_GU_STATE} data component. Five components run
- * past {@link StreamCodec#composite}'s limit of six, so the {@code STREAM_CODEC} is hand-written;
- * encode and decode order must match by hand, nothing checks it. The compact constructor clamps
- * every field to {@code >= 0}.
+ * <p>An immutable record stored on the {@code REFINED_GU_STATE} data component. Its five fields fit
+ * the composite stream codec. The compact constructor clamps every field to {@code >= 0}.
  *
  * <p>⚠ Stores damage taken rather than health remaining, so a wild Gu's zero already reads as
  * undamaged. Turning that around would need a special case in every reader.

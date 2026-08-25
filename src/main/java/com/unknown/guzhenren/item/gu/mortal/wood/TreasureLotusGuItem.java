@@ -14,7 +14,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -138,33 +137,43 @@ public class TreasureLotusGuItem extends TendedGuItem {
     }
 
     private void dropToInventory(ServerPlayer player, int amount) {
-        Item item = ModItems.PRIMEVAL_STONE.get();
+        ItemStack produced = new ItemStack(ModItems.PRIMEVAL_STONE.get());
         Inventory inventory = player.getInventory();
-        int left = placeInto(inventory, 9, 36, item, amount);
-        left = placeInto(inventory, 0, 9, item, left);
-        if (left > 0 && player.getOffhandItem().isEmpty()) {
-            int moved = Math.min(left, item.getDefaultMaxStackSize());
-            player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(item, moved));
+        int left = placeInto(inventory, 9, 36, produced, amount);
+        left = placeInto(inventory, 0, 9, produced, left);
+        ItemStack offhand = player.getOffhandItem();
+        if (left > 0 && ItemStack.isSameItemSameComponents(offhand, produced)
+                && offhand.getCount() < offhand.getMaxStackSize()) {
+            int moved = Math.min(left, offhand.getMaxStackSize() - offhand.getCount());
+            offhand.grow(moved);
+            left -= moved;
+        } else if (left > 0 && offhand.isEmpty()) {
+            int moved = Math.min(left, produced.getMaxStackSize());
+            player.setItemInHand(InteractionHand.OFF_HAND, produced.copyWithCount(moved));
             left -= moved;
         }
-        if (left > 0) player.drop(new ItemStack(item, left), false);
+        while (left > 0) {
+            int moved = Math.min(left, produced.getMaxStackSize());
+            player.drop(produced.copyWithCount(moved), false);
+            left -= moved;
+        }
     }
 
-    private int placeInto(Inventory inventory, int from, int to, Item item, int amount) {
-        int max = item.getDefaultMaxStackSize();
+    private int placeInto(Inventory inventory, int from, int to, ItemStack produced, int amount) {
         int left = amount;
         for (int slot = from; slot < to && left > 0; slot++) {
-            ItemStack stack = inventory.getItem(slot);
-            if (stack.is(item) && stack.getCount() < max) {
-                int moved = Math.min(left, max - stack.getCount());
-                stack.grow(moved);
+            ItemStack existing = inventory.getItem(slot);
+            if (ItemStack.isSameItemSameComponents(existing, produced)
+                    && existing.getCount() < existing.getMaxStackSize()) {
+                int moved = Math.min(left, existing.getMaxStackSize() - existing.getCount());
+                existing.grow(moved);
                 left -= moved;
             }
         }
         for (int slot = from; slot < to && left > 0; slot++) {
             if (inventory.getItem(slot).isEmpty()) {
-                int moved = Math.min(left, max);
-                inventory.setItem(slot, new ItemStack(item, moved));
+                int moved = Math.min(left, produced.getMaxStackSize());
+                inventory.setItem(slot, produced.copyWithCount(moved));
                 left -= moved;
             }
         }

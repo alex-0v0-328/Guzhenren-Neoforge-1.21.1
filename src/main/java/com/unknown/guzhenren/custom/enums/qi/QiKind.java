@@ -12,9 +12,8 @@ import org.jetbrains.annotations.NotNull;
  * <p>Closed vocabulary enum: eight kinds, and {@code HEAVEN}/{@code EARTH} have no source in phase 2
  * (升仙's threshold, not a gap). {@code SWORD} has no effect at all. No sibling mod may add a kind.
  *
- * <p>⚠ The tier ladder ({@code 10 << 2×tier}) and the decay rate ({@code 1 << tier}) are tuned against
- * each other so every tier empties in the same number of seconds. Move one without the other and the
- * tiers stop being comparable.
+ * <p>⚠ Timed tiers drain in 10/20/40/80/160 seconds: the tier amount is {@code 10 << 2×tier} and
+ * its decay rate is {@code 1 << tier}. Move one without the other and those durations stop matching.
  *
  * @author Alex
  * @version 1.0.0

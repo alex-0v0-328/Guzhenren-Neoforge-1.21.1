@@ -10,6 +10,7 @@ import com.unknown.guzhenren.client.screen.RefinementScreen;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.network.CrashStepPayload;
 import com.unknown.guzhenren.registry.ModEntityTypes;
+import com.unknown.guzhenren.registry.ModEffects;
 import com.unknown.guzhenren.registry.ModMenus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -90,9 +91,11 @@ public final class ClientEvents {
     public static void onClientTick(ClientTickEvent.Post event) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null) return;
-        boolean canCrashStep = canUseCrashStep(minecraft.player.getMainHandItem());
-        if (!canCrashStep) {
+        ItemStack mainHand = minecraft.player.getMainHandItem();
+        boolean canUseCrashStep = canUseCrashStep(mainHand);
+        if (!canUseCrashStep) {
             EpicFightCapabilities.getLocalPlayerPatchAsOptional(minecraft.player)
+                    .filter(yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch::isEpicFightMode)
                     .ifPresent(patch -> patch.toVanillaMode(true));
         }
         while (ModKeyMappings.OPEN_INFO.consumeClick()) {
@@ -105,18 +108,23 @@ public final class ClientEvents {
         boolean right = minecraft.options.keyRight.isDown();
         boolean pressed = up && !previousUp || down && !previousDown
                 || left && !previousLeft || right && !previousRight;
-        if (canCrashStep && minecraft.screen == null && Screen.hasAltDown() && pressed) {
+        if (canUseCrashStep && minecraft.screen == null && Screen.hasAltDown() && pressed) {
             int vertical = up == down ? 0 : up ? 1 : -1;
             int horizontal = left == right ? 0 : left ? 1 : -1;
-            if (vertical != 0 || horizontal != 0) {
-                EpicFightCapabilities.getLocalPlayerPatchAsOptional(minecraft.player)
-                        .ifPresent(patch -> patch.toEpicFightMode(true));
-                float cameraYRot = EpicFightCameraAPI.getInstance().getForwardYRot();
-                float yRot = Mth.wrapDegrees(cameraYRot
-                        - (90.0F * horizontal * (1 - Math.abs(vertical))
-                        + 45.0F * vertical * horizontal));
-                PacketDistributor.sendToServer(new CrashStepPayload(vertical, horizontal, yRot));
-            }
+            boolean directionHasEffect = canUseCrashStep(mainHand, vertical, horizontal,
+                    minecraft.player.hasEffect(ModEffects.HORIZONTAL_CRASH_GU),
+                    minecraft.player.hasEffect(ModEffects.VERTICAL_CRASH_GU),
+                    minecraft.player.hasEffect(ModEffects.CHARGING_CRASH_GU));
+            EpicFightCapabilities.getLocalPlayerPatchAsOptional(minecraft.player)
+                    .filter(patch -> shouldSendCrashStep(patch.isVanillaMode(), directionHasEffect))
+                    .ifPresent(patch -> {
+                        patch.toEpicFightMode(true);
+                        float cameraYRot = EpicFightCameraAPI.getInstance().getForwardYRot();
+                        float yRot = Mth.wrapDegrees(cameraYRot
+                                - (90.0F * horizontal * (1 - Math.abs(vertical))
+                                + 45.0F * vertical * horizontal));
+                        PacketDistributor.sendToServer(new CrashStepPayload(vertical, horizontal, yRot));
+                    });
         }
         previousUp = up;
         previousDown = down;
@@ -126,5 +134,16 @@ public final class ClientEvents {
 
     public static boolean canUseCrashStep(ItemStack mainHand) {
         return !(mainHand.getItem() instanceof MortalGuItem);
+    }
+
+    public static boolean canUseCrashStep(ItemStack mainHand, int vertical, int horizontal,
+                                          boolean horizontalCrash, boolean verticalCrash, boolean chargingCrash) {
+        if (!canUseCrashStep(mainHand) || vertical == 0 && horizontal == 0) return false;
+        return (horizontal == 0 || horizontalCrash || chargingCrash)
+                && (vertical == 0 || verticalCrash || chargingCrash);
+    }
+
+    public static boolean shouldSendCrashStep(boolean vanillaMode, boolean directionHasEffect) {
+        return vanillaMode && directionHasEffect;
     }
 }
