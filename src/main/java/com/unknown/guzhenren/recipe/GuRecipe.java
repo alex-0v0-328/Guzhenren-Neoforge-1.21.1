@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unknown.guzhenren.Ticks;
-import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.registry.ModRecipes;
 import io.netty.buffer.ByteBuf;
@@ -74,10 +73,6 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
         }
     }
 
-    public record Shape(RefinementMode mode, int guInputs) {
-        public boolean composite() {return guInputs >= 2;}
-    }
-
     //region the ritual's own clock -- the window list IS the stage count
     public int windowCount() {return windows.size();}
     public int stonesFor(int window) {return windows.get(window);}
@@ -138,47 +133,14 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
     }
     //endregion
 
-    //region 炼法 [refinement mode] -- derived from the ranks, never stored; null means undetermined
-    public @Nullable Shape shape() {
-        Rank top = null;
-        int guInputs = 0;
-
-        for (SizedIngredient need : ingredients) {
-            ItemStack[] options = need.ingredient().getItems();
-            Rank rank = null;
-            int guOptions = 0;
-            for (ItemStack option : options) {
-                if (!(option.getItem() instanceof MortalGuItem gu)) continue;
-                if (rank != null && rank != gu.rank()) return null;
-                rank = gu.rank();
-                guOptions++;
-            }
-            if (guOptions == 0) continue;
-            if (guOptions != options.length) return null;
-
-            guInputs += need.count();
-            if (top == null || rank.ordinal() > top.ordinal()) top = rank;
-        }
-
-        Rank out = highestGuRank(results);
-        return top == null || out == null ? null : new Shape(RefinementMode.between(top, out), guInputs);
-    }
-
+    //region the Gu count among the results -- the sole-Gu inheritance rule reads it
+    //  TODO(炼法): rebuild the refinement-mode derivation (two axes, never one enum) once modes gain behavior.
     public int guResultCount() {
         int n = 0;
         for (ItemStack stack : results) {
             if (stack.getItem() instanceof MortalGuItem) n += stack.getCount();
         }
         return n;
-    }
-
-    private static @Nullable Rank highestGuRank(List<ItemStack> stacks) {
-        Rank top = null;
-        for (ItemStack stack : stacks) {
-            if (!(stack.getItem() instanceof MortalGuItem gu)) continue;
-            if (top == null || gu.rank().ordinal() > top.ordinal()) top = gu.rank();
-        }
-        return top;
     }
     //endregion
 
