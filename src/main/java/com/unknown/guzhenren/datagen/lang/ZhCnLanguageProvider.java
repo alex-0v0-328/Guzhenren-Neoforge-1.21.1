@@ -18,7 +18,7 @@ import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
-import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
+import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
@@ -89,10 +89,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.8",                 "八");
         add("guzhenren.display.base_units.9",                 "九");
         add("guzhenren.display.none",                         "[无]");
-        add("guzhenren.display.time.multiple.2",              "两倍");
-        add("guzhenren.display.time.multiple.3",              "三倍");
-        add("guzhenren.display.time.multiple.4",              "四倍");
-        add("guzhenren.display.time.multiple.5",              "五倍");
+        add("guzhenren.display.time_rate_up",                 "%s倍");
         add("guzhenren.display.wild",                         "野生·%s");
         add("guzhenren.display.vital",                        "本命·%s");
         add("guzhenren.display.strength.beast_reading",       "[%s%s之力]");
@@ -174,15 +171,15 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.lifespan",        "玩家寿元  %s");
         add("guzhenren.command.info.life_form",       "生命形态  %s");
         add("guzhenren.command.info.race",            "种族      %s");
-        add("guzhenren.command.info.wisdom",          "智道造诣");
-        add("guzhenren.command.info.wisdom_entry",    "  %s  %s");
-        add("guzhenren.command.info.qi",              "气道造诣");
-        add("guzhenren.command.info.qi_entry",        "  %s  %s");
+        add("guzhenren.command.info.wisdom_path_achieve",       "智道造诣");
+        add("guzhenren.command.info.wisdom_path_achieve_entry", "  %s  %s");
+        add("guzhenren.command.info.qi_path_achieve",           "气道造诣");
+        add("guzhenren.command.info.qi_path_achieve_entry",     "  %s  %s");
         add("guzhenren.command.info.paths",           "流派造诣");
-        add("guzhenren.command.info.strength",        "力道造诣");
-        add("guzhenren.command.info.strength_entry",  "  %s  %s");
-        add("guzhenren.command.info.time",            "宙道造诣");
-        add("guzhenren.command.info.time_entry",      "  时间流速  %s");
+        add("guzhenren.command.info.strength_path_achieve",       "力道造诣");
+        add("guzhenren.command.info.strength_path_achieve_entry", "  %s  %s");
+        add("guzhenren.command.info.time_path_achieve",           "宙道造诣");
+        add("guzhenren.command.info.time_rate_up_entry",          "  自身时间加速  %s");
         add("guzhenren.command.info.capacity",        "肉身承受  %s / %s斤");
         add("guzhenren.command.info.attack",          "基础攻击力  %s");
         add("guzhenren.command.info.brilliance",      "才情  %s");
@@ -259,14 +256,14 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.distilled",      "精炼真元");
         add("guzhenren.screen.label.life_form",      "生命形态");
         add("guzhenren.screen.label.race",           "种族");
-        add("guzhenren.screen.label.wisdom",         "智道造诣");
+        add("guzhenren.screen.label.wisdom_path_achieve", "智道造诣");
         add("guzhenren.screen.label.soul",           "魂魄");
         add("guzhenren.screen.label.lifespan",       "寿元");
-        add("guzhenren.screen.label.qi",             "气道造诣");
+        add("guzhenren.screen.label.qi_path_achieve", "气道造诣");
         add("guzhenren.screen.label.paths",          "流派造诣");
-        add("guzhenren.screen.label.strength",       "力道造诣");
-        add("guzhenren.screen.label.time",           "宙道造诣");
-        add("guzhenren.screen.label.time_flow",      "时间流速");
+        add("guzhenren.screen.label.strength_path_achieve", "力道造诣");
+        add("guzhenren.screen.label.time_path_achieve",     "宙道造诣");
+        add("guzhenren.screen.label.time_rate_up",          "自身时间加速");
         add("guzhenren.screen.lable.body_capacity",  "承受");
         add("guzhenren.screen.label.attack",         "基础攻击力");
         add("guzhenren.screen.label.apreture_pressure", "空窍压力");
@@ -469,7 +466,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addThoughtTag();
         addBeastStrength();
         addBeastStrengthFamily();
-        addStrengthBranch();
+        addStrengthPathBranch();
         addHumanStrength();
     }
 
@@ -479,11 +476,11 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(BeastStrength.BEAR,       "熊");
     }
 
-    private void addStrengthBranch() {
-        add(StrengthBranch.HUMAN,           "人力钧力流");
-        add(StrengthBranch.BEASTS,          "兽力虚影流");
-        add(StrengthBranch.ENVIRONMENT,     "气象天地流");
-        add(StrengthBranch.OLDER_ANTIQUITY, "上古力道");
+    private void addStrengthPathBranch() {
+        add(StrengthPathBranch.BEAST_STRENGTH_PHANTOM,          "兽力虚影流");
+        add(StrengthPathBranch.HUMAN_JUN_STRENGTH,              "人力钧力流");
+        add(StrengthPathBranch.ATMOSPHERIC_HEAVEN_AND_EARTH,    "气象天地流");
+        add(StrengthPathBranch.NORMAL,                           "基础力道");
     }
 
     private void addHumanStrength() {

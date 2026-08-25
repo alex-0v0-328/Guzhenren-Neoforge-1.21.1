@@ -49,7 +49,7 @@ public final class CmdInfo {
                 .then(ModCommandSupport.withTargets(Commands.literal("soul"),
                         context -> print(context, InfoModel::soul)))
                 .then(ModCommandSupport.withTargets(Commands.literal("path"),
-                        context -> print(context, InfoModel::pathAchievement)))
+                        context -> print(context, InfoModel::pathAchieve)))
                 .then(ModCommandSupport.withTargets(Commands.literal("mind"),
                         context -> print(context, InfoModel::mind)));
     }
@@ -86,18 +86,20 @@ public final class CmdInfo {
             case InfoModel.Lifespan e -> key("lifespan", ModDisplayText.lifespan(e.lifespan(), e.age()));
             case InfoModel.PathsHeader e -> header("paths", e.empty());
             case InfoModel.PathRow e -> ModDisplayText.pathLine(e.path(), e.entry());
-            case InfoModel.QiHeader ignored -> key("qi");
-            case InfoModel.QiRow e -> key("qi_entry", enumName(e.kind().getTranslationKey()), e.amount());
-            case InfoModel.TimeHeader ignored -> key("time");
-            case InfoModel.TimeRow e -> key("time_entry", ModDisplayText.timeFlow(e.rate()));
-            case InfoModel.StrengthHeader ignored -> key("strength");
-            case InfoModel.StrengthRow e -> key("strength_entry",
+            case InfoModel.QiPathAchieveHeader ignored -> key("qi_path_achieve");
+            case InfoModel.QiKindRow e ->
+                    key("qi_path_achieve_entry", enumName(e.kind().getTranslationKey()), e.amount());
+            case InfoModel.TimePathAchieveHeader ignored -> key("time_path_achieve");
+            case InfoModel.TimeRateUpRow e -> key("time_rate_up_entry", ModDisplayText.timeRateUp(e.rate()));
+            case InfoModel.StrengthPathAchieveHeader ignored -> key("strength_path_achieve");
+            case InfoModel.StrengthPathBranchRow e -> key("strength_path_achieve_entry",
                     ModDisplayText.strengthLabel(enumName(e.branch().getTranslationKey()), e.totalJin()),
                     e.reading());
             case InfoModel.CapacityRow e -> key("capacity", e.usable(), e.total());
             case InfoModel.AttackRow e -> key("attack", ModDisplayText.attackBonus(e.bonus()));
-            case InfoModel.WisdomHeader ignored -> key("wisdom");
-            case InfoModel.WisdomRow e -> key("wisdom_entry", enumName(e.tag().getTranslationKey()), e.amount());
+            case InfoModel.WisdomPathAchieveHeader ignored -> key("wisdom_path_achieve");
+            case InfoModel.ThoughtTagRow e ->
+                    key("wisdom_path_achieve_entry", enumName(e.tag().getTranslationKey()), e.amount());
 
             case InfoModel.BrillianceRow e -> key("brilliance", enumName(e.brilliance().getTranslationKey()))
                     .append(muted(key("brilliance_rate", e.brilliance().getThoughtsPerSecond())));

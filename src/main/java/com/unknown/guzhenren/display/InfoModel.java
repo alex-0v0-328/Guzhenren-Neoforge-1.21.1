@@ -21,7 +21,7 @@ import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
-import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
+import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
@@ -76,16 +76,17 @@ public final class InfoModel {
     public record Lifespan(double lifespan, double age) implements Entry {}
     public record PathsHeader(boolean empty) implements Entry {}
     public record PathRow(GuPath path, PathEntry entry) implements Entry {}
-    public record QiHeader() implements Entry {}
-    public record QiRow(QiKind kind, long amount) implements Entry {}
-    public record StrengthHeader() implements Entry {}
-    public record StrengthRow(StrengthBranch branch, int totalJin, Component reading) implements Entry {}
-    public record TimeHeader() implements Entry {}
-    public record TimeRow(int rate) implements Entry {}
+    public record QiPathAchieveHeader() implements Entry {}
+    public record QiKindRow(QiKind kind, long amount) implements Entry {}
+    public record StrengthPathAchieveHeader() implements Entry {}
+    public record StrengthPathBranchRow(StrengthPathBranch branch, int totalJin,
+                                        Component reading) implements Entry {}
+    public record TimePathAchieveHeader() implements Entry {}
+    public record TimeRateUpRow(int rate) implements Entry {}
     public record CapacityRow(int usable, int total) implements Entry {}
     public record AttackRow(double bonus) implements Entry {}
-    public record WisdomHeader() implements Entry {}
-    public record WisdomRow(ThoughtTag tag, long amount) implements Entry {}
+    public record WisdomPathAchieveHeader() implements Entry {}
+    public record ThoughtTagRow(ThoughtTag tag, long amount) implements Entry {}
     //endregion
 
     //region Mind
@@ -132,7 +133,7 @@ public final class InfoModel {
         rows.add(new Row(0, new Lifespan(body.lifespanYears(), body.ageYears())));
         if (strength.isEmpty()) return rows;
 
-        if (strength.hasBranch(StrengthBranch.HUMAN)) {
+        if (strength.hasPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)) {
             rows.add(new Row(0, new CapacityRow(StrengthService.usableJin(player), strength.totalJin())));
         }
         rows.add(new Row(0, new AttackRow(AttackService.bonus(player))));
@@ -143,22 +144,22 @@ public final class InfoModel {
         return List.of(new Row(0, new Soul(SoulService.get(player))));
     }
 
-    public static List<Row> pathAchievement(Player player) {
+    public static List<Row> pathAchieve(Player player) {
         List<Row> rows = new ArrayList<>();
-        strength(rows, player);
-        wisdom(rows, player);
-        qi(rows, player);
-        time(rows, player);
+        strengthPathAchieve(rows, player);
+        timePathAchieve(rows, player);
+        qiPathAchieve(rows, player);
+        wisdomPathAchieve(rows, player);
         paths(rows, player);
         return rows;
     }
 
-    private static void time(List<Row> rows, Player player) {
+    private static void timePathAchieve(List<Row> rows, Player player) {
         int rate = TimeFlowService.rate(player);
         if (rate <= TimeFlowService.NORMAL_RATE) return;
 
-        rows.add(new Row(0, new TimeHeader()));
-        rows.add(new Row(INDENT, new TimeRow(rate)));
+        rows.add(new Row(0, new TimePathAchieveHeader()));
+        rows.add(new Row(INDENT, new TimeRateUpRow(rate)));
     }
 
     private static void paths(List<Row> rows, Player player) {
@@ -168,43 +169,44 @@ public final class InfoModel {
         paths.forEach((path, entry) -> rows.add(new Row(INDENT, new PathRow(path, entry))));
     }
 
-    private static void qi(List<Row> rows, Player player) {
+    private static void qiPathAchieve(List<Row> rows, Player player) {
         List<Row> held = new ArrayList<>();
         for (QiKind kind : QiKind.values()) {
             long amount = QiService.current(player, kind);
-            if (amount > 0L) held.add(new Row(INDENT, new QiRow(kind, amount)));
+            if (amount > 0L) held.add(new Row(INDENT, new QiKindRow(kind, amount)));
         }
         if (held.isEmpty()) return;
 
-        rows.add(new Row(0, new QiHeader()));
+        rows.add(new Row(0, new QiPathAchieveHeader()));
         rows.addAll(held);
     }
 
-    private static void strength(List<Row> rows, Player player) {
+    private static void strengthPathAchieve(List<Row> rows, Player player) {
         StrengthData data = StrengthService.get(player);
         if (data.isEmpty()) return;
 
-        rows.add(new Row(0, new StrengthHeader()));
-        if (data.hasBranch(StrengthBranch.BEASTS)) {
+        rows.add(new Row(0, new StrengthPathAchieveHeader()));
+        if (data.hasPathBranch(StrengthPathBranch.BEAST_STRENGTH_PHANTOM)) {
             rows.add(new Row(INDENT,
-                    new StrengthRow(StrengthBranch.BEASTS, 0, ModDisplayText.beastStrengthLine(data))));
+                    new StrengthPathBranchRow(StrengthPathBranch.BEAST_STRENGTH_PHANTOM, 0,
+                            ModDisplayText.beastStrengthLine(data))));
         }
-        if (data.hasBranch(StrengthBranch.HUMAN)) {
-            rows.add(new Row(INDENT, new StrengthRow(StrengthBranch.HUMAN, data.totalJin(),
-                    ModDisplayText.humanStrengthLine(data))));
+        if (data.hasPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)) {
+            rows.add(new Row(INDENT, new StrengthPathBranchRow(StrengthPathBranch.HUMAN_JUN_STRENGTH,
+                    data.totalJin(), ModDisplayText.humanStrengthLine(data))));
         }
     }
 
-    private static void wisdom(List<Row> rows, Player player) {
+    private static void wisdomPathAchieve(List<Row> rows, Player player) {
         List<Row> held = new ArrayList<>();
         long natural = MindService.naturalThoughts(player);
-        if (natural > 0L) held.add(new Row(INDENT, new WisdomRow(ThoughtTag.NATURAL, natural)));
+        if (natural > 0L) held.add(new Row(INDENT, new ThoughtTagRow(ThoughtTag.NATURAL, natural)));
         MindService.taggedThoughts(player).forEach((tag, amount) -> {
-            if (amount > 0L) held.add(new Row(INDENT, new WisdomRow(tag, amount)));
+            if (amount > 0L) held.add(new Row(INDENT, new ThoughtTagRow(tag, amount)));
         });
         if (held.isEmpty()) return;
 
-        rows.add(new Row(0, new WisdomHeader()));
+        rows.add(new Row(0, new WisdomPathAchieveHeader()));
         rows.addAll(held);
     }
 

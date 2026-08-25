@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 class TimeFlowServiceTest {
 
-    /** Every rate a player can reach: one Watch Gu, the other, or both worn together. */
-    private static final int[] RATES = {1, 2, 3, 5};
+    /** Every rate a player can reach from the two Watch Gu effects. */
+    private static final int[] RATES = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13};
 
     @Test
     @DisplayName("an ordinary clock changes nothing at all")

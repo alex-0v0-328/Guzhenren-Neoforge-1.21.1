@@ -4,7 +4,7 @@ import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
-import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
+import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
 import com.unknown.guzhenren.registry.ModAttachments;
 import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,7 +43,7 @@ public final class StrengthService {
     public static StrengthData get(Player p) {return p.getData(ModAttachments.STRENGTH);}
     public static boolean has(Player p, BeastStrength b) {return get(p).has(b);}
     public static int humanStrength(Player p, HumanStrength k) {return get(p).humanStrengthCount(k);}
-    public static boolean hasBranch(Player p, StrengthBranch b) {return get(p).hasBranch(b);}
+    public static boolean hasPathBranch(Player p, StrengthPathBranch b) {return get(p).hasPathBranch(b);}
 
     //region what the body can actually bring to bear [承受上限]
     public static int capacity(Player p) {

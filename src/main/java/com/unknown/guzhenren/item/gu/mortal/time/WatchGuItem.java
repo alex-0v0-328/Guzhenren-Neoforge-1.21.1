@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.item.gu.mortal.time;
 
+import com.unknown.guzhenren.effect.timed.TimeRateUpEffect;
 import com.unknown.guzhenren.item.gu.ConsumedGuItem;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.registry.ModEffects;
@@ -15,11 +16,11 @@ import org.jetbrains.annotations.Nullable;
  * A Watch Gu [更蛊]: for a while its holder's own clock [自身时间] outruns the world's, and then it is gone.
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.ConsumedGuItem}, making it tended AND taken by its
- * own use. Two rungs register against this one class (两更蛊 ×2 / 三更蛊 ×3); the effect holder and its
- * length come from registration, and the rate it books lives on the effect, not here.
+ * own use. Two rungs register against this one class: 两更蛊 reaches two ×2 layers, and 三更蛊 reaches
+ * three ×3 layers. The effect owns both its rate and layer cap.
  *
- * <p>⚠ It refuses nothing. Wearing two Watch Gu at once is the design, and their rates and their
- * rates both add.
+ * <p>⚠ It refuses nothing. Reusing one kind adds a capped layer and refreshes its duration; wearing
+ * both kinds is the design, and their rates add.
  *
  * @author Alex
  * @version 1.0.0
@@ -42,6 +43,9 @@ public class WatchGuItem extends ConsumedGuItem {
 
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
-        player.addEffect(ModEffects.instance(form, effectTicks));
+        MobEffectInstance current = player.getEffect(form);
+        TimeRateUpEffect effect = (TimeRateUpEffect) form.value();
+        int amplifier = effect.nextAmplifier(current == null ? -1 : current.getAmplifier());
+        player.addEffect(ModEffects.instance(form, effectTicks, amplifier));
     }
 }

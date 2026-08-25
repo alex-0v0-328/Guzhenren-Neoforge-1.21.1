@@ -18,7 +18,7 @@ import com.unknown.guzhenren.custom.enums.soul.SoulTier;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
-import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
+import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
@@ -87,10 +87,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.base_units.8",                 "Eight");
         add("guzhenren.display.base_units.9",                 "Nine");
         add("guzhenren.display.none",                         "[NONE]");
-        add("guzhenren.display.time.multiple.2",              "x2");
-        add("guzhenren.display.time.multiple.3",              "x3");
-        add("guzhenren.display.time.multiple.4",              "x4");
-        add("guzhenren.display.time.multiple.5",              "x5");
+        add("guzhenren.display.time_rate_up",                 "x%s");
         add("guzhenren.display.wild",                         "Wild %s");
         add("guzhenren.display.vital",                        "Vital %s");
         add("guzhenren.display.strength.beast_reading",       "[%s %s Strength]");
@@ -172,15 +169,15 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.lifespan",        "Lifespan:    %s");
         add("guzhenren.command.info.life_form",       "Life form:   %s");
         add("guzhenren.command.info.race",            "Race:        %s");
-        add("guzhenren.command.info.wisdom",          "Wisdom Path:");
-        add("guzhenren.command.info.wisdom_entry",    "  %s  %s");
-        add("guzhenren.command.info.qi",              "Qi Path:");
-        add("guzhenren.command.info.qi_entry",        "  %s  %s");
+        add("guzhenren.command.info.wisdom_path_achieve",       "Wisdom Path Achieve:");
+        add("guzhenren.command.info.wisdom_path_achieve_entry", "  %s  %s");
+        add("guzhenren.command.info.qi_path_achieve",           "Qi Path Achieve:");
+        add("guzhenren.command.info.qi_path_achieve_entry",     "  %s  %s");
         add("guzhenren.command.info.paths",           "Paths:");
-        add("guzhenren.command.info.strength",        "Strength Path:");
-        add("guzhenren.command.info.strength_entry",  "  %s  %s");
-        add("guzhenren.command.info.time",            "Time Path:");
-        add("guzhenren.command.info.time_entry",      "  Time Flow  %s");
+        add("guzhenren.command.info.strength_path_achieve",       "Strength Path Achieve:");
+        add("guzhenren.command.info.strength_path_achieve_entry", "  %s  %s");
+        add("guzhenren.command.info.time_path_achieve",           "Time Path Achieve:");
+        add("guzhenren.command.info.time_rate_up_entry",          "  Time Rate Up  %s");
         add("guzhenren.command.info.capacity",        "Bearing:     %s / %s jin");
         add("guzhenren.command.info.attack",          "Base Attack: %s");
         add("guzhenren.command.info.brilliance",      "Brilliance:  %s");
@@ -256,14 +253,14 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.distilled",      "Distilled");
         add("guzhenren.screen.label.life_form",      "Life Form");
         add("guzhenren.screen.label.race",           "Race");
-        add("guzhenren.screen.label.wisdom",         "Wisdom Path");
+        add("guzhenren.screen.label.wisdom_path_achieve", "Wisdom Path Achieve");
         add("guzhenren.screen.label.soul",           "Soul");
         add("guzhenren.screen.label.lifespan",       "Lifespan");
-        add("guzhenren.screen.label.qi",             "Qi Path");
+        add("guzhenren.screen.label.qi_path_achieve", "Qi Path Achieve");
         add("guzhenren.screen.label.paths",          "Paths");
-        add("guzhenren.screen.label.strength",       "Strength Path");
-        add("guzhenren.screen.label.time",           "Time Path");
-        add("guzhenren.screen.label.time_flow",      "Time Flow");
+        add("guzhenren.screen.label.strength_path_achieve", "Strength Path Achieve");
+        add("guzhenren.screen.label.time_path_achieve",     "Time Path Achieve");
+        add("guzhenren.screen.label.time_rate_up",          "Time Rate Up");
         add("guzhenren.screen.lable.body_capacity",  "Capacity");
         add("guzhenren.screen.label.attack",         "Base Attack");
         add("guzhenren.screen.label.apreture_pressure", "Aperture Pressure");
@@ -465,7 +462,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addThoughtTag();
         addBeastStrength();
         addBeastStrengthFamily();
-        addStrengthBranch();
+        addStrengthPathBranch();
         addHumanStrength();
     }
 
@@ -475,11 +472,11 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(BeastStrength.BEAR,       "Bear");
     }
 
-    private void addStrengthBranch() {
-        add(StrengthBranch.HUMAN,           "Human Jun Strength Branch");
-        add(StrengthBranch.BEASTS,          "Beast Strength Phantom Branch");
-        add(StrengthBranch.ENVIRONMENT,     "Atmospheric Heaven and Earth Branch");
-        add(StrengthBranch.OLDER_ANTIQUITY, "Older Antiquity");
+    private void addStrengthPathBranch() {
+        add(StrengthPathBranch.BEAST_STRENGTH_PHANTOM,          "Beast Strength Phantom Branch");
+        add(StrengthPathBranch.HUMAN_JUN_STRENGTH,              "Human Jun Strength Branch");
+        add(StrengthPathBranch.ATMOSPHERIC_HEAVEN_AND_EARTH,    "Atmospheric Heaven and Earth Branch");
+        add(StrengthPathBranch.NORMAL,                           "Normal");
     }
 
     private void addHumanStrength() {

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Alex
  * @version 1.0.0
  * @since 1.0.0
- * @see StrengthBranch
+ * @see StrengthPathBranch
  */
 public enum HumanStrength implements StringRepresentable, EnumTranslatable {
 

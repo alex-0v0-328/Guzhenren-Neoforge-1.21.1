@@ -119,8 +119,8 @@ public final class ModDisplayText {
 
     public static String attackBonus(double bonus) {return "+" + bonus;}
 
-    public static MutableComponent timeFlow(int rate) {
-        return Component.translatable("guzhenren.display.time.multiple." + rate);
+    public static MutableComponent timeRateUp(int rate) {
+        return Component.translatable("guzhenren.display.time_rate_up", rate);
     }
 
     public static MutableComponent beastStrengthLine(StrengthData data) {

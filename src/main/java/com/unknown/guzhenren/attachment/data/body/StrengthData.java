@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
-import com.unknown.guzhenren.custom.enums.strength.StrengthBranch;
+import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
 import com.unknown.guzhenren.serialization.ModStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import java.util.Collections;
@@ -89,11 +89,11 @@ public record StrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Integer
         return humanStrengthCount(base) + HumanStrength.TEN_FACTOR * humanStrengthCount(ten);
     }
 
-    public boolean hasBranch(StrengthBranch branch) {
+    public boolean hasPathBranch(StrengthPathBranch branch) {
         return switch (branch) {
-            case BEASTS -> !beasts.isEmpty();
-            case HUMAN -> !humanStrength.isEmpty();
-            case ENVIRONMENT, OLDER_ANTIQUITY -> false;
+            case BEAST_STRENGTH_PHANTOM -> !beasts.isEmpty();
+            case HUMAN_JUN_STRENGTH -> !humanStrength.isEmpty();
+            case ATMOSPHERIC_HEAVEN_AND_EARTH, NORMAL -> false;
         };
     }
 

@@ -3,6 +3,8 @@ package com.unknown.guzhenren.item.gu;
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
+import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
 import com.unknown.guzhenren.item.GuItem;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -88,6 +90,10 @@ public abstract class MortalGuItem extends GuItem {
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
+        StrengthPathBranch branch = spec.strengthPathBranch();
+        if (path() == GuPath.STRENGTH && branch != StrengthPathBranch.NORMAL) {
+            tooltip.add(Component.translatable(branch.getTranslationKey()).withStyle(ChatFormatting.GRAY));
+        }
         MutableComponent line = progressLine(stack);
         if (line != null) tooltip.add(line.withStyle(ChatFormatting.GRAY));
     }

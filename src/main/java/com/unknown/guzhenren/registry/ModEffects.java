@@ -16,7 +16,7 @@ import com.unknown.guzhenren.effect.timed.HardshipStrengthGuEffect;
 import com.unknown.guzhenren.effect.timed.LiquorWormEffect;
 import com.unknown.guzhenren.effect.timed.MaliciousThoughtEffect;
 import com.unknown.guzhenren.effect.timed.SelfRelianceGuEffect;
-import com.unknown.guzhenren.effect.timed.TimeFlowEffect;
+import com.unknown.guzhenren.effect.timed.TimeRateUpEffect;
 import com.unknown.guzhenren.effect.timed.VitalityLeafEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -68,11 +68,9 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, StrengthQiEffect> STRENGTH_QI = MOB_EFFECTS.register(
             "strength_qi", () -> new StrengthQiEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
+    //region 兽力虚影流 [Beast Strength Phantom Branch]
     public static final DeferredHolder<MobEffect, FlowerBoarGuEffect> FLOWER_BOAR_GU = MOB_EFFECTS.register(
             "flower_boar_gu", () -> new FlowerBoarGuEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
-
-    public static final DeferredHolder<MobEffect, AllOutEffortEffect> ALL_OUT_EFFORT = MOB_EFFECTS.register(
-            "all_out_effort", () -> new AllOutEffortEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, DragonpillCricketGuEffect> DRAGONPILL_CRICKET_GU =
             MOB_EFFECTS.register("dragonpill_cricket_gu", () -> new DragonpillCricketGuEffect(
@@ -81,6 +79,11 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, BruteForceLonghornBeetleGuEffect> BRUTE_FORCE_LONGHORN_BEETLE_GU =
             MOB_EFFECTS.register("brute_force_longhorn_beetle_gu", () -> new BruteForceLonghornBeetleGuEffect(
                     MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
+    //endregion
+
+    //region 基础力道 [Normal]
+    public static final DeferredHolder<MobEffect, AllOutEffortEffect> ALL_OUT_EFFORT = MOB_EFFECTS.register(
+            "all_out_effort", () -> new AllOutEffortEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static final DeferredHolder<MobEffect, CrashGuEffect> HORIZONTAL_CRASH_GU = MOB_EFFECTS.register(
             "horizontal_crash_gu", () -> new CrashGuEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
@@ -102,18 +105,19 @@ public final class ModEffects {
     public static final DeferredHolder<MobEffect, HardshipStrengthGuEffect> HARDSHIP_STRENGTH_GU =
             MOB_EFFECTS.register("hardship_strength_gu", () -> new HardshipStrengthGuEffect(
                     MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
+    //endregion
 
     public static final DeferredHolder<MobEffect, HalfZombieEffect> HALF_ZOMBIE = MOB_EFFECTS.register(
             "half_zombie", () -> new HalfZombieEffect(MobEffectCategory.NEUTRAL, EFFECT_COLOR));
 
     //region 更蛊 [Watch Gu] -- one effect per Gu, so both can be worn at once and their rates add
-    public static final DeferredHolder<MobEffect, TimeFlowEffect> SECOND_WATCH_GU = MOB_EFFECTS.register(
-            "second_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
-                    2, "second_watch_gu"));
+    public static final DeferredHolder<MobEffect, TimeRateUpEffect> SECOND_WATCH_GU = MOB_EFFECTS.register(
+            "second_watch_gu", () -> new TimeRateUpEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
+                    2, 2, "second_watch_gu"));
 
-    public static final DeferredHolder<MobEffect, TimeFlowEffect> THIRD_WATCH_GU = MOB_EFFECTS.register(
-            "third_watch_gu", () -> new TimeFlowEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
-                    3, "third_watch_gu"));
+    public static final DeferredHolder<MobEffect, TimeRateUpEffect> THIRD_WATCH_GU = MOB_EFFECTS.register(
+            "third_watch_gu", () -> new TimeRateUpEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR,
+                    3, 3, "third_watch_gu"));
     //endregion
 
     public static final DeferredHolder<MobEffect, MaliciousThoughtEffect> MALICIOUS_THOUGHT_GU = MOB_EFFECTS.register(

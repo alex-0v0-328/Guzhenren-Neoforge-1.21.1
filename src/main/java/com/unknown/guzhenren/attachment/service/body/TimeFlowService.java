@@ -1,6 +1,6 @@
 package com.unknown.guzhenren.attachment.service.body;
 
-import com.unknown.guzhenren.effect.timed.TimeFlowEffect;
+import com.unknown.guzhenren.effect.timed.TimeRateUpEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
  * comes to it.
  *
  * <p>Static service; {@code rate()} walks {@code getActiveEffects()} for every
- * {@link TimeFlowEffect} and sums, flooring at 1.
+ * {@link TimeRateUpEffect} and sums, flooring at 1.
  *
  * <p>⚠ THREE verbs leave this class and a caller uses ONE of them: {@code waited}, {@code perStep},
  * {@code steps}. Doing arithmetic on {@code rate()} at a call site is how 寿元 once aged BACKWARDS --
@@ -23,7 +23,7 @@ import net.minecraft.world.entity.player.Player;
  * @version 1.0.0
  * @since 1.0.0
  * @see AttackService
- * @see TimeFlowEffect
+ * @see TimeRateUpEffect
  */
 public final class TimeFlowService {
 
@@ -35,7 +35,7 @@ public final class TimeFlowService {
         int rate = 0;
         // TODO(refactor): restore a contributor interface when a second time-flow effect class exists.
         for (MobEffectInstance instance : player.getActiveEffects()) {
-            if (instance.getEffect().value() instanceof TimeFlowEffect effect) {
+            if (instance.getEffect().value() instanceof TimeRateUpEffect effect) {
                 rate += effect.timeRate(instance.getAmplifier());
             }
         }

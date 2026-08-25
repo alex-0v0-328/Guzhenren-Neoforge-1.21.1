@@ -404,7 +404,7 @@ public final class PlayerInfoScreen extends Screen {
         List<InfoModel.Row> model = switch (activeTab) {
             case TAB_BODY -> InfoModel.body(player);
             case TAB_SOUL -> InfoModel.soul(player);
-            case TAB_PATH -> InfoModel.pathAchievement(player);
+            case TAB_PATH -> InfoModel.pathAchieve(player);
             case TAB_MIND -> InfoModel.mind(player);
             default -> InfoModel.aperture(player);
         };
@@ -457,22 +457,23 @@ public final class PlayerInfoScreen extends Screen {
                     ModDisplayText.lifespan(e.lifespan(), e.age()));
             case InfoModel.PathsHeader e -> new Row(indent, label("paths"), e.empty() ? none() : null);
             case InfoModel.PathRow e -> new Row(indent, ModDisplayText.pathLine(e.path(), e.entry()), Component.empty());
-            case InfoModel.QiHeader ignored -> new Row(indent, label("qi"), null);
-            case InfoModel.QiRow e -> new Row(indent, name(e.kind().getTranslationKey()),
+            case InfoModel.QiPathAchieveHeader ignored -> new Row(indent, label("qi_path_achieve"), null);
+            case InfoModel.QiKindRow e -> new Row(indent, name(e.kind().getTranslationKey()),
                     Component.literal(String.valueOf(e.amount())));
-            case InfoModel.TimeHeader ignored -> new Row(indent, label("time"), null);
-            case InfoModel.TimeRow e -> new Row(indent, label("time_flow"),
-                    ModDisplayText.timeFlow(e.rate()));
-            case InfoModel.StrengthHeader ignored -> new Row(indent, label("strength"), null);
-            case InfoModel.StrengthRow e -> new Row(indent,
+            case InfoModel.TimePathAchieveHeader ignored -> new Row(indent, label("time_path_achieve"), null);
+            case InfoModel.TimeRateUpRow e -> new Row(indent, label("time_rate_up"),
+                    ModDisplayText.timeRateUp(e.rate()));
+            case InfoModel.StrengthPathAchieveHeader ignored ->
+                    new Row(indent, label("strength_path_achieve"), null);
+            case InfoModel.StrengthPathBranchRow e -> new Row(indent,
                     ModDisplayText.strengthLabel(name(e.branch().getTranslationKey()), e.totalJin()), e.reading());
             case InfoModel.CapacityRow e -> new Row(indent,
                     Component.translatable("guzhenren.screen.lable.body_capacity"),
                     Component.translatable("guzhenren.screen.capacity", e.usable(), e.total()));
             case InfoModel.AttackRow e -> new Row(indent, label("attack"),
                     Component.literal(ModDisplayText.attackBonus(e.bonus())));
-            case InfoModel.WisdomHeader ignored -> new Row(indent, label("wisdom"), null);
-            case InfoModel.WisdomRow e -> new Row(indent, name(e.tag().getTranslationKey()),
+            case InfoModel.WisdomPathAchieveHeader ignored -> new Row(indent, label("wisdom_path_achieve"), null);
+            case InfoModel.ThoughtTagRow e -> new Row(indent, name(e.tag().getTranslationKey()),
                     Component.literal(String.valueOf(e.amount())));
 
             case InfoModel.BrillianceRow e -> new Row(indent, label("brilliance"),

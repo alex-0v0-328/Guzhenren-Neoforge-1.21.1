@@ -7,6 +7,7 @@ import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
+import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
 import com.unknown.guzhenren.effect.timed.BruteForceLonghornBeetleGuEffect;
 import com.unknown.guzhenren.effect.timed.CrashGuEffect;
 import com.unknown.guzhenren.effect.timed.DragonpillCricketGuEffect;
@@ -94,31 +95,32 @@ public final class ModItems {
             () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.FIVE, GuPath.HEAVEN)));
     //endregion
 
-    //region 兽力虚影流 -- one round of 3,600 buys a beast's strength, held once ever
+    //region 兽力虚影流 [Beast Strength Phantom Branch]
     public static final DeferredItem<Item> WHITE_BOAR_GU = ITEMS.register("white_boar_gu",
             () -> new BeastStrengthGuItem(tended(), BeastStrength.WHITE_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+                    .strengthPathBranch(StrengthPathBranch.BEAST_STRENGTH_PHANTOM)
                     .refine(800)
                     .channel(3_600)
                     .hungerBar(36, 1).hungerEvery(100)
                     .feed(ModItemTags.BOAR_FEED, 1)));
     public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
             () -> new BeastStrengthGuItem(tended(), BeastStrength.BLACK_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+                    .strengthPathBranch(StrengthPathBranch.BEAST_STRENGTH_PHANTOM)
                     .refine(800)
                     .channel(3_600)
                     .hungerBar(36, 1).hungerEvery(100)
                     .feed(ModItemTags.BOAR_FEED, 1)));
     public static final DeferredItem<Item> BEAR_STRENGTH_GU = ITEMS.register("bear_strength_gu",
             () -> new BeastStrengthGuItem(tended(), BeastStrength.BEAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+                    .strengthPathBranch(StrengthPathBranch.BEAST_STRENGTH_PHANTOM)
                     .refine(800)
                     .channel(3_600)
                     .hungerBar(36, 1).hungerEvery(100)
                     .feed(ModItemTags.BEAR_FEED, 1)));
-    //endregion
-
-    //region 一转力道即时增益 -- one class, the effect and its length given at registration
     public static final DeferredItem<Item> FLOWER_BOAR_GU = ITEMS.register("flower_boar_gu",
             () -> new BuffGuItem(tended(), ModEffects.FLOWER_BOAR_GU, FlowerBoarGuEffect.DURATION_TICKS,
                     GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+                            .strengthPathBranch(StrengthPathBranch.BEAST_STRENGTH_PHANTOM)
                             .refine(800)
                             .costPerUse(16)
                             .hungerBar(12, 1).hungerPerUse(4)
@@ -128,6 +130,7 @@ public final class ModItems {
             () -> new BuffGuItem(tended(), ModEffects.DRAGONPILL_CRICKET_GU,
                     DragonpillCricketGuEffect.DURATION_TICKS,
                     GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+                            .strengthPathBranch(StrengthPathBranch.BEAST_STRENGTH_PHANTOM)
                             .refine(800)
                             .costPerUse(16)
                             .hungerBar(12, 1).hungerPerUse(4)
@@ -138,12 +141,15 @@ public final class ModItems {
                     () -> new BuffGuItem(tended(), ModEffects.BRUTE_FORCE_LONGHORN_BEETLE_GU,
                             BruteForceLonghornBeetleGuEffect.DURATION_TICKS,
                             GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+                                    .strengthPathBranch(StrengthPathBranch.BEAST_STRENGTH_PHANTOM)
                                     .refine(800)
                                     .costPerUse(16)
                                     .hungerBar(12, 1).hungerPerUse(4)
                                     .feed(ModItemTags.BEEF_FEED, 1)
                                     .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
+    //endregion
 
+    //region 基础力道 [Normal] -- Strength Path Gu outside the three specialized branches
     public static final DeferredItem<Item> HORIZONTAL_CRASH_GU = ITEMS.register("horizontal_crash_gu",
             () -> new BuffGuItem(tended(), ModEffects.HORIZONTAL_CRASH_GU, CrashGuEffect.duration(30),
                     GuSpec.of(Rank.THREE, GuPath.STRENGTH)
@@ -196,34 +202,38 @@ public final class ModItems {
                             .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
     //endregion
 
-    //region 人力钧力流 -- one class, the kind at registration; one round is one layer
+    //region 人力钧力流 [Human Jun Strength Branch] -- one round is one layer
     public static final DeferredItem<Item> JIN_STRENGTH_GU = ITEMS.register("jin_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.JIN, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
+                    .strengthPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)
                     .refine(800)
                     .channel(3_600)
                     .hungerBar(36, 1).hungerEvery(300)
                     .feed(ModItemTags.JIN_FEED, 1)));
     public static final DeferredItem<Item> TENS_JIN_STRENGTH_GU = ITEMS.register("tens_jin_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.TEN_JIN, GuSpec.of(Rank.TWO, GuPath.STRENGTH)
+                    .strengthPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)
                     .refine(8_000)
                     .channel(36_000)
                     .hungerBar(36, 2).hungerEvery(3_000)
                     .feed(ModItemTags.JIN_FEED, 1)));
     public static final DeferredItem<Item> JUN_STRENGTH_GU = ITEMS.register("jun_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.JUN, GuSpec.of(Rank.THREE, GuPath.STRENGTH)
+                    .strengthPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)
                     .refine(80_000)
                     .channel(72_000)
                     .hungerBar(36, 4).hungerEvery(6_000)
                     .feed(ModItemTags.JIN_FEED_SMELTED, 1)));
     public static final DeferredItem<Item> TENS_JUN_STRENGTH_GU = ITEMS.register("tens_jun_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.TEN_JUN, GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
+                    .strengthPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)
                     .refine(800_000)
                     .channel(720_000)
                     .hungerBar(36, 8).hungerEvery(60_000)
                     .feed(ModItemTags.JIN_FEED_SMELTED, 1)));
     //endregion
 
-    //region 全力以赴蛊 -- 上古力道; the only thing that unlocks a stockpiled 9999 斤
+    //region 基础力道 [Normal] -- All-Out Effort Gu unlocks a stockpiled 9999 jin
     public static final DeferredItem<Item> ALL_OUT_EFFORT_GU_3 = ITEMS.register("all_out_effort_gu_3",
             () -> new AllOutEffortGuItem(tended(), 60, GuSpec.of(Rank.THREE, GuPath.STRENGTH)
                     .refine(80_000)

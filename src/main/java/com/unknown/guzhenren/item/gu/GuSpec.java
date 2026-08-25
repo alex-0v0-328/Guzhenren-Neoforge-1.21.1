@@ -2,6 +2,7 @@ package com.unknown.guzhenren.item.gu;
 
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +29,7 @@ public final class GuSpec {
 
     private final Rank rank;
     private final GuPath path;
+    private StrengthPathBranch strengthPathBranch = StrengthPathBranch.NORMAL;
 
     private int refineCost;
 
@@ -117,11 +119,17 @@ public final class GuSpec {
         this.maxHealth = health;
         return this;
     }
+
+    public GuSpec strengthPathBranch(StrengthPathBranch branch) {
+        this.strengthPathBranch = branch;
+        return this;
+    }
     //endregion
 
     //region what the base classes read
     public Rank rank() {return rank;}
     public GuPath path() {return path;}
+    public StrengthPathBranch strengthPathBranch() {return strengthPathBranch;}
     public int refineCost() {return refineCost;}
     public int essencePerRound() {return essencePerRound;}
     public boolean channels() {return channels;}
