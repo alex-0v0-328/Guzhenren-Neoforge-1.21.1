@@ -3,10 +3,12 @@ package com.unknown.guzhenren.attachment.service.aperture;
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.HealthService;
 import com.unknown.guzhenren.attachment.service.body.PathService;
 import com.unknown.guzhenren.attachment.service.body.QiService;
 import com.unknown.guzhenren.compat.EpicFightIntegration;
+import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
@@ -85,6 +87,17 @@ public final class ApertureService {
     public static @NotNull Aperture aperture(@NotNull Player p) {return get(p).primary();}
     public static @NotNull Aperture aperture(@NotNull Player p, int i) {return get(p).get(i);}
     public static boolean isAwakened(@NotNull Player p) {return get(p).isAwakened();}
+
+    /**
+     * The one derivation of {@link ApertureStatus}: DEAD outranks STONE -- the zombie is the more
+     * thorough negative, and stone still has the pressure way back -- and everything else, alive
+     * or half-zombie, reads NORMAL.
+     */
+    public static @NotNull ApertureStatus status(@NotNull Player p) {
+        if (BodyService.isZombie(p)) return ApertureStatus.DEAD;
+        if (NourishService.isPetrified(p)) return ApertureStatus.STONE;
+        return ApertureStatus.NORMAL;
+    }
     public static @NotNull Talent talent(@NotNull Player p) {return aperture(p).talent();}
     public static @NotNull Rank rank(@NotNull Player p) {return aperture(p).rank();}
     public static @NotNull Stage stage(@NotNull Player p) {return aperture(p).stage();}

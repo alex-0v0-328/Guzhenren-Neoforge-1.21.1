@@ -17,6 +17,7 @@ import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
@@ -67,6 +68,9 @@ public final class InfoModel {
     }
 
     public record Realm(Aperture aperture) implements Entry {
+    }
+
+    public record Status(ApertureStatus status) implements Entry {
     }
 
     public record Talent(Aperture aperture, boolean awakened) implements Entry {
@@ -149,24 +153,27 @@ public final class InfoModel {
 
     public static List<Row> aperture(Player player) {
         ApertureData data = ApertureService.get(player);
+        ApertureStatus status = ApertureService.status(player);
         List<Row> rows = new ArrayList<>();
 
         if (data.count() <= 1) {
-            apertureBlock(rows, data.primary(), data.isAwakened(), 0, true);
+            apertureBlock(rows, data.primary(), data.isAwakened(), 0, true, status);
             return rows;
         }
         for (int i = 0; i < data.count(); i++) {
             rows.add(new Row(0, new ApertureIndex(i + 1)));
-            apertureBlock(rows, data.get(i), true, INDENT, i == ApertureData.PRIMARY);
+            apertureBlock(rows, data.get(i), true, INDENT, i == ApertureData.PRIMARY,
+                    i == ApertureData.PRIMARY ? status : ApertureStatus.NORMAL);
         }
         return rows;
     }
 
     private static void apertureBlock(List<Row> rows, Aperture aperture, boolean awakened, int indent,
-                                      boolean pressure) {
+                                      boolean pressure, ApertureStatus status) {
         rows.add(new Row(indent, new Realm(aperture)));
         rows.add(new Row(indent, new Talent(aperture, awakened)));
         if (awakened) {
+            rows.add(new Row(indent, new Status(status)));
             rows.add(new Row(indent, new Essence(aperture)));
             if (aperture.distilledEssence() > 0L) rows.add(new Row(indent, new Distilled(aperture)));
             if (pressure && aperture.isExtreme()) rows.add(new Row(indent, new Pressure(aperture)));

@@ -185,6 +185,7 @@ public final class PlayerInfoScreen extends Screen {
     private void renderCultivation(GuiGraphics g, int mouseX, int mouseY, int accent) {
         if (!cultivationButtons()) return;
         LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return;
         boolean paired = NourishService.canImpact(player);
         boolean running = NourishService.isCultivating(player);
 
@@ -223,6 +224,7 @@ public final class PlayerInfoScreen extends Screen {
     private boolean clickCultivation(double mx, double my) {
         if (!cultivationButtons()) return false;
         LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return false;
         boolean paired = NourishService.canImpact(player);
 
         if (paired && inBox(mx, my, buttonSplit(), valueRight())) {
@@ -308,7 +310,7 @@ public final class PlayerInfoScreen extends Screen {
 
     private static MutableComponent pickHint() {return Component.translatable("guzhenren.screen.pick.hint");}
 
-    private boolean clickPicker(double mx, double my) {
+    private void clickPicker(double mx, double my) {
         int x0 = pickLeft() + PICK_PAD;
         int y0 = pickTop() + PICK_PAD + HEADER_H;
         for (int i = 0; i < pickCount(); i++) {
@@ -318,10 +320,9 @@ public final class PlayerInfoScreen extends Screen {
 
             PacketDistributor.sendToServer(new SetSecondaryPathPayload(ApertureData.PRIMARY, pickPath(i)));
             picking = false;
-            return true;
+            return;
         }
         picking = false;
-        return true;
     }
     //endregion
 
@@ -360,7 +361,10 @@ public final class PlayerInfoScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
-        if (picking) return button != 0 || clickPicker(mx, my);
+        if (picking) {
+            if (button == 0) clickPicker(mx, my);
+            return true;
+        }
         if (button == 0) {
             if (clickCultivation(mx, my)) return true;
             if (clickableRowY >= 0 && my >= clickableRowY - 1 && my < clickableRowY + LINE_H - 1
@@ -415,8 +419,11 @@ public final class PlayerInfoScreen extends Screen {
             InfoModel.Row row = model.get(i);
             if (activeTab == TAB_PATH && row.entry() instanceof InfoModel.PathRow first) {
                 Row left = draw(row.indent(), first);
-                if (i + 1 < model.size() && model.get(i + 1).entry() instanceof InfoModel.PathRow second) {
-                    Row right = draw(model.get(i + 1).indent(), second);
+                if (left == null) continue;
+                Row right = i + 1 < model.size()
+                        && model.get(i + 1).entry() instanceof InfoModel.PathRow second
+                        ? draw(model.get(i + 1).indent(), second) : null;
+                if (right != null) {
                     rows.add(new Row(row.indent(), left.label(), right.label()));
                     i++;
                 } else {
@@ -435,6 +442,8 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.ApertureIndex e -> new Row(indent,
                     Component.translatable("guzhenren.command.info.aperture_index", e.number()), null);
             case InfoModel.Realm e -> new Row(indent, label("realm"), ModDisplayText.realmTitle(e.aperture()));
+            case InfoModel.Status e -> new Row(indent, label("aperture_status"),
+                    name(e.status().getTranslationKey()));
             case InfoModel.Talent e -> new Row(indent, label("talent"), talent(e));
             case InfoModel.Essence e -> new Row(indent, label("essence"), Component.literal(
                     ModDisplayText.pool(e.aperture().currentEssence(), e.aperture().maxEssence())));

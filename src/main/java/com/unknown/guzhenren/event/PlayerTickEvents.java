@@ -129,7 +129,7 @@ public final class PlayerTickEvents {
         if (player.isCreative() || player.isSpectator()) return;
 
         if (ApertureService.pressureFull(player)) {
-            ApertureService.detonatePressure(player);
+            if (!NourishService.convertPetrifiedPressure(player)) ApertureService.detonatePressure(player);
             return;
         }
         if (BodyService.get(player).isExhausted()) {

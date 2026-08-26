@@ -2,6 +2,7 @@ package com.unknown.guzhenren.datagen.lang;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
+import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.EssenceColor;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
@@ -160,6 +161,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
 
         add("guzhenren.command.info.aperture_index", "Aperture %s");
         add("guzhenren.command.info.realm", "Realm: %s");
+        add("guzhenren.command.info.aperture_status", "Aperture Status: %s");
         add("guzhenren.command.info.talent", "Aptitude:    %s");
         add("guzhenren.command.info.essence", "Essence:     %s / %s");
         add("guzhenren.command.info.distilled", "Distilled:   %s / %s");
@@ -249,6 +251,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.impact.drop_stage", "Impact Failed, Stage dropped");
         add("guzhenren.impact.drop_base", "Impact Failed, Talent dropped");
         add("guzhenren.screen.label.realm", "Realm");
+        add("guzhenren.screen.label.aperture_status", "Aperture Status");
         add("guzhenren.screen.label.talent", "Aptitude");
         add("guzhenren.screen.label.essence", "Essence");
         add("guzhenren.screen.label.distilled", "Distilled");
@@ -336,6 +339,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.GUTS_GU, "Guts Gu");
         addItem(ModItems.CASUAL_GU_1, "Casual Gu I");
         addItem(ModItems.CASUAL_GU_2, "Casual Gu II");
+        addItem(ModItems.STONE_APERTURE_GU_3, "Stone Aperture Gu III");
+        addItem(ModItems.STONE_APERTURE_GU_4, "Stone Aperture Gu IV");
+        addItem(ModItems.STONE_APERTURE_GU_5, "Stone Aperture Gu V");
         addItem(ModItems.PRIMEVAL_STONE, "Primeval Stone");
         addItem(ModItems.LIQUOR, "Liquor");
         addItem(ModItems.SOUR_LIQUOR, "Sour Liquor");
@@ -374,6 +380,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.essence_full", "Essence is already FULL");
         add("guzhenren.item.failed.rank_mismatch", "Wrong realm - this Gu needs %s");
         add("guzhenren.item.failed.stage_peak", "You are at the Stage Peak");
+        add("guzhenren.item.failed.aperture_petrified", "This aperture has already turned to stone");
         add("guzhenren.item.failed.beast_strength_held", "Already hold the %s's strength");
         add("guzhenren.item.failed.human_strength_full", "This strength is already at %s layers");
         add("guzhenren.item.failed.vitality_active", "Vitality Leaf is still working");
@@ -448,6 +455,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addTitle();
         addRank();
         addStage();
+        addApertureStatus();
         addTalent();
         addEssenceColor();
         addTenExtreme();
@@ -512,6 +520,12 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(Stage.MIDDLE, "Middle");
         add(Stage.UPPER, "Upper");
         add(Stage.PEAK, "Peak");
+    }
+
+    private void addApertureStatus() {
+        add(ApertureStatus.NORMAL, "Normal");
+        add(ApertureStatus.DEAD, "Dead");
+        add(ApertureStatus.STONE, "Stone");
     }
 
     private void addTalent() {

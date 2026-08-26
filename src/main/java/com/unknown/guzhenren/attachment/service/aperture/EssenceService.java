@@ -5,6 +5,7 @@ import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
+import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.effect.pool.EssenceQiEffect;
 import com.unknown.guzhenren.registry.ModAttachments;
 import com.unknown.guzhenren.registry.ModEffects;
@@ -27,9 +28,9 @@ import org.jetbrains.annotations.NotNull;
  * ordinary pool by design, so a gate on the raw value refuses everything for that whole phase. ⚠
  * {@code consume} burns the distilled reserve at the 1:2 rate FIRST, then the ordinary pool; the
  * distilled half is rounded UP so the last point cannot pay for itself twice. ⚠ Every path that SKIPS
- * a regen step (death-qi choke, zombie) must zero the carry -- both do today; the two {@code = 0.0F}
- * writes are the mechanic, not tidying. ⚠ {@code isChoked} outranks the liquor redirect AND the
- * essence-qi bonus -- it is checked first in {@code regenStep} and returns.
+ * a regen step (death-qi choke, a DEAD [死窍] or STONE [石窍] aperture) must zero the carry -- all do
+ * today; the two {@code = 0.0F} writes are the mechanic, not tidying. ⚠ {@code isChoked} outranks the
+ * liquor redirect AND the essence-qi bonus -- it is checked first in {@code regenStep} and returns.
  *
  * @author Alex
  * @version 1.0.0
@@ -134,7 +135,7 @@ public final class EssenceService {
         ApertureData data = ApertureService.get(player);
         float[] carry = player.getData(ModAttachments.ESSENCE_CARRY);
 
-        if (isChoked(player) || BodyService.isZombie(player)) {
+        if (isChoked(player) || ApertureService.status(player) != ApertureStatus.NORMAL) {
             Arrays.fill(carry, 0.0F);
             return;
         }

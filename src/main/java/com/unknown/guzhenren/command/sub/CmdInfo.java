@@ -72,6 +72,7 @@ public final class CmdInfo {
         return switch (entry) {
             case InfoModel.ApertureIndex e -> key("aperture_index", e.number());
             case InfoModel.Realm e -> key("realm", ModDisplayText.realmTitle(e.aperture()));
+            case InfoModel.Status e -> key("aperture_status", enumName(e.status().getTranslationKey()));
             case InfoModel.Talent e -> talent(e);
             case InfoModel.Essence e -> key("essence", e.aperture().currentEssence(), e.aperture().maxEssence());
             case InfoModel.Distilled e -> key("distilled", e.aperture().distilledEssence(),
@@ -85,7 +86,7 @@ public final class CmdInfo {
             case InfoModel.Soul e -> key("soul", e.soul().currentSoul(), e.soul().maxSoul())
                     .append(muted(enumName(e.soul().tier().getTranslationKey())));
             case InfoModel.Lifespan e -> key("lifespan", ModDisplayText.lifespan(e.lifespan(), e.age()));
-            case InfoModel.PathsHeader e -> header("paths", e.empty());
+            case InfoModel.PathsHeader e -> header(e.empty());
             case InfoModel.PathRow e -> ModDisplayText.pathLine(e.path(), e.entry());
             case InfoModel.QiPathAchieveHeader ignored -> key("qi_path_achieve");
             case InfoModel.QiKindRow e ->
@@ -116,8 +117,8 @@ public final class CmdInfo {
         return key("talent", talent);
     }
 
-    private static MutableComponent header(String id, boolean empty) {
-        MutableComponent line = key(id);
+    private static MutableComponent header(boolean empty) {
+        MutableComponent line = key("paths");
         return empty ? line.append("  ").append(none()) : line;
     }
 

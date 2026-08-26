@@ -3,6 +3,7 @@ package com.unknown.guzhenren.attachment.service.aperture;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.NourishData;
 import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
+import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
@@ -19,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
  * <p>Static service over the {@code nourish_data} attachment; reads take {@link Player}, writes take
  * {@link ServerPlayer}. Two client-intent entry points ({@code start}, {@code impactWall}) driven by
  * G-panel buttons, plus {@code tickNourish} on the heartbeat. The strike cost is paid in 元石 via
- * {@link PrimevalStoneItem#spend}, never via the essence pool -- it is 1.5× a ten-extreme peak pool by
- * construction, so no pool can hold it.
+ * {@link PrimevalStoneItem#spend(ServerPlayer, long)}, never via the essence pool -- it is 1.5× a
+ * ten-extreme peak pool by construction, so no pool can hold it.
  *
  * <p>⚠ A rank-up MUST also set the stage back to {@code LOWEST} -- {@code setRank} leaves the stage
  * alone, so the missing call yields a "二转巅峰" that squares the essence cap. ⚠ The strike zeroes
@@ -51,6 +52,11 @@ public final class NourishService {
      */
     public static final long IMPACT_COST_PER_RANK_BASE = 1_200L;
 
+    /**
+     * Where the pressure gauge lands after a petrified aperture converts a full one into a rank-up.
+     */
+    public static final int CONVERTED_PRESSURE = 90;
+
     private static final String STARVED = "guzhenren.nourish.starved";
     private static final String STAGE_UP = "guzhenren.nourish.stage_up";
     private static final String IMPACT_POOR = "guzhenren.impact.poor";
@@ -66,15 +72,19 @@ public final class NourishService {
 
     public static @NotNull NourishData get(@NotNull Player p) {return p.getData(ModAttachments.NOURISH);}
     public static boolean isCultivating(@NotNull Player p) {return get(p).cultivating();}
+    public static boolean isPetrified(@NotNull Player p) {return get(p).petrified();}
     public static float fraction(@NotNull Player p) {return get(p).fraction();}
 
     //region what the screen asks
     public static boolean canNourish(@NotNull Player p) {
-        return ApertureService.isAwakened(p) && !isCultivating(p) && !atCeiling(p) && !get(p).isFull();
+        return ApertureService.isAwakened(p) && !isCultivating(p)
+                && ApertureService.status(p) == ApertureStatus.NORMAL
+                && !atCeiling(p) && !get(p).isFull();
     }
     public static boolean canImpact(@NotNull Player p) {
         Aperture a = ApertureService.aperture(p);
-        return ApertureService.isAwakened(p) && !isCultivating(p) && get(p).isFull()
+        return ApertureService.isAwakened(p) && !isCultivating(p)
+                && ApertureService.status(p) == ApertureStatus.NORMAL && get(p).isFull()
                 && a.stage() == Stage.HIGHEST && a.rank() != Rank.HIGHEST;
     }
     private static boolean atCeiling(Player p) {
@@ -114,10 +124,12 @@ public final class NourishService {
         }
     }
 
+    @SuppressWarnings("resource")
     private static boolean nourishSecond(ServerPlayer player) {
         NourishData data = get(player);
         if (!data.cultivating()) return false;
-        if (!ApertureService.isAwakened(player) || atCeiling(player)) {cancel(player); return false;}
+        if (ApertureService.status(player) != ApertureStatus.NORMAL
+                || !ApertureService.isAwakened(player) || atCeiling(player)) {cancel(player); return false;}
 
         player.setDeltaMovement(Vec3.ZERO);
 
@@ -153,6 +165,38 @@ public final class NourishService {
     private static boolean pay(ServerPlayer player, long cost) {
         PrimevalStoneItem.topUp(player);
         return EssenceService.consume(player, cost);
+    }
+    //endregion
+
+    //region 石窍蛊 [Stone Aperture Gu] -- straight to this rank's peak, and never further
+    /**
+     * ⚠ The writer that sets {@code petrified}: it lands the primary aperture on this rank's peak,
+     * zeroes the pressure gauge, and locks cultivation until a full gauge converts (ten-extremes)
+     * or resetAll clears it. A run in progress is force-stopped by the same write, so the heartbeat
+     * loop needs no petrified check of its own.
+     */
+    public static void petrify(@NotNull ServerPlayer player) {
+        if (get(player).petrified()) return;
+        ApertureService.setStage(player, Stage.HIGHEST);
+        ApertureService.setPressure(player, ApertureService.PRIMARY, 0);
+        store(player, NourishData.PETRIFIED);
+    }
+
+    /**
+     * The pressure gauge a petrified aperture keeps filling: at full it converts into the next
+     * rank's first stage AND cures the stone -- the one way back to NORMAL short of resetAll, and
+     * the landing can take the next rank's Stone Aperture Gu to enter the cycle again. Only while
+     * a next rank exists; at the last rank it answers {@code false} and the caller detonates.
+     */
+    public static boolean convertPetrifiedPressure(@NotNull ServerPlayer player) {
+        if (!isPetrified(player) || ApertureService.rank(player) == Rank.HIGHEST) return false;
+
+        ApertureService.setRank(player, ApertureService.rank(player).shift(1));
+        ApertureService.setStage(player, Stage.LOWEST);
+        ApertureService.setPressure(player, ApertureService.PRIMARY, CONVERTED_PRESSURE);
+        store(player, NourishData.DEFAULT);
+        say(player, IMPACT_SUCCESS);
+        return true;
     }
     //endregion
 

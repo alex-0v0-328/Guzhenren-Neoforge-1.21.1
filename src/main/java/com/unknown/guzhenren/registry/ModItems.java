@@ -16,6 +16,7 @@ import com.unknown.guzhenren.effect.timed.HardshipStrengthGuEffect;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.mortal.BuffGuItem;
 import com.unknown.guzhenren.item.gu.mortal.HopeGuItem;
+import com.unknown.guzhenren.item.gu.mortal.earth.StoneApertureGuItem;
 import com.unknown.guzhenren.item.gu.mortal.LifespanGuItem;
 import com.unknown.guzhenren.item.gu.mortal.PrimevalElderGuItem;
 import com.unknown.guzhenren.item.gu.mortal.RelicsGuItem;
@@ -412,6 +413,22 @@ public final class ModItems {
                     .costPerUse(0)
                     .hungerBar(8, 2).hungerPerUse(0)
                     .feed(ModItemTags.CASUAL_FEED, 1)
+                    .cooldown(Ticks.SECOND)));
+    //endregion
+
+    //region 石窍蛊 [Stone Aperture Gu] -- earth path; never feeds, taken by its use, and the aperture
+    // it leaves stands on this rank's peak, petrified
+    public static final DeferredItem<Item> STONE_APERTURE_GU_3 = ITEMS.register("stone_aperture_gu_3",
+            () -> new StoneApertureGuItem(tended(), GuSpec.of(Rank.THREE, GuPath.EARTH)
+                    .refine(10_000).costPerUse(0)
+                    .cooldown(Ticks.SECOND)));
+    public static final DeferredItem<Item> STONE_APERTURE_GU_4 = ITEMS.register("stone_aperture_gu_4",
+            () -> new StoneApertureGuItem(tended(), GuSpec.of(Rank.FOUR, GuPath.EARTH)
+                    .refine(100_000).costPerUse(0)
+                    .cooldown(Ticks.SECOND)));
+    public static final DeferredItem<Item> STONE_APERTURE_GU_5 = ITEMS.register("stone_aperture_gu_5",
+            () -> new StoneApertureGuItem(tended(), GuSpec.of(Rank.FIVE, GuPath.EARTH)
+                    .refine(1_000_000).costPerUse(0)
                     .cooldown(Ticks.SECOND)));
     //endregion
 

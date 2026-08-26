@@ -85,10 +85,20 @@ class NourishTest {
     @Test
     @DisplayName("progress is clamped, and the starved anchor defaults to the sentinel, never to zero")
     void recordInvariants() {
-        assertEquals(0, new NourishData(true, -5, NourishData.NOT_STARVED).progress());
-        assertEquals(NourishData.FULL, new NourishData(true, 500, NourishData.NOT_STARVED).progress());
+        assertEquals(0, new NourishData(true, -5, NourishData.NOT_STARVED, false).progress());
+        assertEquals(NourishData.FULL, new NourishData(true, 500, NourishData.NOT_STARVED, false).progress());
         assertEquals(NourishData.NOT_STARVED, NourishData.DEFAULT.starvedSinceTick());
         assertEquals(false, NourishData.DEFAULT.isStarving());
+    }
+
+    @Test
+    @DisplayName("石窍蛊 lock: PETRIFIED stops cultivating and zeroes progress, DEFAULT never carries it")
+    void petrifiedInvariants() {
+        assertEquals(false, NourishData.DEFAULT.petrified());
+        assertEquals(true, NourishData.PETRIFIED.petrified());
+        assertEquals(false, NourishData.PETRIFIED.cultivating());
+        assertEquals(0, NourishData.PETRIFIED.progress());
+        assertEquals(NourishData.NOT_STARVED, NourishData.PETRIFIED.starvedSinceTick());
     }
 
     @Test

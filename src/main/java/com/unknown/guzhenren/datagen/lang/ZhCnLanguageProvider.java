@@ -2,6 +2,7 @@ package com.unknown.guzhenren.datagen.lang;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
+import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.EssenceColor;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
@@ -162,6 +163,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
 
         add("guzhenren.command.info.aperture_index", "第 %s 窍");
         add("guzhenren.command.info.realm", "玩家修为  %s");
+        add("guzhenren.command.info.aperture_status", "空窍状态  %s");
         add("guzhenren.command.info.talent", "玩家天赋  %s");
         add("guzhenren.command.info.essence", "玩家真元  %s / %s");
         add("guzhenren.command.info.distilled", "精炼真元  %s / %s");
@@ -252,6 +254,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.impact.drop_stage", "冲击失败，小境界掉落");
         add("guzhenren.impact.drop_base", "冲击失败，资质受损");
         add("guzhenren.screen.label.realm", "修为");
+        add("guzhenren.screen.label.aperture_status", "空窍状态");
         add("guzhenren.screen.label.talent", "天赋");
         add("guzhenren.screen.label.essence", "真元");
         add("guzhenren.screen.label.distilled", "精炼真元");
@@ -339,6 +342,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.GUTS_GU, "一转胆识蛊");
         addItem(ModItems.CASUAL_GU_1, "一转随意蛊");
         addItem(ModItems.CASUAL_GU_2, "二转随意蛊");
+        addItem(ModItems.STONE_APERTURE_GU_3, "三转石窍蛊");
+        addItem(ModItems.STONE_APERTURE_GU_4, "四转石窍蛊");
+        addItem(ModItems.STONE_APERTURE_GU_5, "五转石窍蛊");
         addItem(ModItems.PRIMEVAL_STONE, "元石");
         addItem(ModItems.LIQUOR, "酒");
         addItem(ModItems.SOUR_LIQUOR, "酸酒");
@@ -377,6 +383,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.essence_full", "真元已满");
         add("guzhenren.item.failed.rank_mismatch", "境界不符 — 此蛊需%s");
         add("guzhenren.item.failed.stage_peak", "已至小境界巅峰");
+        add("guzhenren.item.failed.aperture_petrified", "空窍已石化");
         add("guzhenren.item.failed.beast_strength_held", "已有%s之力");
         add("guzhenren.item.failed.human_strength_full", "此力已满%s层");
         add("guzhenren.item.failed.vitality_active", "生机叶效果未散");
@@ -452,6 +459,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addTitle();
         addRank();
         addStage();
+        addApertureStatus();
         addTalent();
         addEssenceColor();
         addTenExtreme();
@@ -516,6 +524,12 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(Stage.MIDDLE, "中阶");
         add(Stage.UPPER, "高阶");
         add(Stage.PEAK, "巅峰");
+    }
+
+    private void addApertureStatus() {
+        add(ApertureStatus.NORMAL, "正常");
+        add(ApertureStatus.DEAD, "死窍");
+        add(ApertureStatus.STONE, "石窍");
     }
 
     private void addTalent() {
