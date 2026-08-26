@@ -1,6 +1,7 @@
 package com.unknown.guzhenren;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.attachment.service.body.StrengthService;
 import org.junit.jupiter.api.DisplayName;
@@ -81,7 +82,7 @@ class StrengthRampTest {
         int previous = 0;
         for (int total = 0; total <= 4000; total++) {
             int usable = StrengthService.usableJin(MORTAL_CAPACITY, total);
-            assertEquals(true, usable >= previous, "usable dropped at total=" + total);
+            assertTrue(usable >= previous, "usable dropped at total=" + total);
             previous = usable;
         }
     }

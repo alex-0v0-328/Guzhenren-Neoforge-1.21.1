@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>⚠ It reaches into the {@code item/} package on purpose ({@link GuItem}), against this project's
  * usual dependency direction: binding a Vital Gu has to read that Gu's declared path. Do not "fix"
- * those imports. ⚠ Writes NEVER go through {@link ApertureService#store} -- {@link
+ * those imports. ⚠ Writes NEVER go through {@code ApertureService.store} -- {@link
  * com.unknown.guzhenren.attachment.service.body.HealthService#refresh} hangs off that, and moving one
  * item must not recompute max health. ⚠ {@code setVital} runs on every menu click and every day tick,
  * and {@code setPrimaryPath} no-ops when unchanged, so leaving that call in is free and removing it
@@ -55,7 +55,7 @@ public final class ApertureStorageService {
     public static boolean set(@NotNull ServerPlayer p, int aperture, @NotNull List<ItemStack> items) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.with(aperture, items);
-        if (!canWrite(load(p, current, aperture), load(p, next, aperture))) return false;
+        if (exceedsLoad(load(p, current, aperture), load(p, next, aperture))) return false;
 
         p.setData(ModAttachments.APERTURE_STORAGE, next);
         return true;
@@ -64,7 +64,7 @@ public final class ApertureStorageService {
     public static boolean setVital(@NotNull ServerPlayer p, int aperture, @NotNull ItemStack stack) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.withVital(aperture, stack);
-        if (!canWrite(load(p, current, aperture), load(p, next, aperture))) return false;
+        if (exceedsLoad(load(p, current, aperture), load(p, next, aperture))) return false;
 
         p.setData(ModAttachments.APERTURE_STORAGE, next);
         if (stack.getItem() instanceof GuItem gu) ApertureService.setPrimaryPath(p, aperture, gu.path());
@@ -74,7 +74,7 @@ public final class ApertureStorageService {
     public static boolean setPage(@NotNull ServerPlayer p, int aperture, int from, @NotNull List<ItemStack> page) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.withPage(aperture, from, page);
-        if (!canWrite(load(p, current, aperture), load(p, next, aperture))) return false;
+        if (exceedsLoad(load(p, current, aperture), load(p, next, aperture))) return false;
 
         p.setData(ModAttachments.APERTURE_STORAGE, next);
         return true;
@@ -98,9 +98,7 @@ public final class ApertureStorageService {
         return total;
     }
 
-    private static boolean canWrite(int current, int next) {
-        return current <= MAX_LOAD ? next <= MAX_LOAD : next <= current;
-    }
+    private static boolean exceedsLoad(int current, int next) {return next > Math.max(MAX_LOAD, current);}
 
     private static int cost(Rank holder, ItemStack stack) {
         if (stack.isEmpty() || !(stack.getItem() instanceof MortalGuItem gu)) return 0;

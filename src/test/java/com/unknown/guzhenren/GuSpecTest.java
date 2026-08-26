@@ -1,6 +1,7 @@
 package com.unknown.guzhenren;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -62,7 +63,7 @@ class GuSpecTest {
     @DisplayName("effect and item cooldowns can be configured independently")
     void cooldownsAreIndependent() {
         GuSpec spec = GuSpec.of(Rank.THREE, GuPath.STRENGTH).cooldown(600, 20);
-        assertTrue(spec.effectCooldownTicks() == 600);
-        assertTrue(spec.itemCooldownTicks() == 20);
+        assertEquals(600, spec.effectCooldownTicks());
+        assertEquals(20, spec.itemCooldownTicks());
     }
 }

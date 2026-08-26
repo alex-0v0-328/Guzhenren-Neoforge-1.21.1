@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @see MarkTag
  * @since 1.0.0
  */
 

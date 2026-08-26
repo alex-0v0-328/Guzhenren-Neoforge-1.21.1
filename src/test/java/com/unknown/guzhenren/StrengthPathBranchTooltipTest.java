@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.registry.ModItems;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ class StrengthPathBranchTooltipTest {
 
     private static List<String> keys(Item item) {
         List<Component> tooltip = new ArrayList<>();
-        ((MortalGuItem) item).appendHoverText(new ItemStack(item), null, tooltip, null);
+        item.appendHoverText(new ItemStack(item), null, tooltip, null);
         return tooltip.stream()
                 .map(Component::getContents)
                 .filter(TranslatableContents.class::isInstance)

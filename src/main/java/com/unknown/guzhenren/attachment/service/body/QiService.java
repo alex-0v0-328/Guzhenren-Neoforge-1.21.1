@@ -58,6 +58,7 @@ public final class QiService {
         store(p, get(p).with(kind, new QiEntry(amount, holdEnd)));
     }
 
+    @SuppressWarnings("resource")
     private static long now(Player p) {return p.level().getGameTime();}
 
     private static void store(ServerPlayer p, QiData data) {

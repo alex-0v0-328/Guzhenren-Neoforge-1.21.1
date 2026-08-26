@@ -1,8 +1,10 @@
 package com.unknown.guzhenren;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.NourishData;
@@ -88,15 +90,15 @@ class NourishTest {
         assertEquals(0, new NourishData(true, -5, NourishData.NOT_STARVED, false).progress());
         assertEquals(NourishData.FULL, new NourishData(true, 500, NourishData.NOT_STARVED, false).progress());
         assertEquals(NourishData.NOT_STARVED, NourishData.DEFAULT.starvedSinceTick());
-        assertEquals(false, NourishData.DEFAULT.isStarving());
+        assertFalse(NourishData.DEFAULT.isStarving());
     }
 
     @Test
     @DisplayName("石窍蛊 lock: PETRIFIED stops cultivating and zeroes progress, DEFAULT never carries it")
     void petrifiedInvariants() {
-        assertEquals(false, NourishData.DEFAULT.petrified());
-        assertEquals(true, NourishData.PETRIFIED.petrified());
-        assertEquals(false, NourishData.PETRIFIED.cultivating());
+        assertFalse(NourishData.DEFAULT.petrified());
+        assertTrue(NourishData.PETRIFIED.petrified());
+        assertFalse(NourishData.PETRIFIED.cultivating());
         assertEquals(0, NourishData.PETRIFIED.progress());
         assertEquals(NourishData.NOT_STARVED, NourishData.PETRIFIED.starvedSinceTick());
     }
@@ -104,15 +106,15 @@ class NourishTest {
     @Test
     @DisplayName("a fresh world is not already starved out -- zero is a real game time")
     void freshWorldIsNotStarved() {
-        assertEquals(false, NourishData.DEFAULT.starvedOut(0L));
-        assertEquals(false, NourishData.DEFAULT.starvedOut(Long.MAX_VALUE / 2));
+        assertFalse(NourishData.DEFAULT.starvedOut(0L));
+        assertFalse(NourishData.DEFAULT.starvedOut(Long.MAX_VALUE / 2));
     }
 
     @Test
     @DisplayName("the starve grace runs out only after the full window")
     void starveWindow() {
         NourishData starving = NourishData.DEFAULT.withStarvedSince(1_000L);
-        assertEquals(false, starving.starvedOut(1_000L + NourishData.STARVE_GRACE_TICKS - 1L));
-        assertEquals(true, starving.starvedOut(1_000L + NourishData.STARVE_GRACE_TICKS));
+        assertFalse(starving.starvedOut(1_000L + NourishData.STARVE_GRACE_TICKS - 1L));
+        assertTrue(starving.starvedOut(1_000L + NourishData.STARVE_GRACE_TICKS));
     }
 }

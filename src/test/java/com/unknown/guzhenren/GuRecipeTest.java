@@ -7,6 +7,7 @@ import com.unknown.guzhenren.recipe.GuRecipe;
 import java.util.AbstractList;
 import java.util.List;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +52,7 @@ class GuRecipeTest {
             public int size() {return Integer.MAX_VALUE;}
 
             @Override
-            public Stream<Integer> stream() {return Stream.empty();}
+            public @NotNull Stream<Integer> stream() {return Stream.empty();}
         };
 
         assertThrows(IllegalArgumentException.class, () -> recipe(0L, 0L, tooManyWindows, 0));

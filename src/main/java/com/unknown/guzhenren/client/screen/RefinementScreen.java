@@ -188,7 +188,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         if (!menu.running()) return;
 
         int span = menu.inWindow() ? GuRecipe.WINDOW_TICKS : GuRecipe.GAP_TICKS;
-        int filled = BAR_W * menu.phaseLeft() / Math.max(1, span);
+        int filled = BAR_W * menu.phaseLeft() / span;
         g.fill(bx, by, bx + filled, by + BAR_H, barColour());
     }
 
@@ -496,7 +496,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     //region the 蛊方 a player may attempt -- the client holds the whole synced table, so it needs no packet
     private @Nullable List<RecipeHolder<GuRecipe>> knownCache;
 
-    @SuppressWarnings("resource")
     private List<RecipeHolder<GuRecipe>> known() {
         if (knownCache == null) {
             ClientLevel level = Minecraft.getInstance().level;

@@ -50,6 +50,7 @@ public final class BodyService {
     public static boolean isZombie(@NotNull Player p) {return get(p).isZombie();}
     public static boolean isHalfZombie(@NotNull Player p) {return get(p).isHalfZombie();}
     public static @NotNull Race race(@NotNull Player p) {return get(p).race();}
+    @SuppressWarnings("resource")
     public static long now(@NotNull Player p) {return p.level().getGameTime();}
 
     private static void store(ServerPlayer p, BodyData data) {p.setData(ModAttachments.BODY, data);}

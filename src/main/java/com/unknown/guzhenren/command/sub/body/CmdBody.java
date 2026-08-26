@@ -12,7 +12,7 @@ import net.minecraft.commands.Commands;
 /**
  * {@code /gzr body}: reads and writes body [肉身] state -- life form, race, soul, lifespan, age.
  *
- * <p>Assembles the body sub-tree under {@code /gzr body}, delegating to
+ * <p>Assembles the body subtree under {@code /gzr body}, delegating to
  * {@link com.unknown.guzhenren.command.sub.body.CmdPath},
  * {@link com.unknown.guzhenren.command.sub.body.CmdQi}, and
  * {@link com.unknown.guzhenren.command.sub.body.CmdStrength} for the deeper branches. All of

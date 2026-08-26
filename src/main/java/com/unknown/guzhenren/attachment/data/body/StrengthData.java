@@ -23,8 +23,8 @@ import net.minecraft.network.codec.StreamCodec;
  * <p>Immutable record attachment keyed {@code strength_data}; {@link
  * com.unknown.guzhenren.attachment.service.body.StrengthService} is the only writer. Two components:
  * a {@code Set} of {@link BeastStrength} (one kind once ever) and a sparse {@code Map} of
- * {@link HumanStrength} to layer count. The compact ctor caps each human kind at its own
- * {@code getMaxLayers()} and prunes zero-or-below entries.
+ * {@link HumanStrength} to layer count. The compact ctor caps each entry at its own {@link
+ * HumanStrength#getMaxLayers()} limit and prunes zero-or-below entries.
  *
  * <p>⚠ The compact constructor must use {@code new EnumMap<>(Class)} plus {@code putAll}, never the
  * {@code EnumMap(Map)} copy constructor -- that one throws on the empty maps {@code DEFAULT} is built

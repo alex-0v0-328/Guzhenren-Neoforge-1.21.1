@@ -22,7 +22,7 @@ import net.minecraft.util.StringRepresentable;
  *
  * <p>Guarded by a {@code requires(sourceAwakened)} gate (presentation only) AND an
  * {@code applyOnAwakened} per-target gate (data protection). Offers graded setters for rank, stage,
- * and talent, the physique setter, and the essence sub-tree with {@code base}/{@code current}/
+ * and talent, the physique setter, and the essence subtree with {@code base}/{@code current}/
  * {@code distilled} and their {@code refill} where applicable.
  *
  * @author Alex

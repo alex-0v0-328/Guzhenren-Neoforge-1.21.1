@@ -41,9 +41,8 @@ public final class TimeFlowService {
                 rate += effect.timeRate(instance.getAmplifier());
             }
         }
-        if (rate < NORMAL_RATE) return NORMAL_RATE;
         //   TODO(宙道造诣): a grade term joins HERE, so that no caller has to learn about it.
-        return rate;
+        return Math.max(NORMAL_RATE, rate);
     }
 
     public static boolean hastened(@NotNull Player p) {return rate(p) > NORMAL_RATE;}

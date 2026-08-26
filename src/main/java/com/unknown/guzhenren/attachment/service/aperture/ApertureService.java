@@ -126,6 +126,7 @@ public final class ApertureService {
     public static void shiftStage(@NotNull ServerPlayer p, int d) {setStage(p, aperture(p).stage().shift(d));}
     public static void shiftTalent(@NotNull ServerPlayer p, int d) {setTalent(p, aperture(p).talent().shift(d));}
 
+    @SuppressWarnings("resource")
     public static void setPressure(@NotNull ServerPlayer player, int index, int value) {
         Aperture current = aperture(player, index);
         if (!current.isExtreme()) return;
@@ -143,6 +144,7 @@ public final class ApertureService {
         setPressure(player, PRIMARY, Math.max(0, current.pressure() - amount));
     }
 
+    @SuppressWarnings("resource")
     public static void tickPressure(@NotNull ServerPlayer player) {
         Aperture aperture = aperture(player, PRIMARY);
         if (!aperture.isExtreme() || aperture.pressure() >= Aperture.MAX_PRESSURE) return;
@@ -171,6 +173,7 @@ public final class ApertureService {
         return aperture.isExtreme() && aperture.pressure() >= Aperture.MAX_PRESSURE;
     }
 
+    @SuppressWarnings("resource")
     public static long pressureRemainingTicks(@NotNull Player player) {
         Aperture aperture = aperture(player, PRIMARY);
         if (!aperture.isExtreme() || aperture.pressure() != Aperture.PRESSURE_COUNTDOWN_START
@@ -178,6 +181,7 @@ public final class ApertureService {
         return Math.max(0L, aperture.pressureDeadlineTick() - player.level().getGameTime());
     }
 
+    @SuppressWarnings("resource")
     public static void detonatePressure(@NotNull ServerPlayer player) {
         Aperture aperture = aperture(player);
         int radius = pressureExplosionRadius(aperture.rank());
@@ -202,7 +206,6 @@ public final class ApertureService {
         return 16 * Math.clamp(rank.ordinal(), Rank.LOWEST.ordinal(), Rank.HIGHEST.ordinal());
     }
 
-    @SuppressWarnings("resource")
     private static void clearPressureSphere(Level level, double x, double y, double z, int radius,
                                             @Nullable Block floorBlock) {
         int minX = Mth.floor(x - radius);

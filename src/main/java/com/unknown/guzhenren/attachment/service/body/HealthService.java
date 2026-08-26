@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Max health as a transient {@link AttributeModifier} derived from rank.
  *
- * <p>Static service; fires from {@link ApertureService#store} on every aperture write, plus login,
+ * <p>Static service; fires from {@code ApertureService.store} on every aperture write, plus login,
  * clone and reset (a modifier does not ride a clone). The modifier is keyed to the rank's
  * {@code getMaxHealth()} minus vanilla's 20, so a mortal ({@code NONE}) reads bonus 0 and the service
  * no-ops.

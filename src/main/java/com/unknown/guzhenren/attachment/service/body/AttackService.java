@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>Static service; {@code bonus()} walks {@code getActiveEffects()} for every {@link AttackContributor}
  * (力道 timed effects), plus the beast strengths [兽力], the usable-jin ramp, and the zombie [僵] tier bonus.
  * {@code refresh} writes the single transient modifier; it fires on login, clone, reset, the heartbeat,
- * and every {@link StrengthService#store} -- a modifier does not ride a clone.
+ * and every {@code StrengthService.store} -- a modifier does not ride a clone.
  *
  * <p>⚠ The modifier MUST stay transient -- a permanent one is saved into attribute NBT and then fights
  * the next login, stacking itself on top of what was already stored. ⚠ No effect may declare its own

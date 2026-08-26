@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The stream codecs this mod adds: an enum as its ordinal, and enum-keyed maps and sets.
@@ -33,7 +34,7 @@ public final class ModStreamCodecs {
         return ByteBufCodecs.VAR_INT.map(ordinal -> values[ordinal], Enum::ordinal);
     }
 
-    public static <E extends Enum<E>> StreamCodec<ByteBuf, E> ofNullableEnum(Class<E> type) {
+    public static <E extends Enum<E>> StreamCodec<ByteBuf, @Nullable E> ofNullableEnum(Class<E> type) {
         E[] values = type.getEnumConstants();
         return ByteBufCodecs.VAR_INT.map(i -> i == 0 ? null : values[i - 1],
                 value -> value == null ? 0 : value.ordinal() + 1);

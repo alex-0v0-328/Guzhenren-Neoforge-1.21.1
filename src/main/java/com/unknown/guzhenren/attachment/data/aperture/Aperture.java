@@ -80,7 +80,7 @@ public record Aperture(
     private static final StreamCodec<ByteBuf, Stage> STAGE = ModStreamCodecs.ofEnum(Stage.class);
     private static final StreamCodec<ByteBuf, ExtremePhysique> PHYSIQUE =
             ModStreamCodecs.ofEnum(ExtremePhysique.class);
-    private static final StreamCodec<ByteBuf, GuPath> PATH = ModStreamCodecs.ofNullableEnum(GuPath.class);
+    private static final StreamCodec<ByteBuf, @Nullable GuPath> PATH = ModStreamCodecs.ofNullableEnum(GuPath.class);
 
     public static final StreamCodec<ByteBuf, Aperture> STREAM_CODEC = new StreamCodec<>() {
         @Override
