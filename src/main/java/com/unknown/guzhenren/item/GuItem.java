@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.item;
 
+import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
@@ -66,7 +67,7 @@ public abstract class GuItem extends Item {
 
     //region 蓄力 [charge] -- paced by the holder's rank against this item's own, never by the stage
     public static final int USE_FAST_TICKS = 5;
-    public static final int USE_SAME_TICKS = 10;
+    public static final int USE_SAME_TICKS = Ticks.HALF_SECOND;
     public static final int USE_SLOW_TICKS = 20;
 
     protected int rankGap(Player p) {return ApertureService.rank(p).ordinal() - rank.ordinal();}

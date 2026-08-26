@@ -1,11 +1,12 @@
 package com.unknown.guzhenren.effect.timed;
 
+import com.unknown.guzhenren.Ticks;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
 /**
- * The timed healing of the Vitality Leaf Gu [生机叶蛊]: heals one HP every ten ticks for 640 ticks,
+ * The timed healing of the Vitality Leaf Gu [生机叶蛊]: heals one HP every half-second for 64 pulses
  * on its own vanilla timer.
  *
  * <p>Timed effects own their truth on vanilla's {@link net.minecraft.world.effect.MobEffect} timer —
@@ -21,8 +22,8 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class VitalityLeafEffect extends MobEffect {
 
-    public static final int DURATION_TICKS = 640;
-    public static final int HEAL_INTERVAL_TICKS = 10;
+    public static final int HEAL_INTERVAL_TICKS = Ticks.HALF_SECOND;
+    public static final int DURATION_TICKS = 64 * HEAL_INTERVAL_TICKS;
 
     public VitalityLeafEffect(MobEffectCategory category, int color) {
         super(category, color);

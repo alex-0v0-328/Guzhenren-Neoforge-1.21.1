@@ -25,7 +25,7 @@ class TimeFlowServiceTest {
     void theUseLadderShortens() {
         assertEquals(2, TimeFlowService.waited(2, GuItem.USE_FAST_TICKS));
         assertEquals(5, TimeFlowService.waited(2, GuItem.USE_SAME_TICKS));
-        assertEquals(10, TimeFlowService.waited(2, GuItem.USE_SLOW_TICKS));
+        assertEquals(Ticks.HALF_SECOND, TimeFlowService.waited(2, GuItem.USE_SLOW_TICKS));
 
         assertEquals(1, TimeFlowService.waited(3, GuItem.USE_FAST_TICKS));
         assertEquals(3, TimeFlowService.waited(3, GuItem.USE_SAME_TICKS));

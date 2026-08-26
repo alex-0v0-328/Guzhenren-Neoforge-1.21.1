@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.effect.pool;
 
+import com.unknown.guzhenren.Ticks;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
  *
  * <p>Pool effects are rebuilt every heartbeat by {@code QiService.syncEffects}, so milk cannot cure
  * them — the pool is the truth. The heal runs on vanilla's own {@code applyEffectTick} cadence
- * ({@code HEAL_INTERVAL_TICKS} 10), healing {@code amplifier + 1} HP each pulse.
+ * ({@code HEAL_INTERVAL_TICKS} = {@link Ticks#HALF_SECOND}), healing {@code amplifier + 1} HP each pulse.
  *
  * <p>⚠ 生气 does NOT refuse when 死气 is present: it pays 死气 down 1:1 first, and only the excess
  * reaches the 生气 pool.
@@ -23,7 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class LifeQiEffect extends MobEffect {
 
-    public static final int HEAL_INTERVAL_TICKS = 10;
+    public static final int HEAL_INTERVAL_TICKS = Ticks.HALF_SECOND;
 
     public LifeQiEffect(MobEffectCategory category, int color) {
         super(category, color);
