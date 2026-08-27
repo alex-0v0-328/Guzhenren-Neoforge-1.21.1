@@ -7,7 +7,7 @@ import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import com.unknown.guzhenren.menu.RefinementMenu;
-import com.unknown.guzhenren.network.payload.CrashStepPayload;
+import com.unknown.guzhenren.network.payload.DashPayload;
 import com.unknown.guzhenren.network.payload.ImpactApertureWallPayload;
 import com.unknown.guzhenren.network.payload.NourishAperturePayload;
 import com.unknown.guzhenren.network.payload.OpenApertureStoragePayload;
@@ -63,8 +63,8 @@ public final class ModPayloads {
                 ModPayloads::nourishAperture);
         registrar.playToServer(ImpactApertureWallPayload.TYPE, ImpactApertureWallPayload.STREAM_CODEC,
                 ModPayloads::impactApertureWall);
-        registrar.playToServer(CrashStepPayload.TYPE, CrashStepPayload.STREAM_CODEC,
-                ModPayloads::crashStep);
+        registrar.playToServer(DashPayload.TYPE, DashPayload.STREAM_CODEC,
+                ModPayloads::dash);
     }
 
     private static void nourishAperture(NourishAperturePayload payload, IPayloadContext context) {
@@ -81,7 +81,7 @@ public final class ModPayloads {
         NourishService.impactWall(player);
     }
 
-    private static void crashStep(CrashStepPayload payload, IPayloadContext context) {
+    private static void dash(DashPayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
 
         int vertical = payload.vertical();
@@ -95,7 +95,7 @@ public final class ModPayloads {
         if (vertical != 0 && !player.hasEffect(ModEffects.VERTICAL_CRASH_GU)
                 && !player.hasEffect(ModEffects.CHARGING_CRASH_GU)) return;
 
-        EpicFightIntegration.crashStep(player, vertical, payload.yRot());
+        EpicFightIntegration.dash(player, vertical, payload.yRot());
     }
 
     private static void openRefinement(OpenRefinementPayload payload, IPayloadContext context) {

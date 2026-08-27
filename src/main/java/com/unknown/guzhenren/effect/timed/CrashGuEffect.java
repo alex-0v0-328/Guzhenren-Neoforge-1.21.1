@@ -9,12 +9,12 @@ import net.minecraft.world.effect.MobEffectCategory;
  * horizontal, vertical, and the charging one that moves on both axes.
  *
  * <p>The class holds only the axis flags and the shared duration helper; the movement itself is
- * reported by the client through {@link com.unknown.guzhenren.network.payload.CrashStepPayload}. The
+ * reported by the client through {@link com.unknown.guzhenren.network.payload.DashPayload}. The
  * charging shape grades its icon by rank because it spans ranks four and five.
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.network.payload.CrashStepPayload
+ * @see com.unknown.guzhenren.network.payload.DashPayload
  * @since 1.0.0
  */
 

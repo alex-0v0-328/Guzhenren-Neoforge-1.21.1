@@ -47,8 +47,8 @@ public final class EpicFightIntegration {
 
     private static final ResourceLocation STAMINA_MODIFIER = Guzhenren.id("epic_fight_stamina");
 
-    private static AnimationManager.AnimationAccessor<DodgeAnimation> CRASH_STEP_FORWARD;
-    private static AnimationManager.AnimationAccessor<DodgeAnimation> CRASH_STEP_BACKWARD;
+    private static AnimationManager.AnimationAccessor<DodgeAnimation> DASH_FORWARD;
+    private static AnimationManager.AnimationAccessor<DodgeAnimation> DASH_BACKWARD;
 
     private EpicFightIntegration() {}
 
@@ -60,22 +60,22 @@ public final class EpicFightIntegration {
 
     public static void onAnimationRegistry(AnimationManager.AnimationRegistryEvent event) {
         event.newBuilder(Guzhenren.MOD_ID, builder -> {
-            CRASH_STEP_FORWARD = builder.nextAccessor("biped/skill/crash_step_forward", accessor ->
-                    new CrashAnimation(0.1F, accessor, 0.8F, 0.6F, Armatures.BIPED)
+            DASH_FORWARD = builder.nextAccessor("biped/skill/dash_forward", accessor ->
+                    new DashAnimation(0.1F, accessor, 0.8F, 0.6F, Armatures.BIPED)
                             .setResourceLocation("epicfight", "biped/skill/step_forward"));
-            CRASH_STEP_BACKWARD = builder.nextAccessor("biped/skill/crash_step_backward", accessor ->
-                    new CrashAnimation(0.1F, accessor, 0.8F, 0.6F, Armatures.BIPED)
+            DASH_BACKWARD = builder.nextAccessor("biped/skill/dash_backward", accessor ->
+                    new DashAnimation(0.1F, accessor, 0.8F, 0.6F, Armatures.BIPED)
                             .setResourceLocation("epicfight", "biped/skill/step_backward"));
         });
     }
 
-    public static void crashStep(ServerPlayer player, int vertical, float yRot) {
+    public static void dash(ServerPlayer player, int vertical, float yRot) {
         ServerPlayerPatch patch = EpicFightCapabilities.getServerPlayerPatch(player);
         if (patch == null) return;
         if (!EpicFightSkills.STEP.get().isExecutableState(patch)) return;
 
         AnimationManager.AnimationAccessor<DodgeAnimation> animation = vertical < 0
-                ? CRASH_STEP_BACKWARD : CRASH_STEP_FORWARD;
+                ? DASH_BACKWARD : DASH_FORWARD;
         if (animation == null) return;
         patch.playAnimationSynchronized(animation, 0.0F);
         patch.setModelYRot(yRot, true);
@@ -122,10 +122,10 @@ public final class EpicFightIntegration {
         if (event.getTarget() instanceof HopeGuEntity) event.cancel();
     }
 
-    private static final class CrashAnimation extends DodgeAnimation {
+    private static final class DashAnimation extends DodgeAnimation {
 
-        private CrashAnimation(float transitionTime, AnimationManager.AnimationAccessor<DodgeAnimation> accessor,
-                               float width, float height, AssetAccessor<? extends Armature> armature) {
+        private DashAnimation(float transitionTime, AnimationManager.AnimationAccessor<DodgeAnimation> accessor,
+                              float width, float height, AssetAccessor<? extends Armature> armature) {
             super(transitionTime, accessor, width, height, armature);
         }
 
