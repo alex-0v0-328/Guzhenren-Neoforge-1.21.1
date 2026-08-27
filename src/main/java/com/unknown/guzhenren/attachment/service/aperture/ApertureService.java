@@ -19,15 +19,12 @@ import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.registry.ModAttachments;
 import com.unknown.guzhenren.registry.ModDamageTypes;
 import java.util.List;
-import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -184,14 +181,14 @@ public final class ApertureService {
     @SuppressWarnings("resource")
     public static void detonatePressure(@NotNull ServerPlayer player) {
         Aperture aperture = aperture(player);
-        int radius = pressureExplosionRadius(aperture.rank());
+        int radius = pressureExplosionRadius(aperture.rank(), aperture.extremePhysique());
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();
         setPressure(player, PRIMARY, 0);
         DamageSource source = ModDamageTypes.source(player, ModDamageTypes.APERTURE_PRESSURE_EXPLOSION);
         player.level().explode(null, source, null, x, y, z, 0.0F, false, Level.ExplosionInteraction.NONE);
-        clearPressureSphere(player.level(), x, y, z, radius, floorBlock(aperture.extremePhysique()));
+        PressureExplosionTask.start((ServerLevel) player.level(), x, y, z, radius, aperture.extremePhysique());
 
         DamageSource disaster = ModDamageTypes.source(player, ModDamageTypes.TEN_EXTREME_DISASTER);
         double radiusSquared = radius * (double) radius;
@@ -202,53 +199,9 @@ public final class ApertureService {
         if (!player.isDeadOrDying()) player.hurt(source, Float.MAX_VALUE);
     }
 
-    private static int pressureExplosionRadius(Rank rank) {
-        return 16 * Math.clamp(rank.ordinal(), Rank.LOWEST.ordinal(), Rank.HIGHEST.ordinal());
-    }
-
-    private static void clearPressureSphere(Level level, double x, double y, double z, int radius,
-                                            @Nullable Block floorBlock) {
-        int minX = Mth.floor(x - radius);
-        int maxX = Mth.floor(x + radius);
-        int minY = Math.max(level.getMinBuildHeight(), Mth.floor(y - radius));
-        int maxY = Math.min(level.getMaxBuildHeight() - 1, Mth.floor(y + radius));
-        int minZ = Mth.floor(z - radius);
-        int maxZ = Mth.floor(z + radius);
-        double radiusSquared = radius * (double) radius;
-
-        for (BlockPos pos : BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ)) {
-            double dx = pos.getX() + 0.5D - x;
-            double dy = pos.getY() + 0.5D - y;
-            double dz = pos.getZ() + 0.5D - z;
-            if (dx * dx + dy * dy + dz * dz > radiusSquared) continue;
-            if (!level.getBlockState(pos).isAir())
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-        }
-
-        if (floorBlock == null) return;
-        for (int blockX = minX; blockX <= maxX; blockX++) {
-            double dx = blockX + 0.5D - x;
-            for (int blockZ = minZ; blockZ <= maxZ; blockZ++) {
-                double dz = blockZ + 0.5D - z;
-                double horizontalSquared = dx * dx + dz * dz;
-                if (horizontalSquared > radiusSquared) continue;
-                int floorY = (int) Math.ceil(y - Math.sqrt(radiusSquared - horizontalSquared) - 0.5D) - 1;
-                if (floorY < level.getMinBuildHeight() || floorY >= level.getMaxBuildHeight()) continue;
-                BlockPos floorPos = new BlockPos(blockX, floorY, blockZ);
-                if (!level.getBlockState(floorPos).isAir()) {
-                    level.setBlock(floorPos, floorBlock.defaultBlockState(), Block.UPDATE_ALL);
-                }
-            }
-        }
-    }
-
-    private static @Nullable Block floorBlock(ExtremePhysique physique) {
-        return switch (physique) {
-            case NORTHERN_DARK_ICE_SOUL -> Blocks.ICE;
-            case BLAZING_GLORY_LIGHTNING_BRILLIANCE -> Blocks.MAGMA_BLOCK;
-            case MYRIAD_GOLD_WONDROUS_ESSENCE -> Blocks.GOLD_BLOCK;
-            default -> null;
-        };
+    private static int pressureExplosionRadius(Rank rank, ExtremePhysique physique) {
+        int base = 16 * (Math.clamp(rank.ordinal(), Rank.LOWEST.ordinal(), Rank.HIGHEST.ordinal()) + 1);
+        return physique == ExtremePhysique.GREAT_STRENGTH_TRUE_MARTIAL ? base + 16 : base;
     }
 
     private static void setPressureState(ServerPlayer player, int index, int value, long deadline) {
