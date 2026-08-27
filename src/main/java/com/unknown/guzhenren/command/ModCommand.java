@@ -9,6 +9,7 @@ import com.unknown.guzhenren.command.sub.aperture.CmdAperture;
 import com.unknown.guzhenren.command.sub.aperture.CmdAwaken;
 import com.unknown.guzhenren.command.sub.body.CmdBody;
 import com.unknown.guzhenren.command.sub.mind.CmdMind;
+import com.unknown.guzhenren.command.sub.soul.CmdSoul;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -18,9 +19,9 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 /**
  * The root of {@code /guzhenren} (alias {@code /gzr}), assembling every subcommand under it.
  *
- * <p>Registers the literal {@code guzhenren} with permission level 2, then attaches the six domain
+ * <p>Registers the literal {@code guzhenren} with permission level 2, then attaches the seven root
  * branches ({@link com.unknown.guzhenren.command.sub.CmdInfo}, {@code CmdAwaken}, {@code CmdReset},
- * {@code CmdAperture}, {@code CmdBody}, {@code CmdMind}). The {@code gzr} alias is a
+ * {@code CmdAperture}, {@code CmdBody}, {@code CmdSoul}, {@code CmdMind}). The {@code gzr} alias is a
  * {@code redirect} to that root, so everything typed after it parses into a child context.
  *
  * @author Alex
@@ -50,6 +51,7 @@ public final class ModCommand {
                         .then(CmdReset.node())
                         .then(CmdAperture.node())
                         .then(CmdBody.node())
+                        .then(CmdSoul.node())
                         .then(CmdMind.node()));
 
         dispatcher.register(Commands.literal("gzr")

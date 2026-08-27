@@ -19,8 +19,8 @@ import org.jetbrains.annotations.NotNull;
  * heartbeat ({@code checkLethalState}) notices, so there is no "kill" call in this file to search for.
  * ⚠ A cap of 0 also lands current at 0 (one check catches both), so {@code revive} must restore
  * {@code DEFAULT_MAX_SOUL} when the cap itself was 0 -- a respawn may never hand back a value the
- * lethal check would fire on. ⚠ Nothing raises {@code maxSoul} yet -- that 手段 is 魂道's, unbuilt;
- * do not "fix" the cost by softening the numbers.
+ * lethal check would fire on. ⚠ Guts Gu [胆识蛊] raises {@code maxSoul}; do not "fix" the refining
+ * cost by softening the numbers.
  *
  * @author Alex
  * @version 1.0.0

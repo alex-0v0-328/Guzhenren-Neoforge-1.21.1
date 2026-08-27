@@ -37,7 +37,7 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
  * <p>Annotated {@code @EventBusSubscriber(Dist.CLIENT)}. Registers three GUI layers
  * ({@link com.unknown.guzhenren.client.hud.PlayerStatsHud},
  * {@link com.unknown.guzhenren.client.hud.ChargeHud},
- * {@link com.unknown.guzhenren.client.hud.NourishHud}), the key mapping for the G panel, the menu
+ * {@link com.unknown.guzhenren.client.hud.NourishHud}), the key mapping for the B panel, the menu
  * screens for the two containers, and the {@code NoopRenderer} for wild Gu entities.
  *
  * @author Alex

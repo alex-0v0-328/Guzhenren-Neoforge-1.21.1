@@ -19,10 +19,10 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
- * {@code /gzr info}: prints what a player is, from the same rows the G panel draws.
+ * {@code /gzr info}: prints what a player is, from the same rows the B panel draws.
  *
  * <p>Reads the shared {@link com.unknown.guzhenren.display.InfoModel} so the command and the screen
- * cannot word the same fact two different ways. Five sections mirror the G-panel tabs (aperture,
+ * cannot word the same fact two different ways. Five sections mirror the B-panel tabs (aperture,
  * body, soul, path, mind); the bare form defaults to {@code aperture} on self.
  *
  * <p>⚠ The target list hangs off each section, so the bare command means the sender and a name after

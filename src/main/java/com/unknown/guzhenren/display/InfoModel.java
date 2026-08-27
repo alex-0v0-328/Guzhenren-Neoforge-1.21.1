@@ -34,7 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Every row the G panel and the info command share: which rows, in what order, decided once.
+ * Every row the B panel and the info command share: which rows, in what order, decided once.
  *
  * <p>The shared structure for both surfaces: deciding "draw or not" here (not in a surface) is what
  * avoids one side printing a section header with [无] beside a real Dao-mark [道痕] figure. The

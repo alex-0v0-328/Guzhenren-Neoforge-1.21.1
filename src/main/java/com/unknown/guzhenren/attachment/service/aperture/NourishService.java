@@ -19,9 +19,9 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>Static service over the {@code nourish_data} attachment; reads take {@link Player}, writes take
  * {@link ServerPlayer}. Two client-intent entry points ({@code start}, {@code impactWall}) driven by
- * G-panel buttons, plus {@code tickNourish} on the heartbeat. The strike cost is paid in 元石 via
- * {@link PrimevalStoneItem#spend(ServerPlayer, long)}, never via the essence pool -- it is 1.5× a
- * ten-extreme peak pool by construction, so no pool can hold it.
+ * B-panel buttons, plus {@code tickNourish} on the heartbeat. The strike cost goes through
+ * {@link PrimevalStoneItem#spend(ServerPlayer, long)}: current and distilled essence first, then
+ * an offhand Elder Gu [元老蛊] or carried stones. It exceeds every same-rank pool by construction.
  *
  * <p>⚠ A rank-up MUST also set the stage back to {@code LOWEST} -- {@code setRank} leaves the stage
  * alone, so the missing call yields a "二转巅峰" that squares the essence cap. ⚠ The strike zeroes

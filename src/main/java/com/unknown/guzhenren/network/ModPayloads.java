@@ -26,7 +26,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 /**
  * Registers the client-intent payloads and handles each of them on the server.
  *
- * <p>Every payload in this mod is a client intent -- a G-panel button or movement input that
+ * <p>Every payload in this mod is a client intent -- a B-panel button or movement input that
  * attachment sync cannot carry upstream. None carries player data; downstream player data always
  * travels as synced state.
  * This class wires the six payloads to their server-side handlers: opening the two containers,

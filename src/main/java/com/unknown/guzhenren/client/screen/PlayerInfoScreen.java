@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The G panel: every tab of what a player is, read straight off the synced attachments.
+ * The B panel: every tab of what a player is, read straight off the synced attachments.
  *
  * <p>Extends {@link net.minecraft.client.gui.screens.Screen} (no menu behind it). Seven tabs:
  * 空窍, 肉身, 魂魄, 流派造诣, 脑海, 空窍存储, 炼蛊. The last two open a container via a client-intent
@@ -68,7 +68,7 @@ public final class PlayerInfoScreen extends Screen {
     private static final int TAB_TEXT_DEAD = 0xFF6A6A6A;
 
     private static final int[] ACCENT =
-            {0xFF4FC3F7, 0xFFB388FF, 0xFFD388FF, 0xFFFF8A65, 0xFF4DD0E1, 0xFFFFD54F, 0xFF81C784};
+            {0xFF4FC3F7, 0xFFFFAB91, 0xFFD388FF, 0xFFFF8A65, 0xFF4DD0E1, 0xFFFFD54F, 0xFF81C784};
 
     private static final String[] TAB_KEYS = {
             "guzhenren.screen.tab.aperture",

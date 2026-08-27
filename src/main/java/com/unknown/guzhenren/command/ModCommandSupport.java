@@ -81,6 +81,14 @@ public final class ModCommandSupport {
                 }));
     }
 
+    public static ArgumentBuilder<CommandSourceStack, ?> counter(
+            String literal, LongOperation set, LongOperation add) {
+        return Commands.literal(literal)
+                .then(longNode("set", set))
+                .then(longNode("add", add))
+                .then(longNode("sub", (player, value) -> add.apply(player, -value)));
+    }
+
     public static <E extends Enum<E> & StringRepresentable> ArgumentBuilder<CommandSourceStack, ?> enumSetNode(
             String literal, E[] values, EnumOperation<E> operation,
             Predicate<ServerPlayer> allowed, String refusedKey) {

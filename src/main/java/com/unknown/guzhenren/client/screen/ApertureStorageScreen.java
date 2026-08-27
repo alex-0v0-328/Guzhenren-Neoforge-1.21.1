@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>Extends {@link net.minecraft.client.gui.screens.inventory.AbstractContainerScreen} for
  * {@link com.unknown.guzhenren.menu.ApertureStorageMenu}. Draws 54 slots per page, prev/next pager
  * buttons, and the Vital Gu [本命蛊] slot past the right edge of the panel. A back button ({@code <-})
- * closes the container first, then opens the G panel. All drawing is {@code g.fill}, no textures.
+ * closes the container first, then opens the B panel. All drawing is {@code g.fill}, no textures.
  *
  * @author Alex
  * @version 1.0.0
