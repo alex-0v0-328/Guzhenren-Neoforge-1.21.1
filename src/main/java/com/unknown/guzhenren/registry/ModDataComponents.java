@@ -47,6 +47,11 @@ public final class ModDataComponents {
                     .persistent(UUIDUtil.CODEC)
                     .networkSynchronized(UUIDUtil.STREAM_CODEC));
 
+    public static final Supplier<DataComponentType<Integer>> VITAL_APERTURE =
+            DATA_COMPONENTS.registerComponentType("vital_aperture", builder -> builder
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT));
+
     public static final Supplier<DataComponentType<Long>> STORED_STONES =
             DATA_COMPONENTS.registerComponentType("stored_stones", builder -> builder
                     .persistent(Codec.LONG)

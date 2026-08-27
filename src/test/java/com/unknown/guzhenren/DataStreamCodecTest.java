@@ -23,7 +23,7 @@ class DataStreamCodecTest {
     @DisplayName("Aperture stream codec preserves nullable paths and all sentinels")
     void apertureRoundTrip() {
         Aperture expected = new Aperture(Rank.THREE, Stage.UPPER, 83, ExtremePhysique.GREAT_STRENGTH_TRUE_MARTIAL,
-                12_345L, GuPath.TIME, null, 678L, 73, 987_654L);
+                12_345L, GuPath.TIME, null, 678L, 73, 987_654L, 42, true, true, true);
         ByteBuf buffer = Unpooled.buffer();
         try {
             Aperture.STREAM_CODEC.encode(buffer, expected);
@@ -37,6 +37,10 @@ class DataStreamCodecTest {
             assertEquals(expected.distilledEssence(), ByteBufCodecs.VAR_LONG.decode(buffer));
             assertEquals(expected.pressure(), ByteBufCodecs.VAR_INT.decode(buffer));
             assertEquals(expected.pressureDeadlineTick(), ByteBufCodecs.VAR_LONG.decode(buffer));
+            assertEquals(expected.nourishProgress(), ByteBufCodecs.VAR_INT.decode(buffer));
+            assertEquals(expected.petrified(), ByteBufCodecs.BOOL.decode(buffer));
+            assertEquals(expected.distilling(), ByteBufCodecs.BOOL.decode(buffer));
+            assertEquals(expected.zombieOpened(), ByteBufCodecs.BOOL.decode(buffer));
             assertEquals(0, buffer.readableBytes());
 
             ModStreamCodecs.ofEnum(Rank.class).encode(buffer, expected.rank());
@@ -49,6 +53,10 @@ class DataStreamCodecTest {
             ByteBufCodecs.VAR_LONG.encode(buffer, expected.distilledEssence());
             ByteBufCodecs.VAR_INT.encode(buffer, expected.pressure());
             ByteBufCodecs.VAR_LONG.encode(buffer, expected.pressureDeadlineTick());
+            ByteBufCodecs.VAR_INT.encode(buffer, expected.nourishProgress());
+            ByteBufCodecs.BOOL.encode(buffer, expected.petrified());
+            ByteBufCodecs.BOOL.encode(buffer, expected.distilling());
+            ByteBufCodecs.BOOL.encode(buffer, expected.zombieOpened());
             assertEquals(expected, Aperture.STREAM_CODEC.decode(buffer));
             assertEquals(0, buffer.readableBytes());
         } finally {

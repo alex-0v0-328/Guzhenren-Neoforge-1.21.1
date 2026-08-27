@@ -3,6 +3,7 @@ package com.unknown.guzhenren.network.payload;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.serialization.ModStreamCodecs;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
@@ -10,8 +11,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Client intent: begin or abandon nourishing the aperture [温养空窍].
  *
- * <p>A payload carrying only a named action ({@code START} / {@code CANCEL}) -- no player data, no
- * aperture index. The server handler in {@link com.unknown.guzhenren.network.ModPayloads} delegates
+ * <p>A payload carrying a named action ({@code START} / {@code CANCEL}) and the target aperture
+ * index -- no player data. The server handler in {@link com.unknown.guzhenren.network.ModPayloads}
+ * delegates
  * to {@link com.unknown.guzhenren.attachment.service.aperture.NourishService}. Client intent is the
  * one direction attachment sync cannot carry.
  *
@@ -24,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  * @since 1.0.0
  */
 
-public record NourishAperturePayload(Action action) implements CustomPacketPayload {
+public record NourishAperturePayload(Action action, int aperture) implements CustomPacketPayload {
 
     public enum Action {START, CANCEL}
 
@@ -33,6 +35,7 @@ public record NourishAperturePayload(Action action) implements CustomPacketPaylo
 
     public static final StreamCodec<ByteBuf, NourishAperturePayload> STREAM_CODEC = StreamCodec.composite(
             ModStreamCodecs.ofEnum(Action.class), NourishAperturePayload::action,
+            ByteBufCodecs.VAR_INT, NourishAperturePayload::aperture,
             NourishAperturePayload::new);
 
     @Override

@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.client.hud;
 
 import com.unknown.guzhenren.attachment.data.aperture.NourishData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -51,9 +52,11 @@ public final class NourishHud extends HotbarHud {
         int x = (minecraft.getWindow().getGuiScaledWidth() - BAR_WIDTH) / 2;
         int y = barTop(minecraft);
 
-        drawBar(graphics, x, y, NourishService.fraction(player), starving ? FILL_STARVING : FILL);
+        int target = NourishService.targetIndex(player);
+        drawBar(graphics, x, y, NourishService.fraction(player, target), starving ? FILL_STARVING : FILL);
 
         drawLabel(graphics, minecraft, x, y,
-                Component.translatable(starving ? STARVING : CAPTION, nourish.progress()));
+                Component.translatable(starving ? STARVING : CAPTION,
+                        ApertureService.aperture(player, target).nourishProgress()));
     }
 }

@@ -120,7 +120,7 @@ public final class PlayerTickEvents {
     }
 
     private static void closeDistilling(ServerPlayer player) {
-        if (EssenceService.distilledEssence(player) > 0L && !EssenceService.isDistilling(player)) {
+        if (EssenceService.totalDistilled(player) > 0L && !EssenceService.isDistilling(player)) {
             EssenceService.endDistilling(player);
         }
     }

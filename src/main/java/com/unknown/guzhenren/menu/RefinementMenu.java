@@ -528,9 +528,8 @@ public class RefinementMenu extends AbstractContainerMenu {
         }
     }
 
-    //   TODO: a Gu cannot name the aperture that bound it, so PRIMARY -- as PlayerDataService does.
     private static void inherit(ServerPlayer server, ItemStack made, TendedGuItem gu) {
-        GuItem.bind(made, server);
+        GuItem.bind(made, server, ApertureService.PRIMARY);
         ApertureService.setPrimaryPath(server, ApertureService.PRIMARY, gu.path());
     }
 

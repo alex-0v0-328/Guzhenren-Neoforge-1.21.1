@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.menu;
 
+import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService;
 import com.unknown.guzhenren.item.GuItem;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
@@ -161,7 +162,11 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         }
 
         ItemStack bound = vital.getItem(0);
-        if (!bound.isEmpty() && !GuItem.isVital(bound)) GuItem.bind(bound, server);
+        if (!bound.isEmpty() && bound.getItem() instanceof GuItem gu
+                && (!GuItem.isVital(bound) || GuItem.boundAperture(bound) != aperture)) {
+            GuItem.bind(bound, server, aperture);
+            ApertureService.setPrimaryPath(server, aperture, gu.path());
+        }
         if (!same(bound, ApertureStorageService.vital(server, aperture))) {
             if (!ApertureStorageService.setVital(server, aperture, bound.copy())) {
                 load(pageIndex());

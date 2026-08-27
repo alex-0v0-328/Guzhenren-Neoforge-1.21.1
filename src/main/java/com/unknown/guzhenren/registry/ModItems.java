@@ -17,6 +17,7 @@ import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.mortal.BuffGuItem;
 import com.unknown.guzhenren.item.gu.mortal.HopeGuItem;
 import com.unknown.guzhenren.item.gu.mortal.earth.StoneApertureGuItem;
+import com.unknown.guzhenren.item.gu.mortal.human.SecondApertureGuItem;
 import com.unknown.guzhenren.item.gu.mortal.LifespanGuItem;
 import com.unknown.guzhenren.item.gu.mortal.PrimevalElderGuItem;
 import com.unknown.guzhenren.item.gu.mortal.RelicsGuItem;
@@ -32,6 +33,7 @@ import com.unknown.guzhenren.item.gu.mortal.wisdom.CasualGuItem;
 import com.unknown.guzhenren.item.gu.mortal.wisdom.MaliciousThoughtGuItem;
 import com.unknown.guzhenren.item.gu.mortal.wood.TreasureLotusGuItem;
 import com.unknown.guzhenren.item.gu.mortal.zombie.ZombieGuItem;
+import com.unknown.guzhenren.item.material.GuMaterialItem;
 import com.unknown.guzhenren.item.material.LiquorItem;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.item.material.qi.DeathQiItem;
@@ -41,6 +43,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Every item and the only place a Gu's numbers actually live.
@@ -432,6 +435,28 @@ public final class ModItems {
                     .cooldown(Ticks.SECOND)));
     //endregion
 
+    //region 第二空窍蛊 [Second Aperture Gu] -- human path; opens or upgrades the second aperture,
+    // taken by its use; Grade-A at 8/10, this rank's first stage, never a physique
+    public static final DeferredItem<Item> SECOND_APERTURE_GU_1 = ITEMS.register("second_aperture_gu_1",
+            () -> secondApertureGu(Rank.ONE, 100, 1));
+    public static final DeferredItem<Item> SECOND_APERTURE_GU_2 = ITEMS.register("second_aperture_gu_2",
+            () -> secondApertureGu(Rank.TWO, 1_000, 2));
+    public static final DeferredItem<Item> SECOND_APERTURE_GU_3 = ITEMS.register("second_aperture_gu_3",
+            () -> secondApertureGu(Rank.THREE, 10_000, 4));
+    public static final DeferredItem<Item> SECOND_APERTURE_GU_4 = ITEMS.register("second_aperture_gu_4",
+            () -> secondApertureGu(Rank.FOUR, 100_000, 8));
+    public static final DeferredItem<Item> SECOND_APERTURE_GU_5 = ITEMS.register("second_aperture_gu_5",
+            () -> secondApertureGu(Rank.FIVE, 1_000_000, 16));
+
+    private static SecondApertureGuItem secondApertureGu(Rank rank, int refineCost, int stonesPerHunger) {
+        return new SecondApertureGuItem(tended(), GuSpec.of(rank, GuPath.HUMAN)
+                .refine(refineCost).costPerUse(0)
+                .hungerBar(8, stonesPerHunger).hungerPerUse(0)
+                .feed(ModItemTags.PRIMEVAL_STONE_FEED, 1)
+                .cooldown(Ticks.SECOND));
+    }
+    //endregion
+
     //region 蛊材 [Gu materials]
     public static final DeferredItem<Item> PRIMEVAL_STONE = ITEMS.register("primeval_stone",
             () -> new PrimevalStoneItem(new Item.Properties(), PRIMEVAL_STONE_ESSENCE));
@@ -450,6 +475,29 @@ public final class ModItems {
 
     public static final DeferredItem<Item> SPICY_LIQUOR = ITEMS.register("spicy_liquor",
             () -> new LiquorItem(new Item.Properties()));
+    //endregion
+
+    //region 人窍 [Human Aperture] -- pure gu material, ranks I..V; a wiped death drops one per aperture
+    public static final DeferredItem<Item> HUMAN_APERTURE_1 = humanAperture("human_aperture_1", Rank.ONE);
+    public static final DeferredItem<Item> HUMAN_APERTURE_2 = humanAperture("human_aperture_2", Rank.TWO);
+    public static final DeferredItem<Item> HUMAN_APERTURE_3 = humanAperture("human_aperture_3", Rank.THREE);
+    public static final DeferredItem<Item> HUMAN_APERTURE_4 = humanAperture("human_aperture_4", Rank.FOUR);
+    public static final DeferredItem<Item> HUMAN_APERTURE_5 = humanAperture("human_aperture_5", Rank.FIVE);
+
+    private static DeferredItem<Item> humanAperture(String id, Rank rank) {
+        return ITEMS.register(id, () -> new GuMaterialItem(new Item.Properties().stacksTo(64), rank, GuPath.HUMAN));
+    }
+
+    public static @Nullable Item humanAperture(Rank rank) {
+        return switch (rank) {
+            case ONE -> HUMAN_APERTURE_1.get();
+            case TWO -> HUMAN_APERTURE_2.get();
+            case THREE -> HUMAN_APERTURE_3.get();
+            case FOUR -> HUMAN_APERTURE_4.get();
+            case FIVE -> HUMAN_APERTURE_5.get();
+            default -> null;
+        };
+    }
     //endregion
 
     //region Qi Path [气道] materials -- 21, ranks I..V

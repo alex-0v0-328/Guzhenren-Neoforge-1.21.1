@@ -14,6 +14,7 @@ import com.unknown.guzhenren.network.payload.OpenApertureStoragePayload;
 import com.unknown.guzhenren.network.payload.OpenRefinementPayload;
 import com.unknown.guzhenren.network.payload.SetSecondaryPathPayload;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -89,6 +90,7 @@ public final class PlayerInfoScreen extends Screen {
 
     private static final String KEY_NOURISH = "guzhenren.screen.nourish";
     private static final String KEY_NOURISH_STOP = "guzhenren.screen.nourish_stop";
+    private static final String KEY_NOURISH_SECOND = "guzhenren.screen.nourish_second";
     private static final String KEY_IMPACT = "guzhenren.screen.impact";
 
     private static final int TAB_APERTURE = 0;
@@ -113,8 +115,9 @@ public final class PlayerInfoScreen extends Screen {
     private int panelH;
     private int activeTab = 0;
 
-    private int clickableRowY = -1;
+    private @Nullable Click hoverClick;
     private boolean picking;
+    private int pickerAperture = ApertureData.PRIMARY;
     private int scrollRow;
 
     public PlayerInfoScreen() {super(Component.translatable("guzhenren.screen.info.title"));}
@@ -154,13 +157,13 @@ public final class PlayerInfoScreen extends Screen {
         int valueRight = valueRight();
         int rowLeft = contentLeft();
         int y = contentTop();
-        clickableRowY = -1;
+        hoverClick = null;
         for (int i = scrollRow; i < Math.min(rows.size(), scrollRow + visible); i++) {
             Row row = rows.get(i);
             if (mouseY >= y - 1 && mouseY < y + LINE_H - 1 && mouseX >= rowLeft - 2 && mouseX < valueRight + 2) {
                 g.fill(rowLeft - 2, y - 1, valueRight + 2, y + LINE_H - 1, ROW_HOVER);
+                if (row.click() != null) hoverClick = row.click();
             }
-            if (row.clickable()) clickableRowY = y;
             int labelColor = row.value() == null ? accent : TEXT;
             g.drawString(font, row.label(), rowLeft + row.indent(), y, labelColor, false);
             if (row.value() != null) {
@@ -173,43 +176,59 @@ public final class PlayerInfoScreen extends Screen {
         if (picking) renderPicker(g, mouseX, mouseY, accent);
     }
 
-    //region 温养空窍 [nourish] and 冲击窍壁 [impact] -- the only two real buttons on this panel
-    private boolean cultivationButtons() {
-        LocalPlayer player = Minecraft.getInstance().player;
-        return activeTab == TAB_APERTURE && player != null && ApertureService.isAwakened(player);
+    //region 温养空窍 [nourish] and 冲刷窍壁 [flush] -- one button row per visible aperture, bottom of the panel
+    private static int[] visibleCultivation(LocalPlayer player) {
+        int count = ApertureService.get(player).count();
+        int[] kept = new int[count];
+        int visible = 0;
+        for (int i = 0; i < count; i++) {
+            if (!NourishService.atCeiling(player, i)) kept[visible++] = i;
+        }
+        return Arrays.copyOf(kept, visible);
     }
-    private int buttonTop() {return contentBottom() - BTN_H;}
-    private int buttonSplit() {return (contentLeft() + valueRight()) / 2;}
-    private int nourishRight(boolean paired) {return paired ? buttonSplit() - BTN_GAP : valueRight();}
+    private int cultivationCount() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        return activeTab == TAB_APERTURE && player != null && ApertureService.isAwakened(player)
+                ? visibleCultivation(player).length : 0;
+    }
+    private int buttonTop(int row) {
+        return contentBottom() - cultivationCount() * (BTN_H + BTN_GAP) + BTN_GAP + row * (BTN_H + BTN_GAP);
+    }
 
     private void renderCultivation(GuiGraphics g, int mouseX, int mouseY, int accent) {
-        if (!cultivationButtons()) return;
+        if (activeTab != TAB_APERTURE) return;
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return;
-        boolean paired = NourishService.canImpact(player);
-        boolean running = NourishService.isCultivating(player);
+        if (player == null || !ApertureService.isAwakened(player)) return;
+        int[] visible = visibleCultivation(player);
 
-        int top = buttonTop();
-        int x0 = contentLeft();
-        int x1 = nourishRight(paired);
-        int fill = running ? BTN_HOVER : NourishService.canNourish(player) ? BTN_IDLE : BTN_DEAD;
+        for (int r = 0; r < visible.length; r++) {
+            int aperture = visible[r];
+            boolean paired = aperture == ApertureData.PRIMARY && NourishService.canImpact(player);
+            boolean running = NourishService.isCultivating(player) && NourishService.targetIndex(player) == aperture;
 
-        g.fill(x0, top, x1, top + BTN_H, fill);
-        if (running) {
-            int done = x0 + Math.round((x1 - x0) * NourishService.fraction(player));
-            g.fill(x0, top, done, top + BTN_H, BTN_PROGRESS);
+            int top = buttonTop(r);
+            int x0 = contentLeft();
+            int x3 = valueRight();
+            if (paired) {
+                int strike = !NourishService.canAffordImpact(player) ? BTN_DEAD
+                        : inBox(mouseX, mouseY, x0, x3, r) ? BTN_HOVER : BTN_IDLE;
+                g.fill(x0, top, x3, top + BTN_H, strike);
+                g.renderOutline(x0, top, x3 - x0, BTN_H, accent);
+                label(g, Component.translatable(KEY_IMPACT), x0, x3, top);
+                continue;
+            }
+
+            int fill = running ? BTN_HOVER : NourishService.canNourish(player, aperture) ? BTN_IDLE : BTN_DEAD;
+
+            g.fill(x0, top, x3, top + BTN_H, fill);
+            if (running) {
+                int done = x0 + Math.round((x3 - x0) * NourishService.fraction(player, aperture));
+                g.fill(x0, top, done, top + BTN_H, BTN_PROGRESS);
+            }
+            g.renderOutline(x0, top, x3 - x0, BTN_H, running ? accent : BORDER);
+            String nourish = aperture == ApertureData.PRIMARY ? KEY_NOURISH : KEY_NOURISH_SECOND;
+            label(g, Component.translatable(running ? KEY_NOURISH_STOP : nourish), x0, x3, top);
         }
-        g.renderOutline(x0, top, x1 - x0, BTN_H, running ? accent : BORDER);
-        label(g, Component.translatable(running ? KEY_NOURISH_STOP : KEY_NOURISH), x0, x1, top);
-
-        if (!paired) return;
-        int x2 = buttonSplit();
-        int x3 = valueRight();
-        int strike = !NourishService.canAffordImpact(player) ? BTN_DEAD
-                : inBox(mouseX, mouseY, x2, x3) ? BTN_HOVER : BTN_IDLE;
-        g.fill(x2, top, x3, top + BTN_H, strike);
-        g.renderOutline(x2, top, x3 - x2, BTN_H, accent);
-        label(g, Component.translatable(KEY_IMPACT), x2, x3, top);
     }
 
     private void label(GuiGraphics g, Component text, int x0, int x1, int top) {
@@ -217,30 +236,38 @@ public final class PlayerInfoScreen extends Screen {
                 top + (BTN_H - font.lineHeight) / 2, TEXT, false);
     }
 
-    private boolean inBox(double mx, double my, int x0, int x1) {
-        return mx >= x0 && mx < x1 && my >= buttonTop() && my < buttonTop() + BTN_H;
+    private boolean inBox(double mx, double my, int x0, int x1, int row) {
+        return mx >= x0 && mx < x1 && my >= buttonTop(row) && my < buttonTop(row) + BTN_H;
     }
 
     private boolean clickCultivation(double mx, double my) {
-        if (!cultivationButtons()) return false;
+        if (activeTab != TAB_APERTURE) return false;
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return false;
-        boolean paired = NourishService.canImpact(player);
+        if (player == null || !ApertureService.isAwakened(player)) return false;
+        int[] visible = visibleCultivation(player);
 
-        if (paired && inBox(mx, my, buttonSplit(), valueRight())) {
-            PacketDistributor.sendToServer(ImpactApertureWallPayload.INSTANCE);
+        for (int r = 0; r < visible.length; r++) {
+            int aperture = visible[r];
+            if (aperture == ApertureData.PRIMARY && NourishService.canImpact(player)) {
+                if (inBox(mx, my, contentLeft(), valueRight(), r)) {
+                    PacketDistributor.sendToServer(ImpactApertureWallPayload.INSTANCE);
+                    return true;
+                }
+                continue;
+            }
+            if (!inBox(mx, my, contentLeft(), valueRight(), r)) continue;
+
+            if (NourishService.isCultivating(player)) {
+                PacketDistributor.sendToServer(new NourishAperturePayload(NourishAperturePayload.Action.CANCEL,
+                        NourishService.targetIndex(player)));
+                return true;
+            }
+            if (!NourishService.canNourish(player, aperture)) return true;
+            PacketDistributor.sendToServer(new NourishAperturePayload(NourishAperturePayload.Action.START, aperture));
+            onClose();
             return true;
         }
-        if (!inBox(mx, my, contentLeft(), nourishRight(paired))) return false;
-
-        if (NourishService.isCultivating(player)) {
-            PacketDistributor.sendToServer(new NourishAperturePayload(NourishAperturePayload.Action.CANCEL));
-            return true;
-        }
-        if (!NourishService.canNourish(player)) return true;
-        PacketDistributor.sendToServer(new NourishAperturePayload(NourishAperturePayload.Action.START));
-        onClose();
-        return true;
+        return false;
     }
     //endregion
 
@@ -252,7 +279,7 @@ public final class PlayerInfoScreen extends Screen {
     private int inset() {return (edgeRight() - edgeLeft()) / CONTENT_INSET_DIVISOR;}
     private int edgeLeft() {return leftPos + PAD;}
     private int edgeRight() {return tabLeft() - PAD;}
-    private int rowsBottom() {return contentBottom() - (cultivationButtons() ? BTN_H + BTN_GAP : 0);}
+    private int rowsBottom() {return contentBottom() - cultivationCount() * (BTN_H + BTN_GAP);}
     private int visibleRows() {return Math.max(0, (rowsBottom() - contentTop()) / LINE_H);}
 
     private void renderScrollBar(GuiGraphics g, int total, int visible, int accent) {
@@ -318,7 +345,7 @@ public final class PlayerInfoScreen extends Screen {
             int cy = y0 + (i / PICK_COLS) * PICK_CELL_H;
             if (mx < cx || mx >= cx + PICK_CELL_W || my < cy || my >= cy + PICK_CELL_H) continue;
 
-            PacketDistributor.sendToServer(new SetSecondaryPathPayload(ApertureData.PRIMARY, pickPath(i)));
+            PacketDistributor.sendToServer(new SetSecondaryPathPayload(pickerAperture, pickPath(i)));
             picking = false;
             return;
         }
@@ -367,9 +394,14 @@ public final class PlayerInfoScreen extends Screen {
         }
         if (button == 0) {
             if (clickCultivation(mx, my)) return true;
-            if (clickableRowY >= 0 && my >= clickableRowY - 1 && my < clickableRowY + LINE_H - 1
-                    && mx >= contentLeft() - 2 && mx < valueRight() + 2) {
-                picking = true;
+            Click click = hoverClick;
+            if (click != null) {
+                if (click.picker()) {
+                    pickerAperture = click.aperture();
+                    picking = true;
+                } else {
+                    PacketDistributor.sendToServer(new OpenApertureStoragePayload(click.aperture()));
+                }
                 return true;
             }
             for (int i = 0; i < TAB_KEYS.length; i++) {
@@ -439,8 +471,9 @@ public final class PlayerInfoScreen extends Screen {
 
     private static @Nullable Row draw(int indent, InfoModel.Entry entry) {
         return switch (entry) {
-            case InfoModel.ApertureIndex e -> new Row(indent,
-                    Component.translatable("guzhenren.command.info.aperture_index", e.number()), null);
+            case InfoModel.ApertureIndex e -> new Row(indent, ModDisplayText.apertureName(e.number()), null,
+                    new Click(false, e.number() - 1));
+            case InfoModel.Blank ignored -> new Row(indent, Component.empty(), null);
             case InfoModel.Realm e -> new Row(indent, label("realm"), ModDisplayText.realmTitle(e.aperture()));
             case InfoModel.Status e -> new Row(indent, label("aperture_status"),
                     name(e.status().getTranslationKey()));
@@ -456,7 +489,8 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.PathChoice e -> e.primary()
                     ? new Row(indent, label("primary_path"), ModDisplayText.path(e.path()))
                     : new Row(indent, label("secondary_path"),
-                    ModDisplayText.path(e.path()).append(detail(pickHint())), true);
+                    detail(pickHint()).copy().append(detail(ModDisplayText.path(e.path()))),
+                    new Click(true, e.aperture()));
 
             case InfoModel.Form e -> new Row(indent, label("life_form"), name(e.form().getTranslationKey()));
             case InfoModel.RaceRow e -> new Row(indent, label("race"), name(e.race().getTranslationKey()));
@@ -510,7 +544,9 @@ public final class PlayerInfoScreen extends Screen {
         return Component.translatable("guzhenren.command.info.detail", v).withStyle(ChatFormatting.DARK_GRAY);
     }
 
-    private record Row(int indent, Component label, @Nullable Component value, boolean clickable) {
-        Row(int indent, Component label, @Nullable Component value) {this(indent, label, value, false);}
+    private record Row(int indent, Component label, @Nullable Component value, @Nullable Click click) {
+        Row(int indent, Component label, @Nullable Component value) {this(indent, label, value, null);}
     }
+
+    private record Click(boolean picker, int aperture) {}
 }

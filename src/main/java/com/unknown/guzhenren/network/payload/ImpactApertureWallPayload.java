@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Client intent: strike the aperture wall [冲击窍壁] and take whatever the roll gives.
+ * Client intent: flush the aperture wall [冲刷窍壁] and take whatever the roll gives.
  *
  * <p>A zero-byte singleton payload -- it carries no data at all, only the button press. The server
  * handler in {@link com.unknown.guzhenren.network.ModPayloads} delegates to

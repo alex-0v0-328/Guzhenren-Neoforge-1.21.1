@@ -69,9 +69,10 @@ public final class ModPayloads {
 
     private static void nourishAperture(NourishAperturePayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
+        if (payload.aperture() < 0 || payload.aperture() >= ApertureService.get(player).count()) return;
 
         switch (payload.action()) {
-            case START -> NourishService.start(player);
+            case START -> NourishService.start(player, payload.aperture());
             case CANCEL -> NourishService.cancel(player);
         }
     }

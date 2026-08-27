@@ -77,6 +77,8 @@ public final class ModDisplayText {
                 : Component.translatable(path.getTranslationKey());
     }
 
+    public static Component apertureName(int number) {return Component.translatable("guzhenren.display.aperture_" + number);}
+
     public static MutableComponent pathLine(GuPath path, PathEntry entry) {
         MutableComponent line = path(path);
         if (entry.attainment() != GuAttainment.NONE) {

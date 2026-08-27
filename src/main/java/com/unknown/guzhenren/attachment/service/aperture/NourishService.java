@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.attachment.service.aperture;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.aperture.NourishData;
 import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
@@ -15,21 +16,25 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Nourishing the Aperture [温养空窍] and striking its wall [冲击窍壁] -- the only way a rank rises.
+ * Nourishing the Aperture [温养空窍] and striking its wall [冲刷窍壁] -- the only way a rank rises.
  *
- * <p>Static service over the {@code nourish_data} attachment; reads take {@link Player}, writes take
- * {@link ServerPlayer}. Two client-intent entry points ({@code start}, {@code impactWall}) driven by
- * B-panel buttons, plus {@code tickNourish} on the heartbeat. The strike cost goes through
- * {@link PrimevalStoneItem#spend(ServerPlayer, long)}: current and distilled essence first, then
- * an offhand Elder Gu [元老蛊] or carried stones. It exceeds every same-rank pool by construction.
+ * <p>Static service; reads take {@link Player}, writes take {@link ServerPlayer}. The run's progress
+ * and the petrified latch live on each {@link Aperture}; this attachment only says whether a run is
+ * going and which aperture it feeds ({@code target}). Two client-intent entry points ({@code start},
+ * {@code impactWall}) driven by B-panel buttons, plus {@code tickNourish} on the heartbeat. The strike
+ * cost goes through {@link PrimevalStoneItem#spend(ServerPlayer, long)}: current and distilled essence
+ * first, then an offhand Elder Gu [元老蛊] or carried stones. It exceeds every same-rank pool by
+ * construction.
  *
- * <p>⚠ A rank-up MUST also set the stage back to {@code LOWEST} -- {@code setRank} leaves the stage
- * alone, so the missing call yields a "二转巅峰" that squares the essence cap. ⚠ The strike zeroes
- * progress whether it succeeds or fails; that IS how "you must run a whole peak round again" is
- * implemented, with no separate flag. ⚠ Charge the strike BEFORE rolling, and leave the progress
- * alone when the charge fails -- a click nobody can afford must cost nothing. ⚠ A hastened clock
- * bills MORE seconds per heartbeat ({@code steps}), never a bigger second -- scaling the progress and
- * the price instead would round the round's length off the pool it is defined to cost.
+ * <p>⚠ The wall belongs to the PRIMARY aperture alone -- a second aperture nourishes its stages but
+ * can never strike, so its only way to a higher rank is a higher-rank Second Aperture Gu. ⚠ A rank-up
+ * MUST also set the stage back to {@code LOWEST} -- leaving the stage alone yields a "二转巅峰" that
+ * squares the essence cap. ⚠ The strike zeroes progress whether it succeeds or fails; that IS how
+ * "you must run a whole peak round again" is implemented, with no separate flag. ⚠ Charge the strike
+ * BEFORE rolling, and leave the progress alone when the charge fails -- a click nobody can afford
+ * must cost nothing. ⚠ A hastened clock bills MORE seconds per heartbeat ({@code steps}), never a
+ * bigger second -- scaling the progress and the price instead would round the round's length off the
+ * pool it is defined to cost.
  *
  * @author Alex
  * @version 1.0.0
@@ -72,29 +77,42 @@ public final class NourishService {
 
     public static @NotNull NourishData get(@NotNull Player p) {return p.getData(ModAttachments.NOURISH);}
     public static boolean isCultivating(@NotNull Player p) {return get(p).cultivating();}
-    public static boolean isPetrified(@NotNull Player p) {return get(p).petrified();}
-    public static float fraction(@NotNull Player p) {return get(p).fraction();}
+    public static boolean isPetrified(@NotNull Player p, int index) {
+        return ApertureService.aperture(p, index).petrified();
+    }
+    public static float fraction(@NotNull Player p, int index) {
+        return ApertureService.aperture(p, index).nourishProgress() / (float) NourishData.FULL;
+    }
+
+    public static int targetIndex(@NotNull Player p) {
+        return Math.min(get(p).target(), Math.max(ApertureData.PRIMARY, ApertureService.get(p).count() - 1));
+    }
 
     //region what the screen asks
-    public static boolean canNourish(@NotNull Player p) {
-        return ApertureService.isAwakened(p) && !isCultivating(p)
-                && ApertureService.status(p) == ApertureStatus.NORMAL
-                && !atCeiling(p) && !get(p).isFull();
+    public static boolean canNourish(@NotNull Player p, int index) {
+        if (!ApertureService.isAwakened(p) || isCultivating(p)) return false;
+        if (index >= ApertureService.get(p).count()) return false;
+        if (ApertureService.status(p, index) != ApertureStatus.NORMAL) return false;
+        return !atCeiling(p, index)
+                && ApertureService.aperture(p, index).nourishProgress() < NourishData.FULL;
     }
     public static boolean canImpact(@NotNull Player p) {
         Aperture a = ApertureService.aperture(p);
         return ApertureService.isAwakened(p) && !isCultivating(p)
-                && ApertureService.status(p) == ApertureStatus.NORMAL && get(p).isFull()
+                && ApertureService.status(p) == ApertureStatus.NORMAL
+                && a.nourishProgress() >= NourishData.FULL
                 && a.stage() == Stage.HIGHEST && a.rank() != Rank.HIGHEST;
     }
-    private static boolean atCeiling(Player p) {
-        Aperture a = ApertureService.aperture(p);
-        return a.rank() == Rank.HIGHEST && a.stage() == Stage.HIGHEST;
+    public static boolean atCeiling(@NotNull Player p, int index) {
+        Aperture a = ApertureService.aperture(p, index);
+        return index == ApertureService.PRIMARY
+                ? a.rank() == Rank.HIGHEST && a.stage() == Stage.HIGHEST
+                : a.stage() == Stage.HIGHEST;
     }
     //endregion
 
-    public static long costPerSecond(@NotNull Player p) {
-        long max = EssenceService.maxEssence(p);
+    public static long costPerSecond(@NotNull Player p, int index) {
+        long max = ApertureService.aperture(p, index).maxEssence();
         return Math.max(1L, (max + COST_DIVISOR - 1) / COST_DIVISOR);
     }
     public static long impactCost(@NotNull Player p) {
@@ -102,9 +120,10 @@ public final class NourishService {
     }
     public static boolean canAffordImpact(@NotNull Player p) {return PrimevalStoneItem.canAfford(p, impactCost(p));}
 
-    public static void start(@NotNull ServerPlayer player) {
-        if (!canNourish(player)) return;
-        store(player, get(player).withCultivating(true).withStarvedSince(NourishData.NOT_STARVED));
+    public static void start(@NotNull ServerPlayer player, int index) {
+        if (!canNourish(player, index)) return;
+        store(player, get(player).withCultivating(true).withTarget(index)
+                .withStarvedSince(NourishData.NOT_STARVED));
     }
 
     public static void cancel(@NotNull ServerPlayer player) {
@@ -128,12 +147,13 @@ public final class NourishService {
     private static boolean nourishSecond(ServerPlayer player) {
         NourishData data = get(player);
         if (!data.cultivating()) return false;
-        if (ApertureService.status(player) != ApertureStatus.NORMAL
-                || !ApertureService.isAwakened(player) || atCeiling(player)) {cancel(player); return false;}
+        int target = targetIndex(player);
+        if (ApertureService.status(player, target) != ApertureStatus.NORMAL
+                || !ApertureService.isAwakened(player) || atCeiling(player, target)) {cancel(player); return false;}
 
         player.setDeltaMovement(Vec3.ZERO);
 
-        long cost = costPerSecond(player);
+        long cost = costPerSecond(player, target);
         if (!pay(player, cost)) {
             long now = player.level().getGameTime();
             NourishData starving = data.isStarving() ? data : data.withStarvedSince(now);
@@ -146,23 +166,29 @@ public final class NourishService {
             return false;
         }
 
-        NourishData fed = data.withStarvedSince(NourishData.NOT_STARVED)
-                .withProgress(data.progress() + PERCENT_PER_SECOND);
-        if (!fed.isFull()) {store(player, fed); return true;}
+        Aperture aperture = ApertureService.aperture(player, target);
+        Aperture fed = aperture.withNourishProgress(aperture.nourishProgress() + PERCENT_PER_SECOND);
+        if (fed.nourishProgress() < NourishData.FULL) {
+            ApertureService.set(player, target, fed);
+            store(player, data.withStarvedSince(NourishData.NOT_STARVED));
+            return true;
+        }
 
-        Stage stage = ApertureService.aperture(player).stage();
+        Stage stage = aperture.stage();
         if (stage == Stage.HIGHEST) {
-            store(player, fed.withCultivating(false));
+            ApertureService.set(player, target, fed);
+            store(player, data.withCultivating(false).withStarvedSince(NourishData.NOT_STARVED));
             return false;
         }
-        ApertureService.setStage(player, stage.shift(1));
-        ApertureService.relievePressure(player, 20);
+        ApertureService.set(player, target, fed.withStage(stage.shift(1)).withNourishProgress(0));
+        if (target == ApertureService.PRIMARY) ApertureService.relievePressure(player, 20);
         store(player, NourishData.DEFAULT);
         player.displayClientMessage(Component.translatable(STAGE_UP), true);
         return false;
     }
 
     private static boolean pay(ServerPlayer player, long cost) {
+        if (player.hasInfiniteMaterials()) return true;
         PrimevalStoneItem.topUp(player);
         return EssenceService.consume(player, cost);
     }
@@ -170,16 +196,18 @@ public final class NourishService {
 
     //region 石窍蛊 [Stone Aperture Gu] -- straight to this rank's peak, and never further
     /**
-     * ⚠ The writer that sets {@code petrified}: it lands the primary aperture on this rank's peak,
-     * zeroes the pressure gauge, and locks cultivation until a full gauge converts (ten-extremes)
-     * or resetAll clears it. A run in progress is force-stopped by the same write, so the heartbeat
-     * loop needs no petrified check of its own.
+     * ⚠ The writer that sets {@code petrified}: it lands the aperture on this rank's peak, zeroes the
+     * pressure gauge, and locks cultivation until a full gauge converts (ten-extremes) or resetAll
+     * clears it. A run in progress is force-stopped by the same write, so the heartbeat loop needs no
+     * petrified check of its own.
      */
-    public static void petrify(@NotNull ServerPlayer player) {
-        if (get(player).petrified()) return;
-        ApertureService.setStage(player, Stage.HIGHEST);
-        ApertureService.setPressure(player, ApertureService.PRIMARY, 0);
-        store(player, NourishData.PETRIFIED);
+    public static void petrify(@NotNull ServerPlayer player, int index) {
+        Aperture aperture = ApertureService.aperture(player, index);
+        if (aperture.petrified()) return;
+        ApertureService.set(player, index, aperture.withStage(Stage.HIGHEST)
+                .withNourishProgress(0).withPetrified(true));
+        ApertureService.setPressure(player, index, 0);
+        store(player, NourishData.DEFAULT);
     }
 
     /**
@@ -189,10 +217,14 @@ public final class NourishService {
      * a next rank exists; at the last rank it answers {@code false} and the caller detonates.
      */
     public static boolean convertPetrifiedPressure(@NotNull ServerPlayer player) {
-        if (!isPetrified(player) || ApertureService.rank(player) == Rank.HIGHEST) return false;
+        Aperture aperture = ApertureService.aperture(player);
+        if (!aperture.petrified() || aperture.rank() == Rank.HIGHEST) return false;
 
-        ApertureService.setRank(player, ApertureService.rank(player).shift(1));
-        ApertureService.setStage(player, Stage.LOWEST);
+        ApertureService.set(player, ApertureService.PRIMARY, aperture
+                .withRank(aperture.rank().shift(1))
+                .withStage(Stage.LOWEST)
+                .withNourishProgress(0)
+                .withPetrified(false));
         ApertureService.setPressure(player, ApertureService.PRIMARY, CONVERTED_PRESSURE);
         store(player, NourishData.DEFAULT);
         say(player, IMPACT_SUCCESS);
@@ -205,7 +237,7 @@ public final class NourishService {
         if (!canImpact(player)) return;
         Aperture a = ApertureService.aperture(player);
         long cost = impactCost(player);
-        if (!PrimevalStoneItem.spend(player, cost)) {
+        if (!player.hasInfiniteMaterials() && !PrimevalStoneItem.spend(player, cost)) {
             player.displayClientMessage(Component.translatable(IMPACT_POOR, cost), true);
             return;
         }
@@ -231,6 +263,8 @@ public final class NourishService {
                 say(player, IMPACT_DROP_BASE);
             }
         }
+        ApertureService.set(player, ApertureService.PRIMARY,
+                ApertureService.aperture(player, ApertureService.PRIMARY).withNourishProgress(0));
         store(player, NourishData.DEFAULT);
     }
 

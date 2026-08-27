@@ -44,7 +44,7 @@ public class LiquorWormItem extends TendedGuItem {
         if (ApertureService.rank(player) != rank()) {
             return new Refusal(FAILED_RANK, Component.translatable(rank().getTranslationKey()));
         }
-        return EssenceService.isDistilling(player) ? new Refusal(FAILED_DISTILLING) : null;
+        return EssenceService.canDistill(player) ? null : new Refusal(FAILED_DISTILLING);
     }
 
     @Override

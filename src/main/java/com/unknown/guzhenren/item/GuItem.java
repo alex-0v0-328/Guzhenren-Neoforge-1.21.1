@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.item;
 
 import com.unknown.guzhenren.Ticks;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
@@ -83,7 +84,14 @@ public abstract class GuItem extends Item {
     public static @Nullable UUID owner(ItemStack s) {return s.get(ModDataComponents.VITAL_OWNER.get());}
     public static boolean isVital(ItemStack s) {return s.has(ModDataComponents.VITAL_OWNER.get());}
     public static boolean isVitalOf(ItemStack s, Player p) {return p.getUUID().equals(owner(s));}
-    public static void bind(ItemStack s, Player p) {s.set(ModDataComponents.VITAL_OWNER.get(), p.getUUID());}
+    public static int boundAperture(ItemStack s) {
+        return s.getOrDefault(ModDataComponents.VITAL_APERTURE.get(), ApertureData.PRIMARY);
+    }
+    public static void bind(ItemStack s, Player p) {bind(s, p, ApertureData.PRIMARY);}
+    public static void bind(ItemStack s, Player p, int aperture) {
+        s.set(ModDataComponents.VITAL_OWNER.get(), p.getUUID());
+        s.set(ModDataComponents.VITAL_APERTURE.get(), aperture);
+    }
     //endregion
 
     //region the hooks a leaf fills

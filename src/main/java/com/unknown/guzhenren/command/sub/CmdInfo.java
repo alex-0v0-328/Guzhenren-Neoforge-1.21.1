@@ -70,7 +70,8 @@ public final class CmdInfo {
 
     private static Component line(InfoModel.Entry entry) {
         return switch (entry) {
-            case InfoModel.ApertureIndex e -> key("aperture_index", e.number());
+            case InfoModel.ApertureIndex e -> ModDisplayText.apertureName(e.number());
+            case InfoModel.Blank ignored -> Component.empty();
             case InfoModel.Realm e -> key("realm", ModDisplayText.realmTitle(e.aperture()));
             case InfoModel.Status e -> key("aperture_status", enumName(e.status().getTranslationKey()));
             case InfoModel.Talent e -> talent(e);

@@ -7,9 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.aperture.NourishData;
 import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import com.unknown.guzhenren.attachment.service.aperture.NourishService.Outcome;
+import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +20,7 @@ import org.junit.jupiter.api.Test;
 class NourishTest {
 
     @Test
-    @DisplayName("冲击窍壁 ordinary table splits at 40 / 70 / 90")
+    @DisplayName("冲刷窍壁 ordinary table splits at 40 / 70 / 90")
     void ordinaryBoundaries() {
         assertSame(Outcome.SUCCESS, NourishService.resolve(0, false));
         assertSame(Outcome.SUCCESS, NourishService.resolve(39, false));
@@ -63,7 +65,7 @@ class NourishTest {
     }
 
     @Test
-    @DisplayName("冲击窍壁 costs one and a half Ten-Extremes peak pools -- the ×10 rank ladder, exactly")
+    @DisplayName("冲刷窍壁 costs one and a half Ten-Extremes peak pools -- the ×10 rank ladder, exactly")
     void impactCostLadder() {
         assertEquals(1_200L, cost(Rank.ONE));
         assertEquals(12_000L, cost(Rank.TWO));
@@ -85,22 +87,25 @@ class NourishTest {
     }
 
     @Test
-    @DisplayName("progress is clamped, and the starved anchor defaults to the sentinel, never to zero")
+    @DisplayName("the starved anchor defaults to the sentinel, never to zero, and the target defaults to PRIMARY")
     void recordInvariants() {
-        assertEquals(0, new NourishData(true, -5, NourishData.NOT_STARVED, false).progress());
-        assertEquals(NourishData.FULL, new NourishData(true, 500, NourishData.NOT_STARVED, false).progress());
         assertEquals(NourishData.NOT_STARVED, NourishData.DEFAULT.starvedSinceTick());
         assertFalse(NourishData.DEFAULT.isStarving());
+        assertEquals(ApertureData.PRIMARY, NourishData.DEFAULT.target());
     }
 
     @Test
-    @DisplayName("石窍蛊 lock: PETRIFIED stops cultivating and zeroes progress, DEFAULT never carries it")
+    @DisplayName("石窍蛊 lock: petrified and the progress live on the aperture, clamped by its ctor")
     void petrifiedInvariants() {
-        assertFalse(NourishData.DEFAULT.petrified());
-        assertTrue(NourishData.PETRIFIED.petrified());
-        assertFalse(NourishData.PETRIFIED.cultivating());
-        assertEquals(0, NourishData.PETRIFIED.progress());
-        assertEquals(NourishData.NOT_STARVED, NourishData.PETRIFIED.starvedSinceTick());
+        Aperture fresh = Aperture.secondaryOpened(Rank.THREE, false);
+        assertFalse(fresh.petrified());
+        assertEquals(0, fresh.nourishProgress());
+        assertEquals(0, new Aperture(Rank.ONE, Stage.INIT, 80, ExtremePhysique.NONE, 0L, null, null, 0L, 0, 0L,
+                -5, false, false, false).nourishProgress());
+        assertEquals(NourishData.FULL, new Aperture(Rank.ONE, Stage.INIT, 80, ExtremePhysique.NONE, 0L, null, null,
+                0L, 0, 0L, 500, true, false, false).nourishProgress());
+        assertTrue(new Aperture(Rank.ONE, Stage.INIT, 80, ExtremePhysique.NONE, 0L, null, null,
+                0L, 0, 0L, 0, true, false, false).petrified());
     }
 
     @Test

@@ -88,23 +88,36 @@ public final class ApertureService {
     /**
      * The one derivation of {@link ApertureStatus}: DEAD outranks STONE -- the zombie is the more
      * thorough negative, and stone still has the pressure way back -- and everything else, alive
-     * or half-zombie, reads NORMAL.
+     * or half-zombie, reads NORMAL. ⚠ {@code zombieOpened} is the one escape: an aperture opened
+     * while undead keeps reading NORMAL under every later undeath.
      */
-    public static @NotNull ApertureStatus status(@NotNull Player p) {
-        if (BodyService.isZombie(p)) return ApertureStatus.DEAD;
-        if (NourishService.isPetrified(p)) return ApertureStatus.STONE;
+    public static @NotNull ApertureStatus status(@NotNull Player p, int index) {
+        Aperture aperture = aperture(p, index);
+        if (BodyService.isZombie(p) && !aperture.zombieOpened()) return ApertureStatus.DEAD;
+        if (aperture.petrified()) return ApertureStatus.STONE;
         return ApertureStatus.NORMAL;
     }
+    public static @NotNull ApertureStatus status(@NotNull Player p) {return status(p, PRIMARY);}
     public static @NotNull Talent talent(@NotNull Player p) {return aperture(p).talent();}
     public static @NotNull Rank rank(@NotNull Player p) {return aperture(p).rank();}
     public static @NotNull Stage stage(@NotNull Player p) {return aperture(p).stage();}
 
-    public static void setRank(@NotNull ServerPlayer p, @NotNull Rank v) {set(p, PRIMARY, aperture(p).withRank(v));}
-    public static void setStage(@NotNull ServerPlayer p, @NotNull Stage v) {set(p, PRIMARY, aperture(p).withStage(v));}
-    public static void addBaseEssence(@NotNull ServerPlayer p, int d) {setBaseEssence(p, aperture(p).baseEssence() + d);}
+    public static void setRank(@NotNull ServerPlayer p, @NotNull Rank v) {setRank(p, PRIMARY, v);}
+    public static void setRank(@NotNull ServerPlayer p, int index, @NotNull Rank v) {
+        set(p, index, aperture(p, index).withRank(v));
+    }
+    public static void setStage(@NotNull ServerPlayer p, @NotNull Stage v) {setStage(p, PRIMARY, v);}
+    public static void setStage(@NotNull ServerPlayer p, int index, @NotNull Stage v) {
+        set(p, index, aperture(p, index).withStage(v));
+    }
+    public static void addBaseEssence(@NotNull ServerPlayer p, int d) {addBaseEssence(p, PRIMARY, d);}
+    public static void addBaseEssence(@NotNull ServerPlayer p, int index, int d) {
+        setBaseEssence(p, index, aperture(p, index).baseEssence() + d);
+    }
 
-    public static void setTalent(@NotNull ServerPlayer p, @NotNull Talent v) {
-        setBaseEssence(p, Talent.randomPercent(v));
+    public static void setTalent(@NotNull ServerPlayer p, @NotNull Talent v) {setTalent(p, PRIMARY, v);}
+    public static void setTalent(@NotNull ServerPlayer p, int index, @NotNull Talent v) {
+        setBaseEssence(p, index, Talent.randomPercent(v));
     }
 
     public static void setPrimaryPath(@NotNull ServerPlayer p, int index, @Nullable GuPath v) {
@@ -119,10 +132,18 @@ public final class ApertureService {
         set(p, index, aperture.withSecondaryPath(v));
     }
 
-    public static void shiftRank(@NotNull ServerPlayer p, int d) {setRank(p, aperture(p).rank().shift(d));}
-    public static void shiftStage(@NotNull ServerPlayer p, int d) {setStage(p, aperture(p).stage().shift(d));}
-    public static void shiftTalent(@NotNull ServerPlayer p, int d) {setTalent(p, aperture(p).talent().shift(d));}
-
+    public static void shiftRank(@NotNull ServerPlayer p, int d) {shiftRank(p, PRIMARY, d);}
+    public static void shiftRank(@NotNull ServerPlayer p, int index, int d) {
+        setRank(p, index, aperture(p, index).rank().shift(d));
+    }
+    public static void shiftStage(@NotNull ServerPlayer p, int d) {shiftStage(p, PRIMARY, d);}
+    public static void shiftStage(@NotNull ServerPlayer p, int index, int d) {
+        setStage(p, index, aperture(p, index).stage().shift(d));
+    }
+    public static void shiftTalent(@NotNull ServerPlayer p, int d) {shiftTalent(p, PRIMARY, d);}
+    public static void shiftTalent(@NotNull ServerPlayer p, int index, int d) {
+        setTalent(p, index, aperture(p, index).talent().shift(d));
+    }
     @SuppressWarnings("resource")
     public static void setPressure(@NotNull ServerPlayer player, int index, int value) {
         Aperture current = aperture(player, index);
@@ -210,8 +231,10 @@ public final class ApertureService {
         player.setData(ModAttachments.APERTURE, get(player).with(index, current.withPressureAndDeadline(value, deadline)));
     }
 
-    public static void setBaseEssence(@NotNull ServerPlayer p, int v) {
-        set(p, PRIMARY, aperture(p).withBaseEssence(Math.clamp(v, Aperture.MIN_BASE, Aperture.MAX_BASE)));
+    public static void setBaseEssence(@NotNull ServerPlayer p, int v) {setBaseEssence(p, PRIMARY, v);}
+
+    public static void setBaseEssence(@NotNull ServerPlayer p, int index, int v) {
+        set(p, index, aperture(p, index).withBaseEssence(Math.clamp(v, Aperture.MIN_BASE, Aperture.MAX_BASE)));
     }
 
     public static void setExtremePhysique(@NotNull ServerPlayer player, @NotNull ExtremePhysique physique) {
@@ -235,7 +258,25 @@ public final class ApertureService {
         open(player, Aperture.openedAt(baseEssence));
     }
 
+    /**
+     * The only opener of a second aperture: Grade-A at 8/10, this rank's first stage, a full pool, and
+     * never a physique. A higher-rank Second Aperture Gu overwrites what is already there; the zombie
+     * stamp is decided here so a second aperture opened while undead reads a living one.
+     */
+    public static void openSecondary(@NotNull ServerPlayer player, @NotNull Rank rank) {
+        ApertureData data = get(player);
+        if (data.count() < 1 || data.isFull()) return;
+
+        Aperture opened = Aperture.secondaryOpened(rank, BodyService.isZombie(player));
+        if (data.count() == 1) {
+            store(player, data.opened(opened));
+            return;
+        }
+        set(player, ApertureData.SECONDARY, opened);
+    }
+
     private static void open(ServerPlayer player, Aperture aperture) {
+        if (get(player).isFull()) return;
         ExtremePhysique before = aperture(player).extremePhysique();
         store(player, get(player).opened(enforce(aperture)));
         reconcileTalentPaths(player, before, aperture(player).extremePhysique());

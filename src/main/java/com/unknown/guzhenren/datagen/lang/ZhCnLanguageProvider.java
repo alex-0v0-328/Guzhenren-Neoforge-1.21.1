@@ -67,6 +67,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.display.realm_title", "%s%s");
         add("guzhenren.display.gu_line", "%s%s%s");
         add("guzhenren.display.gu", "蛊虫");
+        add("guzhenren.display.aperture_1", "第一空窍");
+        add("guzhenren.display.aperture_2", "第二空窍");
         add("guzhenren.display.gu_material", "蛊材");
         add("guzhenren.display.physique", "[%s]");
         add("guzhenren.display.lifespan", "%s [%s岁]");
@@ -160,8 +162,8 @@ public class ZhCnLanguageProvider extends LanguageProvider {
 
         add("guzhenren.command.failed.awakened", "%s 已开窍");
         add("guzhenren.command.failed.unawakened", "%s 尚未开窍");
+        add("guzhenren.command.failed.aperture_index", "%s 没有该空窍");
 
-        add("guzhenren.command.info.aperture_index", "第 %s 窍");
         add("guzhenren.command.info.realm", "玩家修为  %s");
         add("guzhenren.command.info.aperture_status", "空窍状态  %s");
         add("guzhenren.command.info.talent", "玩家天赋  %s");
@@ -244,15 +246,16 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.pick.hint", "点击选择");
         add("guzhenren.screen.nourish", "温养空窍");
         add("guzhenren.screen.nourish_stop", "停止温养");
-        add("guzhenren.screen.impact", "冲击窍壁");
+        add("guzhenren.screen.nourish_second", "温养第二空窍");
+        add("guzhenren.screen.impact", "冲刷窍壁");
 
         add("guzhenren.nourish.starved", "真元见底，中止温养");
         add("guzhenren.nourish.stage_up", "小境界提升");
-        add("guzhenren.impact.poor", "冲击窍壁需真元 %s");
+        add("guzhenren.impact.poor", "冲刷窍壁需真元 %s");
         add("guzhenren.impact.success", "大境界提升");
-        add("guzhenren.impact.hold", "冲击失败，大境界未变");
-        add("guzhenren.impact.drop_stage", "冲击失败，小境界掉落");
-        add("guzhenren.impact.drop_base", "冲击失败，资质受损");
+        add("guzhenren.impact.hold", "冲刷失败，大境界未变");
+        add("guzhenren.impact.drop_stage", "冲刷失败，小境界掉落");
+        add("guzhenren.impact.drop_base", "冲刷失败，资质受损");
         add("guzhenren.screen.label.realm", "修为");
         add("guzhenren.screen.label.aperture_status", "空窍状态");
         add("guzhenren.screen.label.talent", "天赋");
@@ -345,7 +348,17 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.STONE_APERTURE_GU_3, "三转石窍蛊");
         addItem(ModItems.STONE_APERTURE_GU_4, "四转石窍蛊");
         addItem(ModItems.STONE_APERTURE_GU_5, "五转石窍蛊");
+        addItem(ModItems.SECOND_APERTURE_GU_1, "一转第二空窍蛊");
+        addItem(ModItems.SECOND_APERTURE_GU_2, "二转第二空窍蛊");
+        addItem(ModItems.SECOND_APERTURE_GU_3, "三转第二空窍蛊");
+        addItem(ModItems.SECOND_APERTURE_GU_4, "四转第二空窍蛊");
+        addItem(ModItems.SECOND_APERTURE_GU_5, "五转第二空窍蛊");
         addItem(ModItems.PRIMEVAL_STONE, "元石");
+        addItem(ModItems.HUMAN_APERTURE_1, "一转人窍");
+        addItem(ModItems.HUMAN_APERTURE_2, "二转人窍");
+        addItem(ModItems.HUMAN_APERTURE_3, "三转人窍");
+        addItem(ModItems.HUMAN_APERTURE_4, "四转人窍");
+        addItem(ModItems.HUMAN_APERTURE_5, "五转人窍");
         addItem(ModItems.LIQUOR, "酒");
         addItem(ModItems.SOUR_LIQUOR, "酸酒");
         addItem(ModItems.SWEET_LIQUOR, "甜酒");
@@ -383,7 +396,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.essence_full", "真元已满");
         add("guzhenren.item.failed.rank_mismatch", "境界不符 — 此蛊需%s");
         add("guzhenren.item.failed.stage_peak", "已至小境界巅峰");
-        add("guzhenren.item.failed.aperture_petrified", "空窍已石化");
+        add("guzhenren.item.failed.aperture_absent", "你未开窍");
+        add("guzhenren.item.failed.second_aperture_rank", "第二空窍已是该转数或更高");
+        add("guzhenren.item.failed.aperture_unavailable", "没有可以作用的空窍");
         add("guzhenren.item.failed.beast_strength_held", "已有%s之力");
         add("guzhenren.item.failed.human_strength_full", "此力已满%s层");
         add("guzhenren.item.failed.vitality_active", "生机叶效果未散");

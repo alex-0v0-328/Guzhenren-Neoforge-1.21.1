@@ -66,6 +66,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.display.gu_line", "%s %s %s");
         add("guzhenren.display.gu", "Gu");
         add("guzhenren.display.gu_material", "Gu Material");
+        add("guzhenren.display.aperture_1", "First Aperture");
+        add("guzhenren.display.aperture_2", "Second Aperture");
         add("guzhenren.display.physique", "[%s]");
         add("guzhenren.display.lifespan", "%s [age %s]");
         add("guzhenren.display.base_fraction", "%s %s");
@@ -158,8 +160,8 @@ public class EnUsLanguageProvider extends LanguageProvider {
 
         add("guzhenren.command.failed.awakened", "%s has already awakened");
         add("guzhenren.command.failed.unawakened", "%s has not awakened");
+        add("guzhenren.command.failed.aperture_index", "%s has no aperture there");
 
-        add("guzhenren.command.info.aperture_index", "Aperture %s");
         add("guzhenren.command.info.realm", "Realm: %s");
         add("guzhenren.command.info.aperture_status", "Aperture Status: %s");
         add("guzhenren.command.info.talent", "Aptitude:    %s");
@@ -242,14 +244,15 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.pick.hint", "click to set");
         add("guzhenren.screen.nourish", "Nourish Aperture");
         add("guzhenren.screen.nourish_stop", "Stop Nourishing");
-        add("guzhenren.screen.impact", "Impact Aperture Wall");
+        add("guzhenren.screen.nourish_second", "Nourish Second Aperture");
+        add("guzhenren.screen.impact", "Flush Aperture Wall");
         add("guzhenren.nourish.starved", "The essence ran out");
         add("guzhenren.nourish.stage_up", "Aperture Stage Up");
-        add("guzhenren.impact.poor", "Impact aperture wall needs %s essence");
+        add("guzhenren.impact.poor", "Flushing the wall needs %s essence");
         add("guzhenren.impact.success", "Aperture Rank Up");
-        add("guzhenren.impact.hold", "Impact Failed, No change");
-        add("guzhenren.impact.drop_stage", "Impact Failed, Stage dropped");
-        add("guzhenren.impact.drop_base", "Impact Failed, Talent dropped");
+        add("guzhenren.impact.hold", "Flush Failed, No change");
+        add("guzhenren.impact.drop_stage", "Flush Failed, Stage dropped");
+        add("guzhenren.impact.drop_base", "Flush Failed, Talent dropped");
         add("guzhenren.screen.label.realm", "Realm");
         add("guzhenren.screen.label.aperture_status", "Aperture Status");
         add("guzhenren.screen.label.talent", "Aptitude");
@@ -342,7 +345,17 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addItem(ModItems.STONE_APERTURE_GU_3, "Stone Aperture Gu III");
         addItem(ModItems.STONE_APERTURE_GU_4, "Stone Aperture Gu IV");
         addItem(ModItems.STONE_APERTURE_GU_5, "Stone Aperture Gu V");
+        addItem(ModItems.SECOND_APERTURE_GU_1, "Second Aperture Gu I");
+        addItem(ModItems.SECOND_APERTURE_GU_2, "Second Aperture Gu II");
+        addItem(ModItems.SECOND_APERTURE_GU_3, "Second Aperture Gu III");
+        addItem(ModItems.SECOND_APERTURE_GU_4, "Second Aperture Gu IV");
+        addItem(ModItems.SECOND_APERTURE_GU_5, "Second Aperture Gu V");
         addItem(ModItems.PRIMEVAL_STONE, "Primeval Stone");
+        addItem(ModItems.HUMAN_APERTURE_1, "Human Aperture I");
+        addItem(ModItems.HUMAN_APERTURE_2, "Human Aperture II");
+        addItem(ModItems.HUMAN_APERTURE_3, "Human Aperture III");
+        addItem(ModItems.HUMAN_APERTURE_4, "Human Aperture IV");
+        addItem(ModItems.HUMAN_APERTURE_5, "Human Aperture V");
         addItem(ModItems.LIQUOR, "Liquor");
         addItem(ModItems.SOUR_LIQUOR, "Sour Liquor");
         addItem(ModItems.SWEET_LIQUOR, "Sweet Liquor");
@@ -380,7 +393,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.essence_full", "Essence is already FULL");
         add("guzhenren.item.failed.rank_mismatch", "Wrong realm - this Gu needs %s");
         add("guzhenren.item.failed.stage_peak", "You are at the Stage Peak");
-        add("guzhenren.item.failed.aperture_petrified", "This aperture has already turned to stone");
+        add("guzhenren.item.failed.aperture_absent", "You have NOT awakened");
+        add("guzhenren.item.failed.second_aperture_rank", "The second aperture already stands at or above this rank");
+        add("guzhenren.item.failed.aperture_unavailable", "No usable aperture remains");
         add("guzhenren.item.failed.beast_strength_held", "Already hold the %s's strength");
         add("guzhenren.item.failed.human_strength_full", "This strength is already at %s layers");
         add("guzhenren.item.failed.vitality_active", "Vitality Leaf is still working");

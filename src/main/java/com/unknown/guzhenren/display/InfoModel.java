@@ -67,6 +67,9 @@ public final class InfoModel {
     public record ApertureIndex(int number) implements Entry {
     }
 
+    public record Blank() implements Entry {
+    }
+
     public record Realm(Aperture aperture) implements Entry {
     }
 
@@ -85,7 +88,7 @@ public final class InfoModel {
     public record Pressure(Aperture aperture) implements Entry {
     }
 
-    public record PathChoice(boolean primary, @Nullable GuPath path) implements Entry {
+    public record PathChoice(boolean primary, int aperture, @Nullable GuPath path) implements Entry {
     }
     //endregion
 
@@ -157,19 +160,20 @@ public final class InfoModel {
         List<Row> rows = new ArrayList<>();
 
         if (data.count() <= 1) {
-            apertureBlock(rows, data.primary(), data.isAwakened(), 0, true, status);
+            apertureBlock(rows, data.primary(), data.isAwakened(), 0, ApertureData.PRIMARY, true, status);
             return rows;
         }
         for (int i = 0; i < data.count(); i++) {
             rows.add(new Row(0, new ApertureIndex(i + 1)));
-            apertureBlock(rows, data.get(i), true, INDENT, i == ApertureData.PRIMARY,
-                    i == ApertureData.PRIMARY ? status : ApertureStatus.NORMAL);
+            apertureBlock(rows, data.get(i), true, INDENT, i, i == ApertureData.PRIMARY,
+                    ApertureService.status(player, i));
+            if (i < data.count() - 1) rows.add(new Row(0, new Blank()));
         }
         return rows;
     }
 
     private static void apertureBlock(List<Row> rows, Aperture aperture, boolean awakened, int indent,
-                                      boolean pressure, ApertureStatus status) {
+                                      int index, boolean pressure, ApertureStatus status) {
         rows.add(new Row(indent, new Realm(aperture)));
         rows.add(new Row(indent, new Talent(aperture, awakened)));
         if (awakened) {
@@ -177,8 +181,8 @@ public final class InfoModel {
             rows.add(new Row(indent, new Essence(aperture)));
             if (aperture.distilledEssence() > 0L) rows.add(new Row(indent, new Distilled(aperture)));
             if (pressure && aperture.isExtreme()) rows.add(new Row(indent, new Pressure(aperture)));
-            rows.add(new Row(indent, new PathChoice(true, aperture.primaryPath())));
-            rows.add(new Row(indent, new PathChoice(false, aperture.secondaryPath())));
+            rows.add(new Row(indent, new PathChoice(true, index, aperture.primaryPath())));
+            rows.add(new Row(indent, new PathChoice(false, index, aperture.secondaryPath())));
         }
     }
 

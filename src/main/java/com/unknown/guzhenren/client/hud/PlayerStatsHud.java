@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.client.hud;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.body.SoulData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
@@ -65,6 +66,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
 
         Font font = minecraft.font;
         Aperture aperture = ApertureService.aperture(player);
+        ApertureData data = ApertureService.get(player);
         SoulData soul = SoulService.get(player);
         BodyData body = BodyService.get(player);
 
@@ -73,14 +75,16 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         y += TEXT_HEIGHT + ROW_GAP;
 
         if (ApertureService.isAwakened(player)) {
-            bar(graphics, font, y, aperture.currentEssence(), aperture.maxEssence(), ESSENCE_FILL);
-            y += BAR_HEIGHT + ROW_GAP;
-
-            if (aperture.distilledEssence() > 0L) {
-                bar(graphics, font, y, aperture.distilledEssence(), aperture.maxEssence(), DISTILLED_FILL);
+            for (int i = 0; i < data.count(); i++) {
+                Aperture pool = data.get(i);
+                bar(graphics, font, y, pool.currentEssence(), pool.maxEssence(), ESSENCE_FILL);
                 y += BAR_HEIGHT + ROW_GAP;
-            }
 
+                if (pool.distilledEssence() > 0L) {
+                    bar(graphics, font, y, pool.distilledEssence(), pool.maxEssence(), DISTILLED_FILL);
+                    y += BAR_HEIGHT + ROW_GAP;
+                }
+            }
         }
 
         bar(graphics, font, y, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);

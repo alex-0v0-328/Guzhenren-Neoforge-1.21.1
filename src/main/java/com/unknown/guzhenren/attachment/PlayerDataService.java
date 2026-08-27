@@ -22,10 +22,14 @@ import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.ModAttachments;
+import com.unknown.guzhenren.registry.ModDataComponents;
 import com.unknown.guzhenren.registry.ModDamageTypes;
+import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -82,6 +86,7 @@ public final class PlayerDataService {
 
     public static void onClone(@NotNull Player from, @NotNull Player to, boolean wasDeath, boolean keepInventory) {
         if (wasDeath && !keepInventory) {
+            dropHumanApertures(from);
             resetAll(to);
         } else {
             copy(from, to);
@@ -90,6 +95,20 @@ public final class PlayerDataService {
             HealthService.refresh(server);
             AttackService.refresh(server);
             EpicFightIntegration.refresh(server);
+        }
+    }
+
+    /**
+     * A death that wipes the apertures shakes one Human Aperture [人窍] loose per aperture, each at its
+     * own rank, at the corpse. keepInventory deaths keep the apertures and drop nothing.
+     */
+    private static void dropHumanApertures(@NotNull Player from) {
+        ApertureData data = from.getData(ModAttachments.APERTURE);
+        for (int i = 0; i < data.count(); i++) {
+            Item drop = ModItems.humanAperture(data.get(i).rank());
+            if (drop == null) continue;
+            from.level().addFreshEntity(new ItemEntity(from.level(), from.getX(), from.getY(), from.getZ(),
+                    new ItemStack(drop)));
         }
     }
 
@@ -118,8 +137,8 @@ public final class PlayerDataService {
         }
         owner.hurt(ModDamageTypes.source(owner, ModDamageTypes.VITAL_GU_LOST), owner.getHealth() * 0.8F);
 
-        //   TODO: a Gu cannot name the aperture that bound it, so PRIMARY.
-        ApertureService.setPrimaryPath(owner, ApertureService.PRIMARY, null);
+        int bound = stack.getOrDefault(ModDataComponents.VITAL_APERTURE.get(), ApertureData.PRIMARY);
+        ApertureService.setPrimaryPath(owner, bound, null);
     }
 
     public static void copy(@NotNull Player from, @NotNull Player to) {
