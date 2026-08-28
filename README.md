@@ -9,7 +9,7 @@
 |                              |                                       |
 |------------------------------|---------------------------------------|
 | Minecraft                    | `1.21.1`                              |
-| NeoForge                     | `21.1.235`                            |
+| NeoForge                     | `21.1.238`                            |
 | Parchment                    | `2024.11.17`                          |
 | Java                         | `21`                                  |
 | mod id / package             | `guzhenren` · `com.unknown.guzhenren` |

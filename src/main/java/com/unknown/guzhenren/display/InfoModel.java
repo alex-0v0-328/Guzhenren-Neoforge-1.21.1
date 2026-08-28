@@ -3,20 +3,20 @@ package com.unknown.guzhenren.display;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
-import com.unknown.guzhenren.attachment.data.body.PathEntry;
-import com.unknown.guzhenren.attachment.data.body.SoulData;
-import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.data.mind.MindPool;
+import com.unknown.guzhenren.attachment.data.path.PathEntry;
+import com.unknown.guzhenren.attachment.data.path.PathStrengthData;
+import com.unknown.guzhenren.attachment.data.soul.SoulData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.body.AttackService;
+import com.unknown.guzhenren.attachment.service.body.BodyAttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.attachment.service.body.PathService;
-import com.unknown.guzhenren.attachment.service.body.QiService;
-import com.unknown.guzhenren.attachment.service.body.SoulService;
-import com.unknown.guzhenren.attachment.service.body.StrengthService;
-import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.attachment.service.path.PathQiService;
+import com.unknown.guzhenren.attachment.service.path.PathService;
+import com.unknown.guzhenren.attachment.service.path.PathStrengthService;
+import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
+import com.unknown.guzhenren.attachment.service.soul.SoulService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.Race;
@@ -188,16 +188,16 @@ public final class InfoModel {
 
     public static List<Row> body(Player player) {
         BodyData body = BodyService.get(player);
-        StrengthData strength = StrengthService.get(player);
+        PathStrengthData strength = PathStrengthService.get(player);
         List<Row> rows = new ArrayList<>();
 
         rows.add(new Row(0, new Form(body.lifeForm())));
         rows.add(new Row(0, new RaceRow(body.race())));
         rows.add(new Row(0, new Lifespan(body.lifespanYears(), body.ageYears())));
         if (!strength.isEmpty() && strength.hasPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)) {
-            rows.add(new Row(0, new CapacityRow(StrengthService.usableJin(player), strength.totalJin())));
+            rows.add(new Row(0, new CapacityRow(PathStrengthService.usableJin(player), strength.totalJin())));
         }
-        double attackBonus = AttackService.bonus(player);
+        double attackBonus = BodyAttackService.bonus(player);
         if (shouldShowAttackRow(strength.isEmpty(), attackBonus)) {
             rows.add(new Row(0, new AttackRow(attackBonus)));
         }
@@ -223,8 +223,8 @@ public final class InfoModel {
     }
 
     private static void timePathAchieve(List<Row> rows, Player player) {
-        int rate = TimeFlowService.rate(player);
-        if (rate <= TimeFlowService.NORMAL_RATE) return;
+        int rate = PathTimeFlowService.rate(player);
+        if (rate <= PathTimeFlowService.NORMAL_RATE) return;
 
         rows.add(new Row(0, new TimePathAchieveHeader()));
         rows.add(new Row(INDENT, new TimeRateUpRow(rate)));
@@ -240,7 +240,7 @@ public final class InfoModel {
     private static void qiPathAchieve(List<Row> rows, Player player) {
         List<Row> held = new ArrayList<>();
         for (QiKind kind : QiKind.values()) {
-            long amount = QiService.current(player, kind);
+            long amount = PathQiService.current(player, kind);
             if (amount > 0L) held.add(new Row(INDENT, new QiKindRow(kind, amount)));
         }
         if (held.isEmpty()) return;
@@ -250,7 +250,7 @@ public final class InfoModel {
     }
 
     private static void strengthPathAchieve(List<Row> rows, Player player) {
-        StrengthData data = StrengthService.get(player);
+        PathStrengthData data = PathStrengthService.get(player);
         if (data.isEmpty()) return;
 
         rows.add(new Row(0, new StrengthPathAchieveHeader()));

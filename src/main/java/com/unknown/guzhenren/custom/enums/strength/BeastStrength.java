@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The beast strengths a body can hold, each declaring what it is worth.
  *
- * <p>Closed vocabulary enum stored as {@code Set<BeastStrength>} on {@code StrengthData}. Each constant
+ * <p>Closed vocabulary enum stored as {@code Set<BeastStrength>} on {@code PathStrengthData}. Each constant
  * carries its own family and attack bonus, so adding a beast is one constant touching neither
  * the Gu item nor the attack sum. No sibling mod may add a species.
  *

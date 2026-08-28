@@ -5,10 +5,10 @@ import net.minecraft.world.effect.MobEffectCategory;
 
 /**
  * Death Qi [死气] effect — a pool projection of the 死气 held in {@link
- * com.unknown.guzhenren.attachment.data.body.QiData}, which burns lifespan [寿元] and floors health
+ * com.unknown.guzhenren.attachment.data.path.PathQiData}, which burns lifespan [寿元] and floors health
  * while the amount is above zero.
  *
- * <p>Pool effects are rebuilt every heartbeat by {@code QiService.syncEffects}, so milk cannot cure
+ * <p>Pool effects are rebuilt every heartbeat by {@code PathQiService.syncEffects}, so milk cannot cure
  * them. This class holds only the constants; the actual burning runs on the heartbeat in {@code
  * PlayerTickEvents.tickDeathQi}, because a {@link net.minecraft.world.effect.MobEffect} has no
  * expiry hook and the lifespan debt must be settled by reading the level.
@@ -19,7 +19,7 @@ import net.minecraft.world.effect.MobEffectCategory;
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.attachment.service.body.QiService
+ * @see com.unknown.guzhenren.attachment.service.path.PathQiService
  * @since 1.0.0
  */
 

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The human strengths a body accumulates, measured in Jin [斤] and Jun [钧].
  *
- * <p>Closed vocabulary enum stored as {@code Map<HumanStrength, Integer>} on {@code StrengthData}.
+ * <p>Closed vocabulary enum stored as {@code Map<HumanStrength, Integer>} on {@code PathStrengthData}.
  * {@code JUN == 30 斤} and the four layer caps sum to exactly 9,999 斤. No sibling mod may add a kind.
  *
  * <p>⚠ {@code ATTACK_PER_JIN} 0.125 is load-bearing: a kind not worth exactly {@code 0.125 × 斤} would

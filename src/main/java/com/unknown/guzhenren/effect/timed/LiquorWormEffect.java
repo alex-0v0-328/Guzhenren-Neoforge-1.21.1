@@ -8,7 +8,7 @@ import net.minecraft.world.effect.MobEffectCategory;
  * HUD icon, not the state itself.
  *
  * <p>Timed effects own their truth on vanilla's timer, but this one is exceptional: it marks the
- * state, it does not hold it. {@link com.unknown.guzhenren.attachment.service.aperture.EssenceService}
+ * state, it does not hold it. {@link com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService}
  * owns the three phases, so removing this effect does not end the distillation. The 1:2 payback
  * on expiry is watched by {@code PlayerTickEvents.closeDistilling}, which reads the level — the
  * only thing that catches milk, {@code /effect clear} and death.
@@ -18,7 +18,7 @@ import net.minecraft.world.effect.MobEffectCategory;
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.attachment.service.aperture.EssenceService
+ * @see com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService
  * @since 1.0.0
  */
 

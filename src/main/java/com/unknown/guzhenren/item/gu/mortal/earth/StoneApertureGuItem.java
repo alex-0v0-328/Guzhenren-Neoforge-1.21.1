@@ -1,8 +1,8 @@
 package com.unknown.guzhenren.item.gu.mortal.earth;
 
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.item.gu.ConsumedGuItem;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * NORMAL second aperture. A rank mismatch on the primary does NOT pass it on -- the fall-through is
  * for a lost aperture, not for a wrong rank. The gate refuses no usable target, a rank mismatch on
  * the target, and a target already at the peak (that use would buy only the lock). The payout
- * delegates to {@link NourishService#petrify}.
+ * delegates to {@link ApertureNourishService#petrify}.
  *
  * @author Alex
  * @version 1.0.0
@@ -72,6 +72,6 @@ public class StoneApertureGuItem extends ConsumedGuItem {
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
         int target = targetOf(player);
-        if (target != NO_TARGET) NourishService.petrify(player, target);
+        if (target != NO_TARGET) ApertureNourishService.petrify(player, target);
     }
 }

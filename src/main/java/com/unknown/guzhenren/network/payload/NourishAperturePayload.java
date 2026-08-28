@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>A payload carrying a named action ({@code START} / {@code CANCEL}) and the target aperture
  * index -- no player data. The server handler in {@link com.unknown.guzhenren.network.ModPayloads}
  * delegates
- * to {@link com.unknown.guzhenren.attachment.service.aperture.NourishService}. Client intent is the
+ * to {@link com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService}. Client intent is the
  * one direction attachment sync cannot carry.
  *
  * <p>⚠ Two intents ride one payload as a named action rather than as a bare boolean, because a

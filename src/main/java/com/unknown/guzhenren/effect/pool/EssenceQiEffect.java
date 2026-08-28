@@ -5,18 +5,18 @@ import net.minecraft.world.effect.MobEffectCategory;
 
 /**
  * Essence Qi [元气] effect — a pool projection of the 元气 held in {@link
- * com.unknown.guzhenren.attachment.data.body.QiData}, which lifts essence [真元] regeneration.
+ * com.unknown.guzhenren.attachment.data.path.PathQiData}, which lifts essence [真元] regeneration.
  *
- * <p>Pool effects are rebuilt every heartbeat by {@code QiService.syncEffects}, so milk cannot cure
+ * <p>Pool effects are rebuilt every heartbeat by {@code PathQiService.syncEffects}, so milk cannot cure
  * them — the pool is the truth. The {@code REGEN_BONUS} table is read by {@link
- * com.unknown.guzhenren.attachment.service.aperture.EssenceService#regenStep} rather than applied
+ * com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService#regenStep} rather than applied
  * from here, so essence regeneration stays a single formula in a single place.
  *
  * <p>⚠ 死气 [Death Qi] outranks this: the regen step checks {@code isChoked} first and returns.
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.attachment.service.body.QiService
+ * @see com.unknown.guzhenren.attachment.service.path.PathQiService
  * @since 1.0.0
  */
 

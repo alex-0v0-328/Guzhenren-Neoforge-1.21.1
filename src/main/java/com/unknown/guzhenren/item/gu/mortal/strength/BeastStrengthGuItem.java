@@ -1,6 +1,6 @@
 package com.unknown.guzhenren.item.gu.mortal.strength;
 
-import com.unknown.guzhenren.attachment.service.body.StrengthService;
+import com.unknown.guzhenren.attachment.service.path.PathStrengthService;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. The gate refuses a holder who already
  * carries that species; the apply delegates to
- * {@link com.unknown.guzhenren.attachment.service.body.StrengthService#grant}. A species declares its
+ * {@link com.unknown.guzhenren.attachment.service.path.PathStrengthService#grant}. A species declares its
  * own family and worth on the enum, so adding one never touches this class.
  *
  * <p>⚠ If an edit here starts to look necessary, a number has been put in the wrong place.
@@ -39,11 +39,11 @@ public class BeastStrengthGuItem extends TendedGuItem {
 
     @Override
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
-        return StrengthService.has(player, beast)
+        return PathStrengthService.has(player, beast)
                 ? new Refusal(FAILED_STRENGTH_HELD, Component.translatable(beast.getTranslationKey()))
                 : null;
     }
 
     @Override
-    protected void payout(ServerPlayer player, ItemStack stack) {StrengthService.grant(player, beast);}
+    protected void payout(ServerPlayer player, ItemStack stack) {PathStrengthService.grant(player, beast);}
 }

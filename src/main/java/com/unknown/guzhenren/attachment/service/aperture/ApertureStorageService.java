@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>⚠ It reaches into the {@code item/} package on purpose ({@link GuItem}), against this project's
  * usual dependency direction: binding a Vital Gu has to read that Gu's declared path. Do not "fix"
  * those imports. ⚠ Writes NEVER go through {@code ApertureService.store} -- {@link
- * com.unknown.guzhenren.attachment.service.body.HealthService#refresh} hangs off that, and moving one
+ * com.unknown.guzhenren.attachment.service.body.BodyHealthService#refresh} hangs off that, and moving one
  * item must not recompute max health. ⚠ {@code setVital} runs on every menu click and every day tick,
  * and {@code setPrimaryPath} no-ops when unchanged, so leaving that call in is free and removing it
  * loses the path on rebind.

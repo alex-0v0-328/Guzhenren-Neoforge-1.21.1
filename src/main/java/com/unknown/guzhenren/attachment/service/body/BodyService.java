@@ -2,6 +2,8 @@ package com.unknown.guzhenren.attachment.service.body;
 
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
+import com.unknown.guzhenren.attachment.service.path.PathService;
+import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
@@ -24,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>⚠ {@code tickAging} returns how many days it just billed, and that count is often far more than
  * one -- an offline stretch or a {@code /time} jump arrives as a single call; the return drives three
  * day-clock walks, so swallowing it would starve every Gu at once. ⚠ 寿元 is SPENT through
- * {@link TimeFlowService#perStep} -- hand-rolling the rate here once made it run BACKWARDS, into a
+ * {@link PathTimeFlowService#perStep} -- hand-rolling the rate here once made it run BACKWARDS, into a
  * pure longevity buff. Only {@code InfoModel} may read {@code rate()} to print it. ⚠ The anchor is
  * {@code dayTime}, not {@code gameTime}, so {@code /time add} still ages him; time running backwards
  * re-anchors and bills nothing -- one {@code <} is the whole guard, on BOTH clocks. ⚠ Every caller
@@ -32,8 +34,8 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @see TimeFlowService
- * @see AttackService
+ * @see PathTimeFlowService
+ * @see BodyAttackService
  * @since 1.0.0
  */
 
@@ -76,12 +78,12 @@ public final class BodyService {
 
         BodyData turned = body.withLifeForm(form);
         store(player, form.isZombie() ? turned.withLifespanParts(BodyData.parts(BodyData.ZOMBIE_LIFESPAN)) : turned);
-        AttackService.refresh(player);
+        BodyAttackService.refresh(player);
     }
 
     public static void revive(@NotNull ServerPlayer player) {
         store(player, get(player).revived());
-        AttackService.refresh(player);
+        BodyAttackService.refresh(player);
     }
 
     public static void enterHalfZombie(@NotNull ServerPlayer player, int tier, int durationTicks) {
@@ -89,7 +91,7 @@ public final class BodyService {
                 .withLifeForm(LifeForm.HALF_ZOMBIE)
                 .withHalfZombieEndTick(now(player) + durationTicks)
                 .withZombieTier(tier));
-        AttackService.refresh(player);
+        BodyAttackService.refresh(player);
     }
 
     public static void turnZombie(@NotNull ServerPlayer player, int tier) {
@@ -97,7 +99,7 @@ public final class BodyService {
                 .withLifeForm(LifeForm.ZOMBIE)
                 .withLifespanParts(BodyData.parts(BodyData.ZOMBIE_LIFESPAN))
                 .withZombieTier(tier));
-        AttackService.refresh(player);
+        BodyAttackService.refresh(player);
     }
 
     public static boolean wouldRelapse(@NotNull Player p) {return get(p).withinRelapseWindow(now(p));}
@@ -193,7 +195,7 @@ public final class BodyService {
             store(player, body.withLastBilledTick(now));
             return;
         }
-        long lived = TimeFlowService.perStep(player, elapsedParts(now - body.lastBilledTick()));
+        long lived = PathTimeFlowService.perStep(player, elapsedParts(now - body.lastBilledTick()));
         if (lived <= 0L) return;
 
         store(player, body.lived(lived, now));

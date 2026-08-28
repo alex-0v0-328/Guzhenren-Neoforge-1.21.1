@@ -3,10 +3,10 @@ package com.unknown.guzhenren.client.hud;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
-import com.unknown.guzhenren.attachment.data.body.SoulData;
+import com.unknown.guzhenren.attachment.data.soul.SoulData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.attachment.service.body.SoulService;
+import com.unknown.guzhenren.attachment.service.soul.SoulService;
 import com.unknown.guzhenren.display.ModDisplayText;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>Implements {@link net.minecraft.client.gui.LayeredDraw.Layer}; registered above
  * {@code VanillaGuiLayers.HOTBAR} in
- * {@link com.unknown.guzhenren.client.ClientEvents}. Draws the title line (realm + title + aptitude +
+ * {@link com.unknown.guzhenren.client.event.ClientEvents}. Draws the title line (realm + title + aptitude +
  * physique) then bars in order: essence, distilled, soul, gap, lifespan/age and pressure text. Hidden with
  * {@code hideGui}, in spectator, and under F3. Every phrase comes from
  * {@link com.unknown.guzhenren.display.ModDisplayText} so the HUD and the info command cannot diverge.

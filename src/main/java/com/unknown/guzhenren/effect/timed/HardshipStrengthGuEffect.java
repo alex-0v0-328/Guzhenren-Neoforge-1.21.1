@@ -9,12 +9,12 @@ import net.minecraft.world.effect.MobEffectCategory;
  * holder's health fraction, not from here.
  *
  * <p>This class carries only the duration and the icon; the 0..120 capacity bonus is computed in
- * {@link com.unknown.guzhenren.attachment.service.body.StrengthService#capacity} off missing
+ * {@link com.unknown.guzhenren.attachment.service.path.PathStrengthService#capacity} off missing
  * health, so the effect staying present IS what keeps that ramp alive.
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.attachment.service.body.StrengthService
+ * @see com.unknown.guzhenren.attachment.service.path.PathStrengthService
  * @since 1.0.0
  */
 

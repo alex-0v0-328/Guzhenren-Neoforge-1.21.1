@@ -2,8 +2,8 @@ package com.unknown.guzhenren.display;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
-import com.unknown.guzhenren.attachment.data.body.PathEntry;
-import com.unknown.guzhenren.attachment.data.body.StrengthData;
+import com.unknown.guzhenren.attachment.data.path.PathEntry;
+import com.unknown.guzhenren.attachment.data.path.PathStrengthData;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
@@ -125,7 +125,7 @@ public final class ModDisplayText {
         return Component.translatable("guzhenren.display.time_rate_up", rate);
     }
 
-    public static MutableComponent beastStrengthLine(StrengthData data) {
+    public static MutableComponent beastStrengthLine(PathStrengthData data) {
         MutableComponent line = Component.empty();
         data.beastReadings().forEach((family, reading) -> line.append(beastReading(family, reading)));
         return line;
@@ -137,7 +137,7 @@ public final class ModDisplayText {
                 Component.translatable(family.getTranslationKey()));
     }
 
-    public static MutableComponent humanStrengthLine(StrengthData data) {
+    public static MutableComponent humanStrengthLine(PathStrengthData data) {
         MutableComponent line = Component.empty();
         appendFamily(line, "guzhenren.display.strength.jun_reading", data.junReading());
         appendFamily(line, "guzhenren.display.strength.jin_reading", data.jinReading());

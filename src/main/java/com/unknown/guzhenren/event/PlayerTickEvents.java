@@ -1,15 +1,15 @@
 package com.unknown.guzhenren.event;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageTick;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
-import com.unknown.guzhenren.attachment.service.aperture.NourishService;
-import com.unknown.guzhenren.attachment.service.body.AttackService;
+import com.unknown.guzhenren.attachment.service.body.BodyAttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.attachment.service.body.QiService;
-import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.attachment.service.path.PathQiService;
+import com.unknown.guzhenren.attachment.service.soul.SoulService;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.effect.pool.DeathQiEffect;
@@ -55,7 +55,7 @@ public final class PlayerTickEvents {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player.isRemoved() || player.isDeadOrDying()) return;
 
-        if (player.tickCount % EssenceService.REGEN_INTERVAL_TICKS != 0) return;
+        if (player.tickCount % ApertureEssenceService.REGEN_INTERVAL_TICKS != 0) return;
 
         long days = BodyService.tickAging(player);
         TendedGuItem.tickCarried(player, days);
@@ -66,12 +66,12 @@ public final class PlayerTickEvents {
         closeDistilling(player);
         tickHalfZombie(player);
         pinUndeadHunger(player);
-        QiService.syncEffects(player);
+        PathQiService.syncEffects(player);
         tickDeathQi(player);
-        AttackService.refresh(player);
+        BodyAttackService.refresh(player);
         BodyService.tickLifespan(player);
-        EssenceService.regenStep(player);
-        NourishService.tickNourish(player);
+        ApertureEssenceService.regenStep(player);
+        ApertureNourishService.tickNourish(player);
         MindService.regenStep(player);
         SelfRelianceGuItem.tryAutoUse(player);
         ApertureService.tickPressure(player);
@@ -101,7 +101,7 @@ public final class PlayerTickEvents {
 
     private static void tickHalfZombie(ServerPlayer player) {
         if (BodyService.isHalfZombie(player)) {
-            if (QiService.current(player, QiKind.DEATH) > 0L) {
+            if (PathQiService.current(player, QiKind.DEATH) > 0L) {
                 BodyService.setLifeForm(player, LifeForm.ZOMBIE);
             } else if (BodyService.halfZombieRanOut(player)) {
                 BodyService.setLifeForm(player, LifeForm.ALIVE);
@@ -120,8 +120,8 @@ public final class PlayerTickEvents {
     }
 
     private static void closeDistilling(ServerPlayer player) {
-        if (EssenceService.totalDistilled(player) > 0L && !EssenceService.isDistilling(player)) {
-            EssenceService.endDistilling(player);
+        if (ApertureEssenceService.totalDistilled(player) > 0L && !ApertureEssenceService.isDistilling(player)) {
+            ApertureEssenceService.endDistilling(player);
         }
     }
 
@@ -129,7 +129,7 @@ public final class PlayerTickEvents {
         if (player.isCreative() || player.isSpectator()) return;
 
         if (ApertureService.pressureFull(player)) {
-            if (!NourishService.convertPetrifiedPressure(player)) ApertureService.detonatePressure(player);
+            if (!ApertureNourishService.convertPetrifiedPressure(player)) ApertureService.detonatePressure(player);
             return;
         }
         if (BodyService.get(player).isExhausted()) {

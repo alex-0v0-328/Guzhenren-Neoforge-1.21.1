@@ -3,7 +3,7 @@ package com.unknown.guzhenren.item.gu;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.unknown.guzhenren.client.ClientEvents;
+import com.unknown.guzhenren.client.event.ClientEvents;
 import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

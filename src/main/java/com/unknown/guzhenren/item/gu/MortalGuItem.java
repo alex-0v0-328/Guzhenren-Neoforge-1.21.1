@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.item.gu;
 
 import com.unknown.guzhenren.Ticks;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
 import com.unknown.guzhenren.item.GuItem;
@@ -61,11 +61,11 @@ public abstract class MortalGuItem extends GuItem {
     //region refining [炼化] -- every Gu answers it, and only the price differs
     protected final @Nullable Refusal essenceGate(Player player, long required, String key) {
         if (required <= 0) return null;
-        return EssenceService.spendable(player) < required ? new Refusal(key) : null;
+        return ApertureEssenceService.spendable(player) < required ? new Refusal(key) : null;
     }
 
     protected final void payRefineCost(ServerPlayer player) {
-        if (refineCost() > 0) EssenceService.consume(player, refineCost());
+        if (refineCost() > 0) ApertureEssenceService.consume(player, refineCost());
     }
     //endregion
 

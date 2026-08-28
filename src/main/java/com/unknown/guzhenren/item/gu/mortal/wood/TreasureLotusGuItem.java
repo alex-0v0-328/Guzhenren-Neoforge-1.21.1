@@ -1,8 +1,8 @@
 package com.unknown.guzhenren.item.gu.mortal.wood;
 
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
 import com.unknown.guzhenren.item.gu.mortal.PrimevalElderGuItem;
@@ -64,7 +64,7 @@ public class TreasureLotusGuItem extends TendedGuItem {
     //region the passive heartbeat -- 5% essence and the minting chain
     @Override
     protected void payOwnUpkeep(ServerPlayer player, ItemStack stack) {
-        EssenceService.add(player, EssenceService.maxEssence(player) * ESSENCE_REGEN_PERCENT / 100);
+        ApertureEssenceService.add(player, ApertureEssenceService.maxEssence(player) * ESSENCE_REGEN_PERCENT / 100);
         mintStones(player, stack);
     }
 

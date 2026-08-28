@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.event;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.attachment.service.aperture.PressureExplosionTask;
+import com.unknown.guzhenren.attachment.service.aperture.AperturePressureExplosionTask;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -16,7 +16,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.attachment.service.aperture.PressureExplosionTask
+ * @see com.unknown.guzhenren.attachment.service.aperture.AperturePressureExplosionTask
  * @since 1.0.0
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
@@ -25,8 +25,8 @@ public final class ServerTickEvents {
     private ServerTickEvents() {}
 
     @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event) {PressureExplosionTask.tickAll();}
+    public static void onServerTick(ServerTickEvent.Post event) {AperturePressureExplosionTask.tickAll();}
 
     @SubscribeEvent
-    public static void onServerStopping(ServerStoppingEvent event) {PressureExplosionTask.clear();}
+    public static void onServerStopping(ServerStoppingEvent event) {AperturePressureExplosionTask.clear();}
 }

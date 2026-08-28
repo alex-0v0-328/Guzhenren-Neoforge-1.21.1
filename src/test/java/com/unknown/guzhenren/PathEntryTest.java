@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
-import com.unknown.guzhenren.attachment.data.body.PathEntry;
+import com.unknown.guzhenren.attachment.data.path.PathEntry;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import org.junit.jupiter.api.DisplayName;

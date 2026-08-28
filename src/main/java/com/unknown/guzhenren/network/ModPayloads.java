@@ -1,8 +1,8 @@
 package com.unknown.guzhenren.network;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
@@ -72,14 +72,14 @@ public final class ModPayloads {
         if (payload.aperture() < 0 || payload.aperture() >= ApertureService.get(player).count()) return;
 
         switch (payload.action()) {
-            case START -> NourishService.start(player, payload.aperture());
-            case CANCEL -> NourishService.cancel(player);
+            case START -> ApertureNourishService.start(player, payload.aperture());
+            case CANCEL -> ApertureNourishService.cancel(player);
         }
     }
 
     private static void impactApertureWall(ImpactApertureWallPayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
-        NourishService.impactWall(player);
+        ApertureNourishService.impactWall(player);
     }
 
     private static void dash(DashPayload payload, IPayloadContext context) {
@@ -90,7 +90,7 @@ public final class ModPayloads {
         if (vertical < -1 || vertical > 1 || horizontal < -1 || horizontal > 1
                 || (vertical == 0 && horizontal == 0) || !Float.isFinite(payload.yRot())) return;
         if (player.getMainHandItem().getItem() instanceof MortalGuItem) return;
-        if (NourishService.isCultivating(player)) return;
+        if (ApertureNourishService.isCultivating(player)) return;
         if (horizontal != 0 && !player.hasEffect(ModEffects.HORIZONTAL_CRASH_GU)
                 && !player.hasEffect(ModEffects.CHARGING_CRASH_GU)) return;
         if (vertical != 0 && !player.hasEffect(ModEffects.VERTICAL_CRASH_GU)

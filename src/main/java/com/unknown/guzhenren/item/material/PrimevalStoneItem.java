@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.item.material;
 
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.item.gu.mortal.PrimevalElderGuItem;
@@ -57,19 +57,19 @@ public class PrimevalStoneItem extends GuMaterialItem {
     @Override
     protected @Nullable Refusal gate(Player player, ItemStack stack) {
         if (!ApertureService.isAwakened(player)) return new Refusal(FAILED_UNAWAKENED);
-        return EssenceService.currentEssence(player) >= EssenceService.maxEssence(player)
+        return ApertureEssenceService.currentEssence(player) >= ApertureEssenceService.maxEssence(player)
                 ? new Refusal(FAILED_FULL) : null;
     }
 
     @Override
     protected int apply(ServerPlayer player, ItemStack stack) {
         int used = used(player, stack);
-        EssenceService.add(player, essence * used);
+        ApertureEssenceService.add(player, essence * used);
         return used;
     }
 
     public int used(Player player, ItemStack stack) {
-        long deficit = EssenceService.maxEssence(player) - EssenceService.currentEssence(player);
+        long deficit = ApertureEssenceService.maxEssence(player) - ApertureEssenceService.currentEssence(player);
         return (int) Math.min(stack.getCount(), (deficit + essence - 1) / essence);
     }
 
@@ -78,11 +78,11 @@ public class PrimevalStoneItem extends GuMaterialItem {
         return ModItems.PRIMEVAL_STONE.get() instanceof PrimevalStoneItem stone ? stone.essence() : 0L;
     }
     public static boolean needsTopUp(Player p) {
-        long max = EssenceService.maxEssence(p);
-        return max > 0L && EssenceService.currentEssence(p) * 100L < max * REFILL_BELOW_PERCENT;
+        long max = ApertureEssenceService.maxEssence(p);
+        return max > 0L && ApertureEssenceService.currentEssence(p) * 100L < max * REFILL_BELOW_PERCENT;
     }
     public static long topUpDeficit(Player p) {
-        return EssenceService.maxEssence(p) * REFILL_UP_TO_PERCENT / 100L - EssenceService.currentEssence(p);
+        return ApertureEssenceService.maxEssence(p) * REFILL_UP_TO_PERCENT / 100L - ApertureEssenceService.currentEssence(p);
     }
 
     /**
@@ -98,7 +98,7 @@ public class PrimevalStoneItem extends GuMaterialItem {
         long each = essencePerStone();
         if (wanted <= 0L || each <= 0L) return;
         int taken = draw(player, (int) Math.min(Integer.MAX_VALUE, (wanted + each - 1) / each));
-        if (taken > 0) EssenceService.add(player, taken * each);
+        if (taken > 0) ApertureEssenceService.add(player, taken * each);
     }
 
     private static int draw(ServerPlayer player, int wanted) {
@@ -139,7 +139,7 @@ public class PrimevalStoneItem extends GuMaterialItem {
     }
 
     public static boolean canAfford(Player p, long cost) {
-        return EssenceService.spendable(p) + worthOnHand(p) >= cost;
+        return ApertureEssenceService.spendable(p) + worthOnHand(p) >= cost;
     }
 
     public static boolean spend(ServerPlayer player, long cost) {
@@ -147,13 +147,13 @@ public class PrimevalStoneItem extends GuMaterialItem {
         long each = essencePerStone();
         if (each <= 0L || !canAfford(player, cost)) return false;
 
-        long fromPool = Math.min(EssenceService.spendable(player), cost);
-        EssenceService.consume(player, fromPool);
+        long fromPool = Math.min(ApertureEssenceService.spendable(player), cost);
+        ApertureEssenceService.consume(player, fromPool);
 
         long owed = cost - fromPool;
         if (owed <= 0L) return true;
         long drawn = draw(player, (int) Math.min(Integer.MAX_VALUE, (owed + each - 1) / each)) * each;
-        if (drawn > owed) EssenceService.add(player, drawn - owed);
+        if (drawn > owed) ApertureEssenceService.add(player, drawn - owed);
         return true;
     }
     //endregion

@@ -4,7 +4,7 @@ import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
 import com.unknown.guzhenren.attachment.data.mind.MindPool;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
+import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
 import com.unknown.guzhenren.custom.enums.wisdom.Brilliance;
 import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
@@ -95,7 +95,7 @@ public final class MindService {
         if (thoughts.current() >= thoughts.max()) return;
 
         long grown = thoughts.current()
-                + TimeFlowService.perStep(player, brilliance(player).getThoughtsPerSecond());
+                + PathTimeFlowService.perStep(player, brilliance(player).getThoughtsPerSecond());
         setCurrent(player, WisdomType.THOUGHTS, Math.min(grown, thoughts.max()));
     }
 

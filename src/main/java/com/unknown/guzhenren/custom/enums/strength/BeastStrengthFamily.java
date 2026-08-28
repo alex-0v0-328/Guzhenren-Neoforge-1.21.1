@@ -11,7 +11,7 @@ import com.unknown.guzhenren.custom.enums.EnumTranslatable;
  * @author Alex
  * @version 1.0.0
  * @see BeastStrength
- * @see com.unknown.guzhenren.attachment.data.body.StrengthData
+ * @see com.unknown.guzhenren.attachment.data.path.PathStrengthData
  * @since 1.0.0
  */
 

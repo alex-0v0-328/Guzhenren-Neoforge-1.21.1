@@ -11,11 +11,9 @@ import net.minecraft.commands.Commands;
 /**
  * {@code /gzr body}: reads and writes body [肉身] state -- life form, race, lifespan and age.
  *
- * <p>Assembles the body subtree under {@code /gzr body}, delegating to
- * {@link com.unknown.guzhenren.command.sub.body.CmdPath},
- * {@link com.unknown.guzhenren.command.sub.body.CmdQi}, and
- * {@link com.unknown.guzhenren.command.sub.body.CmdStrength} for the deeper branches. All of
- * {@code /gzr body} is ungated -- a mortal ages and walks a path too.
+ * <p>Assembles the body subtree under {@code /gzr body}: life form, race, lifespan and age. The
+ * path domain writes live under {@code /gzr path}. All of {@code /gzr body} is ungated -- a
+ * mortal ages and changes form too.
  *
  * <p>⚠ Setting the zombie [僵] form from here leaves the tier unset, so a zombie made by command
  * carries no attack bonus. That is this command's shape, not a fault in the bonus.
@@ -37,9 +35,6 @@ public final class CmdBody {
                 .then(ModCommandSupport.enumSetNode("race", Race.values(),
                         BodyService::setRace, ModCommandSupport.ANYONE, null))
                 .then(ModCommandSupport.counter("lifespan", BodyService::setLifespan, BodyService::addLifespan))
-                .then(ModCommandSupport.counter("age", BodyService::setAge, BodyService::addAge))
-                .then(CmdPath.node())
-                .then(CmdQi.node())
-                .then(CmdStrength.node());
+                .then(ModCommandSupport.counter("age", BodyService::setAge, BodyService::addAge));
     }
 }

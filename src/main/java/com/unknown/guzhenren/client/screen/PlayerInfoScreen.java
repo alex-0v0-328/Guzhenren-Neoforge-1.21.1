@@ -2,8 +2,8 @@ package com.unknown.guzhenren.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import com.unknown.guzhenren.client.ModKeyMappings;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.InfoModel;
@@ -182,7 +182,7 @@ public final class PlayerInfoScreen extends Screen {
         int[] kept = new int[count];
         int visible = 0;
         for (int i = 0; i < count; i++) {
-            if (!NourishService.atCeiling(player, i)) kept[visible++] = i;
+            if (!ApertureNourishService.atCeiling(player, i)) kept[visible++] = i;
         }
         return Arrays.copyOf(kept, visible);
     }
@@ -203,14 +203,14 @@ public final class PlayerInfoScreen extends Screen {
 
         for (int r = 0; r < visible.length; r++) {
             int aperture = visible[r];
-            boolean paired = aperture == ApertureData.PRIMARY && NourishService.canImpact(player);
-            boolean running = NourishService.isCultivating(player) && NourishService.targetIndex(player) == aperture;
+            boolean paired = aperture == ApertureData.PRIMARY && ApertureNourishService.canImpact(player);
+            boolean running = ApertureNourishService.isCultivating(player) && ApertureNourishService.targetIndex(player) == aperture;
 
             int top = buttonTop(r);
             int x0 = contentLeft();
             int x3 = valueRight();
             if (paired) {
-                int strike = !NourishService.canAffordImpact(player) ? BTN_DEAD
+                int strike = !ApertureNourishService.canAffordImpact(player) ? BTN_DEAD
                         : inBox(mouseX, mouseY, x0, x3, r) ? BTN_HOVER : BTN_IDLE;
                 g.fill(x0, top, x3, top + BTN_H, strike);
                 g.renderOutline(x0, top, x3 - x0, BTN_H, accent);
@@ -218,11 +218,11 @@ public final class PlayerInfoScreen extends Screen {
                 continue;
             }
 
-            int fill = running ? BTN_HOVER : NourishService.canNourish(player, aperture) ? BTN_IDLE : BTN_DEAD;
+            int fill = running ? BTN_HOVER : ApertureNourishService.canNourish(player, aperture) ? BTN_IDLE : BTN_DEAD;
 
             g.fill(x0, top, x3, top + BTN_H, fill);
             if (running) {
-                int done = x0 + Math.round((x3 - x0) * NourishService.fraction(player, aperture));
+                int done = x0 + Math.round((x3 - x0) * ApertureNourishService.fraction(player, aperture));
                 g.fill(x0, top, done, top + BTN_H, BTN_PROGRESS);
             }
             g.renderOutline(x0, top, x3 - x0, BTN_H, running ? accent : BORDER);
@@ -248,7 +248,7 @@ public final class PlayerInfoScreen extends Screen {
 
         for (int r = 0; r < visible.length; r++) {
             int aperture = visible[r];
-            if (aperture == ApertureData.PRIMARY && NourishService.canImpact(player)) {
+            if (aperture == ApertureData.PRIMARY && ApertureNourishService.canImpact(player)) {
                 if (inBox(mx, my, contentLeft(), valueRight(), r)) {
                     PacketDistributor.sendToServer(ImpactApertureWallPayload.INSTANCE);
                     return true;
@@ -257,12 +257,12 @@ public final class PlayerInfoScreen extends Screen {
             }
             if (!inBox(mx, my, contentLeft(), valueRight(), r)) continue;
 
-            if (NourishService.isCultivating(player)) {
+            if (ApertureNourishService.isCultivating(player)) {
                 PacketDistributor.sendToServer(new NourishAperturePayload(NourishAperturePayload.Action.CANCEL,
-                        NourishService.targetIndex(player)));
+                        ApertureNourishService.targetIndex(player)));
                 return true;
             }
-            if (!NourishService.canNourish(player, aperture)) return true;
+            if (!ApertureNourishService.canNourish(player, aperture)) return true;
             PacketDistributor.sendToServer(new NourishAperturePayload(NourishAperturePayload.Action.START, aperture));
             onClose();
             return true;

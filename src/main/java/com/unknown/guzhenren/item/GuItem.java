@@ -3,7 +3,7 @@ package com.unknown.guzhenren.item;
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
+import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.ModDisplayText;
@@ -75,8 +75,8 @@ public abstract class GuItem extends Item {
 
     protected int useChargeByGap(Player player) {
         int gap = rankGap(player);
-        if (gap > 0) return TimeFlowService.waited(player, USE_FAST_TICKS);
-        return TimeFlowService.waited(player, gap == 0 ? USE_SAME_TICKS : USE_SLOW_TICKS);
+        if (gap > 0) return PathTimeFlowService.waited(player, USE_FAST_TICKS);
+        return PathTimeFlowService.waited(player, gap == 0 ? USE_SAME_TICKS : USE_SLOW_TICKS);
     }
     //endregion
 
@@ -196,7 +196,7 @@ public abstract class GuItem extends Item {
     protected int cooldownTicks(ItemStack stack) {return COOLDOWN_TICKS;}
 
     protected void spend(ServerPlayer player, ItemStack stack, int count) {
-        player.getCooldowns().addCooldown(this, TimeFlowService.waited(player, cooldownTicks(stack)));
+        player.getCooldowns().addCooldown(this, PathTimeFlowService.waited(player, cooldownTicks(stack)));
         if (count > 0 && !player.hasInfiniteMaterials()) stack.shrink(count);
     }
 }

@@ -1,8 +1,8 @@
 package com.unknown.guzhenren.item.gu.mortal.liquor;
 
 import com.unknown.guzhenren.Ticks;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
 import com.unknown.guzhenren.registry.ModEffects;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. Four rungs register against this one
  * class, each usable only at its own rank. The payout calls
- * {@link com.unknown.guzhenren.attachment.service.aperture.EssenceService#beginDistilling} and stamps a
+ * {@link com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService#beginDistilling} and stamps a
  * day-long effect; the three phases (drain, redirect, 1:2 spend) live in the service and the effect,
  * not here.
  *
@@ -44,12 +44,12 @@ public class LiquorWormItem extends TendedGuItem {
         if (ApertureService.rank(player) != rank()) {
             return new Refusal(FAILED_RANK, Component.translatable(rank().getTranslationKey()));
         }
-        return EssenceService.canDistill(player) ? null : new Refusal(FAILED_DISTILLING);
+        return ApertureEssenceService.canDistill(player) ? null : new Refusal(FAILED_DISTILLING);
     }
 
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
-        EssenceService.beginDistilling(player);
+        ApertureEssenceService.beginDistilling(player);
         player.addEffect(ModEffects.instance(ModEffects.LIQUOR_WORM, Ticks.DAY, tier()));
     }
 }

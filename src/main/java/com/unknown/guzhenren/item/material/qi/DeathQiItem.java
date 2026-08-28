@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
  * <p>Extends {@link com.unknown.guzhenren.item.material.qi.QiMaterialItem}. Both the essence cost and
  * the charge duration are overridden to zero -- it is the only Qi material a mortal can use, and that
  * is exactly why: it harms him. To apply is inherited unchanged; the curse and the lifespan debt are
- * handled by {@link com.unknown.guzhenren.attachment.service.body.QiService} and
+ * handled by {@link com.unknown.guzhenren.attachment.service.path.PathQiService} and
  * {@link com.unknown.guzhenren.attachment.service.body.BodyService}.
  *
  * <p>⚠ The debt is tallied on the body record rather than on the effect, because an effect has no

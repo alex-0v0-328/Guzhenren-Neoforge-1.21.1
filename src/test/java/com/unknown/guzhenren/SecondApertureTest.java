@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
@@ -45,7 +45,7 @@ class SecondApertureTest {
     @Test
     @DisplayName("spending walks PRIMARY distilled, then PRIMARY current, then the second aperture")
     void cascadeWalksPrimaryFirst() {
-        long[][] plan = EssenceService.cascadeTake(50L, List.of(pool(100L, 10L), pool(200L, 20L)));
+        long[][] plan = ApertureEssenceService.cascadeTake(50L, List.of(pool(100L, 10L), pool(200L, 20L)));
         assertArrayEquals(new long[] {10L, 30L}, plan[0]);
         assertArrayEquals(new long[] {0L, 0L}, plan[1]);
     }
@@ -53,14 +53,14 @@ class SecondApertureTest {
     @Test
     @DisplayName("the distilled half rounds UP -- the last distilled point cannot pay for itself twice")
     void distilledRoundsUp() {
-        long[][] plan = EssenceService.cascadeTake(5L, List.of(pool(100L, 10L)));
+        long[][] plan = ApertureEssenceService.cascadeTake(5L, List.of(pool(100L, 10L)));
         assertArrayEquals(new long[] {3L, 0L}, plan[0]);
     }
 
     @Test
     @DisplayName("an exhausted PRIMARY spills the remainder into the second aperture")
     void cascadeSpillsIntoSecond() {
-        long[][] plan = EssenceService.cascadeTake(130L, List.of(pool(0L, 0L), pool(100L, 20L)));
+        long[][] plan = ApertureEssenceService.cascadeTake(130L, List.of(pool(0L, 0L), pool(100L, 20L)));
         assertArrayEquals(new long[] {0L, 0L}, plan[0]);
         assertArrayEquals(new long[] {20L, 90L}, plan[1]);
     }
@@ -68,7 +68,7 @@ class SecondApertureTest {
     @Test
     @DisplayName("a single pool that covers everything never wakes the second aperture")
     void cascadeStopsWhenCovered() {
-        long[][] plan = EssenceService.cascadeTake(30L, List.of(pool(100L, 0L), pool(100L, 0L)));
+        long[][] plan = ApertureEssenceService.cascadeTake(30L, List.of(pool(100L, 0L), pool(100L, 0L)));
         assertArrayEquals(new long[] {0L, 30L}, plan[0]);
         assertArrayEquals(new long[] {0L, 0L}, plan[1]);
     }

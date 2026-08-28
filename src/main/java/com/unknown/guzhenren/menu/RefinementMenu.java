@@ -1,11 +1,11 @@
 package com.unknown.guzhenren.menu;
 
 import com.unknown.guzhenren.Ticks;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
-import com.unknown.guzhenren.attachment.service.body.PathService;
-import com.unknown.guzhenren.attachment.service.body.SoulService;
-import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
+import com.unknown.guzhenren.attachment.service.path.PathService;
+import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
+import com.unknown.guzhenren.attachment.service.soul.SoulService;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.item.GuItem;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
@@ -237,7 +237,7 @@ public class RefinementMenu extends AbstractContainerMenu {
     }
 
     private static boolean affords(Player who, GuRecipe recipe) {
-        return EssenceService.spendable(who) >= threshold(recipe);
+        return ApertureEssenceService.spendable(who) >= threshold(recipe);
     }
 
     private static long threshold(GuRecipe recipe) {
@@ -291,7 +291,7 @@ public class RefinementMenu extends AbstractContainerMenu {
     @Override
     public void broadcastChanges() {
         if (player instanceof ServerPlayer server) {
-            for (int step = TimeFlowService.steps(server); step > 0 && running != null; step--) {
+            for (int step = PathTimeFlowService.steps(server); step > 0 && running != null; step--) {
                 advance(server);
             }
             craftData.set(DATA_AFFORD, pending != null && affords(server, pending) ? 1 : 0);
@@ -306,7 +306,7 @@ public class RefinementMenu extends AbstractContainerMenu {
         if (++secondCounter >= Ticks.SECOND) {
             secondCounter = 0;
             if (recipe.essencePerSecond() > 0
-                    && !EssenceService.consume(server, recipe.essencePerSecond())) {
+                    && !ApertureEssenceService.consume(server, recipe.essencePerSecond())) {
                 fail(server, LOST_ESSENCE);
                 return;
             }
@@ -391,7 +391,7 @@ public class RefinementMenu extends AbstractContainerMenu {
 
         int wanted = (int) Math.min(Integer.MAX_VALUE, (missing + perStone - 1) / perStone);
         int drawn = takeStones(wanted);
-        if (drawn > 0) EssenceService.add(server, drawn * perStone);
+        if (drawn > 0) ApertureEssenceService.add(server, drawn * perStone);
     }
     //endregion
 

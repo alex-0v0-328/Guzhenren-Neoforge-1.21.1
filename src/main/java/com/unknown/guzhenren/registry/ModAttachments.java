@@ -3,14 +3,14 @@ package com.unknown.guzhenren.registry;
 import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureNourishData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
-import com.unknown.guzhenren.attachment.data.aperture.NourishData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
-import com.unknown.guzhenren.attachment.data.body.PathData;
-import com.unknown.guzhenren.attachment.data.body.QiData;
-import com.unknown.guzhenren.attachment.data.body.SoulData;
-import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
+import com.unknown.guzhenren.attachment.data.path.PathData;
+import com.unknown.guzhenren.attachment.data.path.PathQiData;
+import com.unknown.guzhenren.attachment.data.path.PathStrengthData;
+import com.unknown.guzhenren.attachment.data.soul.SoulData;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,8 +27,10 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  * service) plus the two scratch fields ({@code ESSENCE_CARRY}, {@code BORN}).
  * Synced ones use {@code OWNER_ONLY}; the storage and scratch fields are sync-less.
  *
- * <p>⚠ A domain is not an attachment: the body is one domain across five. Never give an attachment the
- * bare domain word -- {@code qi}/{@code soul}/{@code strength} are also {@code GuPath} names.
+ * <p>⚠ The data and service layers are split into five domain packages (aperture/body/soul/path/mind);
+ * {@code qi} and {@code strength} are sub-domains living in the path package, and class names carry
+ * their package prefix. Never give an attachment the bare domain word --
+ * {@code qi}/{@code soul}/{@code strength} are also {@code GuPath} names.
  *
  * @author Alex
  * @version 1.0.0
@@ -61,10 +63,10 @@ public final class ModAttachments {
                     .serialize(ApertureStorage.CODEC)
                     .build());
 
-    public static final Supplier<AttachmentType<NourishData>> NOURISH = ATTACHMENT_TYPES.register(
-            "nourish_data", () -> AttachmentType.builder(() -> NourishData.DEFAULT)
-                    .serialize(NourishData.CODEC)
-                    .sync(OWNER_ONLY, NourishData.STREAM_CODEC)
+    public static final Supplier<AttachmentType<ApertureNourishData>> NOURISH = ATTACHMENT_TYPES.register(
+            "nourish_data", () -> AttachmentType.builder(() -> ApertureNourishData.DEFAULT)
+                    .serialize(ApertureNourishData.CODEC)
+                    .sync(OWNER_ONLY, ApertureNourishData.STREAM_CODEC)
                     .build());
     //endregion
 
@@ -87,16 +89,16 @@ public final class ModAttachments {
                     .sync(OWNER_ONLY, PathData.STREAM_CODEC)
                     .build());
 
-    public static final Supplier<AttachmentType<StrengthData>> STRENGTH = ATTACHMENT_TYPES.register(
-            "strength_data", () -> AttachmentType.builder(() -> StrengthData.DEFAULT)
-                    .serialize(StrengthData.CODEC)
-                    .sync(OWNER_ONLY, StrengthData.STREAM_CODEC)
+    public static final Supplier<AttachmentType<PathStrengthData>> STRENGTH = ATTACHMENT_TYPES.register(
+            "strength_data", () -> AttachmentType.builder(() -> PathStrengthData.DEFAULT)
+                    .serialize(PathStrengthData.CODEC)
+                    .sync(OWNER_ONLY, PathStrengthData.STREAM_CODEC)
                     .build());
 
-    public static final Supplier<AttachmentType<QiData>> QI = ATTACHMENT_TYPES.register(
-            "qi_data", () -> AttachmentType.builder(() -> QiData.DEFAULT)
-                    .serialize(QiData.CODEC)
-                    .sync(OWNER_ONLY, QiData.STREAM_CODEC)
+    public static final Supplier<AttachmentType<PathQiData>> QI = ATTACHMENT_TYPES.register(
+            "qi_data", () -> AttachmentType.builder(() -> PathQiData.DEFAULT)
+                    .serialize(PathQiData.CODEC)
+                    .sync(OWNER_ONLY, PathQiData.STREAM_CODEC)
                     .build());
     //endregion
 

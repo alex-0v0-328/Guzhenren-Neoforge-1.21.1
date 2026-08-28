@@ -1,7 +1,7 @@
 package com.unknown.guzhenren;
 
-import com.unknown.guzhenren.client.GradedEffectIcon;
-import com.unknown.guzhenren.client.ItemEffectIcon;
+import com.unknown.guzhenren.client.icon.GradedEffectIcon;
+import com.unknown.guzhenren.client.icon.ItemEffectIcon;
 import com.unknown.guzhenren.registry.ModEffects;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;

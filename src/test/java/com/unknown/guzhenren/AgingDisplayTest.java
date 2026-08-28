@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
+import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ class AgingDisplayTest {
 
     /** What one stretch of world time costs him, through the same door every other spend goes through. */
     private static long lived(long elapsedTicks, int rate) {
-        return TimeFlowService.perStep(rate, BodyService.elapsedParts(elapsedTicks));
+        return PathTimeFlowService.perStep(rate, BodyService.elapsedParts(elapsedTicks));
     }
 
     @Test

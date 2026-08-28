@@ -1,8 +1,8 @@
 package com.unknown.guzhenren.client.hud;
 
-import com.unknown.guzhenren.attachment.data.aperture.NourishData;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureNourishData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.aperture.NourishService;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>Extends {@link com.unknown.guzhenren.client.hud.HotbarHud}. Registered above
  * {@code VanillaGuiLayers.AIR_LEVEL}. Reads the cultivation fraction from
- * {@link com.unknown.guzhenren.attachment.service.aperture.NourishService#fraction} and swaps to a red
+ * {@link com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService#fraction} and swaps to a red
  * fill when starving.
  *
  * <p>⚠ It is a separate layer from the charge bar on purpose: that one reads only the held item, and
@@ -45,15 +45,15 @@ public final class NourishHud extends HotbarHud {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         if (player == null || minecraft.options.hideGui || player.isSpectator()) return;
-        if (!NourishService.isCultivating(player)) return;
+        if (!ApertureNourishService.isCultivating(player)) return;
 
-        NourishData nourish = NourishService.get(player);
+        ApertureNourishData nourish = ApertureNourishService.get(player);
         boolean starving = nourish.isStarving();
         int x = (minecraft.getWindow().getGuiScaledWidth() - BAR_WIDTH) / 2;
         int y = barTop(minecraft);
 
-        int target = NourishService.targetIndex(player);
-        drawBar(graphics, x, y, NourishService.fraction(player, target), starving ? FILL_STARVING : FILL);
+        int target = ApertureNourishService.targetIndex(player);
+        drawBar(graphics, x, y, ApertureNourishService.fraction(player, target), starving ? FILL_STARVING : FILL);
 
         drawLabel(graphics, minecraft, x, y,
                 Component.translatable(starving ? STARVING : CAPTION,

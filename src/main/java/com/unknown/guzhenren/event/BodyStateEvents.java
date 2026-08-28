@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.event;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.attachment.service.body.AttackService;
+import com.unknown.guzhenren.attachment.service.body.BodyAttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.registry.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,7 +25,7 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.attachment.service.body.AttackService
+ * @see com.unknown.guzhenren.attachment.service.body.BodyAttackService
  * @since 1.0.0
  */
 
@@ -54,10 +54,10 @@ public final class BodyStateEvents {
     @SubscribeEvent
     public static void onAttack(AttackEntityEvent event) {
         if (event.getEntity() instanceof ServerPlayer player
-                && player.hasEffect(ModEffects.HARDSHIP_STRENGTH_GU)) AttackService.refresh(player);
+                && player.hasEffect(ModEffects.HARDSHIP_STRENGTH_GU)) BodyAttackService.refresh(player);
     }
 
     private static void refreshAttack(LivingEntity entity) {
-        if (entity instanceof ServerPlayer player) AttackService.refresh(player);
+        if (entity instanceof ServerPlayer player) BodyAttackService.refresh(player);
     }
 }

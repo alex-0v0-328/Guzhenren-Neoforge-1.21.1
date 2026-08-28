@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.command.sub.soul;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.unknown.guzhenren.attachment.service.body.SoulService;
+import com.unknown.guzhenren.attachment.service.soul.SoulService;
 import com.unknown.guzhenren.command.ModCommandSupport;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -14,7 +14,7 @@ import net.minecraft.commands.Commands;
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.attachment.service.body.SoulService
+ * @see com.unknown.guzhenren.attachment.service.soul.SoulService
  * @since 1.0.0
  */
 

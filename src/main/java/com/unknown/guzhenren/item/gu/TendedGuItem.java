@@ -2,8 +2,8 @@ package com.unknown.guzhenren.item.gu;
 
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.PlayerDataService;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
-import com.unknown.guzhenren.attachment.service.body.TimeFlowService;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
+import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
 import com.unknown.guzhenren.display.ModDisplayText;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.registry.ModDataComponents;
@@ -189,7 +189,7 @@ public abstract class TendedGuItem extends MortalGuItem {
         if (holdingFood(player, stack)) eat(player, stack);
         drawFromOffhandStones(player);
         int take = stepAmount(player, stack, elapsed);
-        if (take <= 0 || !EssenceService.consume(player, take)) {
+        if (take <= 0 || !ApertureEssenceService.consume(player, take)) {
             player.stopUsingItem();
             return;
         }
@@ -200,7 +200,7 @@ public abstract class TendedGuItem extends MortalGuItem {
         drawFromOffhandStones(player);
         int left = refineCost() - state(stack).refineProgress();
         int take = (int) Math.min(left, poured(player, elapsed));
-        if (take <= 0 || !EssenceService.consume(player, take)) {
+        if (take <= 0 || !ApertureEssenceService.consume(player, take)) {
             player.stopUsingItem();
             return;
         }
@@ -221,12 +221,12 @@ public abstract class TendedGuItem extends MortalGuItem {
         int used = stone.used(player, offhand);
         if (used <= 0) return;
 
-        EssenceService.add(player, stone.essence() * used);
+        ApertureEssenceService.add(player, stone.essence() * used);
         if (!player.hasInfiniteMaterials()) offhand.shrink(used);
     }
 
     private int stepAmount(ServerPlayer player, ItemStack stack, int elapsed) {
-        long pool = EssenceService.spendable(player);
+        long pool = ApertureEssenceService.spendable(player);
         if (pool < ESSENCE_FLOOR) return 0;
 
         int round = spec.essencePerRound();
@@ -238,20 +238,20 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     private long mostThisStepMaySpend(ServerPlayer player, long pool, int elapsed) {
         if (guPaced(player)) {
-            return Math.min(pool, TimeFlowService.perStep(player, clock.essencePerHungerPoint()));
+            return Math.min(pool, PathTimeFlowService.perStep(player, clock.essencePerHungerPoint()));
         }
         return poolPacedStep(player, pool, elapsed);
     }
 
     private long poured(ServerPlayer player, int elapsed) {
-        long pool = EssenceService.spendable(player);
+        long pool = ApertureEssenceService.spendable(player);
         if (pool < ESSENCE_FLOOR) return 0L;
         return guPaced(player) ? pool : poolPacedStep(player, pool, elapsed);
     }
 
     private static long poolPacedStep(ServerPlayer player, long pool, int elapsed) {
         int stepIndex = (elapsed % Ticks.SECOND) / POOL_PACED_STEP_TICKS;
-        return Math.min(pool, TimeFlowService.perStep(player, pool / (POOL_PACED_STEPS + 1 - stepIndex)));
+        return Math.min(pool, PathTimeFlowService.perStep(player, pool / (POOL_PACED_STEPS + 1 - stepIndex)));
     }
 
     private void pour(ServerPlayer player, ItemStack stack, int amount) {
@@ -286,7 +286,7 @@ public abstract class TendedGuItem extends MortalGuItem {
      * long after the form has ended. Scaling the window on the way out would recompute a live cooldown.
      */
     private static long cooldownStamp(ServerPlayer player, int window) {
-        return gameTime(player) - (window - TimeFlowService.waited(player, window));
+        return gameTime(player) - (window - PathTimeFlowService.waited(player, window));
     }
 
     private int cooldownLeft(Player player, @Nullable Long stamp, int window) {
@@ -315,7 +315,7 @@ public abstract class TendedGuItem extends MortalGuItem {
     @Override
     protected void spend(ServerPlayer player, ItemStack stack, int count) {
         super.spend(player, stack, count);
-        int left = Math.max(TimeFlowService.waited(player, spec.itemCooldownTicks()),
+        int left = Math.max(PathTimeFlowService.waited(player, spec.itemCooldownTicks()),
                 cooldownLeft(player, stack.get(ModDataComponents.REFINED_AT.get()), REFINE_DONE_COOLDOWN_TICKS));
         if (left > 0) player.getCooldowns().addCooldown(this, left);
     }
@@ -372,7 +372,7 @@ public abstract class TendedGuItem extends MortalGuItem {
     protected int useChargeTicks(Player player, ItemStack stack) {return useChargeByGap(player);}
 
     protected int drive(ServerPlayer player, ItemStack stack) {
-        EssenceService.consume(player, spec.essencePerRound());
+        ApertureEssenceService.consume(player, spec.essencePerRound());
         boolean drivenOnAnEmptyBar = clock.spendWasForced(stack, hungerCostMultiplier(player, stack));
         grant(player, stack);
 

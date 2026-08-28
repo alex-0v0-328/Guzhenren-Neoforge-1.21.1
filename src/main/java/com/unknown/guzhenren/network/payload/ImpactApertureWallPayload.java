@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>A zero-byte singleton payload -- it carries no data at all, only the button press. The server
  * handler in {@link com.unknown.guzhenren.network.ModPayloads} delegates to
- * {@link com.unknown.guzhenren.attachment.service.aperture.NourishService}. Client intent is the one
+ * {@link com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService}. Client intent is the one
  * direction attachment sync cannot carry; no player data travels upstream.
  *
  * @author Alex

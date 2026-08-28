@@ -9,7 +9,7 @@ import net.minecraft.world.effect.MobEffectCategory;
  *
  * <p>Timed effects own their truth on vanilla's timer. This is a marker with no {@link
  * net.minecraft.world.entity.ai.attributes.AttributeModifier} — the lift is read by {@link
- * com.unknown.guzhenren.attachment.service.body.StrengthService#usableJin}, so attack still comes
+ * com.unknown.guzhenren.attachment.service.path.PathStrengthService#usableJin}, so attack still comes
  * out of one formula rather than gaining a second source.
  *
  * <p>A timed buff alters nothing permanently. Re-using it while it runs is a
@@ -17,7 +17,7 @@ import net.minecraft.world.effect.MobEffectCategory;
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.attachment.service.body.StrengthService
+ * @see com.unknown.guzhenren.attachment.service.path.PathStrengthService
  * @since 1.0.0
  */
 

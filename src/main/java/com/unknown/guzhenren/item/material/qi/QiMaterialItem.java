@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.item.material.qi;
 
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
-import com.unknown.guzhenren.attachment.service.body.QiService;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
+import com.unknown.guzhenren.attachment.service.path.PathQiService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
  * <p>Extends {@link com.unknown.guzhenren.item.material.GuMaterialItem}. The {@link QiKind} comes from
  * registration; essence [真元] cost scales with the rank [转数] tier and is spread evenly across the charge ladder
  * (5/10/20 ticks via {@code useChargeByGap}). The apply delegates to
- * {@link com.unknown.guzhenren.attachment.service.body.QiService#add}.
+ * {@link com.unknown.guzhenren.attachment.service.path.PathQiService#add}.
  *
  * <p>⚠ A material, not a Gu, so it keeps the base item's hooks and it stacks. Only the shared
  * per-stack state of a tended Gu forces a stack size of one, and this carries none. No progress is
@@ -60,7 +60,7 @@ public class QiMaterialItem extends GuMaterialItem {
 
     @Override
     protected @Nullable Refusal gate(Player player, ItemStack stack) {
-        return essenceCost() > 0 && EssenceService.spendable(player) < essenceCost()
+        return essenceCost() > 0 && ApertureEssenceService.spendable(player) < essenceCost()
                 ? new Refusal(FAILED_ESSENCE)
                 : null;
     }
@@ -75,7 +75,7 @@ public class QiMaterialItem extends GuMaterialItem {
 
         int tick = duration - remaining + 1;
         long step = paidBy(tick, duration) - paidBy(tick - 1, duration);
-        if (step > 0 && !EssenceService.consume(player, step)) player.stopUsingItem();
+        if (step > 0 && !ApertureEssenceService.consume(player, step)) player.stopUsingItem();
     }
 
     private long paidBy(int ticks, int duration) {return essenceCost() * ticks / duration;}
@@ -87,7 +87,7 @@ public class QiMaterialItem extends GuMaterialItem {
 
     @Override
     protected int apply(ServerPlayer player, ItemStack stack) {
-        QiService.add(player, kind, qiAmount());
+        PathQiService.add(player, kind, qiAmount());
         return 1;
     }
 }

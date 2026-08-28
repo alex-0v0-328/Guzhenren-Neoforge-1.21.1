@@ -2,7 +2,7 @@ package com.unknown.guzhenren.compat;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.body.AttackService;
+import com.unknown.guzhenren.attachment.service.body.BodyAttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.entity.HopeGuEntity;
@@ -115,7 +115,7 @@ public final class EpicFightIntegration {
 
     private static void onComboAttack(ComboAttackEvent event) {
         ServerPlayer player = event.getPlayerPatch().getOriginal();
-        if (player.hasEffect(ModEffects.HARDSHIP_STRENGTH_GU)) AttackService.refresh(player);
+        if (player.hasEffect(ModEffects.HARDSHIP_STRENGTH_GU)) BodyAttackService.refresh(player);
     }
 
     private static void onSetTarget(SetTargetEvent event) {

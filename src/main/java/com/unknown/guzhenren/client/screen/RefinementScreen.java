@@ -1,9 +1,9 @@
 package com.unknown.guzhenren.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.unknown.guzhenren.attachment.data.body.SoulData;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
-import com.unknown.guzhenren.attachment.service.body.SoulService;
+import com.unknown.guzhenren.attachment.data.soul.SoulData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
+import com.unknown.guzhenren.attachment.service.soul.SoulService;
 import com.unknown.guzhenren.menu.RefinementMenu;
 import com.unknown.guzhenren.recipe.GuRecipe;
 import com.unknown.guzhenren.recipe.GuRecipeInput;
@@ -213,11 +213,11 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        long maxEssence = EssenceService.maxEssence(player);
+        long maxEssence = ApertureEssenceService.maxEssence(player);
         int unit = 0;
-        drawPool(g, unit++, EssenceService.currentEssence(player), maxEssence, ESSENCE_FILL);
+        drawPool(g, unit++, ApertureEssenceService.currentEssence(player), maxEssence, ESSENCE_FILL);
 
-        long distilled = EssenceService.distilledEssence(player);
+        long distilled = ApertureEssenceService.distilledEssence(player);
         if (distilled > 0L) drawPool(g, unit++, distilled, maxEssence, DISTILLED_FILL);
 
         SoulData soul = SoulService.get(player);

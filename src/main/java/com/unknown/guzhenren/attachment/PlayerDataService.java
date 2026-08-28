@@ -1,29 +1,29 @@
 package com.unknown.guzhenren.attachment;
 
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureNourishData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
-import com.unknown.guzhenren.attachment.data.aperture.NourishData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
-import com.unknown.guzhenren.attachment.data.body.PathData;
-import com.unknown.guzhenren.attachment.data.body.QiData;
-import com.unknown.guzhenren.attachment.data.body.SoulData;
-import com.unknown.guzhenren.attachment.data.body.StrengthData;
 import com.unknown.guzhenren.attachment.data.mind.MindData;
+import com.unknown.guzhenren.attachment.data.path.PathData;
+import com.unknown.guzhenren.attachment.data.path.PathQiData;
+import com.unknown.guzhenren.attachment.data.path.PathStrengthData;
+import com.unknown.guzhenren.attachment.data.soul.SoulData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
-import com.unknown.guzhenren.attachment.service.body.AttackService;
+import com.unknown.guzhenren.attachment.service.body.BodyAttackService;
+import com.unknown.guzhenren.attachment.service.body.BodyHealthService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.attachment.service.body.HealthService;
-import com.unknown.guzhenren.attachment.service.body.QiService;
-import com.unknown.guzhenren.attachment.service.body.SoulService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
+import com.unknown.guzhenren.attachment.service.path.PathQiService;
+import com.unknown.guzhenren.attachment.service.soul.SoulService;
 import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.custom.enums.body.LifeForm;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.ModAttachments;
-import com.unknown.guzhenren.registry.ModDataComponents;
 import com.unknown.guzhenren.registry.ModDamageTypes;
+import com.unknown.guzhenren.registry.ModDataComponents;
 import com.unknown.guzhenren.registry.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>It is the single place that decides what a clone inherits, because a death-copy and a
  * keepInventory-off {@code resetAll} cannot both be the last write. Every domain service is called
- * from here for the refresh that does not ride a clone -- {@link HealthService}, {@link AttackService}
+ * from here for the refresh that does not ride a clone -- {@link BodyHealthService}, {@link BodyAttackService}
  * and {@link EpicFightIntegration} all re-run on join, clone and reset.
  *
  * <p>⚠ The {@code Player} (not {@code ServerPlayer}) signature on {@code copy}/{@code onBirth}/
@@ -64,8 +64,8 @@ public final class PlayerDataService {
     public static void onJoin(@NotNull ServerPlayer player) {
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
         ApertureService.syncTalentMarks(player);
-        HealthService.refresh(player);
-        AttackService.refresh(player);
+        BodyHealthService.refresh(player);
+        BodyAttackService.refresh(player);
         EpicFightIntegration.refresh(player);
     }
 
@@ -76,7 +76,7 @@ public final class PlayerDataService {
 
     public static void onSleepComplete(@NotNull ServerPlayer player) {
         SoulService.refill(player);
-        EssenceService.refill(player);
+        ApertureEssenceService.refill(player);
         MindService.onSleepComplete(player);
     }
 
@@ -92,8 +92,8 @@ public final class PlayerDataService {
             copy(from, to);
         }
         if (to instanceof ServerPlayer server) {
-            HealthService.refresh(server);
-            AttackService.refresh(server);
+            BodyHealthService.refresh(server);
+            BodyAttackService.refresh(server);
             EpicFightIntegration.refresh(server);
         }
     }
@@ -125,7 +125,7 @@ public final class PlayerDataService {
             MindService.empty(player);
         }
         BodyService.clearDeathQiDebt(player);
-        QiService.set(player, QiKind.DEATH, 0L);
+        PathQiService.set(player, QiKind.DEATH, 0L);
     }
 
     public static void onVitalGuLost(@NotNull ServerPlayer owner, @NotNull ItemStack stack) {
@@ -159,18 +159,18 @@ public final class PlayerDataService {
         player.setData(ModAttachments.APERTURE_STORAGE, ApertureStorage.DEFAULT);
         player.setData(ModAttachments.SOUL, SoulData.DEFAULT);
         player.setData(ModAttachments.PATH, PathData.DEFAULT);
-        player.setData(ModAttachments.QI, QiData.DEFAULT);
-        player.setData(ModAttachments.STRENGTH, StrengthData.DEFAULT);
+        player.setData(ModAttachments.QI, PathQiData.DEFAULT);
+        player.setData(ModAttachments.STRENGTH, PathStrengthData.DEFAULT);
         player.setData(ModAttachments.ESSENCE_CARRY, new float[ApertureData.MAX_APERTURES]);
-        player.setData(ModAttachments.NOURISH, NourishData.DEFAULT);
+        player.setData(ModAttachments.NOURISH, ApertureNourishData.DEFAULT);
         onBirth(player);
 
         player.setData(ModAttachments.BODY,
                 BodyData.DEFAULT.withLastDayIndex(BodyService.get(player).lastDayIndex()));
 
         if (player instanceof ServerPlayer server) {
-            HealthService.refresh(server);
-            AttackService.refresh(server);
+            BodyHealthService.refresh(server);
+            BodyAttackService.refresh(server);
             EpicFightIntegration.refresh(server);
         }
     }

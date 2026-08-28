@@ -140,7 +140,7 @@ public record Aperture(
         distilledEssence = Math.clamp(distilledEssence, 0L, maxEssence(rank, stage, baseEssence));
         pressure = extremePhysique == ExtremePhysique.NONE ? 0 : Math.clamp(pressure, 0, MAX_PRESSURE);
         pressureDeadlineTick = pressure == PRESSURE_COUNTDOWN_START ? Math.max(0L, pressureDeadlineTick) : 0L;
-        nourishProgress = Math.clamp(nourishProgress, 0, NourishData.FULL);
+        nourishProgress = Math.clamp(nourishProgress, 0, ApertureNourishData.FULL);
         if (secondaryPath != null && secondaryPath == primaryPath) secondaryPath = null;
     }
 

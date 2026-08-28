@@ -8,8 +8,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
-import com.unknown.guzhenren.attachment.service.aperture.EssenceService;
 import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.command.ModEnumArgument;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
@@ -77,23 +77,23 @@ public final class CmdAperture {
                         .then(baseNode("add", ApertureService::addBaseEssence))
                         .then(baseNode("sub", (p, i, v) -> ApertureService.addBaseEssence(p, i, -v))))
                 .then(Commands.literal("current")
-                        .then(currentNode("set", EssenceService::set))
+                        .then(currentNode("set", ApertureEssenceService::set))
                         .then(currentNode("add",
-                                (p, i, v) -> EssenceService.set(p, i,
+                                (p, i, v) -> ApertureEssenceService.set(p, i,
                                         ApertureService.aperture(p, i).currentEssence() + v)))
                         .then(currentNode("sub",
-                                (p, i, v) -> EssenceService.set(p, i,
+                                (p, i, v) -> ApertureEssenceService.set(p, i,
                                         ApertureService.aperture(p, i).currentEssence() - v))))
                 .then(Commands.literal("distilled")
-                        .then(currentNode("set", EssenceService::setDistilled))
+                        .then(currentNode("set", ApertureEssenceService::setDistilled))
                         .then(currentNode("add",
-                                (p, i, v) -> EssenceService.setDistilled(p, i,
+                                (p, i, v) -> ApertureEssenceService.setDistilled(p, i,
                                         ApertureService.aperture(p, i).distilledEssence() + v)))
                         .then(currentNode("sub",
-                                (p, i, v) -> EssenceService.setDistilled(p, i,
+                                (p, i, v) -> ApertureEssenceService.setDistilled(p, i,
                                         ApertureService.aperture(p, i).distilledEssence() - v))))
                 .then(ModCommandSupport.withTargets(Commands.literal("refill"),
-                        context -> ModCommandSupport.applyOnAwakened(context, EssenceService::refill)));
+                        context -> ModCommandSupport.applyOnAwakened(context, ApertureEssenceService::refill)));
     }
 
     //region builders

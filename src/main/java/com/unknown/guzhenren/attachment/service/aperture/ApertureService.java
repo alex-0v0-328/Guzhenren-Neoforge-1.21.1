@@ -3,10 +3,10 @@ package com.unknown.guzhenren.attachment.service.aperture;
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.service.body.BodyHealthService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.attachment.service.body.HealthService;
-import com.unknown.guzhenren.attachment.service.body.PathService;
-import com.unknown.guzhenren.attachment.service.body.QiService;
+import com.unknown.guzhenren.attachment.service.path.PathQiService;
+import com.unknown.guzhenren.attachment.service.path.PathService;
 import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Static service over the {@code aperture_data} attachment; reads take {@link Player}, writes take
  * {@link ServerPlayer}. Most writes route through {@code store}, which also fires
- * {@link HealthService#refresh} and {@link EpicFightIntegration#refresh} so derived combat attributes
+ * {@link BodyHealthService#refresh} and {@link EpicFightIntegration#refresh} so derived combat attributes
  * never lag a rank or aptitude change. Pressure writes are the exception because pressure does not
  * affect derived combat attributes. {@code reconcileTalentPaths}
  * is the one place {@code aperture/} writes {@code body/} -- it grants/revokes the ten-extreme talent
@@ -51,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Alex
  * @version 1.0.0
  * @see ApertureData
- * @see EssenceService
+ * @see ApertureEssenceService
  * @since 1.0.0
  */
 
@@ -209,7 +209,7 @@ public final class ApertureService {
         setPressure(player, PRIMARY, 0);
         DamageSource source = ModDamageTypes.source(player, ModDamageTypes.APERTURE_PRESSURE_EXPLOSION);
         player.level().explode(null, source, null, x, y, z, 0.0F, false, Level.ExplosionInteraction.NONE);
-        PressureExplosionTask.start((ServerLevel) player.level(), x, y, z, radius, aperture.extremePhysique());
+        AperturePressureExplosionTask.start((ServerLevel) player.level(), x, y, z, radius, aperture.extremePhysique());
 
         DamageSource disaster = ModDamageTypes.source(player, ModDamageTypes.TEN_EXTREME_DISASTER);
         double radiusSquared = radius * (double) radius;
@@ -290,7 +290,7 @@ public final class ApertureService {
 
     private static void store(ServerPlayer p, ApertureData data) {
         p.setData(ModAttachments.APERTURE, data);
-        HealthService.refresh(p);
+        BodyHealthService.refresh(p);
         EpicFightIntegration.refresh(p);
     }
 
@@ -318,7 +318,7 @@ public final class ApertureService {
         List<GuPath> paths = physique.getTalentPaths();
         if (paths.isEmpty()) return;
 
-        QiService.add(player, QiKind.HUMAN, sign * TALENT_HUMAN_QI);
+        PathQiService.add(player, QiKind.HUMAN, sign * TALENT_HUMAN_QI);
         long marks = sign * talentMarksPerPath(physique);
         for (GuPath path : paths) PathService.addMark(player, path, MarkTag.EXTREME_PHYSIQUE, marks);
     }

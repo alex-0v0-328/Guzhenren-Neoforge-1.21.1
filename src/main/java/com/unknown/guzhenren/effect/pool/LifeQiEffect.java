@@ -7,9 +7,9 @@ import net.minecraft.world.entity.LivingEntity;
 
 /**
  * Life Qi [生气] effect — a pool projection of the 生气 held in {@link
- * com.unknown.guzhenren.attachment.data.body.QiData}, which heals the holder periodically.
+ * com.unknown.guzhenren.attachment.data.path.PathQiData}, which heals the holder periodically.
  *
- * <p>Pool effects are rebuilt every heartbeat by {@code QiService.syncEffects}, so milk cannot cure
+ * <p>Pool effects are rebuilt every heartbeat by {@code PathQiService.syncEffects}, so milk cannot cure
  * them — the pool is the truth. The heal runs on vanilla's own {@code applyEffectTick} cadence
  * ({@code HEAL_INTERVAL_TICKS} = {@link Ticks#HALF_SECOND}), healing {@code amplifier + 1} HP each pulse.
  *
@@ -18,7 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.attachment.service.body.QiService
+ * @see com.unknown.guzhenren.attachment.service.path.PathQiService
  * @since 1.0.0
  */
 
