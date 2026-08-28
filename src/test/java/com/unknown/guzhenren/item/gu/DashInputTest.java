@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.client.event.ClientEvents;
-import com.unknown.guzhenren.registry.ModItems;
+import com.unknown.guzhenren.registry.item.ModItems;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.junit.jupiter.api.Test;

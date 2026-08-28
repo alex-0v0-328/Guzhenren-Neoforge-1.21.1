@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.registry;
+package com.unknown.guzhenren.registry.recipe;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.recipe.GuRecipe;

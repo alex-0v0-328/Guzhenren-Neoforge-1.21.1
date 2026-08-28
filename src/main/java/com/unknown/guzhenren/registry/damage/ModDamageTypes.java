@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.registry;
+package com.unknown.guzhenren.registry.damage;
 
 import com.unknown.guzhenren.Guzhenren;
 import net.minecraft.core.registries.Registries;

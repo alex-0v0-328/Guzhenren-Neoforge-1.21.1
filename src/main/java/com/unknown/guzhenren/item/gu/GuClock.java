@@ -1,6 +1,6 @@
 package com.unknown.guzhenren.item.gu;
 
-import com.unknown.guzhenren.registry.ModDataComponents;
+import com.unknown.guzhenren.registry.item.ModDataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 

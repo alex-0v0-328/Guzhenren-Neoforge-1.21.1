@@ -2,7 +2,7 @@ package com.unknown.guzhenren.item.gu.mortal;
 
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
-import com.unknown.guzhenren.registry.ModEffects;
+import com.unknown.guzhenren.registry.effect.ModEffects;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;

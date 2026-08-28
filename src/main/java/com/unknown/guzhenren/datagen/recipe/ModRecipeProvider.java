@@ -3,7 +3,7 @@ package com.unknown.guzhenren.datagen.recipe;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.menu.RefinementMenu;
 import com.unknown.guzhenren.recipe.GuRecipe;
-import com.unknown.guzhenren.registry.ModItems;
+import com.unknown.guzhenren.registry.item.ModItems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

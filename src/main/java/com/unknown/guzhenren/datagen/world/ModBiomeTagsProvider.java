@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.datagen.world;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.registry.ModBiomeTags;
+import com.unknown.guzhenren.registry.world.ModBiomeTags;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;

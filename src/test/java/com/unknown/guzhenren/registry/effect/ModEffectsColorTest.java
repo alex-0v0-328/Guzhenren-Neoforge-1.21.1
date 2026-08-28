@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.registry;
+package com.unknown.guzhenren.registry.effect;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;

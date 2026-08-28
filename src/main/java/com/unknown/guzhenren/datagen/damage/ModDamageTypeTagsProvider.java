@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.datagen.damage;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.registry.ModDamageTypes;
+import com.unknown.guzhenren.registry.damage.ModDamageTypes;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;

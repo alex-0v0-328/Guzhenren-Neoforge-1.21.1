@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.registry;
+package com.unknown.guzhenren.registry.item;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.Ticks;
@@ -39,6 +39,7 @@ import com.unknown.guzhenren.item.material.PrimevalStoneItem;
 import com.unknown.guzhenren.item.material.qi.DeathQiItem;
 import com.unknown.guzhenren.item.material.qi.LifeQiItem;
 import com.unknown.guzhenren.item.material.qi.QiMaterialItem;
+import com.unknown.guzhenren.registry.effect.ModEffects;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;

@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.event;
+package com.unknown.guzhenren.event.player;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
@@ -16,8 +16,8 @@ import com.unknown.guzhenren.effect.pool.DeathQiEffect;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
 import com.unknown.guzhenren.item.gu.mortal.strength.SelfRelianceGuItem;
 import com.unknown.guzhenren.menu.ApertureStorageMenu;
-import com.unknown.guzhenren.registry.ModDamageTypes;
-import com.unknown.guzhenren.registry.ModEffects;
+import com.unknown.guzhenren.registry.damage.ModDamageTypes;
+import com.unknown.guzhenren.registry.effect.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodData;

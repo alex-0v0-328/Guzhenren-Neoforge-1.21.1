@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.event;
+package com.unknown.guzhenren.event.compat;
 
 import com.unknown.guzhenren.Guzhenren;
 import net.minecraft.server.level.ServerLevel;

@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.event;
+package com.unknown.guzhenren.event.item;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.item.GuItem;

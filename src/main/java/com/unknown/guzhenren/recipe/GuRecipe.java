@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
-import com.unknown.guzhenren.registry.ModRecipes;
+import com.unknown.guzhenren.registry.recipe.ModRecipes;
 import io.netty.buffer.ByteBuf;
 import java.util.Comparator;
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.unknown.guzhenren.datagen;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.registry.ModBiomeTags;
-import com.unknown.guzhenren.registry.ModDamageTypes;
-import com.unknown.guzhenren.registry.ModEntityTypes;
+import com.unknown.guzhenren.registry.damage.ModDamageTypes;
+import com.unknown.guzhenren.registry.entity.ModEntityTypes;
+import com.unknown.guzhenren.registry.world.ModBiomeTags;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;

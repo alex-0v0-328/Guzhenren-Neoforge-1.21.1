@@ -2,8 +2,8 @@ package com.unknown.guzhenren.item.gu.mortal;
 
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
-import com.unknown.guzhenren.registry.ModDataComponents;
-import com.unknown.guzhenren.registry.ModItems;
+import com.unknown.guzhenren.registry.item.ModDataComponents;
+import com.unknown.guzhenren.registry.item.ModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem} but declares no clock and never eats.
  * Right click deposits every stone (free); sneak + right click withdraws a stack of 64 (free). The
- * stored-stones total rides {@link com.unknown.guzhenren.registry.ModDataComponents}, not
+ * stored-stones total rides {@link com.unknown.guzhenren.registry.item.ModDataComponents}, not
  * {@code RefinedGuState}, because every tended Gu shares that record.
  *
  * <p>⚠ Starving is unreachable for it by design -- a failed refinement is the only thing that can

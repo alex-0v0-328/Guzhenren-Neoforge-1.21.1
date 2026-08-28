@@ -8,7 +8,7 @@ import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
-import com.unknown.guzhenren.registry.ModAttachments;
+import com.unknown.guzhenren.registry.attachment.ModAttachments;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;

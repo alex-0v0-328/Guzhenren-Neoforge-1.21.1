@@ -13,7 +13,7 @@ import com.unknown.guzhenren.network.payload.NourishAperturePayload;
 import com.unknown.guzhenren.network.payload.OpenApertureStoragePayload;
 import com.unknown.guzhenren.network.payload.OpenRefinementPayload;
 import com.unknown.guzhenren.network.payload.SetSecondaryPathPayload;
-import com.unknown.guzhenren.registry.ModEffects;
+import com.unknown.guzhenren.registry.effect.ModEffects;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;

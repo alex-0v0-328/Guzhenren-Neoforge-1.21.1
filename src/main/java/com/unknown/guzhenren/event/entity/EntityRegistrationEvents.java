@@ -1,9 +1,9 @@
-package com.unknown.guzhenren.event;
+package com.unknown.guzhenren.event.entity;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.entity.FlyingGuEntity;
 import com.unknown.guzhenren.entity.HopeGuEntity;
-import com.unknown.guzhenren.registry.ModEntityTypes;
+import com.unknown.guzhenren.registry.entity.ModEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;

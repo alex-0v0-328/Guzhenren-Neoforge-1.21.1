@@ -2,7 +2,7 @@ package com.unknown.guzhenren.effect.timed;
 
 import com.unknown.guzhenren.Ticks;
 import com.unknown.guzhenren.effect.AttackContributor;
-import com.unknown.guzhenren.registry.ModEffects;
+import com.unknown.guzhenren.registry.effect.ModEffects;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffects;

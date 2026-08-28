@@ -2,7 +2,7 @@ package com.unknown.guzhenren;
 
 import com.unknown.guzhenren.client.icon.GradedEffectIcon;
 import com.unknown.guzhenren.client.icon.ItemEffectIcon;
-import com.unknown.guzhenren.registry.ModEffects;
+import com.unknown.guzhenren.registry.effect.ModEffects;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;

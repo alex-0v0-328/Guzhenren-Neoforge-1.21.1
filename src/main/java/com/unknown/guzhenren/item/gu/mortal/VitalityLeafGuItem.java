@@ -3,7 +3,7 @@ package com.unknown.guzhenren.item.gu.mortal;
 import com.unknown.guzhenren.effect.timed.VitalityLeafEffect;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.OneShotGuItem;
-import com.unknown.guzhenren.registry.ModEffects;
+import com.unknown.guzhenren.registry.effect.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  * <p>Extends {@link com.unknown.guzhenren.item.gu.OneShotGuItem}. The gate checks
  * {@code hasEffect(VITALITY_LEAF)} so a re-use while the effect runs is a refusal, not a refresh;
  * to apply hands the effect holder and its duration to
- * {@link com.unknown.guzhenren.registry.ModEffects#instance}.
+ * {@link com.unknown.guzhenren.registry.effect.ModEffects#instance}.
  *
  * @author Alex
  * @version 1.0.0

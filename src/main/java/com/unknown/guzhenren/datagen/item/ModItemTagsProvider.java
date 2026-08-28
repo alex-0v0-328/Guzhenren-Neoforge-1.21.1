@@ -1,8 +1,8 @@
 package com.unknown.guzhenren.datagen.item;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.registry.ModItemTags;
-import com.unknown.guzhenren.registry.ModItems;
+import com.unknown.guzhenren.registry.item.ModItemTags;
+import com.unknown.guzhenren.registry.item.ModItems;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

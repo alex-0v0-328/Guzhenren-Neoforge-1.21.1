@@ -1,7 +1,7 @@
 package com.unknown.guzhenren.datagen.item;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.registry.ModItems;
+import com.unknown.guzhenren.registry.item.ModItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;

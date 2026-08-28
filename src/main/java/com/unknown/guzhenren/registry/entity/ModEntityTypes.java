@@ -1,7 +1,8 @@
-package com.unknown.guzhenren.registry;
+package com.unknown.guzhenren.registry.entity;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.entity.HopeGuEntity;
+import com.unknown.guzhenren.registry.item.ModItems;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;

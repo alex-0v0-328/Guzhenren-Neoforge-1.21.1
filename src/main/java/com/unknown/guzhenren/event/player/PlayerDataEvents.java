@@ -1,4 +1,4 @@
-package com.unknown.guzhenren.event;
+package com.unknown.guzhenren.event.player;
 
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.PlayerDataService;

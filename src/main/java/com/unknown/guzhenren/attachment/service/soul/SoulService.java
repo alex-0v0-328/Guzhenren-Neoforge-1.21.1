@@ -2,7 +2,7 @@ package com.unknown.guzhenren.attachment.service.soul;
 
 import com.unknown.guzhenren.attachment.data.soul.SoulData;
 import com.unknown.guzhenren.custom.enums.soul.SoulTier;
-import com.unknown.guzhenren.registry.ModAttachments;
+import com.unknown.guzhenren.registry.attachment.ModAttachments;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;

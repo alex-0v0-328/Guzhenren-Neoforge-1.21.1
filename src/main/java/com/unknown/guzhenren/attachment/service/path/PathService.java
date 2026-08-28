@@ -5,7 +5,7 @@ import com.unknown.guzhenren.attachment.data.path.PathEntry;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
-import com.unknown.guzhenren.registry.ModAttachments;
+import com.unknown.guzhenren.registry.attachment.ModAttachments;
 import java.util.Map;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;

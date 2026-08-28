@@ -6,7 +6,7 @@ import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
-import com.unknown.guzhenren.registry.ModDataComponents;
+import com.unknown.guzhenren.registry.item.ModDataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.MortalGuItem} directly, not {@code OneShotGuItem},
  * because the ritual bar needs a much longer charge than the one-shot template fixes. The rolled value
- * lives in a {@link com.unknown.guzhenren.registry.ModDataComponents} component and is locked on first
+ * lives in a {@link com.unknown.guzhenren.registry.item.ModDataComponents} component and is locked on first
  * press; the service call goes through
  * {@link com.unknown.guzhenren.attachment.service.aperture.ApertureService#awaken}.
  *

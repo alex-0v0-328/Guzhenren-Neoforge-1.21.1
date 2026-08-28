@@ -6,7 +6,7 @@ import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
 import com.unknown.guzhenren.display.ModDisplayText;
 import com.unknown.guzhenren.item.material.PrimevalStoneItem;
-import com.unknown.guzhenren.registry.ModDataComponents;
+import com.unknown.guzhenren.registry.item.ModDataComponents;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
