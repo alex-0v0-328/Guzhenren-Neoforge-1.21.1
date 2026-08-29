@@ -13,6 +13,7 @@
 | Parchment                    | `2024.11.17`                          |
 | Java                         | `21`                                  |
 | mod id / package             | `guzhenren` · `com.unknown.guzhenren` |
+| 必需依赖 <sub>required</sub> | `Epic Fight`                          |
 | 可选依赖 <sub>optional</sub> | `JEI` · `Curios`                      |
 
 ```
@@ -28,21 +29,24 @@
 
 ## 数据层 <sub>Data layer</sub>
 
-玩家状态全部是 **NeoForge data attachment**，每一个都是**不可变 record**，写入只经过拥有它的 service。
-<sub>Player state lives in data attachments, one immutable record each, written only through its owning service.</sub>
+玩家的持久状态主要是 **NeoForge data attachment**：九个核心 attachment 是**不可变 record**，写入只经过拥有它的 service；另有出生闩与瞬时真元 carry。
+<sub>Persistent player state lives mainly in data attachments: nine core attachments are immutable records, written only through their owning services; two auxiliary attachments hold the birth latch and transient essence carry.</sub>
 
-| Attachment                             | 装什么                                                                                            |
-|----------------------------------------|---------------------------------------------------------------------------------------------------|
-| `ApertureData`                         | 空窍：转数、阶段、资质、体质、真元池 <sub>rank, stage, talent, physique, essence</sub>            |
-| `BodyData`                             | 生命形态、种族、年龄与寿元、死气欠账 <sub>life form, race, age & lifespan, death-qi debt</sub>    |
-| `SoulData` · `StaminaData`             | 魂魄、耐力 <sub>soul, stamina</sub>                                                               |
-| `PathData`                             | 33 条流派的道痕，每笔带来源 tag <sub>Dao marks, each tagged with its source</sub>                  |
-| `QiData` · `StrengthData` · `MindData` | 八种气、力道三分支、念/意/情 <sub>qi, strength branches, mind pools</sub>                         |
-| `NourishData` · `ApertureStorage`      | 修炼进度、空窍内的蛊虫仓 <sub>cultivation progress, Gu storage</sub>                              |
+| Attachment                             | 装什么                                                                                         |
+|----------------------------------------|------------------------------------------------------------------------------------------------|
+| `ApertureData`                         | 空窍：转数、阶段、资质、体质、真元池 <sub>rank, stage, talent, physique, essence</sub>         |
+| `BodyData`                             | 生命形态、种族、年龄与寿元、死气欠账 <sub>life form, race, age & lifespan, death-qi debt</sub> |
+| `SoulData`                             | 魂魄 <sub>soul</sub>                                                                           |
+| `PathData`                             | 33 条流派的道痕，每笔带来源 tag <sub>Dao marks, each tagged with its source</sub>              |
+| `QiData` · `StrengthData` · `MindData` | 八种气、力道三分支、念/意/情 <sub>qi, strength branches, mind pools</sub>                      |
+| `NourishData` · `ApertureStorage`      | 修炼进度、空窍内的蛊虫仓 <sub>cultivation progress, Gu storage</sub>                           |
 
 ⚠ 同步靠 attachment 自带的 `sync(OWNER_ONLY, …)`，**不写玩家数据的 payload**；
 唯一的自定义 payload 是 G 面板的按钮意图。
 <sub>Sync rides the attachment's own `sync(...)`; the only custom payloads are G-panel button intents.</sub>
+
+耐力由 **Epic Fight** 独占保存、回复、HUD 与普通消耗；GZR 只通过兼容桥接调整最大耐力，并让僵尸与半僵的技能耐力消耗为零。
+<sub>Epic Fight exclusively owns stamina storage, regeneration, HUD, and ordinary consumption; GZR only adjusts maximum stamina through its compatibility bridge and makes zombie and half-zombie skill stamina costs zero.</sub>
 
 ## 承重约定 <sub>Load-bearing conventions</sub>
 
@@ -62,9 +66,9 @@
 
 ## 内容系统 <sub>Systems</sub>
 
-物品与蛊虫（三种基类：一次性 / 需照顾 / 用完消失）· 炼蛊（26 秒仪式 + 蛊方）· 修炼（温养与冲击窍壁）·
+物品与蛊虫（两条分支：一次性 / 需照顾；后者包含用完消失的蛊）· 炼蛊（26 秒仪式 + 蛊方）· 修炼（温养与冲击窍壁）·
 气（八种，独立资源）· 生命形态四态 · 野生蛊虫实体 · 七页 G 面板与 HUD · `/guzhenren`（别名 `/gzr`，权限 2）。
-<sub>Items and Gu (three base classes), refinement, cultivation, qi, life forms, wild Gu entities,
+<sub>Items and Gu (two branches: one-shot and tended, with consumed Gu as a tended subtype), refinement, cultivation, qi, life forms, wild Gu entities,
 a seven-tab info panel, and an operator command tree.</sub>
 
 ⚠ 仍在开发阶段：蛊方只有两张，其余物品走创造模式栏或 `/give`。
