@@ -40,6 +40,12 @@ jobs:
         working-directory: guzhenren-template-1.21.1
         run: ./gradlew build
 
+      # Boot the dedicated GameTestServer: runs every registered gametest and exits with the
+      # failure count. Uses its own game directory, so the pack mirror in run/mods stays out.
+      - name: Run GameTests
+        working-directory: guzhenren-template-1.21.1
+        run: ./gradlew runGameTestServer
+
       # src/generated/resources is a committed source set, and 'build' happily packs a stale one.
       # git diff alone would miss a provider change that ADDS a file, so this asks git status.
       - name: Generated resources are up to date

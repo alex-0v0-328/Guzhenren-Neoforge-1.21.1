@@ -76,8 +76,12 @@ neoForge {
         // This run config launches GameTestServer and runs all registered gametests, then exits.
         // By default, the server will crash when no gametests are provided.
         // The gametest system is also enabled by default for other run configs under the /test command.
+        // Its own game directory keeps the pack mirror in run/mods out: some of those jars crash a
+        // dedicated server, while the mod under test and its compile-time dependencies (Epic Fight,
+        // Curios) still load from the classpath.
         gameTestServer {
             type = "gameTestServer"
+            gameDirectory = project.file('run-gametest')
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
@@ -147,6 +151,36 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }
+
+// Pure JVM tests over logic that loads without any registry or bootstrap: enum ladders, math
+// seams and self-contained records. Anything touching Items.X / ModItems.X / ItemStack belongs
+// to the modded 'test' source set, and anything needing a live world belongs in a GameTest.
+sourceSets {
+    pureTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+neoForge.addModdingDependenciesTo sourceSets.pureTest
+
+dependencies {
+    pureTestImplementation platform("org.junit:junit-bom:${junit_version}")
+    pureTestImplementation "org.junit.jupiter:junit-jupiter"
+    pureTestRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+tasks.register('pureTest', Test) {
+    description = 'Runs the pure JVM test source set without booting the modded runtime.'
+    group = 'verification'
+    testClassesDirs = sourceSets.pureTest.output.classesDirs
+    classpath = sourceSets.pureTest.runtimeClasspath
+    useJUnitPlatform()
+    testLogging {
+        events 'failed'
+        exceptionFormat 'full'
+    }
+}
+check.dependsOn pureTest
 
 tasks.named('test', Test) {
     useJUnitPlatform()
