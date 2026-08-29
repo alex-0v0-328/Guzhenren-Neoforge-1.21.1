@@ -18,6 +18,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -149,6 +151,8 @@ public abstract class TendedGuItem extends MortalGuItem {
     //endregion
 
     //region refining [炼化] -- paid in instalments; what it buys is a lasting bond
+    public static final int POST_REFINE_COOLDOWN_TICKS = Ticks.SECOND;
+
     private void refineStep(ServerPlayer player, ItemStack stack, int invest) {
         RefinedGuState s = state(stack);
         int next = s.refineProgress() + invest;
@@ -162,7 +166,9 @@ public abstract class TendedGuItem extends MortalGuItem {
     public void bornRefined(ServerPlayer player, ItemStack stack) {
         store(stack, new RefinedGuState(true, refineCost(), 0, 0, state(stack).damageTaken()));
         clock.bind(player, stack);
-        stack.set(ModDataComponents.REFINED_AT.get(), cooldownStamp(player, REFINE_DONE_COOLDOWN_TICKS));
+        stack.set(ModDataComponents.REFINED_AT.get(), cooldownStamp(player, POST_REFINE_COOLDOWN_TICKS));
+        applyPostRefineCooldown(player.getCooldowns(), this,
+                PathTimeFlowService.waited(player, POST_REFINE_COOLDOWN_TICKS));
     }
     //endregion
 
@@ -289,12 +295,20 @@ public abstract class TendedGuItem extends MortalGuItem {
         return gameTime(player) - (window - PathTimeFlowService.waited(player, window));
     }
 
+    static int stampCooldownLeft(long now, @Nullable Long stamp, int window) {
+        if (stamp == null || window <= 0) return 0;
+
+        long elapsed = now - stamp;
+        return elapsed < 0L || elapsed >= window ? 0 : (int) (window - elapsed);
+    }
+
+    static void applyPostRefineCooldown(ItemCooldowns cooldowns, Item item, int wanted) {
+        if (!cooldowns.isOnCooldown(item)) cooldowns.addCooldown(item, wanted);
+    }
+
     private int cooldownLeft(Player player, @Nullable Long stamp, int window) {
         MinecraftServer server = player.getServer();
-        if (stamp == null || server == null || window <= 0) return 0;
-
-        long elapsed = server.overworld().getGameTime() - stamp;
-        return elapsed < 0L || elapsed >= window ? 0 : (int) (window - elapsed);
+        return server == null ? 0 : stampCooldownLeft(server.overworld().getGameTime(), stamp, window);
     }
 
     private int useCooldownLeft(Player p, ItemStack s) {
@@ -302,10 +316,9 @@ public abstract class TendedGuItem extends MortalGuItem {
     }
 
     private @Nullable Refusal cooldownRefusal(Player player, ItemStack stack) {
-        int left = useCooldownLeft(player, stack);
+        int left = Math.max(allowsUseDuringEffectCooldown() ? 0 : useCooldownLeft(player, stack),
+                cooldownLeft(player, stack.get(ModDataComponents.REFINED_AT.get()), POST_REFINE_COOLDOWN_TICKS));
         if (left <= 0) return null;
-
-        if (allowsUseDuringEffectCooldown()) return null;
 
         if (player instanceof ServerPlayer server) server.getCooldowns().addCooldown(this, left);
         long seconds = (left + Ticks.SECOND - 1) / Ticks.SECOND;
@@ -316,7 +329,7 @@ public abstract class TendedGuItem extends MortalGuItem {
     protected void spend(ServerPlayer player, ItemStack stack, int count) {
         super.spend(player, stack, count);
         int left = Math.max(PathTimeFlowService.waited(player, spec.itemCooldownTicks()),
-                cooldownLeft(player, stack.get(ModDataComponents.REFINED_AT.get()), REFINE_DONE_COOLDOWN_TICKS));
+                cooldownLeft(player, stack.get(ModDataComponents.REFINED_AT.get()), POST_REFINE_COOLDOWN_TICKS));
         if (left > 0) player.getCooldowns().addCooldown(this, left);
     }
     //endregion
