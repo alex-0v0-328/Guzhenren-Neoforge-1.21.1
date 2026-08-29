@@ -9,10 +9,10 @@ import com.unknown.guzhenren.attachment.service.path.PathQiService;
 import com.unknown.guzhenren.attachment.service.path.PathService;
 import com.unknown.guzhenren.compat.EpicFightIntegration;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
@@ -37,14 +37,11 @@ import org.jetbrains.annotations.Nullable;
  * {@link ServerPlayer}. Most writes route through {@code store}, which also fires
  * {@link BodyHealthService#refresh} and {@link EpicFightIntegration#refresh} so derived combat attributes
  * never lag a rank or aptitude change. Pressure writes are the exception because pressure does not
- * affect derived combat attributes. {@code reconcileTalentPaths}
- * is the one place {@code aperture/} writes {@code body/} -- it grants/revokes the ten-extreme talent
- * Dao marks and the human qi.
+ * affect derived combat attributes. {@code reconcileTalentPaths} grants/revokes the ten-extreme talent
+ * Dao marks and the human qi when {@code BodyService} changes the body's concrete physique.
  *
- * <p>⚠ The physique-and-talent invariant is enforced here ({@code enforce}) rather than in the record,
- * because repairing it rolls a die and a compact constructor has to stay a pure function. ⚠ The
- * "after" physique must be read AFTER {@code enforce} -- reading it before sees {@code NONE} and the
- * talent grant silently never lands. ⚠ {@code awaken} does NOT refuse an awakened holder -- it
+ * <p>⚠ The body-physique/base-essence invariant is enforced here ({@code enforce}) with player context,
+ * while the concrete physique and talent grant live in {@code BodyService}. ⚠ {@code awaken} does NOT refuse an awakened holder -- it
  * appends; the caller gates. ⚠ {@code reconcileTalentPaths} is one of the two existing cross-domain
  * grants; a third one is the threshold to extract a coordinator (the {@code TODO(refactor)} below).
  *
@@ -71,11 +68,13 @@ public final class ApertureService {
     }
 
     public static void syncTalentMarks(@NotNull ServerPlayer player) {
-        ExtremePhysique physique = aperture(player).extremePhysique();
-        long expected = talentMarksPerPath(physique);
-        for (GuPath path : physique.getTalentPaths()) {
-            if (PathService.mark(player, path, MarkTag.EXTREME_PHYSIQUE) != expected) {
-                PathService.setMark(player, path, MarkTag.EXTREME_PHYSIQUE, expected);
+        ExtremePhysique current = BodyService.extremePhysique(player);
+        for (ExtremePhysique physique : ExtremePhysique.values()) {
+            long expected = physique == current ? talentMarksPerPath(physique) : 0L;
+            for (GuPath path : physique.getTalentPaths()) {
+                if (PathService.mark(player, path, MarkTag.EXTREME_PHYSIQUE) != expected) {
+                    PathService.setMark(player, path, MarkTag.EXTREME_PHYSIQUE, expected);
+                }
             }
         }
     }
@@ -86,15 +85,12 @@ public final class ApertureService {
     public static boolean isAwakened(@NotNull Player p) {return get(p).isAwakened();}
 
     /**
-     * The one derivation of {@link ApertureStatus}: DEAD outranks STONE -- the zombie is the more
-     * thorough negative, and stone still has the pressure way back -- and everything else, alive
-     * or half-zombie, reads NORMAL. ⚠ {@code zombieOpened} is the one escape: an aperture opened
-     * while undead keeps reading NORMAL under every later undeath.
+     * The one derivation of {@link ApertureStatus}: Zombie, Half-Zombie and petrified apertures are
+     * DEAD; every other aperture is NORMAL.
      */
     public static @NotNull ApertureStatus status(@NotNull Player p, int index) {
         Aperture aperture = aperture(p, index);
-        if (BodyService.isZombie(p) && !aperture.zombieOpened()) return ApertureStatus.DEAD;
-        if (aperture.petrified()) return ApertureStatus.STONE;
+        if (BodyService.isZombieOrHalfZombie(p) || aperture.petrified()) return ApertureStatus.DEAD;
         return ApertureStatus.NORMAL;
     }
     public static @NotNull ApertureStatus status(@NotNull Player p) {return status(p, PRIMARY);}
@@ -147,7 +143,7 @@ public final class ApertureService {
     @SuppressWarnings("resource")
     public static void setPressure(@NotNull ServerPlayer player, int index, int value) {
         Aperture current = aperture(player, index);
-        if (!current.isExtreme()) return;
+        if (!BodyService.isExtreme(player) || index != PRIMARY) return;
         long deadline = value == Aperture.PRESSURE_COUNTDOWN_START ? current.pressureDeadlineTick() : 0L;
         if (value == Aperture.PRESSURE_COUNTDOWN_START && deadline == 0L) {
             deadline = player.level().getGameTime() + Ticks.HALF_MINUTE;
@@ -158,14 +154,14 @@ public final class ApertureService {
 
     public static void relievePressure(@NotNull ServerPlayer player, int amount) {
         Aperture current = aperture(player, PRIMARY);
-        if (!current.isExtreme()) return;
+        if (!BodyService.isExtreme(player)) return;
         setPressure(player, PRIMARY, Math.max(0, current.pressure() - amount));
     }
 
     @SuppressWarnings("resource")
     public static void tickPressure(@NotNull ServerPlayer player) {
         Aperture aperture = aperture(player, PRIMARY);
-        if (!aperture.isExtreme() || aperture.pressure() >= Aperture.MAX_PRESSURE) return;
+        if (!BodyService.isExtreme(player) || aperture.pressure() >= Aperture.MAX_PRESSURE) return;
 
         if (aperture.pressure() < Aperture.PRESSURE_COUNTDOWN_START) {
             if (player.tickCount % Ticks.MINUTE != 0) return;
@@ -188,13 +184,13 @@ public final class ApertureService {
 
     public static boolean pressureFull(@NotNull Player player) {
         Aperture aperture = aperture(player, PRIMARY);
-        return aperture.isExtreme() && aperture.pressure() >= Aperture.MAX_PRESSURE;
+        return BodyService.isExtreme(player) && aperture.pressure() >= Aperture.MAX_PRESSURE;
     }
 
     @SuppressWarnings("resource")
     public static long pressureRemainingTicks(@NotNull Player player) {
         Aperture aperture = aperture(player, PRIMARY);
-        if (!aperture.isExtreme() || aperture.pressure() != Aperture.PRESSURE_COUNTDOWN_START
+        if (!BodyService.isExtreme(player) || aperture.pressure() != Aperture.PRESSURE_COUNTDOWN_START
                 || aperture.pressureDeadlineTick() <= 0L) return 0L;
         return Math.max(0L, aperture.pressureDeadlineTick() - player.level().getGameTime());
     }
@@ -202,14 +198,15 @@ public final class ApertureService {
     @SuppressWarnings("resource")
     public static void detonatePressure(@NotNull ServerPlayer player) {
         Aperture aperture = aperture(player);
-        int radius = pressureExplosionRadius(aperture.rank(), aperture.extremePhysique());
+        ExtremePhysique physique = BodyService.extremePhysique(player);
+        int radius = pressureExplosionRadius(aperture.rank(), physique);
         double x = player.getX();
         double y = player.getY();
         double z = player.getZ();
         setPressure(player, PRIMARY, 0);
         DamageSource source = ModDamageTypes.source(player, ModDamageTypes.APERTURE_PRESSURE_EXPLOSION);
         player.level().explode(null, source, null, x, y, z, 0.0F, false, Level.ExplosionInteraction.NONE);
-        AperturePressureExplosionTask.start((ServerLevel) player.level(), x, y, z, radius, aperture.extremePhysique());
+        AperturePressureExplosionTask.start((ServerLevel) player.level(), x, y, z, radius, physique);
 
         DamageSource disaster = ModDamageTypes.source(player, ModDamageTypes.TEN_EXTREME_DISASTER);
         double radiusSquared = radius * (double) radius;
@@ -227,29 +224,17 @@ public final class ApertureService {
 
     private static void setPressureState(ServerPlayer player, int index, int value, long deadline) {
         Aperture current = aperture(player, index);
-        if (!current.isExtreme() || (current.pressure() == value && current.pressureDeadlineTick() == deadline)) return;
+        if (!BodyService.isExtreme(player) || index != PRIMARY
+                || (current.pressure() == value && current.pressureDeadlineTick() == deadline)) return;
         player.setData(ModAttachments.APERTURE, get(player).with(index, current.withPressureAndDeadline(value, deadline)));
     }
 
-    public static void setBaseEssence(@NotNull ServerPlayer p, int v) {setBaseEssence(p, PRIMARY, v);}
+    public static boolean setBaseEssence(@NotNull ServerPlayer p, int v) {return setBaseEssence(p, PRIMARY, v);}
 
-    public static void setBaseEssence(@NotNull ServerPlayer p, int index, int v) {
-        set(p, index, aperture(p, index).withBaseEssence(Math.clamp(v, Aperture.MIN_BASE, Aperture.MAX_BASE)));
-    }
-
-    public static void setExtremePhysique(@NotNull ServerPlayer player, @NotNull ExtremePhysique physique) {
-        Aperture aperture = aperture(player);
-
-        if (physique == ExtremePhysique.NONE) {
-            if (aperture.isExtreme()) {
-                aperture = aperture.withBaseEssence(Talent.randomPercent(Talent.randomNormalTalent()));
-            }
-            aperture = aperture.withExtremePhysique(ExtremePhysique.NONE);
-        } else {
-            aperture = aperture.withBaseEssence(Aperture.MAX_BASE).withExtremePhysique(physique);
-        }
-
-        set(player, PRIMARY, aperture);
+    public static boolean setBaseEssence(@NotNull ServerPlayer p, int index, int v) {
+        int next = Math.clamp(v, Aperture.MIN_BASE, Aperture.MAX_BASE);
+        if (index == PRIMARY && next == Aperture.MAX_BASE && !BodyService.isExtreme(p)) return false;
+        return set(p, index, aperture(p, index).withBaseEssence(next));
     }
 
     public static void awaken(@NotNull ServerPlayer player) {open(player, Aperture.opened());}
@@ -259,15 +244,14 @@ public final class ApertureService {
     }
 
     /**
-     * The only opener of a second aperture: Grade-A at 8/10, this rank's first stage, a full pool, and
-     * never a physique. A higher-rank Second Aperture Gu overwrites what is already there; the zombie
-     * stamp is decided here so a second aperture opened while undead reads a living one.
+     * The only opener of a second aperture: Grade-A at 8/10, this rank's first stage and a full pool.
+     * A higher-rank Second Aperture Gu overwrites what is already there.
      */
     public static void openSecondary(@NotNull ServerPlayer player, @NotNull Rank rank) {
         ApertureData data = get(player);
         if (data.count() < 1 || data.isFull()) return;
 
-        Aperture opened = Aperture.secondaryOpened(rank, BodyService.isZombie(player));
+        Aperture opened = Aperture.secondaryOpened(rank);
         if (data.count() == 1) {
             store(player, data.opened(opened));
             return;
@@ -277,15 +261,16 @@ public final class ApertureService {
 
     private static void open(ServerPlayer player, Aperture aperture) {
         if (get(player).isFull()) return;
-        ExtremePhysique before = aperture(player).extremePhysique();
-        store(player, get(player).opened(enforce(aperture)));
-        reconcileTalentPaths(player, before, aperture(player).extremePhysique());
+        store(player, get(player).opened(aperture));
+        if (aperture.talent() == Talent.EXTREME) {
+            BodyService.setExtremePhysique(player, ExtremePhysique.randomTenExtreme());
+        }
     }
 
-    public static void set(@NotNull ServerPlayer player, int index, @NotNull Aperture aperture) {
-        ExtremePhysique before = index == PRIMARY ? aperture(player).extremePhysique() : null;
-        store(player, get(player).with(index, enforce(aperture)));
-        if (index == PRIMARY) reconcileTalentPaths(player, before, aperture(player).extremePhysique());
+    public static boolean set(@NotNull ServerPlayer player, int index, @NotNull Aperture aperture) {
+        if (index == PRIMARY && aperture.baseEssence() == Aperture.MAX_BASE && !BodyService.isExtreme(player)) return false;
+        store(player, get(player).with(index, enforce(player, index, aperture)));
+        return true;
     }
 
     private static void store(ServerPlayer p, ApertureData data) {
@@ -294,21 +279,19 @@ public final class ApertureService {
         EpicFightIntegration.refresh(p);
     }
 
-    private static Aperture enforce(Aperture aperture) {
-        boolean extreme = aperture.isExtreme();
-        boolean hasPhysique = aperture.extremePhysique() != ExtremePhysique.NONE;
-
-        if (extreme && !hasPhysique) {
-            return aperture.withExtremePhysique(ExtremePhysique.randomTenExtreme());
+    private static Aperture enforce(@NotNull Player player, int index, @NotNull Aperture aperture) {
+        if (index != PRIMARY) return aperture.baseEssence() == Aperture.MAX_BASE
+                ? aperture.withBaseEssence(Aperture.MAX_BASE - 1).withPressure(0) : aperture;
+        if (BodyService.isExtreme(player)) {
+            return aperture.baseEssence() == Aperture.MAX_BASE ? aperture : aperture.withBaseEssence(Aperture.MAX_BASE);
         }
-        if (!extreme && hasPhysique) {
-            return aperture.withExtremePhysique(ExtremePhysique.NONE);
-        }
-        return aperture;
+        return aperture.baseEssence() == Aperture.MAX_BASE
+                ? aperture.withBaseEssence(Aperture.MAX_BASE - 1).withPressure(0) : aperture;
     }
 
     //    TODO(refactor): extract a coordinator once cross-domain grant rules reach 3; TWO exist today.
-    private static void reconcileTalentPaths(ServerPlayer player, ExtremePhysique before, ExtremePhysique after) {
+    public static void reconcileTalentPaths(@NotNull ServerPlayer player, @NotNull ExtremePhysique before,
+                                            @NotNull ExtremePhysique after) {
         if (before == after) return;
         grantTalentPaths(player, before, -1);
         grantTalentPaths(player, after, 1);

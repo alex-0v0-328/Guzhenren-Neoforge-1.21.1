@@ -4,12 +4,12 @@ import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.EssenceColor;
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
-import com.unknown.guzhenren.custom.enums.body.LifeForm;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.body.Physique;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
@@ -63,12 +63,14 @@ public class EnUsLanguageProvider extends LanguageProvider {
     private void addDisplayKeys() {
         add("guzhenren.display.realm", "%s %s");
         add("guzhenren.display.realm_title", "%s %s");
+        add("guzhenren.display.aptitude_line", "%s [%s]");
         add("guzhenren.display.gu_line", "%s %s %s");
         add("guzhenren.display.gu", "Gu");
         add("guzhenren.display.gu_material", "Gu Material");
         add("guzhenren.display.aperture_1", "First Aperture");
         add("guzhenren.display.aperture_2", "Second Aperture");
         add("guzhenren.display.physique", "[%s]");
+        add("guzhenren.display.physique_line", "Physique: %s");
         add("guzhenren.display.lifespan", "%s [age %s]");
         add("guzhenren.display.base_fraction", "%s %s");
         add("guzhenren.display.base_round", "%s");
@@ -161,6 +163,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.failed.awakened", "%s has already awakened");
         add("guzhenren.command.failed.unawakened", "%s has not awakened");
         add("guzhenren.command.failed.aperture_index", "%s has no aperture there");
+        add("guzhenren.command.failed.extreme_physique_required", "%s must use a concrete Extreme physique");
 
         add("guzhenren.command.info.realm", "Realm: %s");
         add("guzhenren.command.info.aperture_status", "Aperture Status: %s");
@@ -172,7 +175,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.secondary_path", "Secondary:   %s");
         add("guzhenren.command.info.soul", "Soul:        %s / %s");
         add("guzhenren.command.info.lifespan", "Lifespan:    %s");
-        add("guzhenren.command.info.life_form", "Life form:   %s");
+        add("guzhenren.command.info.physique", "%s");
         add("guzhenren.command.info.race", "Race:        %s");
         add("guzhenren.command.info.wisdom_path_achieve", "Wisdom Path Achieve:");
         add("guzhenren.command.info.wisdom_path_achieve_entry", "  %s  %s");
@@ -258,7 +261,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.talent", "Aptitude");
         add("guzhenren.screen.label.essence", "Essence");
         add("guzhenren.screen.label.distilled", "Distilled");
-        add("guzhenren.screen.label.life_form", "Life Form");
+        add("guzhenren.screen.label.physique", "Physique");
         add("guzhenren.screen.label.race", "Race");
         add("guzhenren.screen.label.wisdom_path_achieve", "Wisdom Path Achieve");
         add("guzhenren.screen.label.soul", "Soul");
@@ -474,7 +477,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addTalent();
         addEssenceColor();
         addTenExtreme();
-        addLifeForm();
+        addPhysique();
         addRace();
         addSoulTier();
         addMarkTag();
@@ -540,7 +543,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
     private void addApertureStatus() {
         add(ApertureStatus.NORMAL, "Normal");
         add(ApertureStatus.DEAD, "Dead");
-        add(ApertureStatus.STONE, "Stone");
     }
 
     private void addTalent() {
@@ -552,11 +554,10 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add(Talent.NONE, "Unawakened");
     }
 
-    private void addLifeForm() {
-        add(LifeForm.ALIVE, "Alive");
-        add(LifeForm.DEAD, "Dead");
-        add(LifeForm.ZOMBIE, "Zombie");
-        add(LifeForm.HALF_ZOMBIE, "Half-Zombie");
+    private void addPhysique() {
+        add(Physique.ZOMBIE, "Zombie");
+        add(Physique.HALF_ZOMBIE, "Half-Zombie");
+        add(Physique.EXTREME, "Extreme");
     }
 
     private void addRace() {

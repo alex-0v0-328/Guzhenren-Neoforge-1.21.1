@@ -4,15 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
-import com.unknown.guzhenren.custom.enums.body.LifeForm;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.body.Physique;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.serialization.ModStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import java.util.Set;
 import net.minecraft.network.codec.ByteBufCodecs;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,15 +23,14 @@ class DataStreamCodecTest {
     @Test
     @DisplayName("Aperture stream codec preserves nullable paths and all sentinels")
     void apertureRoundTrip() {
-        Aperture expected = new Aperture(Rank.THREE, Stage.UPPER, 83, ExtremePhysique.GREAT_STRENGTH_TRUE_MARTIAL,
-                12_345L, GuPath.TIME, null, 678L, 73, 987_654L, 42, true, true, true);
+        Aperture expected = new Aperture(Rank.THREE, Stage.UPPER, 83, 12_345L, GuPath.TIME, null, 678L, 73,
+                987_654L, 42, true, true);
         ByteBuf buffer = Unpooled.buffer();
         try {
             Aperture.STREAM_CODEC.encode(buffer, expected);
             assertEquals(expected.rank(), ModStreamCodecs.ofEnum(Rank.class).decode(buffer));
             assertEquals(expected.stage(), ModStreamCodecs.ofEnum(Stage.class).decode(buffer));
             assertEquals(expected.baseEssence(), ByteBufCodecs.VAR_INT.decode(buffer));
-            assertEquals(expected.extremePhysique(), ModStreamCodecs.ofEnum(ExtremePhysique.class).decode(buffer));
             assertEquals(expected.currentEssence(), ByteBufCodecs.VAR_LONG.decode(buffer));
             assertEquals(expected.primaryPath(), ModStreamCodecs.ofNullableEnum(GuPath.class).decode(buffer));
             assertEquals(expected.secondaryPath(), ModStreamCodecs.ofNullableEnum(GuPath.class).decode(buffer));
@@ -40,13 +40,11 @@ class DataStreamCodecTest {
             assertEquals(expected.nourishProgress(), ByteBufCodecs.VAR_INT.decode(buffer));
             assertEquals(expected.petrified(), ByteBufCodecs.BOOL.decode(buffer));
             assertEquals(expected.distilling(), ByteBufCodecs.BOOL.decode(buffer));
-            assertEquals(expected.zombieOpened(), ByteBufCodecs.BOOL.decode(buffer));
             assertEquals(0, buffer.readableBytes());
 
             ModStreamCodecs.ofEnum(Rank.class).encode(buffer, expected.rank());
             ModStreamCodecs.ofEnum(Stage.class).encode(buffer, expected.stage());
             ByteBufCodecs.VAR_INT.encode(buffer, expected.baseEssence());
-            ModStreamCodecs.ofEnum(ExtremePhysique.class).encode(buffer, expected.extremePhysique());
             ByteBufCodecs.VAR_LONG.encode(buffer, expected.currentEssence());
             ModStreamCodecs.ofNullableEnum(GuPath.class).encode(buffer, expected.primaryPath());
             ModStreamCodecs.ofNullableEnum(GuPath.class).encode(buffer, expected.secondaryPath());
@@ -56,7 +54,6 @@ class DataStreamCodecTest {
             ByteBufCodecs.VAR_INT.encode(buffer, expected.nourishProgress());
             ByteBufCodecs.BOOL.encode(buffer, expected.petrified());
             ByteBufCodecs.BOOL.encode(buffer, expected.distilling());
-            ByteBufCodecs.BOOL.encode(buffer, expected.zombieOpened());
             assertEquals(expected, Aperture.STREAM_CODEC.decode(buffer));
             assertEquals(0, buffer.readableBytes());
         } finally {
@@ -67,11 +64,14 @@ class DataStreamCodecTest {
     @Test
     @DisplayName("BodyData stream codec preserves anchors and zombie tier")
     void bodyRoundTrip() {
-        BodyData expected = new BodyData(LifeForm.HALF_ZOMBIE, Race.DRAGONMEN, 123L, 456L, 789L, 321L, 654L, 4, 987L);
+        BodyData expected = new BodyData(Set.of(Physique.HALF_ZOMBIE, Physique.EXTREME),
+                ExtremePhysique.GREAT_STRENGTH_TRUE_MARTIAL, Race.DRAGONMEN, 123L, 456L, 789L, 321L, 654L, 4,
+                987L);
         ByteBuf buffer = Unpooled.buffer();
         try {
             BodyData.STREAM_CODEC.encode(buffer, expected);
-            assertEquals(expected.lifeForm(), ModStreamCodecs.ofEnum(LifeForm.class).decode(buffer));
+            assertEquals(expected.physiques(), ModStreamCodecs.enumSet(Physique.class).decode(buffer));
+            assertEquals(expected.extremePhysique(), ModStreamCodecs.ofEnum(ExtremePhysique.class).decode(buffer));
             assertEquals(expected.race(), ModStreamCodecs.ofEnum(Race.class).decode(buffer));
             assertEquals(expected.ageParts(), ByteBufCodecs.VAR_LONG.decode(buffer));
             assertEquals(expected.lifespanParts(), ByteBufCodecs.VAR_LONG.decode(buffer));
@@ -82,7 +82,8 @@ class DataStreamCodecTest {
             assertEquals(expected.lastBilledTick(), ByteBufCodecs.VAR_LONG.decode(buffer));
             assertEquals(0, buffer.readableBytes());
 
-            ModStreamCodecs.ofEnum(LifeForm.class).encode(buffer, expected.lifeForm());
+            ModStreamCodecs.enumSet(Physique.class).encode(buffer, expected.physiques());
+            ModStreamCodecs.ofEnum(ExtremePhysique.class).encode(buffer, expected.extremePhysique());
             ModStreamCodecs.ofEnum(Race.class).encode(buffer, expected.race());
             ByteBufCodecs.VAR_LONG.encode(buffer, expected.ageParts());
             ByteBufCodecs.VAR_LONG.encode(buffer, expected.lifespanParts());

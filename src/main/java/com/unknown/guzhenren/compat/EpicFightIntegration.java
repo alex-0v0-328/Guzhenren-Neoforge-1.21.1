@@ -4,7 +4,7 @@ import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.BodyAttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
 import com.unknown.guzhenren.entity.HopeGuEntity;
 import com.unknown.guzhenren.registry.effect.ModEffects;
 import java.util.Objects;
@@ -99,16 +99,16 @@ public final class EpicFightIntegration {
     }
 
     private static int staminaMaxPercent(ServerPlayer player) {
-        var aperture = ApertureService.aperture(player);
-        return aperture.extremePhysique() == ExtremePhysique.NONE
-                ? aperture.talent().getStaminaMaxPercent()
-                : aperture.extremePhysique().getStaminaMaxPercent();
+        ExtremePhysique physique = BodyService.extremePhysique(player);
+        return physique == ExtremePhysique.NONE
+                ? ApertureService.talent(player).getStaminaMaxPercent()
+                : physique.getStaminaMaxPercent();
     }
 
     private static void onSkillConsume(SkillConsumeEvent event) {
         if (event.getResourceType() != Skill.Resource.STAMINA) return;
         if (event.getEntityPatch().getOriginal() instanceof Player player
-                && !BodyService.lifeForm(player).spendsStamina()) {
+                && BodyService.isUndead(player)) {
             event.setAmount(0.0F);
         }
     }

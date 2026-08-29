@@ -4,12 +4,16 @@ import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
 import com.unknown.guzhenren.attachment.data.path.PathEntry;
 import com.unknown.guzhenren.attachment.data.path.PathStrengthData;
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
+import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.body.Physique;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -51,11 +55,42 @@ public final class ModDisplayText {
     }
 
     public static MutableComponent talent(Aperture aperture) {
-        MutableComponent line = Component.translatable(aperture.talent().getTranslationKey());
-        if (aperture.extremePhysique() == ExtremePhysique.NONE) return line;
+        return Component.translatable(aperture.talent().getTranslationKey());
+    }
 
-        return line.append(" ").append(Component.translatable("guzhenren.display.physique",
-                Component.translatable(aperture.extremePhysique().getTranslationKey())));
+    public static MutableComponent hudHeader(Aperture aperture, BodyData body) {
+        return realmTitle(aperture).append(GAP).append(hudAptitude(aperture, body));
+    }
+
+    public static MutableComponent hudAptitude(Aperture aperture, BodyData body) {
+        if (aperture.talent() == Talent.NONE) return talent(aperture);
+
+        Component detail = aperture.talent() == Talent.EXTREME && body.isExtreme()
+                ? Component.translatable(body.extremePhysique().getTranslationKey())
+                : baseFraction(aperture.baseEssence());
+        return Component.translatable("guzhenren.display.aptitude_line", talent(aperture), detail);
+    }
+
+    public static List<MutableComponent> physiques(BodyData body) {
+        if (body.physiques().isEmpty()) return List.of(physique(null, ExtremePhysique.NONE));
+
+        List<MutableComponent> lines = new ArrayList<>();
+        body.physiques().forEach(value -> lines.add(physique(value, body.extremePhysique())));
+        return lines;
+    }
+
+    public static MutableComponent physique(@Nullable Physique physique, ExtremePhysique extremePhysique) {
+        if (physique == null) {
+            return Component.translatable("guzhenren.display.physique_line",
+                    Component.translatable("guzhenren.display.none"));
+        }
+
+        MutableComponent value = Component.translatable(physique.getTranslationKey());
+        if (physique == Physique.EXTREME) {
+            value.append(" ").append(Component.translatable("guzhenren.display.physique",
+                    Component.translatable(extremePhysique.getTranslationKey())));
+        }
+        return Component.translatable("guzhenren.display.physique_line", value);
     }
 
     public static MutableComponent guLine(Rank rank, GuPath path, String kindKey) {
@@ -114,8 +149,6 @@ public final class ModDisplayText {
     }
 
     private static String years(double v) {return String.format(Locale.ROOT, "%.2f", v);}
-
-    public static MutableComponent realmAndTalent(Aperture a) {return realmTitle(a).append(GAP).append(talent(a));}
 
     public static String pool(long current, long max) {return current + "/" + max;}
 

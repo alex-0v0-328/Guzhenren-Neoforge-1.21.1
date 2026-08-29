@@ -492,7 +492,8 @@ public final class PlayerInfoScreen extends Screen {
                     detail(pickHint()).copy().append(detail(ModDisplayText.path(e.path()))),
                     new Click(true, e.aperture()));
 
-            case InfoModel.Form e -> new Row(indent, label("life_form"), name(e.form().getTranslationKey()));
+            case InfoModel.PhysiqueRow e -> new Row(indent, label("physique"),
+                    ModDisplayText.physique(e.physique(), e.extremePhysique()));
             case InfoModel.RaceRow e -> new Row(indent, label("race"), name(e.race().getTranslationKey()));
             case InfoModel.Soul e -> new Row(indent, label("soul"),
                     Component.literal(ModDisplayText.pool(e.soul().currentSoul(), e.soul().maxSoul()))

@@ -4,13 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
@@ -21,25 +19,26 @@ import org.junit.jupiter.api.Test;
 
 class SecondApertureTest {
 
+    @Test
+    void apertureStatusHasOnlyNormalAndDead() {
+        assertEquals(2, ApertureStatus.values().length);
+        assertFalse(java.util.Arrays.stream(ApertureStatus.values()).anyMatch(value -> value.name().equals("STONE")));
+    }
+
     private static Aperture pool(long current, long distilled) {
-        return new Aperture(Rank.THREE, Stage.INIT, 80, ExtremePhysique.NONE, current, null, null, distilled,
-                0, 0L, 0, false, false, false);
+        return new Aperture(Rank.THREE, Stage.INIT, 80, current, null, null, distilled, 0, 0L, 0, false, false);
     }
 
     @Test
     @DisplayName("the second aperture lands Grade-A at 8/10, first stage, full pool, no physique")
     void secondaryOpenedShape() {
-        Aperture opened = Aperture.secondaryOpened(Rank.THREE, true);
+        Aperture opened = Aperture.secondaryOpened(Rank.THREE);
         assertEquals(Rank.THREE, opened.rank());
         assertEquals(Stage.INIT, opened.stage());
         assertEquals(Aperture.SECONDARY_BASE, opened.baseEssence());
         assertSame(Talent.FIRST, opened.talent());
         assertEquals(opened.maxEssence(), opened.currentEssence());
         assertEquals(0L, opened.distilledEssence());
-        assertEquals(ExtremePhysique.NONE, opened.extremePhysique());
-        assertFalse(opened.isExtreme());
-        assertTrue(opened.zombieOpened());
-        assertFalse(Aperture.secondaryOpened(Rank.FIVE, false).zombieOpened());
     }
 
     @Test
@@ -74,16 +73,12 @@ class SecondApertureTest {
     }
 
     @Test
-    @DisplayName("石窍蛊 target: PRIMARY wins while NORMAL; only DEAD or STONE passes it on")
+    @DisplayName("石窍蛊 target: PRIMARY wins while NORMAL; only DEAD passes it on")
     void stoneTargetTable() {
         assertSame(ApertureData.PRIMARY, StoneApertureGuItem.stoneTarget(
                 ApertureStatus.NORMAL, ApertureStatus.NORMAL));
         assertSame(ApertureData.SECONDARY, StoneApertureGuItem.stoneTarget(
                 ApertureStatus.DEAD, ApertureStatus.NORMAL));
-        assertSame(ApertureData.SECONDARY, StoneApertureGuItem.stoneTarget(
-                ApertureStatus.STONE, ApertureStatus.NORMAL));
-        assertSame(StoneApertureGuItem.NO_TARGET, StoneApertureGuItem.stoneTarget(
-                ApertureStatus.DEAD, ApertureStatus.STONE));
         assertSame(StoneApertureGuItem.NO_TARGET, StoneApertureGuItem.stoneTarget(
                 ApertureStatus.DEAD, ApertureStatus.DEAD));
     }

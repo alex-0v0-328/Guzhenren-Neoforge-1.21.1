@@ -136,6 +136,25 @@ public final class ModCommandSupport {
         return updated;
     }
 
+    public static int applyIfResult(CommandContext<CommandSourceStack> context, Predicate<ServerPlayer> allowed,
+                                    String refusedKey, ResultOperation operation) throws CommandSyntaxException {
+        CommandSourceStack source = context.getSource();
+        List<ServerPlayer> refused = new ArrayList<>();
+        int updated = 0;
+
+        for (ServerPlayer player : targets(context)) {
+            if (!allowed.test(player) || !operation.apply(player)) {
+                refused.add(player);
+                continue;
+            }
+            updated++;
+        }
+
+        if (!refused.isEmpty()) ModCommandFeedback.failure(source, Component.translatable(refusedKey, names(refused)));
+        if (updated > 0) ModCommandFeedback.success(source, Component.translatable("guzhenren.command.updated", updated));
+        return updated;
+    }
+
     public static Collection<ServerPlayer> targets(CommandContext<CommandSourceStack> context)
             throws CommandSyntaxException {
         boolean explicit = context.getNodes().stream()
@@ -155,6 +174,11 @@ public final class ModCommandSupport {
     @FunctionalInterface
     public interface PlayerOperation {
         void apply(ServerPlayer player) throws CommandSyntaxException;
+    }
+
+    @FunctionalInterface
+    public interface ResultOperation {
+        boolean apply(ServerPlayer player);
     }
 
     @FunctionalInterface

@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.attachment;
 
+import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureNourishData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
@@ -18,7 +19,7 @@ import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.attachment.service.path.PathQiService;
 import com.unknown.guzhenren.attachment.service.soul.SoulService;
 import com.unknown.guzhenren.compat.EpicFightIntegration;
-import com.unknown.guzhenren.custom.enums.body.LifeForm;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.custom.enums.wisdom.WisdomType;
 import com.unknown.guzhenren.registry.attachment.ModAttachments;
@@ -63,10 +64,26 @@ public final class PlayerDataService {
 
     public static void onJoin(@NotNull ServerPlayer player) {
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
+        migratePhysique(player);
         ApertureService.syncTalentMarks(player);
         BodyHealthService.refresh(player);
         BodyAttackService.refresh(player);
         EpicFightIntegration.refresh(player);
+    }
+
+    private static void migratePhysique(@NotNull ServerPlayer player) {
+        Aperture aperture = ApertureService.aperture(player);
+        ExtremePhysique legacy = aperture.legacyExtremePhysique();
+        if (!BodyService.isExtreme(player) && legacy != null && legacy != ExtremePhysique.NONE) {
+            BodyService.setExtremePhysique(player, legacy);
+        } else if (!BodyService.isExtreme(player) && aperture.baseEssence() == Aperture.MAX_BASE) {
+            ApertureService.set(player, ApertureData.PRIMARY, aperture.withBaseEssence(Aperture.MAX_BASE - 1)
+                    .withPressure(0));
+        }
+        aperture = ApertureService.aperture(player);
+        if (aperture.legacyExtremePhysique() != null) {
+            ApertureService.set(player, ApertureData.PRIMARY, aperture.clearLegacyExtremePhysique());
+        }
     }
 
     public static void onBirth(@NotNull Player player) {
@@ -78,10 +95,6 @@ public final class PlayerDataService {
         SoulService.refill(player);
         ApertureEssenceService.refill(player);
         MindService.onSleepComplete(player);
-    }
-
-    public static void onDeath(@NotNull ServerPlayer player) {
-        BodyService.setLifeForm(player, LifeForm.DEAD);
     }
 
     public static void onClone(@NotNull Player from, @NotNull Player to, boolean wasDeath, boolean keepInventory) {

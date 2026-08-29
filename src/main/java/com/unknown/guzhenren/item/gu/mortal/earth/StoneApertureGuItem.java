@@ -46,7 +46,7 @@ public class StoneApertureGuItem extends ConsumedGuItem {
 
     /**
      * The pure seam the unit tests pin: PRIMARY wins while it is NORMAL, the second aperture answers
-     * only when the primary is DEAD or STONE, and nobody usable answers {@code NO_TARGET}.
+     * only when the primary is DEAD, and nobody usable answers {@code NO_TARGET}.
      */
     public static int stoneTarget(@NotNull ApertureStatus primary, @NotNull ApertureStatus secondary) {
         if (primary == ApertureStatus.NORMAL) return ApertureData.PRIMARY;

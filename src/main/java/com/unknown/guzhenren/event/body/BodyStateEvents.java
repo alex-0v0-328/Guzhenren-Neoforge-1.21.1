@@ -37,7 +37,7 @@ public final class BodyStateEvents {
     @SubscribeEvent
     public static void onBreathe(LivingBreatheEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
-        if (BodyService.lifeForm(player).breathes()) return;
+        if (!BodyService.isUndead(player)) return;
 
         event.setCanBreathe(true);
     }

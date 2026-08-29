@@ -82,7 +82,7 @@ public final class CmdInfo {
             case InfoModel.PathChoice e -> key(e.primary() ? "primary_path" : "secondary_path",
                     ModDisplayText.path(e.path()));
 
-            case InfoModel.Form e -> key("life_form", enumName(e.form().getTranslationKey()));
+            case InfoModel.PhysiqueRow e -> key("physique", ModDisplayText.physique(e.physique(), e.extremePhysique()));
             case InfoModel.RaceRow e -> key("race", enumName(e.race().getTranslationKey()));
             case InfoModel.Soul e -> key("soul", e.soul().currentSoul(), e.soul().maxSoul())
                     .append(muted(enumName(e.soul().tier().getTranslationKey())));

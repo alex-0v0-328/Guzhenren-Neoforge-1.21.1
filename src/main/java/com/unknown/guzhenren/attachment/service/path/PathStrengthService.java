@@ -1,8 +1,8 @@
 package com.unknown.guzhenren.attachment.service.path;
 
 import com.unknown.guzhenren.attachment.data.path.PathStrengthData;
-import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.BodyAttackService;
+import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.HumanStrength;
 import com.unknown.guzhenren.custom.enums.strength.StrengthPathBranch;
@@ -52,7 +52,7 @@ public final class PathStrengthService {
 
     //region what the body can actually bring to bear [承受上限]
     public static int capacity(@NotNull Player p) {
-        int base = ApertureService.aperture(p).extremePhysique().getStrengthCapacity();
+        int base = BodyService.extremePhysique(p).getStrengthCapacity();
         if (!p.hasEffect(ModEffects.HARDSHIP_STRENGTH_GU)) return base;
 
         double healthFraction = (double) p.getHealth() / p.getMaxHealth();

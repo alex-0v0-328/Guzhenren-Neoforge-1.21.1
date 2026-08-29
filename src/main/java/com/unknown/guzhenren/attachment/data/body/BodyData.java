@@ -1,41 +1,48 @@
 package com.unknown.guzhenren.attachment.data.body;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Decoder;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unknown.guzhenren.Ticks;
-import com.unknown.guzhenren.custom.enums.body.LifeForm;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.body.Physique;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.serialization.ModStreamCodecs;
 import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Body [肉身] state: what the player currently is, as opposed to what they can do.
+ * Body [肉身] state: cumulative physiques, race, age and lifespan.
  *
  * <p>Immutable record attachment keyed {@code body_data}; {@link
- * com.unknown.guzhenren.attachment.service.body.BodyService} is the only writer. Nine components:
- * {@code lifeForm}, {@code race}, age/lifespan in parts (not years), two day-clock anchors, the
- * death-qi debt tally, the half-zombie end tick, the zombie tier, and the lifespan billing anchor.
+ * com.unknown.guzhenren.attachment.service.body.BodyService} is the only writer. The concrete
+ * Ten-Extreme physique belongs here; the aperture stores only its base-essence value.
  *
- * <p>⚠ {@code lifeForm} is the ONE life-state value -- it replaced two scattered ones, and nothing may
- * go back to inferring alive-or-dead by reading several fields. ⚠ This record has NINE components, so
- * its {@code STREAM_CODEC} is handwritten -- {@code StreamCodec.composite} stops at six, and the
- * encode/decode order matches by hand with no compile-time check. ⚠ The time anchors default to
- * {@code UNTRACKED} (-1), never {@code 0}: zero is a real game time, so a fresh world would read as
- * "already started". ⚠ {@code lived()} moves age and lifespan together in one call -- they are never
- * written apart, one is what he has spent and the other what is left.
+ * <p>⚠ Zombie and half-zombie are mutually exclusive, while Extreme may coexist with either one.
+ * ⚠ This record has ten components, so its {@code STREAM_CODEC} is handwritten and its order is
+ * mirrored exactly by the encoder and decoder. ⚠ The time anchors default to {@code UNTRACKED} (-1),
+ * never {@code 0}: zero is a real game time. ⚠ Every caller speaks YEARS; only this file knows parts.
  *
  * @author Alex
  * @version 1.0.0
  * @see com.unknown.guzhenren.attachment.service.body.BodyService
- * @see com.unknown.guzhenren.custom.enums.body.LifeForm
  * @since 1.0.0
  */
 
 public record BodyData(
-        LifeForm lifeForm,
+        Set<Physique> physiques,
+        ExtremePhysique extremePhysique,
         Race race,
         long ageParts,
         long lifespanParts,
@@ -49,10 +56,6 @@ public record BodyData(
     public static final long UNTRACKED = -1L;
     public static final int NO_ZOMBIE_TIER = -1;
 
-    /**
-     * ⚠ A year is a game day. The unit is finer than a tick so that a Time Path form which one day SLOWS
-     * a life, rather than hastening one, still divides a heartbeat's share evenly.
-     */
     public static final long PARTS_PER_TICK = 6L;
     public static final long PARTS_PER_YEAR = Ticks.DAY * PARTS_PER_TICK;
 
@@ -62,13 +65,18 @@ public record BodyData(
 
     public static final long RELAPSE_WINDOW_TICKS = 5L * Ticks.MINUTE;
 
-    public static final BodyData DEFAULT = new BodyData(LifeForm.ALIVE, Race.HUMAN,
+    public static final BodyData DEFAULT = new BodyData(Set.of(), ExtremePhysique.NONE, Race.HUMAN,
             parts(DEFAULT_AGE), parts(DEFAULT_LIFESPAN), UNTRACKED, 0L, UNTRACKED, NO_ZOMBIE_TIER, UNTRACKED);
 
     public static long parts(long years) {return years * PARTS_PER_YEAR;}
 
-    public static final Codec<BodyData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            LifeForm.CODEC.optionalFieldOf("life_form", LifeForm.ALIVE).forGetter(BodyData::lifeForm),
+    private static final Codec<Set<Physique>> PHYSIQUES_CODEC = Physique.CODEC.listOf()
+            .xmap(BodyData::normalizePhysiques, values -> new ArrayList<>(values));
+
+    private static final Codec<BodyData> CURRENT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            PHYSIQUES_CODEC.optionalFieldOf("physiques", Set.of()).forGetter(BodyData::physiques),
+            ExtremePhysique.CODEC.optionalFieldOf("extreme_physique", ExtremePhysique.NONE)
+                    .forGetter(BodyData::extremePhysique),
             Race.CODEC.optionalFieldOf("race", Race.HUMAN).forGetter(BodyData::race),
             Codec.LONG.optionalFieldOf("age_parts", parts(DEFAULT_AGE)).forGetter(BodyData::ageParts),
             Codec.LONG.optionalFieldOf("lifespan_parts", parts(DEFAULT_LIFESPAN)).forGetter(BodyData::lifespanParts),
@@ -79,14 +87,41 @@ public record BodyData(
             Codec.LONG.optionalFieldOf("last_billed_tick", UNTRACKED).forGetter(BodyData::lastBilledTick)
     ).apply(instance, BodyData::new));
 
-    private static final StreamCodec<ByteBuf, LifeForm> FORM = ModStreamCodecs.ofEnum(LifeForm.class);
+    private static final Codec<BodyData> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            LegacyLifeForm.CODEC.optionalFieldOf("life_form", LegacyLifeForm.ALIVE).forGetter(data ->
+                    data.hasPhysique(Physique.ZOMBIE) ? LegacyLifeForm.ZOMBIE
+                            : data.hasPhysique(Physique.HALF_ZOMBIE) ? LegacyLifeForm.HALF_ZOMBIE : LegacyLifeForm.ALIVE),
+            Race.CODEC.optionalFieldOf("race", Race.HUMAN).forGetter(BodyData::race),
+            Codec.LONG.optionalFieldOf("age_parts", parts(DEFAULT_AGE)).forGetter(BodyData::ageParts),
+            Codec.LONG.optionalFieldOf("lifespan_parts", parts(DEFAULT_LIFESPAN)).forGetter(BodyData::lifespanParts),
+            Codec.LONG.optionalFieldOf("last_day_index", UNTRACKED).forGetter(BodyData::lastDayIndex),
+            Codec.LONG.optionalFieldOf("death_qi_lifespan_lost", 0L).forGetter(BodyData::deathQiLifespanLost),
+            Codec.LONG.optionalFieldOf("half_zombie_end_tick", UNTRACKED).forGetter(BodyData::halfZombieEndTick),
+            Codec.INT.optionalFieldOf("zombie_tier", NO_ZOMBIE_TIER).forGetter(BodyData::zombieTier),
+            Codec.LONG.optionalFieldOf("last_billed_tick", UNTRACKED).forGetter(BodyData::lastBilledTick)
+    ).apply(instance, BodyData::fromLegacy));
+
+    private static final Decoder<BodyData> DECODER = new Decoder<>() {
+        @Override
+        public <T> DataResult<Pair<BodyData, T>> decode(DynamicOps<T> ops, T input) {
+            return ops.getMap(input).flatMap(map ->
+                    (map.get("life_form") != null ? LEGACY_CODEC : CURRENT_CODEC).decode(ops, input));
+        }
+    };
+
+    public static final Codec<BodyData> CODEC = Codec.of(CURRENT_CODEC, DECODER);
+
+    private static final StreamCodec<ByteBuf, Set<Physique>> PHYSIQUES = ModStreamCodecs.enumSet(Physique.class);
+    private static final StreamCodec<ByteBuf, ExtremePhysique> EXTREME =
+            ModStreamCodecs.ofEnum(ExtremePhysique.class);
     private static final StreamCodec<ByteBuf, Race> RACE = ModStreamCodecs.ofEnum(Race.class);
 
     public static final StreamCodec<ByteBuf, BodyData> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public @NotNull BodyData decode(@NotNull ByteBuf buf) {
             return new BodyData(
-                    FORM.decode(buf),
+                    PHYSIQUES.decode(buf),
+                    EXTREME.decode(buf),
                     RACE.decode(buf),
                     ByteBufCodecs.VAR_LONG.decode(buf),
                     ByteBufCodecs.VAR_LONG.decode(buf),
@@ -99,7 +134,8 @@ public record BodyData(
 
         @Override
         public void encode(@NotNull ByteBuf buf, @NotNull BodyData value) {
-            FORM.encode(buf, value.lifeForm());
+            PHYSIQUES.encode(buf, value.physiques());
+            EXTREME.encode(buf, value.extremePhysique());
             RACE.encode(buf, value.race());
             ByteBufCodecs.VAR_LONG.encode(buf, value.ageParts());
             ByteBufCodecs.VAR_LONG.encode(buf, value.lifespanParts());
@@ -112,14 +148,41 @@ public record BodyData(
     };
 
     public BodyData {
+        EnumSet<Physique> normalized = EnumSet.noneOf(Physique.class);
+        normalized.addAll(physiques);
+        if (normalized.contains(Physique.ZOMBIE)) normalized.remove(Physique.HALF_ZOMBIE);
+        if (extremePhysique == ExtremePhysique.NONE) normalized.remove(Physique.EXTREME);
+        else normalized.add(Physique.EXTREME);
+        physiques = Collections.unmodifiableSet(normalized);
         ageParts = Math.max(0L, ageParts);
         deathQiLifespanLost = Math.max(0L, deathQiLifespanLost);
-        if (!lifeForm.isAnyZombie()) zombieTier = NO_ZOMBIE_TIER;
+        if (!normalized.contains(Physique.ZOMBIE) && !normalized.contains(Physique.HALF_ZOMBIE)) {
+            zombieTier = NO_ZOMBIE_TIER;
+        }
+    }
+
+    private static Set<Physique> normalizePhysiques(List<Physique> values) {
+        return Set.copyOf(values);
+    }
+
+    private static BodyData fromLegacy(LegacyLifeForm form, Race race, long ageParts, long lifespanParts,
+                                       long lastDayIndex, long deathQiLifespanLost, long halfZombieEndTick,
+                                       int zombieTier, long lastBilledTick) {
+        Set<Physique> physiques = switch (form) {
+            case ZOMBIE -> Set.of(Physique.ZOMBIE);
+            case HALF_ZOMBIE -> Set.of(Physique.HALF_ZOMBIE);
+            case ALIVE, DEAD -> Set.of();
+        };
+        return new BodyData(physiques, ExtremePhysique.NONE, race, ageParts, lifespanParts, lastDayIndex,
+                deathQiLifespanLost, halfZombieEndTick, zombieTier, lastBilledTick);
     }
 
     public boolean isExhausted() {return lifespanParts <= 0L;}
-    public boolean isZombie() {return lifeForm.isZombie();}
-    public boolean isHalfZombie() {return lifeForm.isHalfZombie();}
+    public boolean hasPhysique(Physique physique) {return physiques.contains(physique);}
+    public boolean isZombie() {return hasPhysique(Physique.ZOMBIE);}
+    public boolean isHalfZombie() {return hasPhysique(Physique.HALF_ZOMBIE);}
+    public boolean isZombieOrHalfZombie() {return isZombie() || isHalfZombie();}
+    public boolean isExtreme() {return hasPhysique(Physique.EXTREME);}
 
     public double ageYears() {return ageParts / (double) PARTS_PER_YEAR;}
     public double lifespanYears() {return lifespanParts / (double) PARTS_PER_YEAR;}
@@ -131,53 +194,71 @@ public record BodyData(
         return halfZombieEndTick != UNTRACKED && now < halfZombieEndTick + RELAPSE_WINDOW_TICKS;
     }
 
-    public BodyData withLifeForm(LifeForm v) {
-        return new BodyData(v, race, ageParts, lifespanParts, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, v.isAnyZombie() ? zombieTier : NO_ZOMBIE_TIER, lastBilledTick);
+    public BodyData withPhysiques(Set<Physique> v) {
+        return new BodyData(v, extremePhysique, race, ageParts, lifespanParts, lastDayIndex,
+                deathQiLifespanLost, halfZombieEndTick, zombieTier, lastBilledTick);
+    }
+
+    public BodyData withExtremePhysique(ExtremePhysique v) {
+        return new BodyData(physiques, v, race, ageParts, lifespanParts, lastDayIndex, deathQiLifespanLost,
+                halfZombieEndTick, zombieTier, lastBilledTick);
     }
 
     public BodyData revived() {
-        return new BodyData(LifeForm.ALIVE, race, ageParts, lifespanParts, lastDayIndex, deathQiLifespanLost,
-                UNTRACKED, NO_ZOMBIE_TIER, lastBilledTick);
+        EnumSet<Physique> next = EnumSet.noneOf(Physique.class);
+        next.addAll(physiques);
+        next.remove(Physique.ZOMBIE);
+        next.remove(Physique.HALF_ZOMBIE);
+        return new BodyData(next, extremePhysique, race, ageParts, lifespanParts, lastDayIndex,
+                deathQiLifespanLost, UNTRACKED, NO_ZOMBIE_TIER, lastBilledTick);
     }
     public BodyData withRace(Race v) {
-        return new BodyData(lifeForm, v, ageParts, lifespanParts, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier, lastBilledTick);
+        return new BodyData(physiques, extremePhysique, v, ageParts, lifespanParts, lastDayIndex,
+                deathQiLifespanLost, halfZombieEndTick, zombieTier, lastBilledTick);
     }
     public BodyData withAgeParts(long v) {
-        return new BodyData(lifeForm, race, v, lifespanParts, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier, lastBilledTick);
+        return new BodyData(physiques, extremePhysique, race, v, lifespanParts, lastDayIndex,
+                deathQiLifespanLost, halfZombieEndTick, zombieTier, lastBilledTick);
     }
     public BodyData withLifespanParts(long v) {
-        return new BodyData(lifeForm, race, ageParts, v, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier, lastBilledTick);
+        return new BodyData(physiques, extremePhysique, race, ageParts, v, lastDayIndex,
+                deathQiLifespanLost, halfZombieEndTick, zombieTier, lastBilledTick);
     }
     public BodyData withLastDayIndex(long v) {
-        return new BodyData(lifeForm, race, ageParts, lifespanParts, v, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier, lastBilledTick);
+        return new BodyData(physiques, extremePhysique, race, ageParts, lifespanParts, v,
+                deathQiLifespanLost, halfZombieEndTick, zombieTier, lastBilledTick);
     }
     public BodyData withDeathQiLifespanLost(long v) {
-        return new BodyData(lifeForm, race, ageParts, lifespanParts, lastDayIndex, v,
+        return new BodyData(physiques, extremePhysique, race, ageParts, lifespanParts, lastDayIndex, v,
                 halfZombieEndTick, zombieTier, lastBilledTick);
     }
     public BodyData withHalfZombieEndTick(long v) {
-        return new BodyData(lifeForm, race, ageParts, lifespanParts, lastDayIndex, deathQiLifespanLost,
-                v, zombieTier, lastBilledTick);
+        return new BodyData(physiques, extremePhysique, race, ageParts, lifespanParts, lastDayIndex,
+                deathQiLifespanLost, v, zombieTier, lastBilledTick);
     }
     public BodyData withZombieTier(int v) {
-        return new BodyData(lifeForm, race, ageParts, lifespanParts, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, v, lastBilledTick);
+        return new BodyData(physiques, extremePhysique, race, ageParts, lifespanParts, lastDayIndex,
+                deathQiLifespanLost, halfZombieEndTick, v, lastBilledTick);
     }
     public BodyData withLastBilledTick(long v) {
-        return new BodyData(lifeForm, race, ageParts, lifespanParts, lastDayIndex, deathQiLifespanLost,
-                halfZombieEndTick, zombieTier, v);
+        return new BodyData(physiques, extremePhysique, race, ageParts, lifespanParts, lastDayIndex,
+                deathQiLifespanLost, halfZombieEndTick, zombieTier, v);
     }
 
-    /**
-     * ⚠ The two move together and are never written apart: one is what he has spent, the other what is left.
-     */
     public BodyData lived(long parts, long billedTick) {
-        return new BodyData(lifeForm, race, ageParts + parts, lifespanParts - parts, lastDayIndex,
-                deathQiLifespanLost, halfZombieEndTick, zombieTier, billedTick);
+        return new BodyData(physiques, extremePhysique, race, ageParts + parts, lifespanParts - parts,
+                lastDayIndex, deathQiLifespanLost, halfZombieEndTick, zombieTier, billedTick);
+    }
+
+    private enum LegacyLifeForm implements StringRepresentable {
+        ALIVE,
+        DEAD,
+        ZOMBIE,
+        HALF_ZOMBIE;
+
+        private static final Codec<LegacyLifeForm> CODEC = StringRepresentable.fromEnum(LegacyLifeForm::values);
+
+        @Override
+        public @NotNull String getSerializedName() {return name().toLowerCase();}
     }
 }

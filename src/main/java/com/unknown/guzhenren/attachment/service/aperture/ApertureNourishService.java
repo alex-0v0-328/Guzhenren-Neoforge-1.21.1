@@ -3,6 +3,7 @@ package com.unknown.guzhenren.attachment.service.aperture;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureNourishData;
+import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
@@ -243,7 +244,7 @@ public final class ApertureNourishService {
         }
 
         int roll = player.getRandom().nextInt(100);
-        Outcome outcome = resolve(roll, a.isExtreme());
+        Outcome outcome = resolve(roll, BodyService.isExtreme(player));
 
         switch (outcome) {
             case SUCCESS -> {

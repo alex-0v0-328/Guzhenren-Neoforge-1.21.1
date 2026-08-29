@@ -8,10 +8,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The aperture status [空窍状态]: what an aperture [空窍] still can and cannot do, derived never stored.
  *
- * <p>Closed vocabulary enum. NORMAL covers every living holder -- alive and half-zombie [半生半僵]
- * alike (the half rate is a speed, not a status); DEAD [死窍] is the zombie's aperture -- no natural
- * regen, no nourishing, no striking; STONE [石窍] is what the Stone Aperture Gu [石窍蛊] leaves --
- * the same three refusals, permanently.
+ * <p>Closed vocabulary enum. NORMAL is a living aperture; DEAD [死窍] covers zombie [僵], half-zombie
+ * [半僵] and stone apertures [石窍] -- no natural regen, nourishing or striking.
  *
  * <p>⚠ The derivation lives on {@code ApertureService#status}, not here -- enums in this package are
  * vocabulary, and the check every gate wants is {@code status == NORMAL}.
@@ -23,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 public enum ApertureStatus implements StringRepresentable, EnumTranslatable {
 
-    NORMAL, DEAD, STONE;
+    NORMAL, DEAD;
 
     public static final Codec<ApertureStatus> CODEC = StringRepresentable.fromEnum(ApertureStatus::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.status.";

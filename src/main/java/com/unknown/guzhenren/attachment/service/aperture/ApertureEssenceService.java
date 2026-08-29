@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  * index order; the distilled half is rounded UP so the last point cannot pay for itself twice. ⚠ The
  * distilling truth is the per-aperture {@code distilling} flag, never the effect -- each Liquor Worm
  * use enrolls the next aperture in index order, and {@code endDistilling} settles only the enrolled
- * ones. ⚠ Every path that SKIPS a regen step (death-qi choke, a DEAD [死窍] or STONE [石窍] aperture)
+ * ones. ⚠ Every path that SKIPS a regen step (death-qi choke or a DEAD [死窍] aperture)
  * must zero that aperture's carry; the {@code = 0.0F} writes are the mechanic, not tidying. ⚠
  * {@code isChoked} outranks everything -- it clears every carry and returns.
  *

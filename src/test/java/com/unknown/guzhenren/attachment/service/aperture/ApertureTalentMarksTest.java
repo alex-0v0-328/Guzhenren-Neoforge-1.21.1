@@ -3,7 +3,7 @@ package com.unknown.guzhenren.attachment.service.aperture;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.unknown.guzhenren.attachment.data.path.PathStrengthData;
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrength;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
 import org.junit.jupiter.api.Test;

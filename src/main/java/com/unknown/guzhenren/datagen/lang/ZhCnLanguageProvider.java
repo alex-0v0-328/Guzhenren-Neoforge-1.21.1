@@ -4,12 +4,12 @@ import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
 import com.unknown.guzhenren.custom.enums.aperture.EssenceColor;
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
-import com.unknown.guzhenren.custom.enums.body.LifeForm;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.body.Physique;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
@@ -65,12 +65,14 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     private void addDisplayKeys() {
         add("guzhenren.display.realm", "%s%s");
         add("guzhenren.display.realm_title", "%s%s");
+        add("guzhenren.display.aptitude_line", "%s [%s]");
         add("guzhenren.display.gu_line", "%s%s%s");
         add("guzhenren.display.gu", "蛊虫");
         add("guzhenren.display.aperture_1", "第一空窍");
         add("guzhenren.display.aperture_2", "第二空窍");
         add("guzhenren.display.gu_material", "蛊材");
         add("guzhenren.display.physique", "[%s]");
+        add("guzhenren.display.physique_line", "体质：%s");
         add("guzhenren.display.lifespan", "%s [%s岁]");
         add("guzhenren.display.base_fraction", "%s成%s");
         add("guzhenren.display.base_round", "%s成");
@@ -163,6 +165,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.failed.awakened", "%s 已开窍");
         add("guzhenren.command.failed.unawakened", "%s 尚未开窍");
         add("guzhenren.command.failed.aperture_index", "%s 没有该空窍");
+        add("guzhenren.command.failed.extreme_physique_required", "%s 必须使用具体的十绝体质");
 
         add("guzhenren.command.info.realm", "玩家修为  %s");
         add("guzhenren.command.info.aperture_status", "空窍状态  %s");
@@ -174,7 +177,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.command.info.secondary_path", "辅修流派  %s");
         add("guzhenren.command.info.soul", "玩家魂魄  %s / %s");
         add("guzhenren.command.info.lifespan", "玩家寿元  %s");
-        add("guzhenren.command.info.life_form", "生命形态  %s");
+        add("guzhenren.command.info.physique", "%s");
         add("guzhenren.command.info.race", "种族      %s");
         add("guzhenren.command.info.wisdom_path_achieve", "智道造诣");
         add("guzhenren.command.info.wisdom_path_achieve_entry", "  %s  %s");
@@ -261,7 +264,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.talent", "天赋");
         add("guzhenren.screen.label.essence", "真元");
         add("guzhenren.screen.label.distilled", "精炼真元");
-        add("guzhenren.screen.label.life_form", "生命形态");
+        add("guzhenren.screen.label.physique", "体质");
         add("guzhenren.screen.label.race", "种族");
         add("guzhenren.screen.label.wisdom_path_achieve", "智道造诣");
         add("guzhenren.screen.label.soul", "魂魄");
@@ -478,7 +481,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addTalent();
         addEssenceColor();
         addTenExtreme();
-        addLifeForm();
+        addPhysique();
         addRace();
         addSoulTier();
         addMarkTag();
@@ -544,7 +547,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     private void addApertureStatus() {
         add(ApertureStatus.NORMAL, "正常");
         add(ApertureStatus.DEAD, "死窍");
-        add(ApertureStatus.STONE, "石窍");
     }
 
     private void addTalent() {
@@ -556,11 +558,10 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(Talent.NONE, "未觉醒");
     }
 
-    private void addLifeForm() {
-        add(LifeForm.ALIVE, "生");
-        add(LifeForm.DEAD, "死");
-        add(LifeForm.ZOMBIE, "僵");
-        add(LifeForm.HALF_ZOMBIE, "半生半僵");
+    private void addPhysique() {
+        add(Physique.ZOMBIE, "僵");
+        add(Physique.HALF_ZOMBIE, "半僵");
+        add(Physique.EXTREME, "十绝体");
     }
 
     private void addRace() {

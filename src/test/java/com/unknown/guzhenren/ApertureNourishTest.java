@@ -9,9 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureNourishData;
-import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService.Outcome;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService;
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService.Outcome;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import org.junit.jupiter.api.DisplayName;
@@ -97,15 +96,15 @@ class ApertureNourishTest {
     @Test
     @DisplayName("石窍蛊 lock: petrified and the progress live on the aperture, clamped by its ctor")
     void petrifiedInvariants() {
-        Aperture fresh = Aperture.secondaryOpened(Rank.THREE, false);
+        Aperture fresh = Aperture.secondaryOpened(Rank.THREE);
         assertFalse(fresh.petrified());
         assertEquals(0, fresh.nourishProgress());
-        assertEquals(0, new Aperture(Rank.ONE, Stage.INIT, 80, ExtremePhysique.NONE, 0L, null, null, 0L, 0, 0L,
-                -5, false, false, false).nourishProgress());
-        assertEquals(ApertureNourishData.FULL, new Aperture(Rank.ONE, Stage.INIT, 80, ExtremePhysique.NONE, 0L, null, null,
-                0L, 0, 0L, 500, true, false, false).nourishProgress());
-        assertTrue(new Aperture(Rank.ONE, Stage.INIT, 80, ExtremePhysique.NONE, 0L, null, null,
-                0L, 0, 0L, 0, true, false, false).petrified());
+        assertEquals(0, new Aperture(Rank.ONE, Stage.INIT, 80, 0L, null, null, 0L, 0, 0L,
+                -5, false, false).nourishProgress());
+        assertEquals(ApertureNourishData.FULL, new Aperture(Rank.ONE, Stage.INIT, 80, 0L, null, null,
+                0L, 0, 0L, 500, true, false).nourishProgress());
+        assertTrue(new Aperture(Rank.ONE, Stage.INIT, 80, 0L, null, null,
+                0L, 0, 0L, 0, true, false).petrified());
     }
 
     @Test

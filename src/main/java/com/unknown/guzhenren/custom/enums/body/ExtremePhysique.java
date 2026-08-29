@@ -1,23 +1,23 @@
-package com.unknown.guzhenren.custom.enums.aperture;
+package com.unknown.guzhenren.custom.enums.body;
 
 import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The Ten-Extremes [十绝] physiques, and the tables that hang off each of them.
+ * The Ten-Extremes [十绝] physiques and the body tables that hang off each of them.
  *
- * <p>Closed vocabulary enum on {@code ApertureData}. A physique other than {@code NONE} exists exactly
- * when the aptitude is the top grade -- one fact held in two places, kept in step only by the aperture
- * service. No sibling mod may add a physique.
+ * <p>The concrete physique is stored on {@code BodyData}; the aperture keeps only the base-essence
+ * value that identifies the top aptitude grade.
  *
- * <p>⚠ The birth die skips {@code PURE_DREAM_REALITY_SEEKER} ({@code randomTenExtreme} excludes it): it
- * translates and is settable but can never be rolled. Read the "after" physique only AFTER {@code enforce}.
+ * <p>⚠ The birth die skips {@code PURE_DREAM_REALITY_SEEKER}: it translates and is settable but can
+ * never be rolled.
  *
  * @author Alex
  * @version 1.0.0
@@ -41,7 +41,7 @@ public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
     PURE_DREAM_REALITY_SEEKER(100, 50, GuPath.DREAM);
 
     public static final Codec<ExtremePhysique> CODEC = StringRepresentable.fromEnum(ExtremePhysique::values);
-    private static final String KEY_PREFIX = "guzhenren.enum.aperture.extreme_physique.";
+    private static final String KEY_PREFIX = "guzhenren.enum.body.extreme_physique.";
 
     private final int strengthCapacity;
     private final int staminaMaxPercent;
@@ -56,6 +56,7 @@ public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
     public int getStrengthCapacity() {return strengthCapacity;}
     public int getStaminaMaxPercent() {return staminaMaxPercent;}
     public List<GuPath> getTalentPaths() {return talentPaths;}
+    public static ExtremePhysique[] settable() {return Arrays.copyOfRange(values(), 1, values().length);}
 
     public static ExtremePhysique randomTenExtreme() {
         List<ExtremePhysique> pool = new ArrayList<>();

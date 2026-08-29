@@ -22,8 +22,8 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>Implements {@link net.minecraft.client.gui.LayeredDraw.Layer}; registered above
  * {@code VanillaGuiLayers.HOTBAR} in
- * {@link com.unknown.guzhenren.client.event.ClientEvents}. Draws the title line (realm + title + aptitude +
- * physique) then bars in order: essence, distilled, soul, gap, lifespan/age and pressure text. Hidden with
+ * {@link com.unknown.guzhenren.client.event.ClientEvents}. Draws the title line (realm + title + aptitude), then
+ * bars in order: essence, distilled, soul, gap, lifespan/age and pressure text. Hidden with
  * {@code hideGui}, in spectator, and under F3. Every phrase comes from
  * {@link com.unknown.guzhenren.display.ModDisplayText} so the HUD and the info command cannot diverge.
  *
@@ -71,7 +71,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         BodyData body = BodyService.get(player);
 
         int y = TOP;
-        line(graphics, font, y, ModDisplayText.realmAndTalent(aperture));
+        line(graphics, font, y, ModDisplayText.hudHeader(aperture, body));
         y += TEXT_HEIGHT + ROW_GAP;
 
         if (ApertureService.isAwakened(player)) {
@@ -93,7 +93,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         line(graphics, font, y, Component.translatable("guzhenren.hud.lifespan", ModDisplayText.hudLifespan(body)));
         y += TEXT_HEIGHT + ROW_GAP;
 
-        if (aperture.isExtreme()) {
+        if (BodyService.isExtreme(player)) {
             Component pressure = aperture.pressure() == Aperture.PRESSURE_COUNTDOWN_START
                     && aperture.pressureDeadlineTick() > 0L
                     ? Component.translatable("guzhenren.hud.aperture_pressure_cd", aperture.pressure(),

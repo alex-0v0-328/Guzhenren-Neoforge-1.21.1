@@ -74,7 +74,7 @@ public final class BodyAttackService {
 
     public static double zombieBonus(@NotNull Player player) {
         BodyData body = BodyService.get(player);
-        if (!body.lifeForm().isAnyZombie() || body.zombieTier() < 0) return 0.0D;
+        if (!body.isZombieOrHalfZombie() || body.zombieTier() < 0) return 0.0D;
 
         return ZOMBIE_ATTACK_BASE * (1 << body.zombieTier());
     }

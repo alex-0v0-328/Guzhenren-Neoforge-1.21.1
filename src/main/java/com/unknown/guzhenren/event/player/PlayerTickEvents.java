@@ -10,7 +10,7 @@ import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.mind.MindService;
 import com.unknown.guzhenren.attachment.service.path.PathQiService;
 import com.unknown.guzhenren.attachment.service.soul.SoulService;
-import com.unknown.guzhenren.custom.enums.body.LifeForm;
+import com.unknown.guzhenren.custom.enums.body.Physique;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
 import com.unknown.guzhenren.effect.pool.DeathQiEffect;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
@@ -91,7 +91,7 @@ public final class PlayerTickEvents {
     }
 
     private static void pinUndeadHunger(ServerPlayer player) {
-        if (BodyService.lifeForm(player).getsHungry()) return;
+        if (!BodyService.isUndead(player)) return;
 
         FoodData food = player.getFoodData();
         food.setFoodLevel(FULL_HUNGER);
@@ -102,9 +102,9 @@ public final class PlayerTickEvents {
     private static void tickHalfZombie(ServerPlayer player) {
         if (BodyService.isHalfZombie(player)) {
             if (PathQiService.current(player, QiKind.DEATH) > 0L) {
-                BodyService.setLifeForm(player, LifeForm.ZOMBIE);
+                BodyService.turnZombie(player, BodyService.get(player).zombieTier());
             } else if (BodyService.halfZombieRanOut(player)) {
-                BodyService.setLifeForm(player, LifeForm.ALIVE);
+                BodyService.removePhysique(player, Physique.HALF_ZOMBIE);
             }
         }
         projectHalfZombie(player);

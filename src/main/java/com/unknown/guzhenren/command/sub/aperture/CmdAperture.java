@@ -12,7 +12,6 @@ import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.command.ModEnumArgument;
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Stage;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
@@ -28,8 +27,7 @@ import net.minecraft.util.StringRepresentable;
  * {@code applyOnAperture} per-target gate (data protection). An optional integer index right after the
  * literal picks the aperture (1-based, default the first) -- safe next to a literal, unlike a word
  * argument. Offers graded setters for rank, stage, and talent, the essence subtree with {@code base}/
- * {@code current}/{@code distilled} and their {@code refill} where applicable. The physique subtree
- * hangs off the unindexed branch only: ten-extremes belong to the primary aperture alone.
+ * {@code current}/{@code distilled} and their {@code refill} where applicable.
  *
  * @author Alex
  * @version 1.0.0
@@ -41,20 +39,22 @@ public final class CmdAperture {
 
     private CmdAperture() {}
 
-    private static final String ARG_APERTURE = "aperture";
+    private static final String ARG_APERTURE = "index";
     private static final String FAILED_INDEX = "guzhenren.command.failed.aperture_index";
 
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         LiteralArgumentBuilder<CommandSourceStack> root =
                 Commands.literal("aperture").requires(ModCommandSupport::sourceAwakened);
+        ArgumentBuilder<CommandSourceStack, ?> indexed = Commands.argument(ARG_APERTURE,
+                IntegerArgumentType.integer(1, ApertureData.MAX_APERTURES));
 
-        attachWrites(root, true);
-        attachWrites(root.then(Commands.argument(ARG_APERTURE,
-                IntegerArgumentType.integer(1, ApertureData.MAX_APERTURES))), false);
+        attachWrites(root);
+        attachWrites(indexed);
+        root.then(indexed);
         return root;
     }
 
-    private static void attachWrites(ArgumentBuilder<CommandSourceStack, ?> parent, boolean withPhysique) {
+    private static void attachWrites(ArgumentBuilder<CommandSourceStack, ?> parent) {
         parent.then(graded("rank", Rank.settable(),
                 ApertureService::setRank, ApertureService::shiftRank))
                 .then(graded("stage", Stage.settable(),
@@ -62,18 +62,12 @@ public final class CmdAperture {
                 .then(graded("talent", Talent.settable(),
                         ApertureService::setTalent, ApertureService::shiftTalent))
                 .then(essence());
-        if (withPhysique) {
-            parent.then(Commands.literal("physique")
-                    .then(ModCommandSupport.enumSetNode("extreme", ExtremePhysique.values(),
-                            ApertureService::setExtremePhysique,
-                            ModCommandSupport.AWAKENED, ModCommandSupport.FAILED_UNAWAKENED)));
-        }
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> essence() {
         return Commands.literal("essence")
                 .then(Commands.literal("base")
-                        .then(baseNode("set", ApertureService::setBaseEssence))
+                        .then(baseSetNode())
                         .then(baseNode("add", ApertureService::addBaseEssence))
                         .then(baseNode("sub", (p, i, v) -> ApertureService.addBaseEssence(p, i, -v))))
                 .then(Commands.literal("current")
@@ -170,6 +164,22 @@ public final class CmdAperture {
                 context -> {
                     int value = IntegerArgumentType.getInteger(context, ModCommandSupport.ARG_VALUE);
                     return applyOnAperture(context, (player, aperture) -> operation.apply(player, aperture, value));
+                }));
+    }
+
+    private static ArgumentBuilder<CommandSourceStack, ?> baseSetNode() {
+        return Commands.literal("set").then(ModCommandSupport.withTargets(
+                Commands.argument(ModCommandSupport.ARG_VALUE,
+                        IntegerArgumentType.integer(-Aperture.MAX_BASE, Aperture.MAX_BASE)),
+                context -> {
+                    int value = IntegerArgumentType.getInteger(context, ModCommandSupport.ARG_VALUE);
+                    int index = apertureOf(context);
+                    String refused = index == ApertureData.PRIMARY
+                            ? "guzhenren.command.failed.extreme_physique_required"
+                            : FAILED_INDEX;
+                    return ModCommandSupport.applyIfResult(context,
+                            ModCommandSupport.AWAKENED.and(p -> index < ApertureService.get(p).count()), refused,
+                            player -> ApertureService.setBaseEssence(player, index, value));
                 }));
     }
 

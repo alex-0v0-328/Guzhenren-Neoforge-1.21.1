@@ -18,7 +18,8 @@ import com.unknown.guzhenren.attachment.service.path.PathStrengthService;
 import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
 import com.unknown.guzhenren.attachment.service.soul.SoulService;
 import com.unknown.guzhenren.custom.enums.aperture.ApertureStatus;
-import com.unknown.guzhenren.custom.enums.body.LifeForm;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.body.Physique;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.qi.QiKind;
@@ -93,7 +94,7 @@ public final class InfoModel {
     //endregion
 
     //region Body
-    public record Form(LifeForm form) implements Entry {
+    public record PhysiqueRow(@Nullable Physique physique, ExtremePhysique extremePhysique) implements Entry {
     }
 
     public record RaceRow(Race race) implements Entry {
@@ -160,27 +161,28 @@ public final class InfoModel {
         List<Row> rows = new ArrayList<>();
 
         if (data.count() <= 1) {
-            apertureBlock(rows, data.primary(), data.isAwakened(), 0, ApertureData.PRIMARY, true, status);
+            apertureBlock(rows, data.primary(), data.isAwakened(), 0, ApertureData.PRIMARY, true,
+                    BodyService.isExtreme(player), status);
             return rows;
         }
         for (int i = 0; i < data.count(); i++) {
             rows.add(new Row(0, new ApertureIndex(i + 1)));
             apertureBlock(rows, data.get(i), true, INDENT, i, i == ApertureData.PRIMARY,
-                    ApertureService.status(player, i));
+                    BodyService.isExtreme(player), ApertureService.status(player, i));
             if (i < data.count() - 1) rows.add(new Row(0, new Blank()));
         }
         return rows;
     }
 
     private static void apertureBlock(List<Row> rows, Aperture aperture, boolean awakened, int indent,
-                                      int index, boolean pressure, ApertureStatus status) {
+                                      int index, boolean pressure, boolean extreme, ApertureStatus status) {
         rows.add(new Row(indent, new Realm(aperture)));
         rows.add(new Row(indent, new Talent(aperture, awakened)));
         if (awakened) {
             rows.add(new Row(indent, new Status(status)));
             rows.add(new Row(indent, new Essence(aperture)));
             if (aperture.distilledEssence() > 0L) rows.add(new Row(indent, new Distilled(aperture)));
-            if (pressure && aperture.isExtreme()) rows.add(new Row(indent, new Pressure(aperture)));
+            if (pressure && extreme) rows.add(new Row(indent, new Pressure(aperture)));
             rows.add(new Row(indent, new PathChoice(true, index, aperture.primaryPath())));
             rows.add(new Row(indent, new PathChoice(false, index, aperture.secondaryPath())));
         }
@@ -191,7 +193,12 @@ public final class InfoModel {
         PathStrengthData strength = PathStrengthService.get(player);
         List<Row> rows = new ArrayList<>();
 
-        rows.add(new Row(0, new Form(body.lifeForm())));
+        if (body.physiques().isEmpty()) {
+            rows.add(new Row(0, new PhysiqueRow(null, ExtremePhysique.NONE)));
+        } else {
+            body.physiques().forEach(physique -> rows.add(new Row(0,
+                    new PhysiqueRow(physique, body.extremePhysique()))));
+        }
         rows.add(new Row(0, new RaceRow(body.race())));
         rows.add(new Row(0, new Lifespan(body.lifespanYears(), body.ageYears())));
         if (!strength.isEmpty() && strength.hasPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)) {

@@ -1,27 +1,32 @@
 package com.unknown.guzhenren.attachment.service.body;
 
 import com.unknown.guzhenren.Ticks;
+import com.unknown.guzhenren.attachment.data.aperture.Aperture;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.data.body.BodyData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.path.PathService;
 import com.unknown.guzhenren.attachment.service.path.PathTimeFlowService;
-import com.unknown.guzhenren.custom.enums.body.LifeForm;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.body.Physique;
 import com.unknown.guzhenren.custom.enums.body.Race;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.path.MarkTag;
 import com.unknown.guzhenren.registry.attachment.ModAttachments;
+import java.util.EnumSet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The only writer of Body [肉身] state, and the home of every life-form [生命形态] transition.
+ * The only writer of Body [肉身] state, and the home of every physique [体质] transition.
  *
  * <p>Static service over the {@code body_data} attachment; reads take {@link Player}, writes take
  * {@link ServerPlayer}. Owns two clocks with two anchors: {@code tickAging} keeps {@code lastDayIndex}
  * and returns DAYS for the Gu-hunger walks; {@code tickLifespan} keeps {@code lastBilledTick} and
- * bills lifespan. {@code setLifeForm} no-ops when unchanged so the zombie's 寿元=1 is never re-written
- * over a recovering zombie.
+ * bills lifespan. Zombie and half-zombie physiques are mutually exclusive, while Extreme can coexist
+ * with either one.
  *
  * <p>⚠ {@code tickAging} returns how many days it just billed, and that count is often far more than
  * one -- an offline stretch or a {@code /time} jump arrives as a single call; the return drives three
@@ -48,9 +53,15 @@ public final class BodyService {
     }
 
     public static @NotNull BodyData get(@NotNull Player p) {return p.getData(ModAttachments.BODY);}
-    public static @NotNull LifeForm lifeForm(@NotNull Player p) {return get(p).lifeForm();}
+    public static boolean hasPhysique(@NotNull Player p, @NotNull Physique physique) {
+        return get(p).hasPhysique(physique);
+    }
     public static boolean isZombie(@NotNull Player p) {return get(p).isZombie();}
     public static boolean isHalfZombie(@NotNull Player p) {return get(p).isHalfZombie();}
+    public static boolean isZombieOrHalfZombie(@NotNull Player p) {return get(p).isZombieOrHalfZombie();}
+    public static boolean isUndead(@NotNull Player p) {return isZombieOrHalfZombie(p);}
+    public static boolean isExtreme(@NotNull Player p) {return get(p).isExtreme();}
+    public static @NotNull ExtremePhysique extremePhysique(@NotNull Player p) {return get(p).extremePhysique();}
     public static @NotNull Race race(@NotNull Player p) {return get(p).race();}
     @SuppressWarnings("resource")
     public static long now(@NotNull Player p) {return p.level().getGameTime();}
@@ -71,14 +82,60 @@ public final class BodyService {
     }
     //endregion
 
-    //region Life form [生命形态] -- 生 / 死 / 僵 / 半生半僵
-    public static void setLifeForm(@NotNull ServerPlayer player, @NotNull LifeForm form) {
-        BodyData body = get(player);
-        if (body.lifeForm() == form) return;
+    //region Physique [体质]
+    public static boolean addPhysique(@NotNull ServerPlayer player, @NotNull Physique physique) {
+        if (physique == Physique.EXTREME) return false;
 
-        BodyData turned = body.withLifeForm(form);
-        store(player, form.isZombie() ? turned.withLifespanParts(BodyData.parts(BodyData.ZOMBIE_LIFESPAN)) : turned);
+        BodyData body = get(player);
+        EnumSet<Physique> next = EnumSet.noneOf(Physique.class);
+        next.addAll(body.physiques());
+        if (physique == Physique.ZOMBIE) next.remove(Physique.HALF_ZOMBIE);
+        if (physique == Physique.HALF_ZOMBIE) next.remove(Physique.ZOMBIE);
+        if (!next.add(physique)) return false;
+
+        BodyData updated = body.withPhysiques(next);
+        if (physique == Physique.ZOMBIE) updated = updated.withLifespanParts(BodyData.parts(BodyData.ZOMBIE_LIFESPAN));
+        store(player, updated);
         BodyAttackService.refresh(player);
+        return true;
+    }
+
+    public static boolean removePhysique(@NotNull ServerPlayer player, @NotNull Physique physique) {
+        if (physique == Physique.EXTREME) return setExtremePhysique(player, ExtremePhysique.NONE);
+
+        BodyData body = get(player);
+        if (!body.hasPhysique(physique)) return false;
+
+        EnumSet<Physique> next = EnumSet.noneOf(Physique.class);
+        next.addAll(body.physiques());
+        next.remove(physique);
+        BodyData updated = body.withPhysiques(next);
+        if (!updated.isZombieOrHalfZombie()) {
+            updated = updated.withHalfZombieEndTick(BodyData.UNTRACKED).withZombieTier(BodyData.NO_ZOMBIE_TIER);
+        }
+        store(player, updated);
+        BodyAttackService.refresh(player);
+        return true;
+    }
+
+    public static boolean setExtremePhysique(@NotNull ServerPlayer player, @NotNull ExtremePhysique physique) {
+        if (physique != ExtremePhysique.NONE && !ApertureService.isAwakened(player)) return false;
+
+        BodyData body = get(player);
+        ExtremePhysique before = body.extremePhysique();
+        if (before == physique) return false;
+
+        store(player, body.withExtremePhysique(physique));
+        ApertureService.reconcileTalentPaths(player, before, physique);
+        ApertureData data = ApertureService.get(player);
+        if (data.isAwakened()) {
+            int base = physique == ExtremePhysique.NONE ? Aperture.MAX_BASE - 1 : Aperture.MAX_BASE;
+            Aperture current = ApertureService.aperture(player);
+            Aperture updated = current.withBaseEssence(base);
+            if (physique == ExtremePhysique.NONE) updated = updated.withPressure(0);
+            ApertureService.set(player, ApertureData.PRIMARY, updated);
+        }
+        return true;
     }
 
     public static void revive(@NotNull ServerPlayer player) {
@@ -87,16 +144,24 @@ public final class BodyService {
     }
 
     public static void enterHalfZombie(@NotNull ServerPlayer player, int tier, int durationTicks) {
-        store(player, get(player)
-                .withLifeForm(LifeForm.HALF_ZOMBIE)
+        BodyData body = get(player);
+        EnumSet<Physique> next = EnumSet.noneOf(Physique.class);
+        next.addAll(body.physiques());
+        next.remove(Physique.ZOMBIE);
+        next.add(Physique.HALF_ZOMBIE);
+        store(player, body.withPhysiques(next)
                 .withHalfZombieEndTick(now(player) + durationTicks)
                 .withZombieTier(tier));
         BodyAttackService.refresh(player);
     }
 
     public static void turnZombie(@NotNull ServerPlayer player, int tier) {
-        store(player, get(player)
-                .withLifeForm(LifeForm.ZOMBIE)
+        BodyData body = get(player);
+        EnumSet<Physique> next = EnumSet.noneOf(Physique.class);
+        next.addAll(body.physiques());
+        next.remove(Physique.HALF_ZOMBIE);
+        next.add(Physique.ZOMBIE);
+        store(player, body.withPhysiques(next)
                 .withLifespanParts(BodyData.parts(BodyData.ZOMBIE_LIFESPAN))
                 .withZombieTier(tier));
         BodyAttackService.refresh(player);
@@ -191,7 +256,7 @@ public final class BodyService {
             store(player, body.withLastBilledTick(now));
             return;
         }
-        if (!body.lifeForm().ages()) {
+        if (body.isZombieOrHalfZombie()) {
             store(player, body.withLastBilledTick(now));
             return;
         }

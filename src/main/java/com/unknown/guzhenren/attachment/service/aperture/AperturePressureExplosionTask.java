@@ -1,6 +1,6 @@
 package com.unknown.guzhenren.attachment.service.aperture;
 
-import com.unknown.guzhenren.custom.enums.aperture.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import java.util.ArrayList;
 import java.util.Iterator;
