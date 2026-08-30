@@ -36,6 +36,8 @@ bin/
 run/
 run-gametest/
 !**/src/**/run/
+logs/
+!**/src/**/logs/
 **/src/generated/**/.cache/
 repo/
 !**/src/**/repo/

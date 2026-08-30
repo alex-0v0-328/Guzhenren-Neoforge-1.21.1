@@ -206,7 +206,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.tab.soul", "Soul");
         add("guzhenren.screen.tab.path", "Path Achieve");
         add("guzhenren.screen.tab.mind", "Mind");
-        add("guzhenren.screen.tab.storage", "Storage");
         add("guzhenren.screen.tab.refinement", "Refinement");
         add("guzhenren.menu.aperture_storage", "Aperture Storage");
         add("guzhenren.menu.vital", "Vital");

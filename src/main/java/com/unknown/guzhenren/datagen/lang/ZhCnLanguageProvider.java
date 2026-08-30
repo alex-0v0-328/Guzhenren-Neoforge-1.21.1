@@ -208,7 +208,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.tab.soul", "魂魄");
         add("guzhenren.screen.tab.path", "流派造诣");
         add("guzhenren.screen.tab.mind", "脑海");
-        add("guzhenren.screen.tab.storage", "空窍存储");
         add("guzhenren.screen.tab.refinement", "炼蛊");
         add("guzhenren.menu.aperture_storage", "空窍存储");
         add("guzhenren.menu.vital", "本命");

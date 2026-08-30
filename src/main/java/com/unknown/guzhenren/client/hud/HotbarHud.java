@@ -1,5 +1,6 @@
 package com.unknown.guzhenren.client.hud;
 
+import com.unknown.guzhenren.client.ModPalette;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,9 +31,6 @@ abstract class HotbarHud implements LayeredDraw.Layer {
     static final int NAME_GAP = 4;
     static final int MIN_SHIFT = 59;
     static final int CREATIVE_LIFT = 14;
-    static final int TRACK = 0xB0202020;
-    static final int BORDER = 0xC0000000;
-    static final int TEXT_COLOR = 0xFFFFFFFF;
 
     static int barTop(Minecraft minecraft) {
         Gui gui = minecraft.gui;
@@ -42,12 +40,12 @@ abstract class HotbarHud implements LayeredDraw.Layer {
         return baseline - NAME_GAP - BAR_HEIGHT;
     }
     static void drawBar(GuiGraphics g, int x, int y, float fraction, int fill) {
-        g.fill(x - 1, y - 1, x + BAR_WIDTH + 1, y + BAR_HEIGHT + 1, BORDER);
-        g.fill(x, y, x + BAR_WIDTH, y + BAR_HEIGHT, TRACK);
+        g.fill(x - 1, y - 1, x + BAR_WIDTH + 1, y + BAR_HEIGHT + 1, ModPalette.BAR_BORDER);
+        g.fill(x, y, x + BAR_WIDTH, y + BAR_HEIGHT, ModPalette.BAR_TRACK);
         g.fill(x, y, x + Math.round(BAR_WIDTH * Math.clamp(fraction, 0.0F, 1.0F)), y + BAR_HEIGHT, fill);
     }
     static void drawLabel(GuiGraphics g, Minecraft mc, int x, int y, Component label) {
         g.drawString(mc.font, label, x + (BAR_WIDTH - mc.font.width(label)) / 2,
-                y - TEXT_GAP - mc.font.lineHeight, TEXT_COLOR, true);
+                y - TEXT_GAP - mc.font.lineHeight, ModPalette.TEXT, true);
     }
 }

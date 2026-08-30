@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.unknown.guzhenren.attachment.data.soul.SoulData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
 import com.unknown.guzhenren.attachment.service.soul.SoulService;
+import com.unknown.guzhenren.client.ModPalette;
 import com.unknown.guzhenren.menu.RefinementMenu;
 import com.unknown.guzhenren.recipe.GuRecipe;
 import com.unknown.guzhenren.recipe.GuRecipeInput;
@@ -63,27 +64,16 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int RECIPE_H = 20;
     private static final int LEGEND_Y = 142;
 
-    private static final int ACCENT = 0xFF81C784;
-    private static final int PANEL_FILL = 0xBF000000;
-    private static final int BORDER = 0x66FFFFFF;
-    private static final int SLOT_FILL = 0x33FFFFFF;
     private static final int CORE_FILL = 0x4DFFFFFF;
-    private static final int TEXT = 0xFFFFFFFF;
     private static final int LEGEND_TEXT = 0xFFA0A0A0;
-    private static final int BUTTON_IDLE = 0x33FFFFFF;
-    private static final int BUTTON_HOVER = 0x66FFFFFF;
-    private static final int BUTTON_DEAD = 0x14FFFFFF;
     private static final int SHORT_RED = 0x99FF5555;
-    private static final int BAR_TRACK = 0x33000000;
+    private static final int TRACK = 0x33000000;
     private static final int BAR_WINDOW = 0xFF81C784;
     private static final int BAR_GAP = 0x6681C784;
     private static final int BAR_SHORT = 0xFFFF5555;
     private static final int PICK_FILL = 0xF0000000;
     private static final int GHOST_OVERLAY = 0x1AFFFFFF;
     private static final float GHOST_ALPHA = 0.35F;
-    private static final int ESSENCE_FILL = 0xFF4FC3F7;
-    private static final int DISTILLED_FILL = 0xFF1565C0;
-    private static final int SOUL_FILL = 0xFFD388FF;
 
     private static final int POOL_X = 18;
     private static final int POOL_W = 230;
@@ -142,30 +132,30 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     protected void renderBg(@NotNull GuiGraphics g, float partialTick, int mouseX, int mouseY) {
         int x = leftPos;
         int y = topPos;
-        g.fill(x, y, x + imageWidth, y + imageHeight, PANEL_FILL);
-        g.renderOutline(x, y, imageWidth, imageHeight, BORDER);
-        g.fill(x + MARGIN, y + HEADER_H, x + imageWidth - MARGIN, y + HEADER_H + 1, ACCENT);
+        g.fill(x, y, x + imageWidth, y + imageHeight, ModPalette.PANEL_FILL);
+        g.renderOutline(x, y, imageWidth, imageHeight, ModPalette.BORDER);
+        g.fill(x + MARGIN, y + HEADER_H, x + imageWidth - MARGIN, y + HEADER_H + 1, ModPalette.REFINEMENT);
 
         drawInput(g, x, y);
-        drawCell(g, x + RefinementMenu.STONE_X, y + RefinementMenu.STONE_Y, SLOT_FILL);
+        drawCell(g, x + RefinementMenu.STONE_X, y + RefinementMenu.STONE_Y, ModPalette.SLOT_FILL);
         drawCells(g, x + RefinementMenu.OUTPUT_X, y + RefinementMenu.OUTPUT_Y,
-                RefinementMenu.OUTPUT_COLS, RefinementMenu.OUTPUT_ROWS, GRID_SLOT, SLOT_FILL);
+                RefinementMenu.OUTPUT_COLS, RefinementMenu.OUTPUT_ROWS, GRID_SLOT, ModPalette.SLOT_FILL);
         drawCells(g, x + RefinementMenu.INVENTORY_X, y + RefinementMenu.INVENTORY_Y,
-                INVENTORY_COLS, 3, SLOT, SLOT_FILL);
+                INVENTORY_COLS, 3, SLOT, ModPalette.SLOT_FILL);
         drawCells(g, x + RefinementMenu.INVENTORY_X, y + RefinementMenu.HOTBAR_Y,
-                INVENTORY_COLS, 1, SLOT, SLOT_FILL);
+                INVENTORY_COLS, 1, SLOT, ModPalette.SLOT_FILL);
         drawBar(g, x, y);
     }
     //region the two rings -- the 内圈 is marked by a brighter cell and an accent frame around the block
     private void drawInput(GuiGraphics g, int x, int y) {
         for (int i = 0; i < RefinementMenu.RING_SIZE; i++) {
-            drawCell(g, x + RefinementMenu.ringX(i), y + RefinementMenu.ringY(i), SLOT_FILL);
+            drawCell(g, x + RefinementMenu.ringX(i), y + RefinementMenu.ringY(i), ModPalette.SLOT_FILL);
         }
         drawCells(g, x + RefinementMenu.coreX(0), y + RefinementMenu.coreY(0),
                 RefinementMenu.CORE_COLS, RefinementMenu.CORE_ROWS, GRID_SLOT, CORE_FILL);
         g.renderOutline(x + RefinementMenu.coreX(0) - 3, y + RefinementMenu.coreY(0) - 3,
                 (RefinementMenu.CORE_COLS - 1) * GRID_SLOT + CELL + 6,
-                (RefinementMenu.CORE_ROWS - 1) * GRID_SLOT + CELL + 6, ACCENT);
+                (RefinementMenu.CORE_ROWS - 1) * GRID_SLOT + CELL + 6, ModPalette.REFINEMENT);
     }
     private void drawCells(GuiGraphics g, int x, int y, int cols, int rows, int pitch, int fill) {
         for (int row = 0; row < rows; row++) {
@@ -179,7 +169,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private void drawBar(GuiGraphics g, int x, int y) {
         int bx = x + BAR_X;
         int by = y + BAR_Y;
-        g.fill(bx, by, bx + BAR_W, by + BAR_H, BAR_TRACK);
+        g.fill(bx, by, bx + BAR_W, by + BAR_H, TRACK);
         if (!menu.running()) return;
 
         int span = menu.inWindow() ? GuRecipe.WINDOW_TICKS : GuRecipe.GAP_TICKS;
@@ -194,10 +184,10 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
 
     @Override
     protected void renderLabels(@NotNull GuiGraphics g, int mouseX, int mouseY) {
-        g.drawString(font, title, titleLabelX, titleLabelY, ACCENT, false);
+        g.drawString(font, title, titleLabelX, titleLabelY, ModPalette.REFINEMENT, false);
         g.drawString(font, statusLine(), RefinementMenu.INPUT_X, LEGEND_Y,
                 statusColour(), false);
-        g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, TEXT, false);
+        g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, ModPalette.TEXT, false);
         renderGhosts(g);
         renderPools(g);
     }
@@ -208,13 +198,13 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
 
         long maxEssence = ApertureEssenceService.maxEssence(player);
         int unit = 0;
-        drawPool(g, unit++, ApertureEssenceService.currentEssence(player), maxEssence, ESSENCE_FILL);
+        drawPool(g, unit++, ApertureEssenceService.currentEssence(player), maxEssence, ModPalette.APERTURE);
 
         long distilled = ApertureEssenceService.distilledEssence(player);
-        if (distilled > 0L) drawPool(g, unit++, distilled, maxEssence, DISTILLED_FILL);
+        if (distilled > 0L) drawPool(g, unit++, distilled, maxEssence, ModPalette.DISTILLED_FILL);
 
         SoulData soul = SoulService.get(player);
-        drawPool(g, unit, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);
+        drawPool(g, unit, soul.currentSoul(), soul.maxSoul(), ModPalette.SOUL);
     }
     private void drawPool(GuiGraphics g, int unit, long value, long max, int fill) {
         int y = POOL_Y + unit * POOL_STRIDE;
@@ -222,7 +212,7 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         g.drawString(font, reading, POOL_X + POOL_W - font.width(reading), y, LEGEND_TEXT, false);
 
         int barY = y + font.lineHeight;
-        g.fill(POOL_X, barY, POOL_X + POOL_W, barY + POOL_H, BAR_TRACK);
+        g.fill(POOL_X, barY, POOL_X + POOL_W, barY + POOL_H, TRACK);
         if (max <= 0L || value <= 0L) return;
 
         int filled = (int) Math.min(POOL_W, POOL_W * value / max);
@@ -246,11 +236,11 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         return Component.translatable(SELECTED_KEY, resultName(recipe));
     }
     private int statusColour() {
-        if (menu.running()) return TEXT;
+        if (menu.running()) return ModPalette.TEXT;
 
         GuRecipe recipe = selectedRecipe();
         if (recipe == null) return LEGEND_TEXT;
-        return crowded(recipe) ? BAR_SHORT : TEXT;
+        return crowded(recipe) ? BAR_SHORT : ModPalette.TEXT;
     }
     private boolean crowded(GuRecipe recipe) {
         if (menu.ready()) return false;
@@ -327,15 +317,15 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         boolean hover = live && inCraft(mouseX, mouseY);
 
         g.fill(x, y, x + CRAFT_W, y + CRAFT_H,
-                live ? (hover ? BUTTON_HOVER : BUTTON_IDLE) : BUTTON_DEAD);
+                live ? (hover ? ModPalette.BUTTON_HOVER : ModPalette.BUTTON_IDLE) : ModPalette.BUTTON_DEAD);
         if (live || shortOfEssence) {
             g.renderOutline(x, y, CRAFT_W, CRAFT_H,
-                    stopping ? BAR_SHORT : live ? ACCENT : SHORT_RED);
+                    stopping ? BAR_SHORT : live ? ModPalette.REFINEMENT : SHORT_RED);
         }
 
         Component label = Component.translatable(stopping ? STOP_KEY : CRAFT_KEY);
         g.drawString(font, label, x + (CRAFT_W - font.width(label)) / 2,
-                y + (CRAFT_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
+                y + (CRAFT_H - font.lineHeight) / 2 + 1, live ? ModPalette.TEXT : ModPalette.BUTTON_IDLE, false);
     }
     private boolean clickable() {return menu.ready() && !menu.running();}
 
@@ -356,12 +346,12 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         boolean hover = live && inRecipe(mouseX, mouseY);
 
         g.fill(x, y, x + RECIPE_W, y + RECIPE_H,
-                live ? (hover ? BUTTON_HOVER : BUTTON_IDLE) : BUTTON_DEAD);
-        if (live) g.renderOutline(x, y, RECIPE_W, RECIPE_H, ACCENT);
+                live ? (hover ? ModPalette.BUTTON_HOVER : ModPalette.BUTTON_IDLE) : ModPalette.BUTTON_DEAD);
+        if (live) g.renderOutline(x, y, RECIPE_W, RECIPE_H, ModPalette.REFINEMENT);
 
         Component label = Component.translatable(RECIPE_KEY);
         g.drawString(font, label, x + (RECIPE_W - font.width(label)) / 2,
-                y + (RECIPE_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
+                y + (RECIPE_H - font.lineHeight) / 2 + 1, live ? ModPalette.TEXT : ModPalette.BUTTON_IDLE, false);
     }
     private int recipeX() {return leftPos + RECIPE_X;}
     private int recipeY() {return topPos + RECIPE_Y;}
@@ -390,20 +380,22 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         int h = pickHeight(visible);
 
         g.fill(x0, y0, x0 + PICK_W, y0 + h, PICK_FILL);
-        g.renderOutline(x0, y0, PICK_W, h, BORDER);
+        g.renderOutline(x0, y0, PICK_W, h, ModPalette.BORDER);
         g.drawString(font, Component.translatable(PICK_TITLE_KEY), x0 + PICK_PAD,
-                y0 + (PICK_HEADER_H - font.lineHeight) / 2, ACCENT, false);
-        g.fill(x0 + PICK_PAD, y0 + PICK_HEADER_H, x0 + PICK_W - PICK_PAD, y0 + PICK_HEADER_H + 1, BORDER);
+                y0 + (PICK_HEADER_H - font.lineHeight) / 2, ModPalette.REFINEMENT, false);
+        g.fill(x0 + PICK_PAD, y0 + PICK_HEADER_H, x0 + PICK_W - PICK_PAD, y0 + PICK_HEADER_H + 1,
+                ModPalette.BORDER);
 
         int hovered = -1;
         for (int i = 0; i < visible; i++) {
             int row = pickScroll + i;
             int ry = pickRowY(y0, i);
             if (mouseX >= x0 && mouseX < x0 + PICK_W && mouseY >= ry && mouseY < ry + PICK_ROW_H) {
-                g.fill(x0 + 1, ry, x0 + PICK_W - 1, ry + PICK_ROW_H, BUTTON_IDLE);
+                g.fill(x0 + 1, ry, x0 + PICK_W - 1, ry + PICK_ROW_H, ModPalette.BUTTON_IDLE);
                 hovered = row;
             }
-            if (row - 1 == menu.selected()) g.renderOutline(x0 + 1, ry, PICK_W - 2, PICK_ROW_H, ACCENT);
+            if (row - 1 == menu.selected()) g.renderOutline(x0 + 1, ry, PICK_W - 2, PICK_ROW_H,
+                    ModPalette.REFINEMENT);
             drawPickRow(g, known, row, x0, ry);
         }
         if (hovered >= 1) g.renderComponentTooltip(font, details(known.get(hovered - 1).value()), mouseX, mouseY);
@@ -412,13 +404,13 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         int textY = y + (PICK_ROW_H - font.lineHeight) / 2;
         if (row == 0) {
             Component auto = Component.translatable(known.isEmpty() ? PICK_EMPTY_KEY : PICK_AUTO_KEY);
-            g.drawString(font, auto, x0 + PICK_PAD, textY, TEXT, false);
+            g.drawString(font, auto, x0 + PICK_PAD, textY, ModPalette.TEXT, false);
             return;
         }
         GuRecipe recipe = known.get(row - 1).value();
         ItemStack icon = result(recipe);
         g.renderFakeItem(icon, x0 + PICK_PAD, y + (PICK_ROW_H - CELL) / 2);
-        g.drawString(font, icon.getHoverName(), x0 + PICK_PAD + CELL + 4, textY, TEXT, false);
+        g.drawString(font, icon.getHoverName(), x0 + PICK_PAD + CELL + 4, textY, ModPalette.TEXT, false);
 
         Component rate = Component.translatable(PICK_CHANCE_KEY, recipe.baseSuccess());
         g.drawString(font, rate, x0 + PICK_W - PICK_PAD - font.width(rate), textY, LEGEND_TEXT, false);
@@ -496,9 +488,9 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         int x = backX();
         int y = backY();
         boolean hover = inBack(mouseX, mouseY);
-        g.fill(x, y, x + BACK_W, y + BACK_H, hover ? BUTTON_HOVER : BUTTON_IDLE);
+        g.fill(x, y, x + BACK_W, y + BACK_H, hover ? ModPalette.BUTTON_HOVER : ModPalette.BUTTON_IDLE);
         g.drawString(font, BACK_GLYPH, x + (BACK_W - font.width(BACK_GLYPH)) / 2,
-                y + (BACK_H - font.lineHeight) / 2 + 1, TEXT, false);
+                y + (BACK_H - font.lineHeight) / 2 + 1, ModPalette.TEXT, false);
     }
     private int backX() {return leftPos + 11;}
     private int backY() {return topPos + 4;}

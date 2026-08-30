@@ -5,6 +5,7 @@ import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.client.ModKeyMappings;
+import com.unknown.guzhenren.client.ModPalette;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.InfoModel;
 import com.unknown.guzhenren.display.ModDisplayText;
@@ -31,13 +32,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The B panel: every tab of what a player is, read straight off the synced attachments.
  *
- * <p>Extends {@link net.minecraft.client.gui.screens.Screen} (no menu behind it). Seven tabs: 空窍,
- * 肉身, 魂魄, 流派造诣, 脑海, 空窍存储, 炼蛊. The last two open a container via a client-intent payload
- * instead of drawing rows. Row content comes from {@link com.unknown.guzhenren.display.InfoModel},
- * shared with {@code /gzr info}, so the two surfaces cannot diverge.
+ * <p>Extends {@link net.minecraft.client.gui.screens.Screen} (no menu behind it). Six tabs: 空窍,
+ * 肉身, 魂魄, 流派造诣, 脑海, 炼蛊. Each aperture row opens that aperture's storage container; the
+ * refinement tab opens its container via a client-intent payload instead of drawing rows. Row
+ * content comes from {@link com.unknown.guzhenren.display.InfoModel}, shared with {@code /gzr
+ * info}, so the two surfaces cannot diverge.
  *
- * <p>⚠ A plain screen with no menu behind it: no container channel to send an intent over, which is
- * the whole reason a client-intent payload exists at all.
+ * <p>⚠ A plain screen with no menu behind it: no container channel to send an intent over.
  *
  * @author Alex
  * @version 1.0.0
@@ -58,17 +59,14 @@ public final class PlayerInfoScreen extends Screen {
     private static final int TAB_H = 20;
     private static final int TAB_GAP = 4;
 
-    private static final int PANEL_FILL = 0xBF000000;
-    private static final int BORDER = 0x66FFFFFF;
     private static final int DIVIDER = 0x33FFFFFF;
     private static final int ROW_HOVER = 0x14FFFFFF;
-    private static final int TEXT = 0xFFFFFFFF;
     private static final int TAB_IDLE = 0x26FFFFFF;
     private static final int TAB_TEXT_IDLE = 0xFFBBBBBB;
     private static final int TAB_TEXT_DEAD = 0xFF6A6A6A;
 
-    private static final int[] ACCENT =
-            {0xFF4FC3F7, 0xFFFFAB91, 0xFFD388FF, 0xFFFF8A65, 0xFF4DD0E1, 0xFFFFD54F, 0xFF81C784};
+    private static final int[] ACCENT = {ModPalette.APERTURE, ModPalette.BODY, ModPalette.SOUL,
+            ModPalette.PATH, ModPalette.MIND, ModPalette.REFINEMENT};
 
     private static final String[] TAB_KEYS = {
             "guzhenren.screen.tab.aperture",
@@ -76,15 +74,11 @@ public final class PlayerInfoScreen extends Screen {
             "guzhenren.screen.tab.soul",
             "guzhenren.screen.tab.path",
             "guzhenren.screen.tab.mind",
-            "guzhenren.screen.tab.storage",
             "guzhenren.screen.tab.refinement",
     };
 
     private static final int BTN_H = 20;
     private static final int BTN_GAP = 4;
-    private static final int BTN_IDLE = 0x33FFFFFF;
-    private static final int BTN_HOVER = 0x66FFFFFF;
-    private static final int BTN_DEAD = 0x14FFFFFF;
     private static final int BTN_PROGRESS = 0x804FC3F7;
 
     private static final String KEY_NOURISH = "guzhenren.screen.nourish";
@@ -97,8 +91,7 @@ public final class PlayerInfoScreen extends Screen {
     private static final int TAB_SOUL = 2;
     private static final int TAB_PATH = 3;
     private static final int TAB_MIND = 4;
-    private static final int TAB_STORAGE = 5;
-    private static final int TAB_REFINEMENT = 6;
+    private static final int TAB_REFINEMENT = 5;
 
     private static final int PICK_COLS = 4;
     private static final int PICK_CELL_W = 84;
@@ -133,8 +126,8 @@ public final class PlayerInfoScreen extends Screen {
         int right = leftPos + panelW;
         int accent = ACCENT[activeTab];
 
-        g.fill(leftPos, topPos, right, topPos + panelH, PANEL_FILL);
-        g.renderOutline(leftPos, topPos, panelW, panelH, BORDER);
+        g.fill(leftPos, topPos, right, topPos + panelH, ModPalette.PANEL_FILL);
+        g.renderOutline(leftPos, topPos, panelW, panelH, ModPalette.BORDER);
 
         g.drawString(font, Component.translatable(TAB_KEYS[activeTab]),
                 leftPos + PAD, topPos + (HEADER_H - font.lineHeight) / 2, accent, false);
@@ -143,7 +136,7 @@ public final class PlayerInfoScreen extends Screen {
         renderTabs(g, mouseX, mouseY);
 
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null || activeTab == TAB_STORAGE) return;
+        if (player == null) return;
 
         List<Row> rows = rows(player);
 
@@ -161,10 +154,10 @@ public final class PlayerInfoScreen extends Screen {
                 g.fill(rowLeft - 2, y - 1, valueRight + 2, y + LINE_H - 1, ROW_HOVER);
                 if (row.click() != null) hoverClick = row.click();
             }
-            int labelColor = row.value() == null ? accent : TEXT;
+            int labelColor = row.value() == null ? accent : ModPalette.TEXT;
             g.drawString(font, row.label(), rowLeft + row.indent(), y, labelColor, false);
             if (row.value() != null) {
-                g.drawString(font, row.value(), valueRight - font.width(row.value()), y, TEXT, false);
+                g.drawString(font, row.value(), valueRight - font.width(row.value()), y, ModPalette.TEXT, false);
             }
             y += LINE_H;
         }
@@ -206,29 +199,31 @@ public final class PlayerInfoScreen extends Screen {
             int x0 = contentLeft();
             int x3 = valueRight();
             if (paired) {
-                int strike = !ApertureNourishService.canAffordImpact(player) ? BTN_DEAD
-                        : inBox(mouseX, mouseY, x0, x3, r) ? BTN_HOVER : BTN_IDLE;
+                int strike = !ApertureNourishService.canAffordImpact(player) ? ModPalette.BUTTON_DEAD
+                        : inBox(mouseX, mouseY, x0, x3, r) ? ModPalette.BUTTON_HOVER : ModPalette.BUTTON_IDLE;
                 g.fill(x0, top, x3, top + BTN_H, strike);
                 g.renderOutline(x0, top, x3 - x0, BTN_H, accent);
                 label(g, Component.translatable(KEY_IMPACT), x0, x3, top);
                 continue;
             }
 
-            int fill = running ? BTN_HOVER : ApertureNourishService.canNourish(player, aperture) ? BTN_IDLE : BTN_DEAD;
+            int fill = running ? ModPalette.BUTTON_HOVER
+                    : ApertureNourishService.canNourish(player, aperture) ? ModPalette.BUTTON_IDLE
+                    : ModPalette.BUTTON_DEAD;
 
             g.fill(x0, top, x3, top + BTN_H, fill);
             if (running) {
                 int done = x0 + Math.round((x3 - x0) * ApertureNourishService.fraction(player, aperture));
                 g.fill(x0, top, done, top + BTN_H, BTN_PROGRESS);
             }
-            g.renderOutline(x0, top, x3 - x0, BTN_H, running ? accent : BORDER);
+            g.renderOutline(x0, top, x3 - x0, BTN_H, running ? accent : ModPalette.BORDER);
             String nourish = aperture == ApertureData.PRIMARY ? KEY_NOURISH : KEY_NOURISH_SECOND;
             label(g, Component.translatable(running ? KEY_NOURISH_STOP : nourish), x0, x3, top);
         }
     }
     private void label(GuiGraphics g, Component text, int x0, int x1, int top) {
         g.drawString(font, text, x0 + (x1 - x0 - font.width(text)) / 2,
-                top + (BTN_H - font.lineHeight) / 2, TEXT, false);
+                top + (BTN_H - font.lineHeight) / 2, ModPalette.TEXT, false);
     }
     private boolean inBox(double mx, double my, int x0, int x1, int row) {
         return mx >= x0 && mx < x1 && my >= buttonTop(row) && my < buttonTop(row) + BTN_H;
@@ -302,7 +297,7 @@ public final class PlayerInfoScreen extends Screen {
         int h = pickRows() * PICK_CELL_H + PICK_PAD * 2 + HEADER_H;
 
         g.fill(x0, y0, x0 + w, y0 + h, 0xF0000000);
-        g.renderOutline(x0, y0, w, h, BORDER);
+        g.renderOutline(x0, y0, w, h, ModPalette.BORDER);
         g.drawString(font, Component.translatable("guzhenren.screen.pick.title"),
                 x0 + PICK_PAD, y0 + (HEADER_H - font.lineHeight) / 2, accent, false);
         g.fill(x0 + PICK_PAD, y0 + HEADER_H, x0 + w - PICK_PAD, y0 + HEADER_H + 1, DIVIDER);
@@ -314,7 +309,7 @@ public final class PlayerInfoScreen extends Screen {
                     && mouseY >= cy && mouseY < cy + PICK_CELL_H;
             if (hover) g.fill(cx, cy, cx + PICK_CELL_W, cy + PICK_CELL_H, ROW_HOVER);
             g.drawString(font, ModDisplayText.path(pickPath(i)), cx + 3,
-                    cy + (PICK_CELL_H - font.lineHeight) / 2, TEXT, false);
+                    cy + (PICK_CELL_H - font.lineHeight) / 2, ModPalette.TEXT, false);
         }
     }
     private static int pickCount() {return GuPath.values().length + 1;}
@@ -360,7 +355,7 @@ public final class PlayerInfoScreen extends Screen {
         }
     }
     private boolean tabLive(int tab) {
-        if (tab != TAB_STORAGE && tab != TAB_REFINEMENT) return true;
+        if (tab != TAB_REFINEMENT) return true;
 
         LocalPlayer player = Minecraft.getInstance().player;
         return player != null && ApertureService.isAwakened(player);
@@ -390,9 +385,7 @@ public final class PlayerInfoScreen extends Screen {
             }
             for (int i = 0; i < TAB_KEYS.length; i++) {
                 if (!inTab(mx, my, i) || !tabLive(i)) continue;
-                if (i == TAB_STORAGE) {
-                    PacketDistributor.sendToServer(new OpenApertureStoragePayload(ApertureData.PRIMARY));
-                } else if (i == TAB_REFINEMENT) {
+                if (i == TAB_REFINEMENT) {
                     PacketDistributor.sendToServer(OpenRefinementPayload.INSTANCE);
                 } else {
                     activeTab = i;
@@ -469,7 +462,9 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.PathChoice e -> e.primary()
                     ? new Row(indent, label("primary_path"), ModDisplayText.path(e.path()))
                     : new Row(indent, label("secondary_path"),
-                    detail(pickHint()).copy().append(detail(ModDisplayText.path(e.path()))),
+                    detail(pickHint()).copy().append(e.path() == null
+                            ? none().withStyle(ChatFormatting.DARK_GRAY)
+                            : detail(ModDisplayText.path(e.path()))),
                     new Click(true, e.aperture()));
 
             case InfoModel.PhysiqueRow e -> new Row(indent, label("physique"),

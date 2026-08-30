@@ -15,10 +15,11 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.ConsumedGuItem}, so it is tended, feeds on primeval
  * stones, and is taken by its own use. Five rungs register against this one class. The gate refuses a
- * holder with no aperture, a rung above the primary aperture's rank, and a second aperture already at
- * or above the rung -- an upgrade must be strictly higher, and it overwrites the old aperture whole
- * (back to the first stage, Grade-A at 8/10, progress zeroed). Usable while undead: an aperture opened
- * by it reads a LIVING one under every later undeath.
+ * holder with no aperture, a rung above the primary's rank while only the primary exists, and a second
+ * aperture already at or above the rung -- an upgrade must be strictly higher than the second aperture
+ * alone, and it overwrites it whole (back to the first stage, Grade-A at 8/10, progress zeroed, bound
+ * paths kept). Usable while undead: an aperture opened by it reads a LIVING one under every later
+ * undeath.
  *
  * @author Alex
  * @version 1.0.0
@@ -38,7 +39,8 @@ public class SecondApertureGuItem extends ConsumedGuItem {
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
         ApertureData data = ApertureService.get(player);
         if (!data.isAwakened()) return new Refusal(FAILED_ABSENT);
-        if (data.primary().rank().ordinal() < rank().ordinal()) {
+        if (data.count() <= ApertureData.SECONDARY
+                && data.primary().rank().ordinal() < rank().ordinal()) {
             return new Refusal(FAILED_RANK_MISMATCH, Component.translatable(rank().getTranslationKey()));
         }
         if (data.count() > ApertureData.SECONDARY

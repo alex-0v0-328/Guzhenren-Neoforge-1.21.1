@@ -213,18 +213,21 @@ public final class ApertureService {
     }
     /**
      * The only opener of a second aperture: Grade-A at 8/10, this rank's first stage and a full pool.
-     * A higher-rank Second Aperture Gu overwrites what is already there.
+     * A higher-rank Second Aperture Gu overwrites what is already there, back to the first stage, while
+     * the bound paths stay -- the Vital Gu holding them is untouched in storage.
      */
     public static void openSecondary(@NotNull ServerPlayer player, @NotNull Rank rank) {
         ApertureData data = get(player);
-        if (data.count() < 1 || data.isFull()) return;
+        if (data.count() < 1) return;
 
         Aperture opened = Aperture.secondaryOpened(rank);
         if (data.count() == 1) {
             store(player, data.opened(opened));
             return;
         }
-        set(player, ApertureData.SECONDARY, opened);
+        Aperture old = data.get(ApertureData.SECONDARY);
+        set(player, ApertureData.SECONDARY,
+                opened.withPrimaryPath(old.primaryPath()).withSecondaryPath(old.secondaryPath()));
     }
     private static void open(ServerPlayer player, Aperture aperture) {
         if (get(player).isFull()) return;

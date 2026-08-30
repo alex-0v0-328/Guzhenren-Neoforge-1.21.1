@@ -3,6 +3,7 @@ package com.unknown.guzhenren.client.hud;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureNourishData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
+import com.unknown.guzhenren.client.ModPalette;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,7 +37,6 @@ public final class NourishHud extends HotbarHud {
     private static final String CAPTION = "guzhenren.hud.nourishing";
     private static final String STARVING = "guzhenren.hud.nourish_starving";
 
-    private static final int FILL = 0xFF4FC3F7;
     private static final int FILL_STARVING = 0xFFE57373;
 
     @Override
@@ -52,7 +52,8 @@ public final class NourishHud extends HotbarHud {
         int y = barTop(minecraft);
 
         int target = ApertureNourishService.targetIndex(player);
-        drawBar(graphics, x, y, ApertureNourishService.fraction(player, target), starving ? FILL_STARVING : FILL);
+        drawBar(graphics, x, y, ApertureNourishService.fraction(player, target),
+                starving ? FILL_STARVING : ModPalette.APERTURE);
 
         drawLabel(graphics, minecraft, x, y,
                 Component.translatable(starving ? STARVING : CAPTION,

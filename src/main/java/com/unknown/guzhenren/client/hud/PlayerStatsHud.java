@@ -7,6 +7,7 @@ import com.unknown.guzhenren.attachment.data.soul.SoulData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.attachment.service.soul.SoulService;
+import com.unknown.guzhenren.client.ModPalette;
 import com.unknown.guzhenren.display.ModDisplayText;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -49,13 +50,6 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
     private static final int ROW_GAP = 2;
     private static final int GROUP_GAP = 7;
 
-    private static final int ESSENCE_FILL = 0xFF4FC3F7;
-    private static final int SOUL_FILL = 0xFFD388FF;
-    private static final int DISTILLED_FILL = 0xFF1565C0;
-    private static final int BAR_TRACK = 0xB0202020;
-    private static final int BAR_BORDER = 0xC0000000;
-    private static final int TEXT_COLOR = 0xFFFFFFFF;
-
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker delta) {
         Minecraft minecraft = Minecraft.getInstance();
@@ -77,17 +71,18 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         if (ApertureService.isAwakened(player)) {
             for (int i = 0; i < data.count(); i++) {
                 Aperture pool = data.get(i);
-                bar(graphics, font, y, pool.currentEssence(), pool.maxEssence(), ESSENCE_FILL);
+                bar(graphics, font, y, pool.currentEssence(), pool.maxEssence(), ModPalette.APERTURE);
                 y += BAR_HEIGHT + ROW_GAP;
 
                 if (pool.distilledEssence() > 0L) {
-                    bar(graphics, font, y, pool.distilledEssence(), pool.maxEssence(), DISTILLED_FILL);
+                    bar(graphics, font, y, pool.distilledEssence(), pool.maxEssence(),
+                            ModPalette.DISTILLED_FILL);
                     y += BAR_HEIGHT + ROW_GAP;
                 }
             }
         }
 
-        bar(graphics, font, y, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);
+        bar(graphics, font, y, soul.currentSoul(), soul.maxSoul(), ModPalette.SOUL);
         y += BAR_HEIGHT + GROUP_GAP;
 
         line(graphics, font, y, Component.translatable("guzhenren.hud.lifespan", ModDisplayText.hudLifespan(body)));
@@ -103,12 +98,12 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         }
     }
     private static void line(GuiGraphics graphics, Font font, int y, Component text) {
-        graphics.drawString(font, text, LEFT, y, TEXT_COLOR, true);
+        graphics.drawString(font, text, LEFT, y, ModPalette.TEXT, true);
     }
     private static void bar(GuiGraphics graphics, Font font, int y, long current, long max, int fill) {
         int right = LEFT + BAR_WIDTH;
-        graphics.fill(LEFT, y, right, y + BAR_HEIGHT, BAR_BORDER);
-        graphics.fill(LEFT + 1, y + 1, right - 1, y + BAR_HEIGHT - 1, BAR_TRACK);
+        graphics.fill(LEFT, y, right, y + BAR_HEIGHT, ModPalette.BAR_BORDER);
+        graphics.fill(LEFT + 1, y + 1, right - 1, y + BAR_HEIGHT - 1, ModPalette.BAR_TRACK);
 
         int track = BAR_WIDTH - 2;
         int filled = max <= 0L ? 0 : Math.clamp(Math.round(track * (current / (double) max)), 0, track);
@@ -117,6 +112,6 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         }
 
         String text = ModDisplayText.pool(current, max);
-        graphics.drawString(font, text, LEFT + (BAR_WIDTH - font.width(text)) / 2, y + 1, TEXT_COLOR, true);
+        graphics.drawString(font, text, LEFT + (BAR_WIDTH - font.width(text)) / 2, y + 1, ModPalette.TEXT, true);
     }
 }
