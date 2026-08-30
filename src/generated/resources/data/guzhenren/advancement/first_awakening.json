@@ -1,0 +1,39 @@
+{
+  "criteria": {
+    "obtained_gu": {
+      "conditions": {
+        "items": [
+          {
+            "items": "guzhenren:hope_gu"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "used_gu": {
+      "trigger": "guzhenren:used_hope_gu"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "description": {
+      "translate": "advancements.guzhenren.first_awakening.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "guzhenren:hope_gu"
+    },
+    "title": {
+      "translate": "advancements.guzhenren.first_awakening.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtained_gu"
+    ],
+    [
+      "used_gu"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

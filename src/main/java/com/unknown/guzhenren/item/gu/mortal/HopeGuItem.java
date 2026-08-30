@@ -6,6 +6,7 @@ import com.unknown.guzhenren.command.ModCommandSupport;
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
 import com.unknown.guzhenren.item.gu.GuSpec;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
+import com.unknown.guzhenren.registry.advancement.ModCriteriaTriggers;
 import com.unknown.guzhenren.registry.item.ModDataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -69,6 +70,7 @@ public class HopeGuItem extends MortalGuItem {
     @Override
     protected final int apply(ServerPlayer player, ItemStack stack) {
         ApertureService.awaken(player, rolledBase(stack));
+        ModCriteriaTriggers.USED_HOPE_GU.get().trigger(player);
         stack.remove(ModDataComponents.AWAKEN_BASE.get());
         ModCommandSupport.refreshCommands(player);
         return 1;

@@ -53,6 +53,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         addScreenKeys();
         addItemKeys();
         addEntityKeys();
+        addAdvancementKeys();
         addDeathMessages();
     }
     private void add(EnumTranslatable key, String value) {add(key.getTranslationKey(), value);}
@@ -450,6 +451,13 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //region ENTITY
     private void addEntityKeys() {
         add("entity.guzhenren.hope_gu_entity", "Hope Gu");
+    }
+    //endregion
+
+    //region ADVANCEMENT
+    private void addAdvancementKeys() {
+        add("advancements.guzhenren.first_awakening.title", "Awakening!");
+        add("advancements.guzhenren.first_awakening.description", "Use your first Hope Gu to open your first aperture");
     }
     //endregion
 

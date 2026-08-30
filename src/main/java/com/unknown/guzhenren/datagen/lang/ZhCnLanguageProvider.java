@@ -55,6 +55,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addScreenKeys();
         addItemKeys();
         addEntityKeys();
+        addAdvancementKeys();
         addDeathMessages();
     }
     private void add(EnumTranslatable key, String value) {add(key.getTranslationKey(), value);}
@@ -454,6 +455,13 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     //region ENTITY
     private void addEntityKeys() {
         add("entity.guzhenren.hope_gu_entity", "希望蛊");
+    }
+    //endregion
+
+    //region ADVANCEMENT
+    private void addAdvancementKeys() {
+        add("advancements.guzhenren.first_awakening.title", "开窍！");
+        add("advancements.guzhenren.first_awakening.description", "使用你的第一只希望蛊，开出第一窍");
     }
     //endregion
 

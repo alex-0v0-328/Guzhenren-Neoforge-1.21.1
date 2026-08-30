@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.datagen;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.datagen.advancement.ModAdvancementProvider;
 import com.unknown.guzhenren.datagen.curios.ModCuriosProvider;
 import com.unknown.guzhenren.datagen.damage.ModDamageTypeTagsProvider;
 import com.unknown.guzhenren.datagen.item.ModItemModelProvider;
@@ -21,9 +22,8 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 /**
  * Wires every generator that runs at datagen time.
  *
- * <p>Annotated {@code @EventBusSubscriber}. On {@code GatherDataEvent} it adds every provider:
- * two language providers, the item model provider, the datapack builtin-entries provider, and the tag
- * providers for items, damage types, and biomes. The output is a committed source set under
+ * <p>Annotated {@code @EventBusSubscriber}. On {@code GatherDataEvent} it adds every provider that
+ * lives under {@code datagen/}. The output is a committed source set under
  * {@code src/generated/resources}.
  *
  * <p>⚠ What they write is a committed source set, so a provider changed without regenerating ships a
@@ -62,6 +62,9 @@ public final class DataGenerators {
                 new ModCuriosProvider(packOutput, existingFileHelper, lookupProvider));
 
         generator.addProvider(event.includeServer(), new ModRecipeProvider(packOutput, lookupProvider));
+
+        generator.addProvider(event.includeServer(),
+                new ModAdvancementProvider(packOutput, lookupProvider, existingFileHelper));
 
         generator.addProvider(event.includeServer(),
                 new ModBiomeTagsProvider(packOutput, datapackProvider.getRegistryProvider(), existingFileHelper));

@@ -2,6 +2,7 @@ package com.unknown.guzhenren;
 
 import com.mojang.logging.LogUtils;
 import com.unknown.guzhenren.compat.EpicFightIntegration;
+import com.unknown.guzhenren.registry.advancement.ModCriteriaTriggers;
 import com.unknown.guzhenren.registry.attachment.ModAttachments;
 import com.unknown.guzhenren.registry.effect.ModEffects;
 import com.unknown.guzhenren.registry.entity.ModEntityTypes;
@@ -20,9 +21,9 @@ import org.slf4j.Logger;
  * Mod entry point: builds every registry holder and hands them to the mod event bus.
  *
  * <p>Holds the {@code MOD_ID} constant and the {@link #id} helper used across the codebase for
- * {@link ResourceLocation} creation. The constructor wires eight {@code DeferredRegister} holders
- * (attachments, data components, effects, entities, items, creative tabs, menus, recipes) to the
- * mod event bus in the order NeoForge requires.
+ * {@link ResourceLocation} creation. The constructor wires nine {@code DeferredRegister} holders
+ * (attachments, data components, effects, entities, items, creative tabs, menus, recipes, criterion
+ * triggers) to the mod event bus in the order NeoForge requires.
  *
  * @author Alex
  * @version 1.0.0
@@ -45,6 +46,7 @@ public class Guzhenren {
         ModCreativeTabs.register(modEventBus);
         ModMenus.register(modEventBus);
         ModRecipes.register(modEventBus);
+        ModCriteriaTriggers.register(modEventBus);
         modEventBus.addListener(EpicFightIntegration::onAnimationRegistry);
         EpicFightIntegration.initialize();
     }
