@@ -177,7 +177,7 @@ public final class PlayerInfoScreen extends Screen {
     }
     private int cultivationCount() {
         LocalPlayer player = Minecraft.getInstance().player;
-        return activeTab == TAB_APERTURE && player != null && ApertureService.isAwakened(player)
+        return activeTab == TAB_APERTURE && player != null && ApertureService.hasAperture(player)
                 ? visibleCultivation(player).length : 0;
     }
     private int buttonTop(int row) {
@@ -186,7 +186,7 @@ public final class PlayerInfoScreen extends Screen {
     private void renderCultivation(GuiGraphics g, int mouseX, int mouseY, int accent) {
         if (activeTab != TAB_APERTURE) return;
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null || !ApertureService.isAwakened(player)) return;
+        if (player == null || !ApertureService.hasAperture(player)) return;
         int[] visible = visibleCultivation(player);
 
         for (int r = 0; r < visible.length; r++) {
@@ -217,7 +217,8 @@ public final class PlayerInfoScreen extends Screen {
                 g.fill(x0, top, done, top + BTN_H, BTN_PROGRESS);
             }
             g.renderOutline(x0, top, x3 - x0, BTN_H, running ? accent : ModPalette.BORDER);
-            String nourish = aperture == ApertureData.PRIMARY ? KEY_NOURISH : KEY_NOURISH_SECOND;
+            String nourish = ApertureService.aperture(player, aperture).second()
+                    ? KEY_NOURISH_SECOND : KEY_NOURISH;
             label(g, Component.translatable(running ? KEY_NOURISH_STOP : nourish), x0, x3, top);
         }
     }
@@ -231,7 +232,7 @@ public final class PlayerInfoScreen extends Screen {
     private boolean clickCultivation(double mx, double my) {
         if (activeTab != TAB_APERTURE) return false;
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null || !ApertureService.isAwakened(player)) return false;
+        if (player == null || !ApertureService.hasAperture(player)) return false;
         int[] visible = visibleCultivation(player);
 
         for (int r = 0; r < visible.length; r++) {
@@ -445,7 +446,7 @@ public final class PlayerInfoScreen extends Screen {
     private static @Nullable Row draw(int indent, InfoModel.Entry entry) {
         return switch (entry) {
             case InfoModel.ApertureIndex e -> new Row(indent, ModDisplayText.apertureName(e.number()), null,
-                    new Click(false, e.number() - 1));
+                    new Click(false, e.index()));
             case InfoModel.Blank ignored -> new Row(indent, Component.empty(), null);
             case InfoModel.Realm e -> new Row(indent, label("realm"), ModDisplayText.realmTitle(e.aperture()));
             case InfoModel.Status e -> new Row(indent, label("aperture_status"),

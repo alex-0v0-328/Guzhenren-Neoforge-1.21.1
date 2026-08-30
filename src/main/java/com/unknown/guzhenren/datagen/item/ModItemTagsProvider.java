@@ -51,8 +51,6 @@ public class ModItemTagsProvider extends ItemTagsProvider {
 
         tag(ModItemTags.ZOMBIE_FEED).add(Items.ROTTEN_FLESH);
 
-        tag(ModItemTags.PRIMEVAL_STONE_FEED).add(ModItems.PRIMEVAL_STONE.get());
-
         //  TODO(placeholder): dirt is a placeholder food for the Malicious Thought Gu, pending Alex's real food.
         tag(ModItemTags.MALICIOUS_THOUGHT_FEED).add(Items.DIRT);
 

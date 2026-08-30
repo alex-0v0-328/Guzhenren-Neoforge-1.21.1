@@ -68,7 +68,7 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
         line(graphics, font, y, ModDisplayText.hudHeader(aperture, body));
         y += TEXT_HEIGHT + ROW_GAP;
 
-        if (ApertureService.isAwakened(player)) {
+        if (ApertureService.hasAperture(player)) {
             for (int i = 0; i < data.count(); i++) {
                 Aperture pool = data.get(i);
                 bar(graphics, font, y, pool.currentEssence(), pool.maxEssence(), ModPalette.APERTURE);

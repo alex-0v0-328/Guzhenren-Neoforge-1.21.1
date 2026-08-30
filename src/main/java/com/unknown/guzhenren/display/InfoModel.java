@@ -60,7 +60,11 @@ public final class InfoModel {
     public sealed interface Entry {
     }
     //region Aperture
-    public record ApertureIndex(int number) implements Entry {
+    /**
+     * ⚠ {@code number} is the display ordinal (1 = first aperture, 2 = second), while {@code index} is
+     * the real list position -- a lone second aperture shows number 2 but lives at index 0.
+     */
+    public record ApertureIndex(int number, int index) implements Entry {
     }
 
     public record Blank() implements Entry {
@@ -156,13 +160,15 @@ public final class InfoModel {
         List<Row> rows = new ArrayList<>();
 
         if (data.count() <= 1) {
-            apertureBlock(rows, data.primary(), data.isAwakened(), 0, ApertureData.PRIMARY, true,
+            boolean second = data.primary().second();
+            if (second) rows.add(new Row(0, new ApertureIndex(2, 0)));
+            apertureBlock(rows, data.primary(), data.hasAperture(), 0, ApertureData.PRIMARY, !second,
                     BodyService.isExtreme(player), status);
             return rows;
         }
         for (int i = 0; i < data.count(); i++) {
-            rows.add(new Row(0, new ApertureIndex(i + 1)));
-            apertureBlock(rows, data.get(i), true, INDENT, i, i == ApertureData.PRIMARY,
+            rows.add(new Row(0, new ApertureIndex(i + 1, i)));
+            apertureBlock(rows, data.get(i), true, INDENT, i, !data.get(i).second(),
                     BodyService.isExtreme(player), ApertureService.status(player, i));
             if (i < data.count() - 1) rows.add(new Row(0, new Blank()));
         }

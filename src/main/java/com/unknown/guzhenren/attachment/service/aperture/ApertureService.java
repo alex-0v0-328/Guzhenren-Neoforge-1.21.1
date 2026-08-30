@@ -72,6 +72,7 @@ public final class ApertureService {
     public static @NotNull Aperture aperture(@NotNull Player p) {return get(p).primary();}
     public static @NotNull Aperture aperture(@NotNull Player p, int i) {return get(p).get(i);}
     public static boolean isAwakened(@NotNull Player p) {return get(p).isAwakened();}
+    public static boolean hasAperture(@NotNull Player p) {return get(p).hasAperture();}
     /**
      * The one derivation of {@link ApertureStatus}: Zombie, Half-Zombie and petrified apertures are
      * DEAD; every other aperture is NORMAL.
@@ -204,7 +205,7 @@ public final class ApertureService {
     public static boolean setBaseEssence(@NotNull ServerPlayer p, int v) {return setBaseEssence(p, PRIMARY, v);}
     public static boolean setBaseEssence(@NotNull ServerPlayer p, int index, int v) {
         int next = Math.clamp(v, Aperture.MIN_BASE, Aperture.MAX_BASE);
-        if (index == PRIMARY && next == Aperture.MAX_BASE && !BodyService.isExtreme(p)) return false;
+        if (index == get(p).firstIndex() && next == Aperture.MAX_BASE && !BodyService.isExtreme(p)) return false;
         return set(p, index, aperture(p, index).withBaseEssence(next));
     }
     public static void awaken(@NotNull ServerPlayer player) {open(player, Aperture.opened());}
@@ -213,31 +214,38 @@ public final class ApertureService {
     }
     /**
      * The only opener of a second aperture: Grade-A at 8/10, this rank's first stage and a full pool.
-     * A higher-rank Second Aperture Gu overwrites what is already there, back to the first stage, while
-     * the bound paths stay -- the Vital Gu holding them is untouched in storage.
+     * Works with NO aperture at all -- the lone second aperture then IS the whole list until Hope Gu
+     * inserts the first one ahead of it. A higher-rank Second Aperture Gu overwrites what is already
+     * there, back to the first stage, while the bound paths stay -- the Vital Gu holding them is
+     * untouched in storage.
      */
     public static void openSecondary(@NotNull ServerPlayer player, @NotNull Rank rank) {
         ApertureData data = get(player);
-        if (data.count() < 1) return;
-
         Aperture opened = Aperture.secondaryOpened(rank);
-        if (data.count() == 1) {
+        int index = data.secondIndex();
+        if (index < 0) {
             store(player, data.opened(opened));
             return;
         }
-        Aperture old = data.get(ApertureData.SECONDARY);
-        set(player, ApertureData.SECONDARY,
-                opened.withPrimaryPath(old.primaryPath()).withSecondaryPath(old.secondaryPath()));
+        Aperture old = data.get(index);
+        set(player, index, opened.withPrimaryPath(old.primaryPath()).withSecondaryPath(old.secondaryPath()));
     }
     private static void open(ServerPlayer player, Aperture aperture) {
-        if (get(player).isFull()) return;
-        store(player, get(player).opened(aperture));
+        ApertureData data = get(player);
+        if (data.isFull()) return;
+        if (data.count() == 1 && data.get(0).second()) {
+            store(player, data.insertFirst(aperture));
+            ApertureStorageService.shiftForFirstAperture(player);
+            ApertureNourishService.shiftTargetForInsertedFirst(player);
+        } else {
+            store(player, data.opened(aperture));
+        }
         if (aperture.talent() == Talent.EXTREME) {
             BodyService.setExtremePhysique(player, ExtremePhysique.randomTenExtreme());
         }
     }
     public static boolean set(@NotNull ServerPlayer player, int index, @NotNull Aperture aperture) {
-        if (index == PRIMARY && aperture.baseEssence() == Aperture.MAX_BASE
+        if (index == get(player).firstIndex() && aperture.baseEssence() == Aperture.MAX_BASE
                 && !BodyService.isExtreme(player)) return false;
         store(player, get(player).with(index, enforce(player, index, aperture)));
         return true;
@@ -248,7 +256,7 @@ public final class ApertureService {
         EpicFightIntegration.refresh(p);
     }
     private static Aperture enforce(@NotNull Player player, int index, @NotNull Aperture aperture) {
-        if (index != PRIMARY) return aperture.baseEssence() == Aperture.MAX_BASE
+        if (index != get(player).firstIndex()) return aperture.baseEssence() == Aperture.MAX_BASE
                 ? aperture.withBaseEssence(Aperture.MAX_BASE - 1).withPressure(0) : aperture;
         if (BodyService.isExtreme(player)) {
             return aperture.baseEssence() == Aperture.MAX_BASE ? aperture : aperture.withBaseEssence(Aperture.MAX_BASE);

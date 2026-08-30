@@ -4,7 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import com.unknown.guzhenren.attachment.data.aperture.Aperture;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService;
@@ -39,6 +44,50 @@ class SecondApertureTest {
         assertSame(Talent.FIRST, opened.talent());
         assertEquals(opened.maxEssence(), opened.currentEssence());
         assertEquals(0L, opened.distilledEssence());
+        assertTrue(opened.second());
+    }
+
+    @Test
+    @DisplayName("a lone second aperture is not awakened; Hope Gu inserts the first one ahead of it")
+    void awakeningOrderAndInsertFirst() {
+        Aperture second = Aperture.secondaryOpened(Rank.THREE);
+        ApertureData lone = new ApertureData(List.of(second));
+        assertTrue(lone.hasAperture());
+        assertFalse(lone.isAwakened());
+        assertEquals(0, lone.secondIndex());
+        assertEquals(-1, lone.firstIndex());
+
+        ApertureData both = lone.insertFirst(Aperture.openedAt(80));
+        assertTrue(both.isAwakened());
+        assertEquals(0, both.firstIndex());
+        assertEquals(1, both.secondIndex());
+        assertSame(second, both.get(1));
+        assertFalse(both.primary().second());
+    }
+
+    @Test
+    @DisplayName("insertFirst falls back to append once the first aperture exists")
+    void insertFirstAppendsWhenFirstExists() {
+        ApertureData one = new ApertureData(List.of(Aperture.openedAt(80)));
+        ApertureData two = one.insertFirst(Aperture.secondaryOpened(Rank.THREE));
+        assertFalse(two.get(0).second());
+        assertEquals(1, two.secondIndex());
+    }
+
+    @Test
+    @DisplayName("decoding heals a pre-flag save: the entry at position 1 becomes the second aperture")
+    void codecHealsLegacyPositions() {
+        JsonElement legacy = Aperture.CODEC.encodeStart(JsonOps.INSTANCE, Aperture.secondaryOpened(Rank.THREE))
+                .getOrThrow();
+        ((JsonObject) legacy).remove("second");
+
+        JsonArray list = new JsonArray();
+        list.add(Aperture.CODEC.encodeStart(JsonOps.INSTANCE, Aperture.openedAt(80)).getOrThrow());
+        list.add(legacy);
+
+        ApertureData healed = ApertureData.CODEC.parse(JsonOps.INSTANCE, list).getOrThrow();
+        assertFalse(healed.get(0).second());
+        assertTrue(healed.get(1).second());
     }
 
     @Test

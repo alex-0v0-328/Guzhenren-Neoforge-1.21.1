@@ -72,7 +72,7 @@ public final class ApertureNourishService {
     }
     //region what the screen asks
     public static boolean canNourish(@NotNull Player p, int index) {
-        if (!ApertureService.isAwakened(p) || isCultivating(p)) return false;
+        if (!ApertureService.hasAperture(p) || isCultivating(p)) return false;
         if (index >= ApertureService.get(p).count()) return false;
         if (ApertureService.status(p, index) != ApertureStatus.NORMAL) return false;
         return !atCeiling(p, index)
@@ -87,9 +87,8 @@ public final class ApertureNourishService {
     }
     public static boolean atCeiling(@NotNull Player p, int index) {
         Aperture a = ApertureService.aperture(p, index);
-        return index == ApertureService.PRIMARY
-                ? a.rank() == Rank.HIGHEST && a.stage() == Stage.HIGHEST
-                : a.stage() == Stage.HIGHEST;
+        return a.second() ? a.stage() == Stage.HIGHEST
+                : a.rank() == Rank.HIGHEST && a.stage() == Stage.HIGHEST;
     }
     //endregion
     public static long costPerSecond(@NotNull Player p, int index) {
@@ -110,6 +109,17 @@ public final class ApertureNourishService {
         if (!data.cultivating()) return;
         store(player, data.withCultivating(false).withStarvedSinceTick(ApertureNourishData.NOT_STARVED));
     }
+    /**
+     * When Hope Gu inserts the first aperture at position 0, an in-progress session aimed at the lone
+     * second aperture (target 0) would silently slide onto the NEW first aperture -- move the target
+     * with its aperture. No session running, nothing to move; the next {@code start} rewrites it.
+     */
+    public static void shiftTargetForInsertedFirst(@NotNull ServerPlayer player) {
+        ApertureNourishData data = get(player);
+        if (data.cultivating() && data.target() == ApertureData.PRIMARY) {
+            store(player, data.withTarget(ApertureData.SECONDARY));
+        }
+    }
     //region 温养 [nourishing] -- the second that the heartbeat bills
     /**
      * ⚠ A hastened clock bills MORE seconds per heartbeat, never a bigger second. Scaling the progress
@@ -126,7 +136,7 @@ public final class ApertureNourishService {
         if (!data.cultivating()) return false;
         int target = targetIndex(player);
         if (ApertureService.status(player, target) != ApertureStatus.NORMAL
-                || !ApertureService.isAwakened(player) || atCeiling(player, target)) {cancel(player); return false;}
+                || !ApertureService.hasAperture(player) || atCeiling(player, target)) {cancel(player); return false;}
 
         player.setDeltaMovement(Vec3.ZERO);
 
@@ -158,7 +168,7 @@ public final class ApertureNourishService {
             return false;
         }
         ApertureService.set(player, target, fed.withStage(stage.shift(1)).withNourishProgress(0));
-        if (target == ApertureService.PRIMARY) ApertureService.relievePressure(player, 20);
+        if (!ApertureService.aperture(player, target).second()) ApertureService.relievePressure(player, 20);
         store(player, ApertureNourishData.DEFAULT);
         player.displayClientMessage(Component.translatable(STAGE_UP), true);
         return false;

@@ -2,6 +2,7 @@ package com.unknown.guzhenren.attachment.data.aperture;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.unknown.guzhenren.registry.item.ModDataComponents;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -109,6 +110,30 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
         while (next.size() <= aperture) next.add(ItemStack.EMPTY);
         next.set(aperture, stack);
         return new ApertureStorage(byAperture, next);
+    }
+    /**
+     * Makes room for a first aperture inserted ahead of a lone second one: every stored list and the
+     * Vital Gu slot moves one position up. A Vital Gu bound by the component default (aperture 0) is
+     * pinned to 1 explicitly, or it would silently follow the new first aperture.
+     */
+    public ApertureStorage shiftRight() {
+        if (byAperture.size() >= ApertureData.MAX_APERTURES) return this;
+
+        List<List<ItemStack>> items = new ArrayList<>();
+        items.add(List.of());
+        for (List<ItemStack> slot : byAperture) items.add(slot);
+
+        List<ItemStack> bound = new ArrayList<>();
+        bound.add(ItemStack.EMPTY);
+        for (ItemStack stack : vital) bound.add(rebound(stack));
+        return new ApertureStorage(items, bound);
+    }
+    private static ItemStack rebound(ItemStack stack) {
+        if (stack.isEmpty()) return stack;
+
+        ItemStack copy = stack.copy();
+        copy.set(ModDataComponents.VITAL_APERTURE.get(), ApertureData.SECONDARY);
+        return copy;
     }
     public ApertureStorage copy() {return new ApertureStorage(byAperture, vital);}
     private static List<ItemStack> copyStacks(List<ItemStack> stacks) {

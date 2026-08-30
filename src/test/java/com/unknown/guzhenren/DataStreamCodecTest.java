@@ -21,10 +21,10 @@ import org.junit.jupiter.api.Test;
 class DataStreamCodecTest {
 
     @Test
-    @DisplayName("Aperture stream codec preserves nullable paths and all sentinels")
+    @DisplayName("Aperture stream codec preserves nullable paths, the second flag and all sentinels")
     void apertureRoundTrip() {
         Aperture expected = new Aperture(Rank.THREE, Stage.UPPER, 83, 12_345L, GuPath.TIME, null, 678L, 73,
-                987_654L, 42, true, true);
+                987_654L, 42, true, true, null, true);
         ByteBuf buffer = Unpooled.buffer();
         try {
             Aperture.STREAM_CODEC.encode(buffer, expected);
@@ -40,6 +40,7 @@ class DataStreamCodecTest {
             assertEquals(expected.nourishProgress(), ByteBufCodecs.VAR_INT.decode(buffer));
             assertEquals(expected.petrified(), ByteBufCodecs.BOOL.decode(buffer));
             assertEquals(expected.distilling(), ByteBufCodecs.BOOL.decode(buffer));
+            assertEquals(expected.second(), ByteBufCodecs.BOOL.decode(buffer));
             assertEquals(0, buffer.readableBytes());
 
             ModStreamCodecs.ofEnum(Rank.class).encode(buffer, expected.rank());
@@ -54,6 +55,7 @@ class DataStreamCodecTest {
             ByteBufCodecs.VAR_INT.encode(buffer, expected.nourishProgress());
             ByteBufCodecs.BOOL.encode(buffer, expected.petrified());
             ByteBufCodecs.BOOL.encode(buffer, expected.distilling());
+            ByteBufCodecs.BOOL.encode(buffer, expected.second());
             assertEquals(expected, Aperture.STREAM_CODEC.decode(buffer));
             assertEquals(0, buffer.readableBytes());
         } finally {

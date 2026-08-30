@@ -227,14 +227,14 @@ public final class ModItems {
             () -> new HumanStrengthGuItem(tended(), HumanStrength.JUN, GuSpec.of(Rank.THREE, GuPath.STRENGTH)
                     .strengthPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)
                     .refine(80_000)
-                    .channel(72_000)
+                    .channel(36_000)
                     .hungerBar(36, 4).essencePerHunger(6_000)
                     .feed(ModItemTags.JIN_FEED_SMELTED, 1)));
     public static final DeferredItem<Item> TENS_JUN_STRENGTH_GU = ITEMS.register("tens_jun_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.TEN_JUN, GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
                     .strengthPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)
                     .refine(800_000)
-                    .channel(720_000)
+                    .channel(360_000)
                     .hungerBar(36, 8).essencePerHunger(60_000)
                     .feed(ModItemTags.JIN_FEED_SMELTED, 1)));
     //endregion
@@ -437,24 +437,20 @@ public final class ModItems {
     //endregion
 
     //region 第二空窍蛊 [Second Aperture Gu] -- human path; opens or upgrades the second aperture,
-    // taken by its use; Grade-A at 8/10, this rank's first stage, never a physique
+    // a free one-shot taken by its use; Grade-A at 8/10, this rank's first stage, never a physique
     public static final DeferredItem<Item> SECOND_APERTURE_GU_1 = ITEMS.register("second_aperture_gu_1",
-            () -> secondApertureGu(Rank.ONE, 100, 1));
+            () -> secondApertureGu(Rank.ONE));
     public static final DeferredItem<Item> SECOND_APERTURE_GU_2 = ITEMS.register("second_aperture_gu_2",
-            () -> secondApertureGu(Rank.TWO, 1_000, 2));
+            () -> secondApertureGu(Rank.TWO));
     public static final DeferredItem<Item> SECOND_APERTURE_GU_3 = ITEMS.register("second_aperture_gu_3",
-            () -> secondApertureGu(Rank.THREE, 10_000, 4));
+            () -> secondApertureGu(Rank.THREE));
     public static final DeferredItem<Item> SECOND_APERTURE_GU_4 = ITEMS.register("second_aperture_gu_4",
-            () -> secondApertureGu(Rank.FOUR, 100_000, 8));
+            () -> secondApertureGu(Rank.FOUR));
     public static final DeferredItem<Item> SECOND_APERTURE_GU_5 = ITEMS.register("second_aperture_gu_5",
-            () -> secondApertureGu(Rank.FIVE, 1_000_000, 16));
+            () -> secondApertureGu(Rank.FIVE));
 
-    private static SecondApertureGuItem secondApertureGu(Rank rank, int refineCost, int stonesPerHunger) {
-        return new SecondApertureGuItem(tended(), GuSpec.of(rank, GuPath.HUMAN)
-                .refine(refineCost).costPerUse(0)
-                .hungerBar(8, stonesPerHunger).hungerPerUse(0)
-                .feed(ModItemTags.PRIMEVAL_STONE_FEED, 1)
-                .cooldown(Ticks.SECOND));
+    private static SecondApertureGuItem secondApertureGu(Rank rank) {
+        return new SecondApertureGuItem(oneShot(), GuSpec.of(rank, GuPath.HUMAN));
     }
     //endregion
 

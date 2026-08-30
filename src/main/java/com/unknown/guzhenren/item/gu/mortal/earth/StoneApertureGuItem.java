@@ -50,8 +50,20 @@ public class StoneApertureGuItem extends ConsumedGuItem {
         if (secondary == ApertureStatus.NORMAL) return ApertureData.SECONDARY;
         return NO_TARGET;
     }
+    /**
+     * Maps the seam's semantic slots onto real list positions: a lone second aperture lives at
+     * position 0, and a missing slot counts as DEAD -- a lost aperture is exactly what the
+     * fall-through exists for.
+     */
     private static int targetOf(Player player) {
-        return stoneTarget(ApertureService.status(player), ApertureService.status(player, ApertureData.SECONDARY));
+        ApertureData data = ApertureService.get(player);
+        int primary = data.firstIndex();
+        int secondary = data.secondIndex();
+        int target = stoneTarget(
+                primary < 0 ? ApertureStatus.DEAD : ApertureService.status(player, primary),
+                secondary < 0 ? ApertureStatus.DEAD : ApertureService.status(player, secondary));
+        if (target == NO_TARGET) return NO_TARGET;
+        return target == ApertureData.SECONDARY ? Math.max(secondary, 0) : Math.max(primary, 0);
     }
     @Override
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {

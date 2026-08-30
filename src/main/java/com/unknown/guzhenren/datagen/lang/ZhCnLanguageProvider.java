@@ -307,9 +307,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addItem(ModItems.ALL_OUT_EFFORT_GU_4, "四转全力以赴蛊");
         addItem(ModItems.ALL_OUT_EFFORT_GU_5, "五转全力以赴蛊");
         addItem(ModItems.JIN_STRENGTH_GU, "斤力蛊");
-        addItem(ModItems.TENS_JIN_STRENGTH_GU, "十斤之力蛊");
+        addItem(ModItems.TENS_JIN_STRENGTH_GU, "十斤力蛊");
         addItem(ModItems.JUN_STRENGTH_GU, "钧力蛊");
-        addItem(ModItems.TENS_JUN_STRENGTH_GU, "十钧之力蛊");
+        addItem(ModItems.TENS_JUN_STRENGTH_GU, "十钧力蛊");
         addItem(ModItems.VITALITY_LEAF_GU, "生机叶蛊");
         addItem(ModItems.LIFESPAN_GU, "寿蛊");
         addItem(ModItems.TENS_LIFESPAN_GU, "十年寿蛊");
@@ -396,7 +396,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.essence_full", "真元已满");
         add("guzhenren.item.failed.rank_mismatch", "境界不符 — 此蛊需%s");
         add("guzhenren.item.failed.stage_peak", "已至小境界巅峰");
-        add("guzhenren.item.failed.aperture_absent", "你未开窍");
         add("guzhenren.item.failed.second_aperture_rank", "第二空窍已是该转数或更高");
         add("guzhenren.item.failed.aperture_unavailable", "没有可以作用的空窍");
         add("guzhenren.item.failed.beast_strength_held", "已有%s之力");

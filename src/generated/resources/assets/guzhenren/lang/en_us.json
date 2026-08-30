@@ -306,7 +306,6 @@
   "guzhenren.impact.success": "Aperture Rank Up",
   "guzhenren.item.death_qi_cured": "Life Qi dispels the Death Qi -- %s years of lifespan restored",
   "guzhenren.item.failed.all_out_active": "The all-out effort has not yet passed",
-  "guzhenren.item.failed.aperture_absent": "You have NOT awakened",
   "guzhenren.item.failed.aperture_unavailable": "No usable aperture remains",
   "guzhenren.item.failed.awakened": "You have already awakened",
   "guzhenren.item.failed.beast_strength_held": "Already hold the %s's strength",

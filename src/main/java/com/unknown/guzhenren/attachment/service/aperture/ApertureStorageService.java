@@ -78,6 +78,14 @@ public final class ApertureStorageService {
         }
         return total;
     }
+    /**
+     * The storage-side twin of {@link com.unknown.guzhenren.attachment.data.aperture.ApertureData
+     * #insertFirst}: when Hope Gu opens the first aperture ahead of a lone second one, every stored
+     * list and the Vital Gu slot slides up one position.
+     */
+    public static void shiftForFirstAperture(@NotNull ServerPlayer p) {
+        p.setData(ModAttachments.APERTURE_STORAGE, get(p).shiftRight());
+    }
     private static int load(Rank holder, List<ItemStack> stacks) {
         int total = 0;
         for (ItemStack stack : stacks) total += cost(holder, stack);

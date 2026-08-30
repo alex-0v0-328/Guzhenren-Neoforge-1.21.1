@@ -393,7 +393,6 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.item.failed.essence_full", "Essence is already FULL");
         add("guzhenren.item.failed.rank_mismatch", "Wrong realm - this Gu needs %s");
         add("guzhenren.item.failed.stage_peak", "You are at the Stage Peak");
-        add("guzhenren.item.failed.aperture_absent", "You have NOT awakened");
         add("guzhenren.item.failed.second_aperture_rank", "The second aperture already stands at or above this rank");
         add("guzhenren.item.failed.aperture_unavailable", "No usable aperture remains");
         add("guzhenren.item.failed.beast_strength_held", "Already hold the %s's strength");

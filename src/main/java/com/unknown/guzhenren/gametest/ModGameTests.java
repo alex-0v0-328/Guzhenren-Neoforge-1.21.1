@@ -2,10 +2,17 @@ package com.unknown.guzhenren.gametest;
 
 import com.mojang.authlib.GameProfile;
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService;
 import com.unknown.guzhenren.attachment.service.aperture.AperturePressureExplosionTask;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
+import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService;
+import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
+import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.entity.FlyingGuEntity;
 import com.unknown.guzhenren.entity.HopeGuEntity;
+import com.unknown.guzhenren.item.GuItem;
 import com.unknown.guzhenren.item.gu.RefinedGuState;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
 import com.unknown.guzhenren.registry.entity.ModEntityTypes;
@@ -135,6 +142,44 @@ public final class ModGameTests {
             helper.assertTrue(travel.dot(towardPlayer) > 1.0D, "hope gu did not fly toward the player");
             helper.assertTrue(gu.distanceTo(player) < startDistance - 1.0D, "hope gu distance did not shrink");
         });
+    }
+    @GameTest(template = "empty9x9x9", timeoutTicks = 100)
+    public static void secondOnlyThenFirstApertureFlow(GameTestHelper helper) {
+        ServerPlayer player = survivalMock(helper, null, true);
+
+        ApertureService.openSecondary(player, Rank.THREE);
+        helper.assertValueEqual(ApertureService.get(player).count(), 1, "second-only aperture count");
+        helper.assertTrue(ApertureService.aperture(player, 0).second(), "lone aperture must be flagged second");
+        helper.assertTrue(!ApertureService.isAwakened(player), "second-only holder must not read awakened");
+        helper.assertTrue(ApertureService.hasAperture(player), "second-only holder must read hasAperture");
+
+        ItemStack vital = new ItemStack(ModItems.WHITE_BOAR_GU.get());
+        ApertureStorageService.setVital(player, 0, vital);
+        ApertureStorageService.set(player, 0, List.of(new ItemStack(ModItems.WHITE_BOAR_GU.get())));
+        ApertureNourishService.start(player, 0);
+        helper.assertTrue(ApertureNourishService.isCultivating(player), "nourish started on the lone second");
+
+        ApertureService.awaken(player, 80);
+        ApertureData data = ApertureService.get(player);
+        helper.assertValueEqual(data.count(), 2, "count after Hope Gu inserts the first aperture");
+        helper.assertValueEqual(data.firstIndex(), 0, "first aperture takes position 0");
+        helper.assertValueEqual(data.secondIndex(), 1, "second aperture slides to position 1");
+        helper.assertTrue(data.get(0).rank() == Rank.ONE, "first aperture rank");
+        helper.assertValueEqual(data.get(1).rank(), Rank.THREE, "second aperture kept its rank");
+        helper.assertTrue(GuItem.boundAperture(ApertureStorageService.vital(player, 1)) == 1,
+                "vital gu binding followed the slide");
+        helper.assertTrue(ApertureStorageService.items(player, 0).isEmpty(), "old store moved off position 0");
+        helper.assertValueEqual(ApertureStorageService.items(player, 1).size(), 1, "store followed the slide");
+        helper.assertTrue(ApertureNourishService.isCultivating(player)
+                && ApertureNourishService.targetIndex(player) == 1, "nourish target followed the slide");
+
+        ApertureService.openSecondary(player, Rank.FIVE);
+        ApertureData upgraded = ApertureService.get(player);
+        helper.assertValueEqual(upgraded.count(), 2, "upgrade keeps two apertures");
+        helper.assertValueEqual(upgraded.secondIndex(), 1, "upgrade overwrites in place");
+        helper.assertValueEqual(upgraded.get(1).rank(), Rank.FIVE, "upgrade lands the gu rank");
+        helper.assertValueEqual(upgraded.get(1).primaryPath(), GuPath.STRENGTH, "upgrade keeps the bound path");
+        helper.succeed();
     }
     private static List<Component> messages(List<Component> inbox, String key) {
         List<Component> hits = new ArrayList<>();

@@ -21,13 +21,15 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * One Aperture [空窍]: the vessel a cultivator awakens, and the thing that decides how much essence
- * fits. Leaf record nested inside {@link ApertureData}; immutable; twelve active components hold rank,
- * stage, essence, paths, distilled essence, pressure and cultivation latches.
+ * fits. Leaf record nested inside {@link ApertureData}; immutable; thirteen active components hold rank,
+ * stage, essence, paths, distilled essence, pressure, cultivation latches and the second-aperture flag.
  *
  * <p>⚠ {@code baseEssence} clamps to {@code [MIN_BASE, MAX_BASE]} (20..100) when positive; {@code 0} is
  * reserved for {@code NONE} and {@code 1..19} is a hole, not a value. ⚠ The two {@link GuPath} fields
  * are the ONLY active nullables in the data model ({@code ofNullableEnum}); the legacy physique carrier
- * is decode-only, never synced nor streamed. ⚠ The stream codec is handwritten (composite caps at 6).
+ * is decode-only, never synced nor streamed. ⚠ {@code second} marks the aperture opened by a Second
+ * Aperture Gu, not by Hope Gu -- the LIST position is the awakening order, the flag is the identity.
+ * ⚠ The stream codec is handwritten (composite caps at 6).
  *
  * @author Alex
  * @version 1.0.0
@@ -49,7 +51,8 @@ public record Aperture(
         int nourishProgress,
         boolean petrified,
         boolean distilling,
-        @Nullable ExtremePhysique legacyExtremePhysique
+        @Nullable ExtremePhysique legacyExtremePhysique,
+        boolean second
 ) {
 
     public static final int MIN_BASE = 20;
@@ -59,14 +62,14 @@ public record Aperture(
     public static final int SECONDARY_BASE = 80;
 
     public static final Aperture NONE = new Aperture(
-            Rank.NONE, Stage.NONE, 0, 0L, null, null, 0L, 0, 0L, 0, false, false, null);
+            Rank.NONE, Stage.NONE, 0, 0L, null, null, 0L, 0, 0L, 0, false, false, null, false);
 
     public Aperture(Rank rank, Stage stage, int baseEssence, long currentEssence,
                     @Nullable GuPath primaryPath, @Nullable GuPath secondaryPath, long distilledEssence,
                     int pressure, long pressureDeadlineTick, int nourishProgress, boolean petrified,
                     boolean distilling) {
         this(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence, pressure,
-                pressureDeadlineTick, nourishProgress, petrified, distilling, null);
+                pressureDeadlineTick, nourishProgress, petrified, distilling, null, false);
     }
     private static final Codec<Aperture> CURRENT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Rank.CODEC.optionalFieldOf("rank", Rank.NONE).forGetter(Aperture::rank),
@@ -80,11 +83,12 @@ public record Aperture(
             Codec.LONG.optionalFieldOf("pressure_deadline_tick", 0L).forGetter(Aperture::pressureDeadlineTick),
             Codec.INT.optionalFieldOf("nourish_progress", 0).forGetter(Aperture::nourishProgress),
             Codec.BOOL.optionalFieldOf("petrified", false).forGetter(Aperture::petrified),
-            Codec.BOOL.optionalFieldOf("distilling", false).forGetter(Aperture::distilling)
+            Codec.BOOL.optionalFieldOf("distilling", false).forGetter(Aperture::distilling),
+            Codec.BOOL.optionalFieldOf("second", false).forGetter(Aperture::second)
     ).apply(instance, (rank, stage, base, essence, primary, secondary, distilled, pressure, deadline,
-                       nourishProgress, petrified, distilling) ->
+                       nourishProgress, petrified, distilling, second) ->
             new Aperture(rank, stage, base, essence, primary.orElse(null), secondary.orElse(null), distilled,
-                    pressure, deadline, nourishProgress, petrified, distilling)));
+                    pressure, deadline, nourishProgress, petrified, distilling, null, second)));
 
     private static final Codec<Aperture> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Rank.CODEC.optionalFieldOf("rank", Rank.NONE).forGetter(Aperture::rank),
@@ -102,12 +106,13 @@ public record Aperture(
             Codec.INT.optionalFieldOf("nourish_progress", 0).forGetter(Aperture::nourishProgress),
             Codec.BOOL.optionalFieldOf("petrified", false).forGetter(Aperture::petrified),
             Codec.BOOL.optionalFieldOf("distilling", false).forGetter(Aperture::distilling),
-            Codec.BOOL.optionalFieldOf("zombie_opened", false).forGetter(a -> false)
+            Codec.BOOL.optionalFieldOf("zombie_opened", false).forGetter(a -> false),
+            Codec.BOOL.optionalFieldOf("second", false).forGetter(Aperture::second)
     ).apply(instance, (rank, stage, base, legacyPhysique, essence, primary, secondary, distilled, pressure, deadline,
-                       nourishProgress, petrified, distilling, ignoredZombieOpened) ->
+                       nourishProgress, petrified, distilling, ignoredZombieOpened, second) ->
             new Aperture(rank, stage, base, essence, primary.orElse(null), secondary.orElse(null), distilled,
                     pressure, deadline, nourishProgress, petrified, distilling,
-                    legacyPhysique == ExtremePhysique.NONE ? null : legacyPhysique)));
+                    legacyPhysique == ExtremePhysique.NONE ? null : legacyPhysique, second)));
 
     private static final Decoder<Aperture> DECODER = new Decoder<>() {
         @Override
@@ -140,6 +145,8 @@ public record Aperture(
                     ByteBufCodecs.VAR_LONG.decode(buf),
                     ByteBufCodecs.VAR_INT.decode(buf),
                     ByteBufCodecs.BOOL.decode(buf),
+                    ByteBufCodecs.BOOL.decode(buf),
+                    null,
                     ByteBufCodecs.BOOL.decode(buf));
         }
         @Override
@@ -156,6 +163,7 @@ public record Aperture(
             ByteBufCodecs.VAR_INT.encode(buf, value.nourishProgress());
             ByteBufCodecs.BOOL.encode(buf, value.petrified());
             ByteBufCodecs.BOOL.encode(buf, value.distilling());
+            ByteBufCodecs.BOOL.encode(buf, value.second());
         }
     };
     public Aperture {
@@ -174,7 +182,8 @@ public record Aperture(
     }
     public static Aperture secondaryOpened(Rank rank) {
         long max = maxEssence(rank, Stage.INIT, SECONDARY_BASE);
-        return new Aperture(rank, Stage.INIT, SECONDARY_BASE, max, null, null, 0L, 0, 0L, 0, false, false);
+        return new Aperture(rank, Stage.INIT, SECONDARY_BASE, max, null, null, 0L, 0, 0L, 0, false, false,
+                null, true);
     }
     public static long maxEssence(Rank rank, Stage stage, int base) {
         return Math.max(0L, (long) base * stage.getEssenceMultiplier() * rank.getRankBase());
@@ -184,54 +193,58 @@ public record Aperture(
     public Aperture refilled() {return withCurrentEssence(maxEssence());}
     public Aperture withRank(Rank v) {
         return new Aperture(v, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
-                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique);
+                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique, second);
     }
     public Aperture withStage(Stage v) {
         return new Aperture(rank, v, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
-                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique);
+                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique, second);
     }
     public Aperture withBaseEssence(int v) {
         return new Aperture(rank, stage, v, currentEssence, primaryPath, secondaryPath, distilledEssence,
-                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique);
+                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique, second);
     }
     public Aperture withCurrentEssence(long v) {
         return new Aperture(rank, stage, baseEssence, v, primaryPath, secondaryPath, distilledEssence,
-                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique);
+                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique, second);
     }
     public Aperture withPrimaryPath(@Nullable GuPath v) {
         return new Aperture(rank, stage, baseEssence, currentEssence, v, secondaryPath, distilledEssence,
-                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique);
+                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique, second);
     }
     public Aperture withSecondaryPath(@Nullable GuPath v) {
         return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, v, distilledEssence,
-                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique);
+                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique, second);
     }
     public Aperture withDistilledEssence(long v) {
         return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, v,
-                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique);
+                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique, second);
     }
     public Aperture withPressure(int v) {
         return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
-                v, 0L, nourishProgress, petrified, distilling, legacyExtremePhysique);
+                v, 0L, nourishProgress, petrified, distilling, legacyExtremePhysique, second);
     }
     public Aperture withPressureAndDeadline(int v, long deadline) {
         return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
-                v, deadline, nourishProgress, petrified, distilling, legacyExtremePhysique);
+                v, deadline, nourishProgress, petrified, distilling, legacyExtremePhysique, second);
     }
     public Aperture withNourishProgress(int v) {
         return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
-                pressure, pressureDeadlineTick, v, petrified, distilling, legacyExtremePhysique);
+                pressure, pressureDeadlineTick, v, petrified, distilling, legacyExtremePhysique, second);
     }
     public Aperture withPetrified(boolean v) {
         return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
-                pressure, pressureDeadlineTick, nourishProgress, v, distilling, legacyExtremePhysique);
+                pressure, pressureDeadlineTick, nourishProgress, v, distilling, legacyExtremePhysique, second);
     }
     public Aperture withDistilling(boolean v) {
         return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
-                pressure, pressureDeadlineTick, nourishProgress, petrified, v, legacyExtremePhysique);
+                pressure, pressureDeadlineTick, nourishProgress, petrified, v, legacyExtremePhysique, second);
+    }
+    public Aperture withSecond(boolean v) {
+        return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
+                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique, v);
     }
     public Aperture clearLegacyExtremePhysique() {
         return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
-                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, null);
+                pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, null, second);
     }
 }
