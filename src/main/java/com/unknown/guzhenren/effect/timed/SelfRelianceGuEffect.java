@@ -19,20 +19,19 @@ import net.minecraft.world.entity.LivingEntity;
  */
 
 public final class SelfRelianceGuEffect extends MobEffect {
-
+    private static final float HEAL_CAP_BASE = 0.5F;
+    private static final float HEAL_CAP_TIER_STEP = 0.1F;
     public SelfRelianceGuEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
-
     @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return duration % Ticks.SECOND == 0;
     }
-
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         int tier = Math.clamp(amplifier - 1, 0, 2);
-        float limit = entity.getMaxHealth() * (0.5F + tier * 0.1F);
+        float limit = entity.getMaxHealth() * (HEAL_CAP_BASE + tier * HEAL_CAP_TIER_STEP);
         if (entity.getHealth() < limit) entity.heal(Math.min(tier + 1.0F, limit - entity.getHealth()));
         return true;
     }

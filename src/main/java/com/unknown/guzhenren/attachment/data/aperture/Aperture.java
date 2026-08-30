@@ -20,17 +20,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * One Aperture [空窍]: the vessel a cultivator awakens, and the thing that decides how much essence fits.
+ * One Aperture [空窍]: the vessel a cultivator awakens, and the thing that decides how much essence
+ * fits. Leaf record nested inside {@link ApertureData}; immutable; twelve active components hold rank,
+ * stage, essence, paths, distilled essence, pressure and cultivation latches.
  *
- * <p>Leaf record nested inside {@link ApertureData}; immutable. Twelve active components hold rank,
- * stage, base/current essence, paths, distilled essence, pressure and cultivation latches. The nullable
- * legacy physique carrier is decode-only and is cleared by player migration; it is neither synchronized
- * nor written by the current stream codec.
- *
- * <p>⚠ {@code baseEssence} is clamped to {@code [MIN_BASE, MAX_BASE]} (20..100) when positive; {@code 0}
- * is reserved for {@code NONE} and {@code 1..19} is a hole, not a value. ⚠ The two {@link GuPath}
- * fields are the ONLY active nullables in the data model, carried via {@code ofNullableEnum}. ⚠ The
- * current stream codec is handwritten because the active record has more than six fields.
+ * <p>⚠ {@code baseEssence} clamps to {@code [MIN_BASE, MAX_BASE]} (20..100) when positive; {@code 0} is
+ * reserved for {@code NONE} and {@code 1..19} is a hole, not a value. ⚠ The two {@link GuPath} fields
+ * are the ONLY active nullables in the data model ({@code ofNullableEnum}); the legacy physique carrier
+ * is decode-only, never synced nor streamed. ⚠ The stream codec is handwritten (composite caps at 6).
  *
  * @author Alex
  * @version 1.0.0
@@ -71,7 +68,6 @@ public record Aperture(
         this(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence, pressure,
                 pressureDeadlineTick, nourishProgress, petrified, distilling, null);
     }
-
     private static final Codec<Aperture> CURRENT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Rank.CODEC.optionalFieldOf("rank", Rank.NONE).forGetter(Aperture::rank),
             Stage.CODEC.optionalFieldOf("stage", Stage.NONE).forGetter(Aperture::stage),
@@ -95,7 +91,8 @@ public record Aperture(
             Stage.CODEC.optionalFieldOf("stage", Stage.NONE).forGetter(Aperture::stage),
             Codec.INT.optionalFieldOf("base_essence", 0).forGetter(Aperture::baseEssence),
             ExtremePhysique.CODEC.optionalFieldOf("extreme_physique", ExtremePhysique.NONE)
-                    .forGetter(a -> a.legacyExtremePhysique() == null ? ExtremePhysique.NONE : a.legacyExtremePhysique()),
+                    .forGetter(a -> a.legacyExtremePhysique() == null
+                            ? ExtremePhysique.NONE : a.legacyExtremePhysique()),
             Codec.LONG.optionalFieldOf("current_essence", 0L).forGetter(Aperture::currentEssence),
             GuPath.CODEC.optionalFieldOf("primary_path").forGetter(a -> Optional.ofNullable(a.primaryPath())),
             GuPath.CODEC.optionalFieldOf("secondary_path").forGetter(a -> Optional.ofNullable(a.secondaryPath())),
@@ -145,7 +142,6 @@ public record Aperture(
                     ByteBufCodecs.BOOL.decode(buf),
                     ByteBufCodecs.BOOL.decode(buf));
         }
-
         @Override
         public void encode(@NotNull ByteBuf buf, @NotNull Aperture value) {
             RANK.encode(buf, value.rank());
@@ -162,7 +158,6 @@ public record Aperture(
             ByteBufCodecs.BOOL.encode(buf, value.distilling());
         }
     };
-
     public Aperture {
         baseEssence = baseEssence <= 0 ? 0 : Math.clamp(baseEssence, MIN_BASE, MAX_BASE);
         currentEssence = Math.clamp(currentEssence, 0L, maxEssence(rank, stage, baseEssence));
@@ -172,27 +167,21 @@ public record Aperture(
         nourishProgress = Math.clamp(nourishProgress, 0, ApertureNourishData.FULL);
         if (secondaryPath != null && secondaryPath == primaryPath) secondaryPath = null;
     }
-
     public static Aperture opened() {return openedAt(Talent.randomPercent(Talent.randomTalent()));}
-
     public static Aperture openedAt(int baseEssence) {
         long max = maxEssence(Rank.ONE, Stage.INIT, baseEssence);
         return new Aperture(Rank.ONE, Stage.INIT, baseEssence, max, null, null, 0L, 0, 0L, 0, false, false);
     }
-
     public static Aperture secondaryOpened(Rank rank) {
         long max = maxEssence(rank, Stage.INIT, SECONDARY_BASE);
         return new Aperture(rank, Stage.INIT, SECONDARY_BASE, max, null, null, 0L, 0, 0L, 0, false, false);
     }
-
     public static long maxEssence(Rank rank, Stage stage, int base) {
         return Math.max(0L, (long) base * stage.getEssenceMultiplier() * rank.getRankBase());
     }
-
     public long maxEssence() {return maxEssence(rank, stage, baseEssence);}
     public Talent talent() {return Talent.fromPercent(baseEssence);}
     public Aperture refilled() {return withCurrentEssence(maxEssence());}
-
     public Aperture withRank(Rank v) {
         return new Aperture(v, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
                 pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, legacyExtremePhysique);
@@ -241,7 +230,6 @@ public record Aperture(
         return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
                 pressure, pressureDeadlineTick, nourishProgress, petrified, v, legacyExtremePhysique);
     }
-
     public Aperture clearLegacyExtremePhysique() {
         return new Aperture(rank, stage, baseEssence, currentEssence, primaryPath, secondaryPath, distilledEssence,
                 pressure, pressureDeadlineTick, nourishProgress, petrified, distilling, null);

@@ -21,12 +21,9 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
  */
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ServerTickEvents {
-
     private ServerTickEvents() {}
-
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {AperturePressureExplosionTask.tickAll();}
-
     @SubscribeEvent
     public static void onServerStopping(ServerStoppingEvent event) {AperturePressureExplosionTask.clear();}
 }

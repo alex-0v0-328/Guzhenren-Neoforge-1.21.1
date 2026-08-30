@@ -47,13 +47,11 @@ public abstract class MortalGuItem extends GuItem {
     private static final String CAPTION_REFINING = "guzhenren.hud.refining";
 
     protected final GuSpec spec;
-
     protected MortalGuItem(Properties properties, GuSpec spec) {
         super(properties, spec.rank(), spec.path());
         this.spec = spec;
         spec.validate(rank().name() + " " + getClass().getSimpleName());
     }
-
     @Override
     protected String kindKey() {return KIND_KEY;}
     public int refineCost() {return spec.refineCost();}
@@ -63,7 +61,6 @@ public abstract class MortalGuItem extends GuItem {
         if (required <= 0) return null;
         return ApertureEssenceService.spendable(player) < required ? new Refusal(key) : null;
     }
-
     protected final void payRefineCost(ServerPlayer player) {
         if (refineCost() > 0) ApertureEssenceService.consume(player, refineCost());
     }
@@ -72,20 +69,17 @@ public abstract class MortalGuItem extends GuItem {
     //region the click -- a Gu always answers the right click, if only to be refined
     @Override
     protected final boolean hasUse() {return true;}
-
     protected @Nullable Refusal useGate(Player player, ItemStack stack) {return null;}
     protected int useApply(ServerPlayer player, ItemStack stack) {return 0;}
     //endregion
 
     //region display
     protected final Component refineCaptionPlain() {return Component.translatable(CAPTION_REFINING_PLAIN);}
-
     protected final Component refineCaption(int invested) {
         return refineCost() > 0
                 ? Component.translatable(CAPTION_REFINING, invested, refineCost())
                 : refineCaptionPlain();
     }
-
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
@@ -97,7 +91,6 @@ public abstract class MortalGuItem extends GuItem {
         MutableComponent line = progressLine(stack);
         if (line != null) tooltip.add(line.withStyle(ChatFormatting.GRAY));
     }
-
     protected @Nullable MutableComponent progressLine(ItemStack stack) {return null;}
     //endregion
 

@@ -10,14 +10,10 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The goal that makes a flying Gu hover beside the player it wants.
  *
- * <p>Extends {@link net.minecraft.world.entity.ai.goal.Goal}. Drives the movement vector directly and
- * never paths -- a mote flies straight, so the navigation's path cache and stuck detector would be
- * obstacles rather than help. The target is re-read every tick via
- * {@link com.unknown.guzhenren.entity.FlyingGuEntity#seekTarget}; a sine bob on {@code tickCount}
- * gives the hover its drift.
- *
- * <p>☠ It drives the movement vector itself and never paths. A mote flies straight, so the
- * navigation's path cache and stuck detector would be obstacles rather than help.
+ * <p>☠ Drives the movement vector directly and never paths -- a mote flies straight, so the navigation's
+ * path cache and stuck detector would be obstacles rather than help. The target is re-read every tick via
+ * {@link com.unknown.guzhenren.entity.FlyingGuEntity#seekTarget}; a sine bob on {@code tickCount} gives
+ * the hover its drift.
  *
  * @author Alex
  * @version 1.0.0
@@ -36,33 +32,26 @@ public class HoverNearPlayerGoal extends Goal {
 
     private final FlyingGuEntity gu;
     private @Nullable Player target;
-
     public HoverNearPlayerGoal(FlyingGuEntity gu) {
         this.gu = gu;
         setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
-
     @Override
     public boolean canUse() {
         target = gu.seekTarget();
         return target != null;
     }
-
     @Override
     public boolean canContinueToUse() {
         return target != null && target.isAlive() && gu.seeks(target)
                 && gu.distanceToSqr(target) <= detectRangeSqr();
     }
-
     @Override
     public void start() {gu.getNavigation().stop();}
-
     @Override
     public void stop() {target = null;}
-
     @Override
     public boolean requiresUpdateEveryTick() {return true;}
-
     @Override
     public void tick() {
         if (target == null) return;
@@ -75,17 +64,14 @@ public class HoverNearPlayerGoal extends Goal {
         }
         bob();
     }
-
     private void approach(Vec3 toEye) {
         Vec3 wanted = toEye.normalize().scale(APPROACH_SPEED);
         gu.setDeltaMovement(gu.getDeltaMovement().add(wanted.subtract(gu.getDeltaMovement()).scale(EASING)));
     }
-
     private void bob() {
         Vec3 movement = gu.getDeltaMovement();
         double lift = Math.sin(gu.tickCount * BOB_FREQUENCY) * BOB_AMPLITUDE;
         gu.setDeltaMovement(movement.x * HOVER_DRAG, lift, movement.z * HOVER_DRAG);
     }
-
     private double detectRangeSqr() {return FlyingGuEntity.DETECT_RANGE * FlyingGuEntity.DETECT_RANGE;}
 }

@@ -28,23 +28,19 @@ import org.jetbrains.annotations.Nullable;
 public final class ModStreamCodecs {
 
     private ModStreamCodecs() {}
-
     public static <E extends Enum<E>> StreamCodec<ByteBuf, E> ofEnum(Class<E> type) {
         E[] values = type.getEnumConstants();
         return ByteBufCodecs.VAR_INT.map(ordinal -> values[ordinal], Enum::ordinal);
     }
-
     public static <E extends Enum<E>> StreamCodec<ByteBuf, @Nullable E> ofNullableEnum(Class<E> type) {
         E[] values = type.getEnumConstants();
         return ByteBufCodecs.VAR_INT.map(i -> i == 0 ? null : values[i - 1],
                 value -> value == null ? 0 : value.ordinal() + 1);
     }
-
     public static <K extends Enum<K>, V> StreamCodec<ByteBuf, Map<K, V>> enumMap(
             Class<K> key, StreamCodec<ByteBuf, V> value) {
         return ByteBufCodecs.map(HashMap::new, ofEnum(key), value);
     }
-
     public static <E extends Enum<E>> StreamCodec<ByteBuf, Set<E>> enumSet(Class<E> type) {
         return ByteBufCodecs.collection(HashSet::new, ofEnum(type));
     }

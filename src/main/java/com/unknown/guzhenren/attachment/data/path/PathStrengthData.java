@@ -18,19 +18,15 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 /**
- * Strength [力道]: the beast and human strengths a player has refined into themselves.
+ * Strength [力道]: the beast and human strengths a player has refined into themselves. Immutable record
+ * attachment keyed {@code strength_data}; {@link
+ * com.unknown.guzhenren.attachment.service.path.PathStrengthService} is the only writer. A {@code Set}
+ * of {@link BeastStrength} plus a sparse {@code Map} of {@link HumanStrength} layer counts, ctor-capped.
  *
- * <p>Immutable record attachment keyed {@code strength_data}; {@link
- * com.unknown.guzhenren.attachment.service.path.PathStrengthService} is the only writer. Two components:
- * a {@code Set} of {@link BeastStrength} (one kind once ever) and a sparse {@code Map} of
- * {@link HumanStrength} to layer count. The compact ctor caps each entry at its own {@link
- * HumanStrength#getMaxLayers()} limit and prunes zero-or-below entries.
- *
- * <p>⚠ The compact constructor must use {@code new EnumMap<>(Class)} plus {@code putAll}, never the
- * {@code EnumMap(Map)} copy constructor -- that one throws on the empty maps {@code DEFAULT} is built
- * from. Same shape for the {@link EnumSet}. ⚠ The four per-kind layer caps (9/9/30/30) sum to exactly
- * 9,999 jin; changing one constant breaks that identity. ⚠ {@code beastReadings()} groups by
- * {@code BeastStrengthFamily}, not by species constant -- two boars share one family and one bracket.
+ * <p>⚠ The ctor must build {@code new EnumMap<>(Class)} + {@code putAll} / {@code noneOf} + {@code
+ * addAll} -- the {@code EnumMap(Map)} copy constructor throws on the empty maps {@code DEFAULT} uses. ⚠
+ * The four layer caps (9/9/30/30) sum to exactly 9,999 jin; changing one breaks that identity. ⚠
+ * {@code beastReadings()} groups by {@code BeastStrengthFamily}, not species -- two boars share one.
  *
  * @author Alex
  * @version 1.0.0
@@ -53,7 +49,6 @@ public record PathStrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Int
             ModStreamCodecs.enumSet(BeastStrength.class), PathStrengthData::beasts,
             ModStreamCodecs.enumMap(HumanStrength.class, ByteBufCodecs.VAR_INT), PathStrengthData::humanStrength,
             PathStrengthData::new);
-
     public PathStrengthData {
         EnumSet<BeastStrength> takenBeasts = EnumSet.noneOf(BeastStrength.class);
         takenBeasts.addAll(beasts);
@@ -65,32 +60,26 @@ public record PathStrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Int
         });
         humanStrength = Collections.unmodifiableMap(pruned);
     }
-
     public boolean has(BeastStrength beast) {return beasts.contains(beast);}
     public int humanStrengthCount(HumanStrength kind) {return humanStrength.getOrDefault(kind, 0);}
     public boolean isEmpty() {return beasts.isEmpty() && humanStrength.isEmpty();}
     public PathStrengthData with(BeastStrength beast) {return rebuilt(beast, true);}
     public PathStrengthData without(BeastStrength beast) {return rebuilt(beast, false);}
-
     public Map<BeastStrengthFamily, Integer> beastReadings() {
         Map<BeastStrengthFamily, Integer> readings = new EnumMap<>(BeastStrengthFamily.class);
         for (BeastStrength beast : beasts) readings.merge(beast.getFamily(), beast.getReading(), Integer::sum);
         return readings;
     }
-
     public int totalJin() {
         int total = 0;
         for (HumanStrength kind : HumanStrength.values()) total += humanStrengthCount(kind) * kind.getJin();
         return total;
     }
-
     public int junReading() {return reading(HumanStrength.JUN, HumanStrength.TEN_JUN);}
     public int jinReading() {return reading(HumanStrength.JIN, HumanStrength.TEN_JIN);}
-
     private int reading(HumanStrength base, HumanStrength ten) {
         return humanStrengthCount(base) + HumanStrength.TEN_FACTOR * humanStrengthCount(ten);
     }
-
     public boolean hasPathBranch(StrengthPathBranch branch) {
         return switch (branch) {
             case BEAST_STRENGTH_PHANTOM -> !beasts.isEmpty();
@@ -98,14 +87,12 @@ public record PathStrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Int
             case ATMOSPHERIC_HEAVEN_AND_EARTH, NORMAL -> false;
         };
     }
-
     public PathStrengthData withHumanStrength(HumanStrength kind, int count) {
         Map<HumanStrength, Integer> next = new EnumMap<>(HumanStrength.class);
         next.putAll(humanStrength);
         next.put(kind, Math.max(0, count));
         return new PathStrengthData(beasts, next);
     }
-
     private PathStrengthData rebuilt(BeastStrength beast, boolean present) {
         EnumSet<BeastStrength> next = EnumSet.noneOf(BeastStrength.class);
         next.addAll(beasts);

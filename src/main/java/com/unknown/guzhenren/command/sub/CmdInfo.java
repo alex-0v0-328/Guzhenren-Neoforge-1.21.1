@@ -35,11 +35,8 @@ import net.minecraft.server.level.ServerPlayer;
  */
 
 public final class CmdInfo {
-
     private CmdInfo() {}
-
     private static final String PREFIX = "guzhenren.command.info.";
-
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("info")
                 .executes(context -> print(context, InfoModel::aperture))
@@ -54,7 +51,6 @@ public final class CmdInfo {
                 .then(ModCommandSupport.withTargets(Commands.literal("mind"),
                         context -> print(context, InfoModel::mind)));
     }
-
     private static int print(CommandContext<CommandSourceStack> context,
                              Function<ServerPlayer, List<InfoModel.Row>> view) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
@@ -67,7 +63,6 @@ public final class CmdInfo {
         }
         return Command.SINGLE_SUCCESS;
     }
-
     private static Component line(InfoModel.Entry entry) {
         return switch (entry) {
             case InfoModel.ApertureIndex e -> ModDisplayText.apertureName(e.number());
@@ -111,22 +106,18 @@ public final class CmdInfo {
                     e.pool().current(), e.pool().max());
         };
     }
-
     private static MutableComponent talent(InfoModel.Talent e) {
         MutableComponent talent = ModDisplayText.talent(e.aperture());
         if (e.awakened()) talent.append(muted(ModDisplayText.baseFraction(e.aperture().baseEssence())));
         return key("talent", talent);
     }
-
     private static MutableComponent header(boolean empty) {
         MutableComponent line = key("paths");
         return empty ? line.append("  ").append(none()) : line;
     }
-
     private static MutableComponent key(String id, Object... args) {return Component.translatable(PREFIX + id, args);}
     private static MutableComponent enumName(String key) {return Component.translatable(key);}
     private static MutableComponent none() {return Component.translatable("guzhenren.display.none");}
-
     private static MutableComponent muted(Object value) {
         return Component.translatable(PREFIX + "detail", value).withStyle(ChatFormatting.DARK_GRAY);
     }

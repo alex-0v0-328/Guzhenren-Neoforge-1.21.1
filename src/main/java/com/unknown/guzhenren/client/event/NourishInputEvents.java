@@ -46,7 +46,6 @@ public final class NourishInputEvents {
         input.jumping = false;
         input.shiftKeyDown = false;
     }
-
     @SubscribeEvent
     public static void onComputeFov(ComputeFovModifierEvent event) {
         if (!ApertureNourishService.isCultivating(event.getPlayer())) return;

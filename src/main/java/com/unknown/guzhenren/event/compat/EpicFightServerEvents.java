@@ -13,9 +13,7 @@ import yesman.epicfight.world.gamerule.EpicFightGameRules;
 
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class EpicFightServerEvents {
-
     private EpicFightServerEvents() {}
-
     @SubscribeEvent
     public static void onServerStarted(ServerStartedEvent event) {
         for (ServerLevel level : event.getServer().getAllLevels()) {

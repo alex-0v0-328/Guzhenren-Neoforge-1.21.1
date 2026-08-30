@@ -20,13 +20,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.StringRepresentable;
 
 /**
- * The shared pieces every subcommand is built from: target resolution, gating, and feedback.
- *
- * <p>Provides the {@code withTargets} wrapper that hangs {@code [targets]} off a literal, the
- * {@code apply} / {@code applyIf} runners that iterate per target, the {@code sourceAwakened}
- * predicate used by {@code requires()}, and {@code refreshCommands} which re-sends the command tree
- * after a gate flip. Also hosts the shared verb builders ({@code enumSetNode}, {@code longNode},
- * {@code counter}) that every domain leaf reuses.
+ * The shared pieces every subcommand is built from: target resolution, gating, and feedback. Provides
+ * the {@code withTargets} wrapper hanging {@code [targets]} off a literal, the {@code apply}/{@code
+ * applyIf} runners iterating per target, the {@code sourceAwakened} predicate used by {@code
+ * requires()}, and {@code refreshCommands} re-sending the command tree after a gate flip; also the
+ * shared verb builders ({@code enumSetNode}, {@code longNode}, {@code counter}).
  *
  * <p>⚠ Anything that flips the answer of a {@code requires()} predicate has to ask this class to
  * refresh the command tree, or the client keeps the tree it was last sent.
@@ -38,39 +36,32 @@ import net.minecraft.util.StringRepresentable;
  */
 
 public final class ModCommandSupport {
-
     private ModCommandSupport() {}
-
     public static final String ARG_TARGETS = "targets";
     public static final String ARG_VALUE = "value";
 
     public static final String FAILED_AWAKENED = "guzhenren.command.failed.awakened";
     public static final String FAILED_UNAWAKENED = "guzhenren.command.failed.unawakened";
+    public static final String FAILED_EXTREME = "guzhenren.command.failed.extreme_physique_required";
 
     public static final Predicate<ServerPlayer> ANYONE = player -> true;
     public static final Predicate<ServerPlayer> AWAKENED = ApertureService::isAwakened;
-
     public static boolean sourceAwakened(CommandSourceStack source) {
         return !(source.getEntity() instanceof ServerPlayer player) || ApertureService.isAwakened(player);
     }
-
     public static void refreshCommands(ServerPlayer player) {
         MinecraftServer server = player.getServer();
         if (server != null) server.getCommands().sendCommands(player);
     }
-
     //region node builders
-
     public static ArgumentBuilder<CommandSourceStack, ?> withTargets(
             ArgumentBuilder<CommandSourceStack, ?> node, Command<CommandSourceStack> executor) {
         return node.executes(executor)
                 .then(Commands.argument(ARG_TARGETS, EntityArgument.players()).executes(executor));
     }
-
     public static ArgumentBuilder<CommandSourceStack, ?> longNode(String literal, LongOperation operation) {
         return longNode(literal, operation, ANYONE, null);
     }
-
     public static ArgumentBuilder<CommandSourceStack, ?> longNode(
             String literal, LongOperation operation, Predicate<ServerPlayer> allowed, String refusedKey) {
         return Commands.literal(literal).then(withTargets(
@@ -80,7 +71,6 @@ public final class ModCommandSupport {
                     return applyIf(context, allowed, refusedKey, player -> operation.apply(player, value));
                 }));
     }
-
     public static ArgumentBuilder<CommandSourceStack, ?> counter(
             String literal, LongOperation set, LongOperation add) {
         return Commands.literal(literal)
@@ -88,7 +78,6 @@ public final class ModCommandSupport {
                 .then(longNode("add", add))
                 .then(longNode("sub", (player, value) -> add.apply(player, -value)));
     }
-
     public static <E extends Enum<E> & StringRepresentable> ArgumentBuilder<CommandSourceStack, ?> enumSetNode(
             String literal, E[] values, EnumOperation<E> operation,
             Predicate<ServerPlayer> allowed, String refusedKey) {
@@ -98,20 +87,16 @@ public final class ModCommandSupport {
                     return applyIf(context, allowed, refusedKey, player -> operation.apply(player, value));
                 })));
     }
-
     //endregion
     //region execution
-
     public static int apply(CommandContext<CommandSourceStack> context, PlayerOperation operation)
             throws CommandSyntaxException {
         return applyIf(context, ANYONE, null, operation);
     }
-
     public static int applyOnAwakened(CommandContext<CommandSourceStack> context, PlayerOperation operation)
             throws CommandSyntaxException {
         return applyIf(context, AWAKENED, FAILED_UNAWAKENED, operation);
     }
-
     public static int applyIf(CommandContext<CommandSourceStack> context, Predicate<ServerPlayer> allowed,
                               String refusedKey, PlayerOperation operation) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
@@ -135,7 +120,6 @@ public final class ModCommandSupport {
         }
         return updated;
     }
-
     public static int applyIfResult(CommandContext<CommandSourceStack> context, Predicate<ServerPlayer> allowed,
                                     String refusedKey, ResultOperation operation) throws CommandSyntaxException {
         CommandSourceStack source = context.getSource();
@@ -151,10 +135,10 @@ public final class ModCommandSupport {
         }
 
         if (!refused.isEmpty()) ModCommandFeedback.failure(source, Component.translatable(refusedKey, names(refused)));
-        if (updated > 0) ModCommandFeedback.success(source, Component.translatable("guzhenren.command.updated", updated));
+        if (updated > 0) ModCommandFeedback.success(source,
+                Component.translatable("guzhenren.command.updated", updated));
         return updated;
     }
-
     public static Collection<ServerPlayer> targets(CommandContext<CommandSourceStack> context)
             throws CommandSyntaxException {
         boolean explicit = context.getNodes().stream()
@@ -164,11 +148,9 @@ public final class ModCommandSupport {
                 ? EntityArgument.getPlayers(context, ARG_TARGETS)
                 : List.of(context.getSource().getPlayerOrException());
     }
-
     private static Component names(List<ServerPlayer> players) {
         return ComponentUtils.formatList(players, ServerPlayer::getDisplayName);
     }
-
     //endregion
 
     @FunctionalInterface
@@ -191,8 +173,4 @@ public final class ModCommandSupport {
         void apply(ServerPlayer player, long value);
     }
 
-    @FunctionalInterface
-    public interface IntOperation {
-        void apply(ServerPlayer player, int value);
-    }
 }

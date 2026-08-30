@@ -48,7 +48,6 @@ public record RefinedGuState(boolean refined, int refineProgress, int investedEs
         hunger = Math.max(0, hunger);
         damageTaken = Math.max(0, damageTaken);
     }
-
     //region the with* copies -- five components run past 120, so these are blocks
     public RefinedGuState withRefine(int v) {
         return new RefinedGuState(refined, v, investedEssence, hunger, damageTaken);

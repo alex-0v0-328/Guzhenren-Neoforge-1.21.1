@@ -39,7 +39,6 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.menu.RefinementMenu
  * @since 1.0.0
  */
 
@@ -139,7 +138,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         this.inventoryLabelX = RefinementMenu.INVENTORY_X;
         this.titleLabelX = TITLE_X_WITH_BACK;
     }
-
     @Override
     protected void renderBg(@NotNull GuiGraphics g, float partialTick, int mouseX, int mouseY) {
         int x = leftPos;
@@ -158,7 +156,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
                 INVENTORY_COLS, 1, SLOT, SLOT_FILL);
         drawBar(g, x, y);
     }
-
     //region the two rings -- the 内圈 is marked by a brighter cell and an accent frame around the block
     private void drawInput(GuiGraphics g, int x, int y) {
         for (int i = 0; i < RefinementMenu.RING_SIZE; i++) {
@@ -170,13 +167,11 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
                 (RefinementMenu.CORE_COLS - 1) * GRID_SLOT + CELL + 6,
                 (RefinementMenu.CORE_ROWS - 1) * GRID_SLOT + CELL + 6, ACCENT);
     }
-
     private void drawCells(GuiGraphics g, int x, int y, int cols, int rows, int pitch, int fill) {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) drawCell(g, x + col * pitch, y + row * pitch, fill);
         }
     }
-
     private void drawCell(GuiGraphics g, int x, int y, int fill) {g.fill(x, y, x + CELL, y + CELL, fill);}
     //endregion
 
@@ -191,7 +186,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         int filled = BAR_W * menu.phaseLeft() / span;
         g.fill(bx, by, bx + filled, by + BAR_H, barColour());
     }
-
     private int barColour() {
         if (!menu.inWindow()) return BAR_GAP;
         return menu.stonesIn() < menu.stonesNeeded() ? BAR_SHORT : BAR_WINDOW;
@@ -207,7 +201,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         renderGhosts(g);
         renderPools(g);
     }
-
     //region the pools -- all three ride the synced attachments, so none of them needs a packet
     private void renderPools(GuiGraphics g) {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -223,7 +216,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         SoulData soul = SoulService.get(player);
         drawPool(g, unit, soul.currentSoul(), soul.maxSoul(), SOUL_FILL);
     }
-
     private void drawPool(GuiGraphics g, int unit, long value, long max, int fill) {
         int y = POOL_Y + unit * POOL_STRIDE;
         Component reading = Component.translatable(POOL_KEY, value, max);
@@ -253,7 +245,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         if (crowded(recipe)) return Component.translatable(EXTRA_KEY);
         return Component.translatable(SELECTED_KEY, resultName(recipe));
     }
-
     private int statusColour() {
         if (menu.running()) return TEXT;
 
@@ -261,7 +252,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         if (recipe == null) return LEGEND_TEXT;
         return crowded(recipe) ? BAR_SHORT : TEXT;
     }
-
     private boolean crowded(GuRecipe recipe) {
         if (menu.ready()) return false;
 
@@ -285,7 +275,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         }
         renderTooltip(g, mouseX, mouseY);
     }
-
     //region the cells a picked 蛊方 still wants -- drawn from renderLabels, so the carried item stays on top
     private void renderGhosts(GuiGraphics g) {
         GuRecipe recipe = selectedRecipe();
@@ -303,7 +292,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
             if (!shown.isEmpty()) drawGhost(g, shown, missing[n], slot);
         }
     }
-
     private void drawGhost(GuiGraphics g, ItemStack shown, int count, int slot) {
         int x = slotX(slot);
         int y = slotY(slot);
@@ -314,17 +302,14 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         g.fill(RenderType.guiGhostRecipeOverlay(), x, y, x + CELL, y + CELL, GHOST_OVERLAY);
         g.renderItemDecorations(font, shown, x, y, count > 1 ? String.valueOf(count) : null);
     }
-
     private static int slotX(int slot) {
         return slot < RefinementMenu.RING_SIZE ? RefinementMenu.ringX(slot)
                 : RefinementMenu.coreX((slot - RefinementMenu.RING_SIZE) % RefinementMenu.CORE_COLS);
     }
-
     private static int slotY(int slot) {
         return slot < RefinementMenu.RING_SIZE ? RefinementMenu.ringY(slot)
                 : RefinementMenu.coreY((slot - RefinementMenu.RING_SIZE) / RefinementMenu.CORE_COLS);
     }
-
     private static ItemStack option(SizedIngredient need) {
         ItemStack[] options = need.ingredient().getItems();
         if (options.length == 0) return ItemStack.EMPTY;
@@ -352,7 +337,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         g.drawString(font, label, x + (CRAFT_W - font.width(label)) / 2,
                 y + (CRAFT_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
     }
-
     private boolean clickable() {return menu.ready() && !menu.running();}
 
     private int craftX() {return leftPos + CRAFT_X;}
@@ -379,7 +363,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         g.drawString(font, label, x + (RECIPE_W - font.width(label)) / 2,
                 y + (RECIPE_H - font.lineHeight) / 2 + 1, live ? TEXT : BUTTON_IDLE, false);
     }
-
     private int recipeX() {return leftPos + RECIPE_X;}
     private int recipeY() {return topPos + RECIPE_Y;}
 
@@ -396,7 +379,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         drawPicker(g, mouseX, mouseY);
         g.pose().popPose();
     }
-
     private void drawPicker(GuiGraphics g, int mouseX, int mouseY) {
         List<RecipeHolder<GuRecipe>> known = known();
         int rows = known.size() + 1;
@@ -426,7 +408,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         }
         if (hovered >= 1) g.renderComponentTooltip(font, details(known.get(hovered - 1).value()), mouseX, mouseY);
     }
-
     private void drawPickRow(GuiGraphics g, List<RecipeHolder<GuRecipe>> known, int row, int x0, int y) {
         int textY = y + (PICK_ROW_H - font.lineHeight) / 2;
         if (row == 0) {
@@ -442,7 +423,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         Component rate = Component.translatable(PICK_CHANCE_KEY, recipe.baseSuccess());
         g.drawString(font, rate, x0 + PICK_W - PICK_PAD - font.width(rate), textY, LEGEND_TEXT, false);
     }
-
     private List<Component> details(GuRecipe recipe) {
         List<Component> lines = new ArrayList<>();
         lines.add(resultName(recipe));
@@ -457,7 +437,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         lines.add(Component.translatable(PICK_SUCCESS_KEY, recipe.baseSuccess()));
         return lines;
     }
-
     private static String stoneList(GuRecipe recipe) {
         StringBuilder text = new StringBuilder();
         for (int i = 0; i < recipe.windowCount(); i++) {
@@ -466,7 +445,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         }
         return text.toString();
     }
-
     private int pickHeight(int visible) {return PICK_HEADER_H + PICK_PAD * 2 + visible * PICK_ROW_H;}
     private int pickLeft() {return leftPos + (imageWidth - PICK_W) / 2;}
     private int pickTop(int visible) {return topPos + (imageHeight - pickHeight(visible)) / 2;}
@@ -503,17 +481,14 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         }
         return knownCache;
     }
-
     private @Nullable GuRecipe selectedRecipe() {
         int index = menu.selected();
         List<RecipeHolder<GuRecipe>> known = known();
         return index >= 0 && index < known.size() ? known.get(index).value() : null;
     }
-
     private static ItemStack result(GuRecipe recipe) {
         return recipe.results().isEmpty() ? ItemStack.EMPTY : recipe.results().getFirst();
     }
-
     private static Component resultName(GuRecipe recipe) {return result(recipe).getHoverName();}
     //endregion
 
@@ -525,14 +500,12 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         g.drawString(font, BACK_GLYPH, x + (BACK_W - font.width(BACK_GLYPH)) / 2,
                 y + (BACK_H - font.lineHeight) / 2 + 1, TEXT, false);
     }
-
     private int backX() {return leftPos + 11;}
     private int backY() {return topPos + 4;}
 
     private boolean inBack(double mx, double my) {
         return mx >= backX() && mx < backX() + BACK_W && my >= backY() && my < backY() + BACK_H;
     }
-
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
         if (picking) return button != 0 || clickPicker(mx, my);
@@ -544,14 +517,12 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         }
         return super.mouseClicked(mx, my, button);
     }
-
     @Override
     public boolean mouseScrolled(double mx, double my, double dx, double dy) {
         if (!picking) return super.mouseScrolled(mx, my, dx, dy);
         if (dy != 0.0) pickScroll = Math.max(0, pickScroll - (int) Math.signum(dy));
         return true;
     }
-
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (!picking) return super.keyPressed(keyCode, scanCode, modifiers);
@@ -562,19 +533,16 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
         }
         return true;
     }
-
     private boolean openPicker() {
         picking = true;
         pickScroll = 0;
         return true;
     }
-
     private boolean clickBack() {
         onClose();
         Minecraft.getInstance().setScreen(new PlayerInfoScreen());
         return true;
     }
-
     private boolean send(int button) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.gameMode == null) return false;

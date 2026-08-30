@@ -34,7 +34,6 @@ public record PathData(Map<GuPath, PathEntry> entries) {
 
     public static final StreamCodec<ByteBuf, PathData> STREAM_CODEC =
             ModStreamCodecs.enumMap(GuPath.class, PathEntry.STREAM_CODEC).map(PathData::new, PathData::entries);
-
     public PathData {
         Map<GuPath, PathEntry> pruned = new EnumMap<>(GuPath.class);
         entries.forEach((path, entry) -> {
@@ -42,9 +41,7 @@ public record PathData(Map<GuPath, PathEntry> entries) {
         });
         entries = Collections.unmodifiableMap(pruned);
     }
-
     public PathEntry get(GuPath path) {return entries.getOrDefault(path, PathEntry.DEFAULT);}
-
     public PathData with(GuPath path, PathEntry entry) {
         Map<GuPath, PathEntry> next = new EnumMap<>(GuPath.class);
         next.putAll(entries);

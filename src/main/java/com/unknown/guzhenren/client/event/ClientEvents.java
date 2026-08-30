@@ -60,6 +60,8 @@ public final class ClientEvents {
 
     private static final ResourceLocation NOURISH =
             Guzhenren.id("nourish");
+    private static final float DASH_YAW_CROSS = 90.0F;
+    private static final float DASH_YAW_DIAGONAL = 45.0F;
 
     private static boolean previousUp;
     private static boolean previousDown;
@@ -73,23 +75,19 @@ public final class ClientEvents {
         event.registerAbove(VanillaGuiLayers.AIR_LEVEL, CHARGE, ChargeHud.INSTANCE);
         event.registerAbove(VanillaGuiLayers.AIR_LEVEL, NOURISH, NourishHud.INSTANCE);
     }
-
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(ModKeyMappings.OPEN_INFO);
     }
-
     @SubscribeEvent
     public static void onRegisterScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.APERTURE_STORAGE_MENU.get(), ApertureStorageScreen::new);
         event.register(ModMenus.REFINEMENT_MENU.get(), RefinementScreen::new);
     }
-
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntityTypes.HOPE_GU_ENTITY.get(), NoopRenderer::new);
     }
-
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Post event) {
         Minecraft minecraft = Minecraft.getInstance();
@@ -119,16 +117,17 @@ public final class ClientEvents {
                     minecraft.player.hasEffect(ModEffects.HORIZONTAL_CRASH_GU),
                     minecraft.player.hasEffect(ModEffects.VERTICAL_CRASH_GU),
                     minecraft.player.hasEffect(ModEffects.CHARGING_CRASH_GU));
-            EpicFightCapabilities.getLocalPlayerPatchAsOptional(minecraft.player)
-                    .filter(patch -> shouldSendDash(patch.isVanillaMode(), directionHasEffect))
-                    .ifPresent(patch -> {
-                        patch.toEpicFightMode(true);
-                        float cameraYRot = EpicFightCameraAPI.getInstance().getForwardYRot();
-                        float yRot = Mth.wrapDegrees(cameraYRot
-                                - (90.0F * horizontal * (1 - Math.abs(vertical))
-                                + 45.0F * vertical * horizontal));
-                        PacketDistributor.sendToServer(new DashPayload(vertical, horizontal, yRot));
-                    });
+            if (directionHasEffect) {
+                EpicFightCapabilities.getLocalPlayerPatchAsOptional(minecraft.player)
+                        .ifPresent(patch -> {
+                            patch.toEpicFightMode(true);
+                            float cameraYRot = EpicFightCameraAPI.getInstance().getForwardYRot();
+                            float yRot = Mth.wrapDegrees(cameraYRot
+                                    - (DASH_YAW_CROSS * horizontal * (1 - Math.abs(vertical))
+                                    + DASH_YAW_DIAGONAL * vertical * horizontal));
+                            PacketDistributor.sendToServer(new DashPayload(vertical, horizontal, yRot));
+                        });
+            }
         }
         previousUp = up;
         previousDown = down;
@@ -136,22 +135,18 @@ public final class ClientEvents {
         previousRight = right;
         previousAlt = alt;
     }
-
     public static boolean canDash(ItemStack mainHand) {
         return !(mainHand.getItem() instanceof MortalGuItem);
     }
-
     public static boolean canDash(ItemStack mainHand, int vertical, int horizontal,
                                   boolean horizontalCrash, boolean verticalCrash, boolean chargingCrash) {
         if (!canDash(mainHand) || vertical == 0 && horizontal == 0) return false;
         return (horizontal == 0 || horizontalCrash || chargingCrash)
                 && (vertical == 0 || verticalCrash || chargingCrash);
     }
-
-    public static boolean shouldSendDash(boolean vanillaMode, boolean directionHasEffect) {
+    public static boolean shouldSendDash(boolean directionHasEffect) {
         return directionHasEffect;
     }
-
     public static boolean shouldStartDash(boolean alt, boolean previousAlt, boolean directionPressed) {
         return alt && (!previousAlt || directionPressed);
     }

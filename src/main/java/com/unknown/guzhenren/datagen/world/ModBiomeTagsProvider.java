@@ -26,12 +26,10 @@ import org.jetbrains.annotations.Nullable;
  */
 
 public class ModBiomeTagsProvider extends TagsProvider<Biome> {
-
     public ModBiomeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
                                 @Nullable ExistingFileHelper existingFileHelper) {
         super(output, Registries.BIOME, lookupProvider, Guzhenren.MOD_ID, existingFileHelper);
     }
-
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         tag(ModBiomeTags.HOPE_GU_SPAWNS)

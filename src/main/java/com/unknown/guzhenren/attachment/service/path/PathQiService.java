@@ -14,20 +14,14 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The only writer of Qi [气] holdings, and where their MobEffects are rebuilt from the pool.
+ * The only writer of Qi [气] holdings, and where their MobEffects are rebuilt from the pool. Static
+ * service; every {@code store} also runs {@code syncEffects}, rebuilding the four qi MobEffects.
  *
- * <p>Static service over the {@code qi_data} attachment; reads take {@link Player}, writes take
- * {@link ServerPlayer}. Every {@code store} also runs {@code syncEffects}, which rebuilds the four
- * qi MobEffects from the pool so they match what the player is actually holding.
- *
- * <p>⚠ Those effects are a PROJECTION, never the truth -- because the heartbeat rebuilds them, milk
- * and {@code /effect clear} cannot cure Death Qi [死气]; the next tick puts it straight back. ⚠
- * {@code set} re-anchors the hold on the SUM when adding to an existing kind, never "takes the higher
- * grade" and never refuses -- death qi accumulates like every other kind. ⚠ The graded syncs
- * ({@code syncGraded}) compute the tier off the CURRENT amount, so a kind past its hold that has
- * decayed down a tier bracket reads a lower-tier effect -- his short-term {@code TODO(decay)} is that
- * a kind past its hold reads NO effect while decaying. ⚠ {@code syncDeath} refreshes with a 20-tick
- * duration so a missed heartbeat does not let the curse lapse.
+ * <p>⚠ Those effects are a PROJECTION, never the truth -- the heartbeat rebuilds them, so milk and
+ * {@code /effect clear} cannot cure Death Qi [死气]. ⚠ {@code set} re-anchors the hold on the SUM,
+ * never "takes the higher grade" and never refuses -- death qi accumulates like every other kind. ⚠
+ * The graded syncs compute the tier off the CURRENT amount, so a kind past its hold reads a lower-tier
+ * effect while decaying ({@code TODO(decay)} wants NO effect while decaying).
  *
  * @author Alex
  * @version 1.0.0
@@ -37,18 +31,13 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class PathQiService {
-
     private PathQiService() {}
-
     private static final int EFFECT_REFRESH_TICKS = 2 * Ticks.SECOND;
-
     public static @NotNull PathQiData get(@NotNull Player p) {return p.getData(ModAttachments.QI);}
     public static long current(@NotNull Player p, @NotNull QiKind kind) {return get(p).current(kind, now(p));}
-
     public static void add(@NotNull ServerPlayer p, @NotNull QiKind kind, long delta) {
         set(p, kind, current(p, kind) + delta);
     }
-
     public static void set(@NotNull ServerPlayer p, @NotNull QiKind kind, long value) {
         long amount = Math.max(0L, value);
         long holdEnd = 0L;
@@ -57,10 +46,8 @@ public final class PathQiService {
         }
         store(p, get(p).with(kind, new PathQiEntry(amount, holdEnd)));
     }
-
     @SuppressWarnings("resource")
     private static long now(Player p) {return p.level().getGameTime();}
-
     private static void store(ServerPlayer p, PathQiData data) {
         long now = now(p);
         PathQiData pruned = data;
@@ -71,7 +58,6 @@ public final class PathQiService {
         p.setData(ModAttachments.QI, pruned);
         syncEffects(p);
     }
-
     //region effect projection -- the store is the truth, the MobEffect is its display
     //    TODO(decay): a kind past its hold reads NO effect while decaying -- per-tier falloff is his short-term TODO.
     public static void syncEffects(@NotNull ServerPlayer player) {
@@ -81,7 +67,6 @@ public final class PathQiService {
         syncGraded(player, QiKind.ESSENCE, ModEffects.ESSENCE_QI, now);
         syncDeath(player, now);
     }
-
     private static void syncGraded(ServerPlayer player, QiKind kind, Holder<MobEffect> effect, long now) {
         PathQiData data = get(player);
         int tier = data.holding(kind, now) ? QiKind.tierOf(data.current(kind, now)) : -1;
@@ -100,7 +85,6 @@ public final class PathQiService {
             player.addEffect(ModEffects.instance(effect, duration, tier));
         }
     }
-
     private static void syncDeath(ServerPlayer player, long now) {
         boolean present = get(player).current(QiKind.DEATH, now) > 0L;
         MobEffectInstance current = player.getEffect(ModEffects.DEATH_QI);

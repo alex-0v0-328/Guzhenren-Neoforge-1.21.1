@@ -23,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.client.hud.HotbarHud
  * @since 1.0.0
  */
 

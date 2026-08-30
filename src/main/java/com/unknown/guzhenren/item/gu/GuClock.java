@@ -42,7 +42,6 @@ public sealed interface GuClock {
     boolean spendWasForced(ItemStack stack);
 
     default boolean spendWasForced(ItemStack stack, int multiplier) {return spendWasForced(stack);}
-
     boolean barVisible(ItemStack stack);
     float barFraction(ItemStack stack);
 
@@ -50,17 +49,13 @@ public sealed interface GuClock {
     record HungerBar(int max, int unitsPerHunger, int essencePerHunger, int perUse) implements GuClock {
 
         private static RefinedGuState state(ItemStack s) {return TendedGuItem.state(s);}
-
         private void setHunger(ItemStack stack, int value) {
             RefinedGuState s = state(stack);
             stack.set(ModDataComponents.REFINED_GU_STATE.get(), s.withHunger(Math.clamp(value, 0, max)));
         }
-
         private int hunger(ItemStack stack) {return state(stack).hunger();}
-
         @Override
         public void bind(ServerPlayer player, ItemStack stack) {setHunger(stack, max);}
-
         @Override
         public boolean starves(ServerPlayer player, ItemStack stack, long days) {
             if (days <= 0L) return false;
@@ -73,15 +68,12 @@ public sealed interface GuClock {
             setHunger(stack, 0);
             return !player.hasInfiniteMaterials();
         }
-
         @Override
         public boolean hungry(ServerPlayer player, ItemStack stack) {return hunger(stack) <= HUNGRY_THRESHOLD;}
-
         @Override
         public void warn(ServerPlayer player, ItemStack stack, long days) {
             if (days > 0L) TendedGuItem.announceHungry(player, stack);
         }
-
         @Override
         public boolean eat(TendedGuItem gu, ServerPlayer player, ItemStack stack, ItemStack food) {
             int units = gu.feedUnits(food);
@@ -90,47 +82,38 @@ public sealed interface GuClock {
             int room = max - hunger(stack);
             if (room <= 0) return false;
 
-            int items = Math.min(food.getCount(), room * unitsPerHunger / units);
-            int gained = items * units / unitsPerHunger;
-            if (gained <= 0) return false;
+            TendedGuItem.Meal meal = TendedGuItem.portion(food.getCount(), room, unitsPerHunger, units);
+            if (meal.gained() <= 0) return false;
 
             if (!player.hasInfiniteMaterials()) {
-                int eaten = (gained * unitsPerHunger + units - 1) / units;
-                TendedGuItem.returnEmptyContainers(player, food, eaten);
-                food.shrink(eaten);
+                TendedGuItem.returnEmptyContainers(player, food, meal.eaten());
+                food.shrink(meal.eaten());
             }
-            setHunger(stack, hunger(stack) + gained);
+            setHunger(stack, hunger(stack) + meal.gained());
             return true;
         }
-
         @Override
         public int essenceAboveHungerFloor(ItemStack stack) {
             return Math.max(0, hunger(stack) - CHANNEL_HUNGER_FLOOR) * essencePerHunger;
         }
-
         @Override
         public int essencePerHungerPoint() {return essencePerHunger;}
-
         @Override
         public void billHungerForEssence(ItemStack stack, int from, int to) {
             setHunger(stack, hunger(stack) - (to / essencePerHunger - from / essencePerHunger));
         }
-
         @Override
         public boolean spendWasForced(ItemStack stack) {
             return spendWasForced(stack, 1);
         }
-
         @Override
         public boolean spendWasForced(ItemStack stack, int multiplier) {
             boolean forced = hunger(stack) <= 0;
-            setHunger(stack, hunger(stack) - Math.max(1, perUse * multiplier));
+            setHunger(stack, hunger(stack) - perUse * multiplier);
             return forced;
         }
-
         @Override
         public boolean barVisible(ItemStack stack) {return hunger(stack) < max;}
-
         @Override
         public float barFraction(ItemStack stack) {return hunger(stack) / (float) max;}
     }
@@ -158,7 +141,6 @@ public sealed interface GuClock {
         public boolean barVisible(ItemStack stack) {return false;}
         @Override
         public float barFraction(ItemStack stack) {return 0.0F;}
-
         @Override
         public boolean eat(TendedGuItem gu, ServerPlayer player, ItemStack stack, ItemStack food) {return false;}
     }

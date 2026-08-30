@@ -28,7 +28,6 @@ public class GuzhenrenClient {
     public GuzhenrenClient(ModContainer container, IEventBus modEventBus) {
         modEventBus.addListener(GuzhenrenClient::onRegisterClientExtensions);
     }
-
     private static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerMobEffect(GradedEffectIcon.mobEffect("essence_qi", 1, 5), ModEffects.ESSENCE_QI);
         event.registerMobEffect(GradedEffectIcon.mobEffect("life_qi", 1, 5), ModEffects.LIFE_QI);
@@ -36,7 +35,8 @@ public class GuzhenrenClient {
         event.registerMobEffect(GradedEffectIcon.mobEffect("all_out_effort", 3, 5), ModEffects.ALL_OUT_EFFORT);
         event.registerMobEffect(GradedEffectIcon.mobEffect("liquor_worm", 1, 4), ModEffects.LIQUOR_WORM);
         event.registerMobEffect(GradedEffectIcon.item("casual_gu", 1, 2), ModEffects.CASUAL_GU);
-        event.registerMobEffect(GradedEffectIcon.item("malicious_thought_gu", 2, 5), ModEffects.MALICIOUS_THOUGHT_GU);
+        event.registerMobEffect(GradedEffectIcon.item("malicious_thought_gu", 2, 5, 2),
+                ModEffects.MALICIOUS_THOUGHT_GU);
         event.registerMobEffect(GradedEffectIcon.item("self_reliance_gu", 2, 4), ModEffects.SELF_RELIANCE_GU);
         event.registerMobEffect(new ItemEffectIcon("hardship_strength_gu"), ModEffects.HARDSHIP_STRENGTH_GU);
         event.registerMobEffect(new ItemEffectIcon("horizontal_crash_gu"), ModEffects.HORIZONTAL_CRASH_GU);

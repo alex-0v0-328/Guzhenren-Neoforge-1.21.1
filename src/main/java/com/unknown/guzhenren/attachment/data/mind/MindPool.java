@@ -8,15 +8,11 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 /**
- * One thought [念] pool of one {@link WisdomType}.
+ * One thought [念] pool of one {@link WisdomType}; leaf record nested inside {@link MindData};
+ * immutable, standard {@code DEFAULT}-codec-stream shape.
  *
- * <p>Leaf record nested inside {@link MindData}; immutable, with the standard {@code DEFAULT}-codec-
- * stream-with pattern. The compact ctor only floors {@code current}/{@code max} at zero and latches
- * {@code bufferUsed} when {@code current > max}.
- *
- * <p>⚠ This record does not clamp itself: it cannot know which wisdom type it belongs to, and only some
- * of them may burst past the cap, so the clamp lives in {@link
- * com.unknown.guzhenren.attachment.service.mind.MindService} -- every write passes through there. ⚠
+ * <p>⚠ Not self-clamping: only some wisdom types may burst past their cap, so the clamp lives in {@link
+ * com.unknown.guzhenren.attachment.service.mind.MindService} and every write passes through there. ⚠
  * {@code burstAt()} divides before multiplying ({@code max / DENOM * NUMER}) so a huge cap cannot
  * overflow; do not "tidy" the order. ⚠ {@code slept()} restores only HALF the deficit when the buffer
  * was used -- never reduce {@code current}.
@@ -41,26 +37,19 @@ public record MindPool(long current, long max, boolean bufferUsed) {
             ByteBufCodecs.VAR_LONG, MindPool::max,
             ByteBufCodecs.BOOL, MindPool::bufferUsed,
             MindPool::new);
-
     public MindPool {
         current = Math.max(0L, current);
         max = Math.max(0L, max);
         bufferUsed = bufferUsed || current > max;
     }
-
     public static MindPool of(WisdomType type) {return new MindPool(0L, type.getDefaultCapacity(), false);}
-
     public long burstAt() {return max / WisdomType.BURST_DENOMINATOR * WisdomType.BURST_NUMERATOR;}
-
     public boolean isOverflowing() {return current > burstAt();}
-
     public MindPool withCurrent(long v) {return new MindPool(v, max, bufferUsed);}
     public MindPool withMax(long v) {return new MindPool(current, v, bufferUsed);}
-
     public MindPool slept() {
         long restored = bufferUsed && current < max ? current + (max - current) / 2 : Math.max(current, max);
         return new MindPool(restored, max, false);
     }
-
     public MindPool emptied() {return new MindPool(0L, max, false);}
 }

@@ -33,17 +33,13 @@ public class BruteForceLonghornBeetleGuEffect extends MobEffect implements Attac
     public static final double ATTACK_BONUS = 8.0D;
 
     private static final int LAST_TICK = 1;
-
     public BruteForceLonghornBeetleGuEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
-
     @Override
     public double attackBonus(int amplifier) {return ATTACK_BONUS;}
-
     @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {return duration == LAST_TICK;}
-
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         entity.addEffect(ModEffects.instance(MobEffects.WEAKNESS, AFTERMATH_TICKS));

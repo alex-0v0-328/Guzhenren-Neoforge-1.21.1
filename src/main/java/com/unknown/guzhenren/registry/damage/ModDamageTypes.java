@@ -44,7 +44,6 @@ public final class ModDamageTypes {
                 .registryOrThrow(Registries.DAMAGE_TYPE)
                 .getHolderOrThrow(type));
     }
-
     private static ResourceKey<DamageType> key(String name) {
         return ResourceKey.create(Registries.DAMAGE_TYPE,
                 Guzhenren.id(name));

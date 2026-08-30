@@ -15,8 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A Stone Aperture Gu [石窍蛊]: the aperture it is used on lands on this rank's peak, then turns to
- * stone -- never nourished, never struck, again.
+ * A Stone Aperture Gu [石窍蛊]: its target hits this rank's peak and petrifies -- never nourished, never struck again.
  *
  * <p>Extends {@link com.unknown.guzhenren.item.gu.ConsumedGuItem}, so it is tended, never feeds and
  * is taken by its own use. Three rungs register against this one class. The target is the PRIMARY
@@ -39,11 +38,9 @@ public class StoneApertureGuItem extends ConsumedGuItem {
     private static final String FAILED_RANK_MISMATCH = "guzhenren.item.failed.rank_mismatch";
     private static final String FAILED_UNAVAILABLE = "guzhenren.item.failed.aperture_unavailable";
     private static final String FAILED_STAGE_PEAK = "guzhenren.item.failed.stage_peak";
-
     public StoneApertureGuItem(Properties properties, GuSpec spec) {
         super(properties, spec);
     }
-
     /**
      * The pure seam the unit tests pin: PRIMARY wins while it is NORMAL, the second aperture answers
      * only when the primary is DEAD, and nobody usable answers {@code NO_TARGET}.
@@ -53,11 +50,9 @@ public class StoneApertureGuItem extends ConsumedGuItem {
         if (secondary == ApertureStatus.NORMAL) return ApertureData.SECONDARY;
         return NO_TARGET;
     }
-
     private static int targetOf(Player player) {
         return stoneTarget(ApertureService.status(player), ApertureService.status(player, ApertureData.SECONDARY));
     }
-
     @Override
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
         int target = targetOf(player);
@@ -68,7 +63,6 @@ public class StoneApertureGuItem extends ConsumedGuItem {
         return ApertureService.aperture(player, target).stage() == Stage.HIGHEST
                 ? new Refusal(FAILED_STAGE_PEAK) : null;
     }
-
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
         int target = targetOf(player);

@@ -9,9 +9,8 @@ import net.minecraft.world.effect.MobEffectCategory;
  * com.unknown.guzhenren.attachment.data.path.PathQiData}, which adds attack damage while held.
  *
  * <p>Pool effects are rebuilt every heartbeat by {@code PathQiService.syncEffects}, so milk cannot cure
- * them. It contributes through {@link com.unknown.guzhenren.effect.AttackContributor} rather than
- * an {@link net.minecraft.world.entity.ai.attributes.AttributeModifier}, so what the body panel
- * shows and what a hit actually deals stay one number.
+ * them. It contributes via {@link com.unknown.guzhenren.effect.AttackContributor}, not an attribute
+ * modifier, so the body panel and a dealt hit stay one number.
  *
  * <p>⚠ The {@code ATTACK_BONUS} ladder {0.25, 1, 4, 16, 64} must be exactly representable as a
  * {@code double} — power-of-two denominators only, no float dust.
@@ -25,11 +24,9 @@ import net.minecraft.world.effect.MobEffectCategory;
 public class StrengthQiEffect extends MobEffect implements AttackContributor {
 
     private static final double[] ATTACK_BONUS = {0.25, 1.0, 4.0, 16.0, 64.0};
-
     public StrengthQiEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
-
     @Override
     public double attackBonus(int amplifier) {
         return ATTACK_BONUS[Math.clamp(amplifier, 0, ATTACK_BONUS.length - 1)];

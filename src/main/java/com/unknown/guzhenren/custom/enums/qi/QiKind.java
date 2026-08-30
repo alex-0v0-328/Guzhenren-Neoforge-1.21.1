@@ -38,28 +38,22 @@ public enum QiKind implements StringRepresentable, EnumTranslatable {
 
     private final long holdFlatTicks;
     private final long holdPerTierTicks;
-
     QiKind(long holdFlatTicks, long holdPerTierTicks) {
         this.holdFlatTicks = holdFlatTicks;
         this.holdPerTierTicks = holdPerTierTicks;
     }
-
     public boolean isTimed() {return holdFlatTicks > 0L || holdPerTierTicks > 0L;}
-
     public long holdTicks(int tier) {
         return holdFlatTicks > 0L ? holdFlatTicks : (tier + 1L) * holdPerTierTicks;
     }
-
     public static long tierAmount(int tier) {return 10L << (2 * tier);}
     public static long decayPerSecond(int tier) {return 1L << tier;}
-
     public static int tierOf(long amount) {
         for (int tier = TIERS - 1; tier >= 0; tier--) {
             if (amount >= tierAmount(tier)) return tier;
         }
         return -1;
     }
-
     @Override
     public @NotNull String getSerializedName() {return name().toLowerCase();}
     public String getTranslationKey() {return KEY_PREFIX + name().toLowerCase();}

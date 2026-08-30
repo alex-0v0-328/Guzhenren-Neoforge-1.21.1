@@ -8,17 +8,14 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 /**
- * Nourishing the Aperture [温养空窍]: whether a run is going, and which aperture it feeds.
- *
- * <p>Immutable record attachment keyed {@code nourish_data}; {@link
- * com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService} is the only writer. Three
- * components: a running flag, the target aperture index, and a starvation-since tick. The progress
- * percent and the petrified latch live on {@link Aperture} itself, one set per aperture.
+ * Nourishing the Aperture [温养空窍]: whether a run is going, and which aperture it feeds. Immutable
+ * record attachment keyed {@code nourish_data}; {@link
+ * com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService} is the only writer; progress
+ * percent and the petrified latch live on {@link Aperture} itself.
  *
  * <p>⚠ {@code starvedSinceTick} defaults to {@code NOT_STARVED} (-1), never {@code 0} -- zero is a real
- * game time, so a fresh world would read as having been starved since the beginning of it. Same trap
- * as {@code halfZombieEndTick} and {@code USED_AT} on the Gu clock. ⚠ {@code target} is only trusted
- * after the service has clamped it against the apertures that exist, never straight from the wire.
+ * game time, so a fresh world would read as starved since its beginning. ⚠ {@code target} is only
+ * trusted once the service has clamped it against the apertures that exist, never straight from the wire.
  *
  * @author Alex
  * @version 1.0.0
@@ -38,7 +35,8 @@ public record ApertureNourishData(boolean cultivating, int target, long starvedS
     public static final Codec<ApertureNourishData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.BOOL.optionalFieldOf("cultivating", false).forGetter(ApertureNourishData::cultivating),
             Codec.INT.optionalFieldOf("target", ApertureData.PRIMARY).forGetter(ApertureNourishData::target),
-            Codec.LONG.optionalFieldOf("starved_since_tick", NOT_STARVED).forGetter(ApertureNourishData::starvedSinceTick)
+            Codec.LONG.optionalFieldOf("starved_since_tick", NOT_STARVED)
+                    .forGetter(ApertureNourishData::starvedSinceTick)
     ).apply(instance, ApertureNourishData::new));
 
     public static final StreamCodec<ByteBuf, ApertureNourishData> STREAM_CODEC = StreamCodec.composite(
@@ -49,8 +47,7 @@ public record ApertureNourishData(boolean cultivating, int target, long starvedS
 
     public boolean isStarving() {return starvedSinceTick != NOT_STARVED;}
     public boolean starvedOut(long now) {return isStarving() && now - starvedSinceTick >= STARVE_GRACE_TICKS;}
-
     public ApertureNourishData withCultivating(boolean v) {return new ApertureNourishData(v, target, starvedSinceTick);}
     public ApertureNourishData withTarget(int v) {return new ApertureNourishData(cultivating, v, starvedSinceTick);}
-    public ApertureNourishData withStarvedSince(long v) {return new ApertureNourishData(cultivating, target, v);}
+    public ApertureNourishData withStarvedSinceTick(long v) {return new ApertureNourishData(cultivating, target, v);}
 }

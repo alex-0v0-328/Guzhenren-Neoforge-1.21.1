@@ -14,16 +14,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
 /**
- * A command argument accepting one constant of an enum, spelled as a {@code word()} literal.
- *
- * <p>Provides both a static-constants factory and a dynamic one that computes suggestions from what
- * was already parsed. The {@code get} method reads from the deepest context via
- * {@code getLastChild()} because {@code /gzr} is a redirect.
+ * A command argument accepting one constant of an enum, spelled as a {@code word()} literal. Provides
+ * a static-constants factory and a dynamic one computing suggestions from what was already parsed.
  *
  * <p>☠ Everything typed after a redirect is parsed into a CHILD context, and {@code /gzr} is that
  * redirect -- so a read of an earlier argument must go through {@code getLastChild()} or it throws
- * {@code IllegalArgumentException}, which Brigadier does NOT catch, and the suggestion list comes back
- * empty and silent.
+ * {@code IllegalArgumentException}, which Brigadier does NOT catch: the suggestion list comes back
+ * empty and silent. That is why {@code get} reads from the deepest context.
  *
  * @author Alex
  * @version 1.0.0
@@ -32,17 +29,13 @@ import net.minecraft.util.StringRepresentable;
  */
 
 public final class ModEnumArgument {
-
     private ModEnumArgument() {}
-
     private static final DynamicCommandExceptionType UNKNOWN_VALUE = new DynamicCommandExceptionType(
             value -> Component.translatable("guzhenren.command.unknown_value", value));
-
     public static <E extends Enum<E> & StringRepresentable> RequiredArgumentBuilder<CommandSourceStack, String> arg(
             String name, E[] values) {
         return arg(name, context -> values);
     }
-
     /**
      * The same argument, but the offered constants are computed from what was already parsed.
      * ⚠ The function must tolerate a nonsense earlier argument: {@code word()} accepts any word.
@@ -53,7 +46,6 @@ public final class ModEnumArgument {
                 .suggests((context, builder) -> SharedSuggestionProvider.suggest(
                         Arrays.stream(offered.apply(context)).map(StringRepresentable::getSerializedName), builder));
     }
-
     public static <E extends Enum<E> & StringRepresentable> E get(
             CommandContext<?> context, String name, E[] values) throws CommandSyntaxException {
         String raw = StringArgumentType.getString(context.getLastChild(), name);

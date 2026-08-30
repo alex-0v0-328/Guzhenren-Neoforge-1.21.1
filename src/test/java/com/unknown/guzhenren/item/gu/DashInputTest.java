@@ -30,10 +30,9 @@ class DashInputTest {
     }
 
     @Test
-    void battleModeAllowsDash() {
-        assertTrue(ClientEvents.shouldSendDash(true, true));
-        assertTrue(ClientEvents.shouldSendDash(false, true));
-        assertFalse(ClientEvents.shouldSendDash(true, false));
+    void directionWithEffectSendsDash() {
+        assertTrue(ClientEvents.shouldSendDash(true));
+        assertFalse(ClientEvents.shouldSendDash(false));
     }
 
     @Test

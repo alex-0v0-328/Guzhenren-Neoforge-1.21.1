@@ -37,14 +37,11 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Every row the B panel and the info command share: which rows, in what order, decided once.
  *
- * <p>The shared structure for both surfaces: deciding "draw or not" here (not in a surface) is what
- * avoids one side printing a section header with [无] beside a real Dao-mark [道痕] figure. The
- * {@code Entry} type is sealed on purpose, so a new row is a compile error in both switches until both
- * handle it.
- *
- * <p>⚠ A named section (Strength Attainment [力道造诣], Qi Attainment [气道造诣], ...) is a LABEL AND ITS
- * ROWS, never a value; attainment [造诣] and Dao marks [道痕] belong to the path-attainment list
- * [流派造诣]. Do not widen {@code Entry} into an open interface.
+ * <p>Deciding "draw or not" here, not in a surface, is what keeps one side from printing a section
+ * header with [无] beside a real Dao-mark [道痕] figure. {@code Entry} is sealed on purpose so a new
+ * row is a compile error in both switches. ⚠ A named section (Strength Attainment [力道造诣], Qi
+ * Attainment [气道造诣], ...) is a label plus its rows, never a value; attainment [造诣] and Dao
+ * marks [道痕] belong to the path-attainment list [流派造诣]. Do not widen {@code Entry}.
  *
  * @author Alex
  * @version 1.0.0
@@ -55,7 +52,6 @@ import org.jetbrains.annotations.Nullable;
 public final class InfoModel {
 
     private InfoModel() {}
-
     public static final int INDENT = 10;
 
     public record Row(int indent, Entry entry) {
@@ -63,7 +59,6 @@ public final class InfoModel {
 
     public sealed interface Entry {
     }
-
     //region Aperture
     public record ApertureIndex(int number) implements Entry {
     }
@@ -173,7 +168,6 @@ public final class InfoModel {
         }
         return rows;
     }
-
     private static void apertureBlock(List<Row> rows, Aperture aperture, boolean awakened, int indent,
                                       int index, boolean pressure, boolean extreme, ApertureStatus status) {
         rows.add(new Row(indent, new Realm(aperture)));
@@ -187,7 +181,6 @@ public final class InfoModel {
             rows.add(new Row(indent, new PathChoice(false, index, aperture.secondaryPath())));
         }
     }
-
     public static List<Row> body(Player player) {
         BodyData body = BodyService.get(player);
         PathStrengthData strength = PathStrengthService.get(player);
@@ -210,15 +203,12 @@ public final class InfoModel {
         }
         return rows;
     }
-
     static boolean shouldShowAttackRow(boolean strengthEmpty, double attackBonus) {
         return !strengthEmpty || attackBonus != 0.0D;
     }
-
     public static List<Row> soul(Player player) {
         return List.of(new Row(0, new Soul(SoulService.get(player))));
     }
-
     public static List<Row> pathAchieve(Player player) {
         List<Row> rows = new ArrayList<>();
         strengthPathAchieve(rows, player);
@@ -228,7 +218,6 @@ public final class InfoModel {
         paths(rows, player);
         return rows;
     }
-
     private static void timePathAchieve(List<Row> rows, Player player) {
         int rate = PathTimeFlowService.rate(player);
         if (rate <= PathTimeFlowService.NORMAL_RATE) return;
@@ -236,14 +225,12 @@ public final class InfoModel {
         rows.add(new Row(0, new TimePathAchieveHeader()));
         rows.add(new Row(INDENT, new TimeRateUpRow(rate)));
     }
-
     private static void paths(List<Row> rows, Player player) {
         Map<GuPath, PathEntry> paths = PathService.visibleEntries(player);
 
         rows.add(new Row(0, new PathsHeader(paths.isEmpty())));
         paths.forEach((path, entry) -> rows.add(new Row(INDENT, new PathRow(path, entry))));
     }
-
     private static void qiPathAchieve(List<Row> rows, Player player) {
         List<Row> held = new ArrayList<>();
         for (QiKind kind : QiKind.values()) {
@@ -255,7 +242,6 @@ public final class InfoModel {
         rows.add(new Row(0, new QiPathAchieveHeader()));
         rows.addAll(held);
     }
-
     private static void strengthPathAchieve(List<Row> rows, Player player) {
         PathStrengthData data = PathStrengthService.get(player);
         if (data.isEmpty()) return;
@@ -271,7 +257,6 @@ public final class InfoModel {
                     data.totalJin(), ModDisplayText.humanStrengthLine(data))));
         }
     }
-
     private static void wisdomPathAchieve(List<Row> rows, Player player) {
         List<Row> held = new ArrayList<>();
         long natural = MindService.naturalThoughts(player);
@@ -284,7 +269,6 @@ public final class InfoModel {
         rows.add(new Row(0, new WisdomPathAchieveHeader()));
         rows.addAll(held);
     }
-
     public static List<Row> mind(Player player) {
         MindData mind = MindService.get(player);
         List<Row> rows = new ArrayList<>();

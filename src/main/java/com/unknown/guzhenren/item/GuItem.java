@@ -50,29 +50,24 @@ public abstract class GuItem extends Item {
 
     private final Rank rank;
     private final GuPath path;
-
     protected GuItem(Properties properties, Rank rank, GuPath path) {
         super(properties);
         this.rank = rank;
         this.path = path;
     }
-
     protected abstract String kindKey();
     public Rank rank() {return rank;}
     public GuPath path() {return path;}
-
     protected int tier() {return rank.ordinal() - Rank.ONE.ordinal();}
 
     public record Refusal(String key, Object... args) {
     }
-
     //region 蓄力 [charge] -- paced by the holder's rank against this item's own, never by the stage
     public static final int USE_FAST_TICKS = 5;
     public static final int USE_SAME_TICKS = Ticks.HALF_SECOND;
     public static final int USE_SLOW_TICKS = 20;
 
     protected int rankGap(Player p) {return ApertureService.rank(p).ordinal() - rank.ordinal();}
-
     protected int useChargeByGap(Player player) {
         int gap = rankGap(player);
         if (gap > 0) return PathTimeFlowService.waited(player, USE_FAST_TICKS);
@@ -114,7 +109,6 @@ public abstract class GuItem extends Item {
                 ? InteractionResultHolder.consume(stack)
                 : InteractionResultHolder.fail(stack);
     }
-
     @Override
     public final @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
                                                                  @NotNull InteractionHand hand) {
@@ -135,7 +129,6 @@ public abstract class GuItem extends Item {
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
-
     @Override
     public final @NotNull ItemStack finishUsingItem(@NotNull ItemStack stack, @NotNull Level level,
                                                     @NotNull LivingEntity entity) {
@@ -153,48 +146,37 @@ public abstract class GuItem extends Item {
         }
         return stack;
     }
-
     public static boolean crouching(Player player) {return player.isCrouching();}
-
     protected boolean isSneakUse(Player player, ItemStack stack) {
         return crouching(player) && hasSneakUse(player, stack);
     }
-
     @Override
     public final int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
         if (!hasUse()) return super.getUseDuration(stack, entity);
         return entity instanceof Player player ? useDurationTicks(player, stack) : 0;
     }
-
     @Override
     public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
         return hasUse() ? UseAnim.NONE : super.getUseAnimation(stack);
     }
-
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
                                 @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         tooltip.add(ModDisplayText.guLine(rank, path, kindKey()).withStyle(ChatFormatting.GRAY));
     }
-
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
         return isVital(stack) ? ModDisplayText.vital(super.getName(stack)) : super.getName(stack);
     }
-
     @Override
     public boolean isFoil(@NotNull ItemStack stack) {return isVital(stack) || super.isFoil(stack);}
-
     protected static void refuse(ServerPlayer player, String key, Object... args) {
         player.displayClientMessage(Component.translatable(key, args).withStyle(ChatFormatting.RED), true);
     }
-
     protected static void inform(ServerPlayer player, String key, Object... args) {
         player.displayClientMessage(Component.translatable(key, args), true);
     }
-
     protected int cooldownTicks(ItemStack stack) {return COOLDOWN_TICKS;}
-
     protected void spend(ServerPlayer player, ItemStack stack, int count) {
         player.getCooldowns().addCooldown(this, PathTimeFlowService.waited(player, cooldownTicks(stack)));
         if (count > 0 && !player.hasInfiniteMaterials()) stack.shrink(count);

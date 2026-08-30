@@ -11,11 +11,10 @@ import net.minecraft.world.item.ItemStack;
 /**
  * Life Qi [生气] material: it pays down a Death Qi [死气] debt before it does anything else.
  *
- * <p>Extends {@link com.unknown.guzhenren.item.material.qi.QiMaterialItem}. The apply overrides the
- * base to route the amount into {@link com.unknown.guzhenren.attachment.service.path.PathQiService} against
- * Death Qi first; only the excess reaches the Life Qi pool. When Death Qi clears to zero the lifespan
- * [寿元] refund is handled by
- * {@link com.unknown.guzhenren.attachment.service.body.BodyService#refundDeathQiDebt}.
+ * <p>Extends {@link com.unknown.guzhenren.item.material.qi.QiMaterialItem}. The apply overrides the base to
+ * route the amount into {@link com.unknown.guzhenren.attachment.service.path.PathQiService} against Death
+ * Qi first; only the excess reaches the Life Qi pool. When Death Qi clears to zero the lifespan [寿元]
+ * refund is handled by {@link com.unknown.guzhenren.attachment.service.body.BodyService#refundDeathQiDebt}.
  *
  * <p>⚠ Only clearing that debt outright refunds any of the burnt lifespan [寿元]; paying it partway
  * down refunds nothing at all. The asymmetry is deliberate.
@@ -29,11 +28,9 @@ import net.minecraft.world.item.ItemStack;
 public class LifeQiItem extends QiMaterialItem {
 
     private static final String CURED = "guzhenren.item.death_qi_cured";
-
     public LifeQiItem(Properties properties, Rank rank) {
         super(properties, rank, QiKind.LIFE);
     }
-
     @Override
     protected int apply(ServerPlayer player, ItemStack stack) {
         long death = PathQiService.current(player, QiKind.DEATH);

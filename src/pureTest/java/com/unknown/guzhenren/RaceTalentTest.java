@@ -2,6 +2,7 @@ package com.unknown.guzhenren;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.unknown.guzhenren.custom.enums.body.Race;
@@ -61,7 +62,7 @@ class RaceTalentTest {
         for (Race race : Race.values()) {
             if (!race.isVariant()) continue;
             variants++;
-            assertSame(Boolean.TRUE, taken.add(race.talentPath()), "duplicate path on " + race);
+            assertTrue(taken.add(race.talentPath()), "duplicate path on " + race);
         }
         assertEquals(variants, taken.size());
         assertSame(null, Race.HUMAN.talentPath());

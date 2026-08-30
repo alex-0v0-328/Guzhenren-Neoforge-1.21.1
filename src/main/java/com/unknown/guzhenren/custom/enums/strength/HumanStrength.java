@@ -37,15 +37,12 @@ public enum HumanStrength implements StringRepresentable, EnumTranslatable {
 
     private final int jin;
     private final int maxLayers;
-
     HumanStrength(int jin, int maxLayers) {
         this.jin = jin;
         this.maxLayers = maxLayers;
     }
-
     public int getJin() {return jin;}
     public int getMaxLayers() {return maxLayers;}
-
     @Override
     public @NotNull String getSerializedName() {return name().toLowerCase();}
     public String getTranslationKey() {return KEY_PREFIX + name().toLowerCase();}

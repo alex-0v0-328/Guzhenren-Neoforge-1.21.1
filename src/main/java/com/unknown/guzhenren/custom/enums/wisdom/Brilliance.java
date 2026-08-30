@@ -2,7 +2,7 @@ package com.unknown.guzhenren.custom.enums.wisdom;
 
 import com.mojang.serialization.Codec;
 import com.unknown.guzhenren.custom.enums.EnumTranslatable;
-import java.util.concurrent.ThreadLocalRandom;
+import com.unknown.guzhenren.custom.enums.WeightedPick;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,29 +37,15 @@ public enum Brilliance implements StringRepresentable, EnumTranslatable {
 
     private final long thoughtsPerSecond;
     private final int weight;
-
     Brilliance(long thoughtsPerSecond, int weight) {
         this.thoughtsPerSecond = thoughtsPerSecond;
         this.weight = weight;
     }
-
     public long getThoughtsPerSecond() {return thoughtsPerSecond;}
     public int getWeight() {return weight;}
-
     public Brilliance shift(int d) {return values()[Math.clamp(ordinal() + d, LOWEST.ordinal(), HIGHEST.ordinal())];}
-
     @Override
     public @NotNull String getSerializedName() {return name().toLowerCase();}
     public String getTranslationKey() {return KEY_PREFIX + name().toLowerCase();}
-
-    public static Brilliance randomBrilliance() {
-        int total = 0;
-        for (Brilliance b : values()) total += b.weight;
-        int roll = ThreadLocalRandom.current().nextInt(total);
-        for (Brilliance b : values()) {
-            roll -= b.weight;
-            if (roll < 0) return b;
-        }
-        return ORDINARY;
-    }
+    public static Brilliance randomBrilliance() {return WeightedPick.pick(values(), b -> b.weight);}
 }

@@ -35,19 +35,14 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The one cross-domain lifecycle service: birth, sleep, death, clone, respawn, and a full reset.
+ * The one cross-domain lifecycle service: birth, sleep, death, clone, respawn, and a full reset. It is
+ * the single place that decides what a clone inherits; every domain service re-runs on join/clone/reset.
  *
- * <p>It is the single place that decides what a clone inherits, because a death-copy and a
- * keepInventory-off {@code resetAll} cannot both be the last write. Every domain service is called
- * from here for the refresh that does not ride a clone -- {@link BodyHealthService}, {@link BodyAttackService}
- * and {@link EpicFightIntegration} all re-run on join, clone and reset.
- *
- * <p>⚠ The {@code Player} (not {@code ServerPlayer}) signature on {@code copy}/{@code onBirth}/
- * {@code resetAll} is the one carve-out from this project's read-{@code Player}/write-{@code ServerPlayer}
- * rule: during {@code PlayerEvent.Clone} the fresh entity is typed {@code Player}. Never copy that
- * widening into a domain service. ⚠ {@code copy} must carry {@code BORN} or the next login after any
- * death rolls a second brilliance. ⚠ A new way to die needs a line in {@code onRespawn} -- the un-fire
- * there returns things BARE (soul 1, mind 0), never a value the lethal check would fire on.
+ * <p>⚠ The {@code Player} (not {@code ServerPlayer}) signature on {@code copy}/{@code onBirth}/{@code
+ * resetAll} is the one carve-out from read-{@code Player}/write-{@code ServerPlayer}: during {@code
+ * PlayerEvent.Clone} the fresh entity is typed {@code Player}; never widen a domain service. ⚠ {@code
+ * copy} must carry {@code BORN} or the next login re-rolls brilliance. ⚠ A new death needs an {@code
+ * onRespawn} line; its un-fire returns BARE values (soul 1, mind 0) the lethal check never fires on.
  *
  * @author Alex
  * @version 1.0.0
@@ -59,9 +54,7 @@ import org.jetbrains.annotations.NotNull;
 public final class PlayerDataService {
 
     private static final String VITAL_LOST = "guzhenren.item.gu.vital_lost";
-
     private PlayerDataService() {}
-
     public static void onJoin(@NotNull ServerPlayer player) {
         if (!player.getData(ModAttachments.BORN)) onBirth(player);
         migratePhysique(player);
@@ -70,7 +63,6 @@ public final class PlayerDataService {
         BodyAttackService.refresh(player);
         EpicFightIntegration.refresh(player);
     }
-
     private static void migratePhysique(@NotNull ServerPlayer player) {
         Aperture aperture = ApertureService.aperture(player);
         ExtremePhysique legacy = aperture.legacyExtremePhysique();
@@ -85,18 +77,15 @@ public final class PlayerDataService {
             ApertureService.set(player, ApertureData.PRIMARY, aperture.clearLegacyExtremePhysique());
         }
     }
-
     public static void onBirth(@NotNull Player player) {
         player.setData(ModAttachments.MIND, MindData.newborn());
         player.setData(ModAttachments.BORN, true);
     }
-
     public static void onSleepComplete(@NotNull ServerPlayer player) {
         SoulService.refill(player);
         ApertureEssenceService.refill(player);
         MindService.onSleepComplete(player);
     }
-
     public static void onClone(@NotNull Player from, @NotNull Player to, boolean wasDeath, boolean keepInventory) {
         if (wasDeath && !keepInventory) {
             dropHumanApertures(from);
@@ -110,7 +99,6 @@ public final class PlayerDataService {
             EpicFightIntegration.refresh(server);
         }
     }
-
     /**
      * A death that wipes the apertures shakes one Human Aperture [人窍] loose per aperture, each at its
      * own rank, at the corpse. keepInventory deaths keep the apertures and drop nothing.
@@ -124,7 +112,6 @@ public final class PlayerDataService {
                     new ItemStack(drop)));
         }
     }
-
     public static void onRespawn(@NotNull ServerPlayer player) {
         BodyService.revive(player);
         if (ApertureService.pressureFull(player)) ApertureService.setPressure(player, ApertureService.PRIMARY, 0);
@@ -140,7 +127,6 @@ public final class PlayerDataService {
         BodyService.clearDeathQiDebt(player);
         PathQiService.set(player, QiKind.DEATH, 0L);
     }
-
     public static void onVitalGuLost(@NotNull ServerPlayer owner, @NotNull ItemStack stack) {
         owner.sendSystemMessage(Component.translatable(VITAL_LOST, stack.getHoverName()));
 
@@ -153,8 +139,7 @@ public final class PlayerDataService {
         int bound = stack.getOrDefault(ModDataComponents.VITAL_APERTURE.get(), ApertureData.PRIMARY);
         ApertureService.setPrimaryPath(owner, bound, null);
     }
-
-    public static void copy(@NotNull Player from, @NotNull Player to) {
+    private static void copy(@NotNull Player from, @NotNull Player to) {
         to.setData(ModAttachments.APERTURE, from.getData(ModAttachments.APERTURE));
         to.setData(ModAttachments.APERTURE_STORAGE, from.getData(ModAttachments.APERTURE_STORAGE).copy());
         to.setData(ModAttachments.BODY, from.getData(ModAttachments.BODY));
@@ -166,7 +151,6 @@ public final class PlayerDataService {
         to.setData(ModAttachments.NOURISH, from.getData(ModAttachments.NOURISH));
         to.setData(ModAttachments.BORN, from.getData(ModAttachments.BORN));
     }
-
     public static void resetAll(@NotNull Player player) {
         player.setData(ModAttachments.APERTURE, ApertureData.DEFAULT);
         player.setData(ModAttachments.APERTURE_STORAGE, ApertureStorage.DEFAULT);

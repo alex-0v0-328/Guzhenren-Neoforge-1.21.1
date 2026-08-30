@@ -12,9 +12,8 @@ import org.jetbrains.annotations.Nullable;
  * One Gu's numbers, given as a builder chain at registration so that a registration reads as a table row.
  *
  * <p>The single source of truth for every Gu's numerical identity: refine cost, channel/cost-per-use,
- * hunger bar geometry, feed tags, cooldown, and max health. Stored on
- * {@link MortalGuItem} at construction; read by {@link TendedGuItem}, {@link GuClock}, and the
- * tooltip/HUD renderers.
+ * hunger bar geometry, feed tags, cooldown, and max health. Stored on {@link MortalGuItem} at
+ * construction; read by {@link TendedGuItem}, {@link GuClock}, and the tooltip/HUD renderers.
  *
  * <p>⚠ {@link #validate} runs at registration and refuses to start the game, naming the Gu, when
  * the channel numbers do not divide evenly. It is the first line of defense; never route around it.
@@ -48,12 +47,10 @@ public final class GuSpec {
     private int itemCooldownTicks;
 
     private int maxHealth;
-
     private GuSpec(Rank rank, GuPath path) {
         this.rank = rank;
         this.path = path;
     }
-
     public static GuSpec of(Rank rank, GuPath path) {return new GuSpec(rank, path);}
 
     //region the chain -- one call per fact, so a registration reads as a table row
@@ -61,53 +58,44 @@ public final class GuSpec {
         this.refineCost = cost;
         return this;
     }
-
     public GuSpec channel(int essencePerRound) {
         this.essencePerRound = essencePerRound;
         this.channels = true;
         return this;
     }
-
     public GuSpec costPerUse(int essence) {
         this.essencePerRound = essence;
         this.channels = false;
         return this;
     }
-
     public GuSpec hungerBar(int max, int unitsPerHunger) {
         this.maxHunger = max;
         this.unitsPerHunger = unitsPerHunger;
         return this;
     }
-
-    public GuSpec hungerEvery(int essence) {
+    public GuSpec essencePerHunger(int essence) {
         this.essencePerHunger = essence;
         return this;
     }
-
     public GuSpec hungerPerUse(int points) {
         this.hungerPerUse = points;
         return this;
     }
-
     public GuSpec feed(TagKey<Item> tag, int units) {
         this.feedTag = tag;
         this.feedUnits = units;
         return this;
     }
-
     public GuSpec cooldown(int ticks) {
         this.effectCooldownTicks = ticks;
         this.itemCooldownTicks = ticks;
         return this;
     }
-
     public GuSpec cooldown(int effectTicks, int itemTicks) {
         this.effectCooldownTicks = effectTicks;
         this.itemCooldownTicks = itemTicks;
         return this;
     }
-
     public GuSpec strengthPathBranch(StrengthPathBranch branch) {
         this.strengthPathBranch = branch;
         return this;
@@ -124,16 +112,13 @@ public final class GuSpec {
     public int effectCooldownTicks() {return effectCooldownTicks;}
     public int itemCooldownTicks() {return itemCooldownTicks;}
     public int maxHealth() {return maxHealth;}
-
     public int unitsPerHealth() {return unitsPerHunger;}
-
     public GuClock buildClock() {
         if (maxHunger > 0) {
             return new GuClock.HungerBar(maxHunger, unitsPerHunger, essencePerHunger, hungerPerUse);
         }
         return new GuClock.NoClock();
     }
-
     public int feedUnits(ItemStack food) {
         return feedTag != null && food.is(feedTag) ? feedUnits : 0;
     }
@@ -153,7 +138,6 @@ public final class GuSpec {
                     .formatted(essencePerRound, essencePerHunger));
         }
     }
-
     private static IllegalStateException fault(String id, String what) {
         return new IllegalStateException("Gu spec for '%s' %s".formatted(id, what));
     }

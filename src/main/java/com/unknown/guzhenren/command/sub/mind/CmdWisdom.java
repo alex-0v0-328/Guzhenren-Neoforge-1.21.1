@@ -25,9 +25,7 @@ import net.minecraft.commands.Commands;
  */
 
 public final class CmdWisdom {
-
     private CmdWisdom() {}
-
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         LiteralArgumentBuilder<CommandSourceStack> wisdom = Commands.literal("wisdom");
         for (WisdomType type : WisdomType.values()) {
@@ -35,7 +33,6 @@ public final class CmdWisdom {
         }
         return wisdom;
     }
-
     private static ArgumentBuilder<CommandSourceStack, ?> cell(WisdomType type) {
         return Commands.literal(type.getSerializedName())
                 .then(Commands.literal("current")

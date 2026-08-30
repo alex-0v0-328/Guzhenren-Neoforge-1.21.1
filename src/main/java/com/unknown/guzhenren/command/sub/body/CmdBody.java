@@ -28,9 +28,7 @@ import net.minecraft.util.StringRepresentable;
  */
 
 public final class CmdBody {
-
     private CmdBody() {}
-
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("body")
                 .then(physique())
@@ -39,12 +37,11 @@ public final class CmdBody {
                 .then(ModCommandSupport.counter("lifespan", BodyService::setLifespan, BodyService::addLifespan))
                 .then(ModCommandSupport.counter("age", BodyService::setAge, BodyService::addAge));
     }
-
     private static ArgumentBuilder<CommandSourceStack, ?> physique() {
         return Commands.literal("physique")
                 .then(enumAction("add", Physique.values(), (player, value) -> BodyService.addPhysique(player, value),
                         value -> value != Physique.EXTREME, player -> true,
-                        "guzhenren.command.failed.extreme_physique_required"))
+                        ModCommandSupport.FAILED_EXTREME))
                 .then(enumAction("remove", Physique.values(),
                         (player, value) -> BodyService.removePhysique(player, value), value -> true,
                         player -> true, null))
@@ -53,7 +50,6 @@ public final class CmdBody {
                                 (player, value) -> BodyService.setExtremePhysique(player, value),
                                 value -> true, ModCommandSupport.AWAKENED, ModCommandSupport.FAILED_UNAWAKENED)));
     }
-
     private static <E extends Enum<E> & StringRepresentable> ArgumentBuilder<CommandSourceStack, ?> enumAction(
             String literal, E[] values, ModCommandSupport.EnumOperation<E> operation,
             Predicate<E> valueAllowed, Predicate<ServerPlayer> allowed, String refusedKey) {
@@ -64,7 +60,7 @@ public final class CmdBody {
                     Predicate<ServerPlayer> gate = !valid
                             ? player -> false : allowed;
                     String key = !valid
-                            ? "guzhenren.command.failed.extreme_physique_required" : refusedKey;
+                            ? ModCommandSupport.FAILED_EXTREME : refusedKey;
                     return ModCommandSupport.applyIf(context, gate, key, player -> operation.apply(player, value));
                 }));
     }

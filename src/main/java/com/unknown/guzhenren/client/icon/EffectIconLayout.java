@@ -40,7 +40,6 @@ interface EffectIconLayout extends IClientMobEffectExtensions {
                 "textures/" + textureFor(instance) + ".png");
         g.blit(texture, x, y, 0, 0.0F, 0.0F, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
     }
-
     @Override
     default boolean renderGuiIcon(@NotNull MobEffectInstance instance, @NotNull Gui gui, GuiGraphics graphics,
                                   int x, int y, float z, float alpha) {
@@ -49,7 +48,6 @@ interface EffectIconLayout extends IClientMobEffectExtensions {
         graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         return true;
     }
-
     @Override
     default boolean renderInventoryIcon(@NotNull MobEffectInstance instance,
                                         @NotNull EffectRenderingInventoryScreen<?> screen,

@@ -1,6 +1,5 @@
 package com.unknown.guzhenren.item.gu.mortal.wisdom;
 
-import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.effect.timed.CasualThoughtEffect;
 import com.unknown.guzhenren.item.gu.ConsumedGuItem;
 import com.unknown.guzhenren.item.gu.GuSpec;
@@ -29,18 +28,15 @@ import org.jetbrains.annotations.Nullable;
 public class CasualGuItem extends ConsumedGuItem {
 
     private final Holder<MobEffect> effect;
-
     public CasualGuItem(Properties properties, Holder<MobEffect> effect, GuSpec spec) {
         super(properties, spec);
         this.effect = effect;
     }
-
     @Override
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {return null;}
-
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
-        int amplifier = spec.rank().ordinal() - Rank.ONE.ordinal();
+        int amplifier = tier();
         player.addEffect(ModEffects.instance(effect, CasualThoughtEffect.DURATION_TICKS, amplifier));
     }
 }

@@ -107,21 +107,21 @@ public final class ModItems {
                     .strengthPathBranch(StrengthPathBranch.BEAST_STRENGTH_PHANTOM)
                     .refine(800)
                     .channel(3_600)
-                    .hungerBar(36, 1).hungerEvery(100)
+                    .hungerBar(36, 1).essencePerHunger(100)
                     .feed(ModItemTags.BOAR_FEED, 1)));
     public static final DeferredItem<Item> BLACK_BOAR_GU = ITEMS.register("black_boar_gu",
             () -> new BeastStrengthGuItem(tended(), BeastStrength.BLACK_BOAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                     .strengthPathBranch(StrengthPathBranch.BEAST_STRENGTH_PHANTOM)
                     .refine(800)
                     .channel(3_600)
-                    .hungerBar(36, 1).hungerEvery(100)
+                    .hungerBar(36, 1).essencePerHunger(100)
                     .feed(ModItemTags.BOAR_FEED, 1)));
     public static final DeferredItem<Item> BEAR_STRENGTH_GU = ITEMS.register("bear_strength_gu",
             () -> new BeastStrengthGuItem(tended(), BeastStrength.BEAR, GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                     .strengthPathBranch(StrengthPathBranch.BEAST_STRENGTH_PHANTOM)
                     .refine(800)
                     .channel(3_600)
-                    .hungerBar(36, 1).hungerEvery(100)
+                    .hungerBar(36, 1).essencePerHunger(100)
                     .feed(ModItemTags.BEAR_FEED, 1)));
     public static final DeferredItem<Item> FLOWER_BOAR_GU = ITEMS.register("flower_boar_gu",
             () -> new BuffGuItem(tended(), ModEffects.FLOWER_BOAR_GU, FlowerBoarGuEffect.DURATION_TICKS,
@@ -214,28 +214,28 @@ public final class ModItems {
                     .strengthPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)
                     .refine(800)
                     .channel(3_600)
-                    .hungerBar(36, 1).hungerEvery(300)
+                    .hungerBar(36, 1).essencePerHunger(300)
                     .feed(ModItemTags.JIN_FEED, 1)));
     public static final DeferredItem<Item> TENS_JIN_STRENGTH_GU = ITEMS.register("tens_jin_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.TEN_JIN, GuSpec.of(Rank.TWO, GuPath.STRENGTH)
                     .strengthPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)
                     .refine(8_000)
                     .channel(36_000)
-                    .hungerBar(36, 2).hungerEvery(3_000)
+                    .hungerBar(36, 2).essencePerHunger(3_000)
                     .feed(ModItemTags.JIN_FEED, 1)));
     public static final DeferredItem<Item> JUN_STRENGTH_GU = ITEMS.register("jun_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.JUN, GuSpec.of(Rank.THREE, GuPath.STRENGTH)
                     .strengthPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)
                     .refine(80_000)
                     .channel(72_000)
-                    .hungerBar(36, 4).hungerEvery(6_000)
+                    .hungerBar(36, 4).essencePerHunger(6_000)
                     .feed(ModItemTags.JIN_FEED_SMELTED, 1)));
     public static final DeferredItem<Item> TENS_JUN_STRENGTH_GU = ITEMS.register("tens_jun_strength_gu",
             () -> new HumanStrengthGuItem(tended(), HumanStrength.TEN_JUN, GuSpec.of(Rank.FOUR, GuPath.STRENGTH)
                     .strengthPathBranch(StrengthPathBranch.HUMAN_JUN_STRENGTH)
                     .refine(800_000)
                     .channel(720_000)
-                    .hungerBar(36, 8).hungerEvery(60_000)
+                    .hungerBar(36, 8).essencePerHunger(60_000)
                     .feed(ModItemTags.JIN_FEED_SMELTED, 1)));
     //endregion
 
@@ -488,7 +488,6 @@ public final class ModItems {
     private static DeferredItem<Item> humanAperture(String id, Rank rank) {
         return ITEMS.register(id, () -> new GuMaterialItem(new Item.Properties().stacksTo(64), rank, GuPath.HUMAN));
     }
-
     public static @Nullable Item humanAperture(Rank rank) {
         return switch (rank) {
             case ONE -> HUMAN_APERTURE_1.get();
@@ -537,7 +536,6 @@ public final class ModItems {
     private static DeferredItem<Item> qiMaterial(String id, Rank rank, QiKind kind) {
         return ITEMS.register(id, () -> new QiMaterialItem(qiProperties(), rank, kind));
     }
-
     private static Item.Properties qiProperties() {return new Item.Properties().stacksTo(64);}
     //endregion
 

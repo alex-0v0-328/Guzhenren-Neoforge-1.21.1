@@ -23,11 +23,10 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The container behind one aperture's [空窍] store, paged because the store itself is uncapped.
  *
- * <p>Extends {@link net.minecraft.world.inventory.AbstractContainerMenu}. 54 slots per page; the Vital
- * Gu [本命蛊] slot sits outside the pager, past {@code imageWidth}. The save trigger
- * is a container listener ({@code page.addListener(c -> save())}), not an override of
- * {@code slotsChanged} -- that override is never called because {@code AbstractContainerMenu} is not a
- * {@code ContainerListener}.
+ * <p>Extends {@link net.minecraft.world.inventory.AbstractContainerMenu}. 54 slots per page; the Vital Gu
+ * [本命蛊] slot sits outside the pager, past {@code imageWidth}. The save trigger is a container
+ * listener ({@code page.addListener(c -> save())}), not an override of {@code slotsChanged} -- that
+ * override is never called because {@code AbstractContainerMenu} is not a {@code ContainerListener}.
  *
  * <p>⚠ It has to reload after the day-rollover walk, or an open menu saves its stale view back and
  * resurrects a Gu that starved a moment earlier.
@@ -49,14 +48,14 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
     public static final int BUTTON_PREV = 0;
     public static final int BUTTON_NEXT = 1;
 
-    private static final int SLOT = 18;
-    private static final int STORAGE_X = 8;
-    private static final int STORAGE_Y = 18;
-    private static final int INVENTORY_Y = 140;
-    private static final int HOTBAR_Y = 198;
+    public static final int SLOT = 18;
+    public static final int STORAGE_X = 8;
+    public static final int STORAGE_Y = 18;
+    public static final int INVENTORY_Y = 140;
+    public static final int HOTBAR_Y = 198;
 
-    private static final int VITAL_X = 186;
-    private static final int VITAL_Y = 22;
+    public static final int VITAL_X = 186;
+    public static final int VITAL_Y = 22;
 
     private static final int DATA_PAGE = 0;
     private static final int DATA_PAGES = 1;
@@ -70,7 +69,6 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
     private final ContainerData pageData = new SimpleContainerData(3);
 
     private boolean loading;
-
     public ApertureStorageMenu(int id, Inventory inventory, int aperture, int pageIndex) {
         super(ModMenus.APERTURE_STORAGE_MENU.get(), id);
         this.player = inventory.player;
@@ -99,17 +97,14 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         addDataSlots(pageData);
         load(pageIndex);
     }
-
     public int pageIndex() {return pageData.get(DATA_PAGE);}
     public int pageCount() {return Math.max(1, pageData.get(DATA_PAGES));}
     public int load() {return pageData.get(DATA_LOAD);}
     public int aperture() {return aperture;}
-
     private int countPages() {
         int count = ApertureStorageService.count(player, aperture);
         return count / PAGE_SIZE + 1;
     }
-
     //region paging
     @Override
     public boolean clickMenuButton(@NotNull Player who, int id) {
@@ -126,12 +121,10 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         broadcastChanges();
         return true;
     }
-
     public void reload() {
         load(pageIndex());
         broadcastChanges();
     }
-
     private void load(int index) {
         loading = true;
         int at = Math.clamp(index, 0, countPages() - 1);
@@ -147,7 +140,6 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         vital.setItem(0, ApertureStorageService.vital(player, aperture).copy());
         loading = false;
     }
-
     private void save() {
         if (loading || !(player instanceof ServerPlayer server)) return;
 
@@ -177,7 +169,6 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         pageData.set(DATA_PAGES, countPages());
         pageData.set(DATA_LOAD, ApertureStorageService.load(server, aperture));
     }
-
     private static boolean same(ItemStack first, ItemStack second) {
         return first.getCount() == second.getCount()
                 && ItemStack.isSameItemSameComponents(first, second);
@@ -189,7 +180,6 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         save();
         super.removed(who);
     }
-
     @Override
     public @NotNull ItemStack quickMoveStack(@NotNull Player who, int index) {
         Slot slot = slots.get(index);
@@ -211,13 +201,11 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
         }
         return original;
     }
-
     @Override
     public boolean stillValid(@NotNull Player who) {return who == player && who.isAlive();}
 
     private static class GuSlot extends Slot {
         GuSlot(Container container, int index, int x, int y) {super(container, index, x, y);}
-
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
             return stack.getItem() instanceof MortalGuItem;
@@ -226,14 +214,12 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
 
     private class VitalSlot extends Slot {
         VitalSlot(int x, int y) {super(vital, 0, x, y);}
-
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
             if (!(stack.getItem() instanceof TendedGuItem gu) || !gu.refined(stack)) return false;
             if (!gu.canBeVital()) return false;
             return !GuItem.isVital(stack) || GuItem.isVitalOf(stack, player);
         }
-
         @Override
         public int getMaxStackSize() {return 1;}
     }

@@ -12,11 +12,10 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Liquor [酒]: what a Liquor Worm [酒虫] is fed, and a drink in its own right.
  *
- * <p>Extends {@link com.unknown.guzhenren.item.material.GuMaterialItem}. It earns a leaf class only
- * because it is drunk rather than eaten -- the {@code FoodProperties} builder needs a
- * {@link net.minecraft.world.item.UseAnim#DRINK} animation and a nausea chance. Five registrations
- * (酒 plus four flavors) use this one class; the flavors exist because the 四味酒虫 recipe takes one
- * of each.
+ * <p>Extends {@link com.unknown.guzhenren.item.material.GuMaterialItem}. It earns a leaf class only because
+ * it is drunk rather than eaten -- the {@code FoodProperties} builder needs a
+ * {@link net.minecraft.world.item.UseAnim#DRINK} animation and a nausea chance. Five registrations (酒 plus
+ * four flavors) use this one class; the flavors exist because the 四味酒虫 recipe takes one of each.
  *
  * <p>⚠ {@code FoodProperties.Builder.effect} must take a {@code Supplier} -- the effect holder resolves
  * too early during registration otherwise.
@@ -34,11 +33,9 @@ public class LiquorItem extends GuMaterialItem {
 
     private static final float NAUSEA_CHANCE = 0.6F;
     private static final int NAUSEA_TICKS = 300;
-
     public LiquorItem(Properties properties) {
         super(properties.food(liquor()), Rank.ONE, GuPath.FOOD);
     }
-
     private static FoodProperties liquor() {
         return new FoodProperties.Builder()
                 .nutrition(NUTRITION)
@@ -47,7 +44,6 @@ public class LiquorItem extends GuMaterialItem {
                 .effect(() -> ModEffects.instance(MobEffects.CONFUSION, NAUSEA_TICKS), NAUSEA_CHANCE)
                 .build();
     }
-
     @Override
     public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {return UseAnim.DRINK;}
 }

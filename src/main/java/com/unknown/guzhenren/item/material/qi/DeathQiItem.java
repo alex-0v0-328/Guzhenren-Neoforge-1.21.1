@@ -14,8 +14,7 @@ import net.minecraft.world.item.ItemStack;
  * handled by {@link com.unknown.guzhenren.attachment.service.path.PathQiService} and
  * {@link com.unknown.guzhenren.attachment.service.body.BodyService}.
  *
- * <p>⚠ The debt is tallied on the body record rather than on the effect, because an effect has no
- * expiry hook to settle from. Milk and a clear command therefore cannot cure it.
+ * <p>⚠ The debt is tallied on the body record, not the effect (no expiry hook); milk and /effect clear cannot cure it.
  *
  * @author Alex
  * @version 1.0.0
@@ -24,14 +23,11 @@ import net.minecraft.world.item.ItemStack;
  */
 
 public class DeathQiItem extends QiMaterialItem {
-
     public DeathQiItem(Properties properties, Rank rank) {
         super(properties, rank, QiKind.DEATH);
     }
-
     @Override
     protected int useDurationTicks(Player player, ItemStack stack) {return 0;}
-
     @Override
     protected long essenceCost() {return 0L;}
 }

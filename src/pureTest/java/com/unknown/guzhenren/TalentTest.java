@@ -1,6 +1,7 @@
 package com.unknown.guzhenren;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.unknown.guzhenren.custom.enums.aperture.Talent;
@@ -64,7 +65,7 @@ class TalentTest {
         Talent[] settable = Talent.settable();
         assertEquals(5, settable.length);
         for (Talent grade : settable) {
-            assertSame(true, grade != Talent.NONE, "NONE must not be settable");
+            assertTrue(grade != Talent.NONE, "NONE must not be settable");
         }
     }
 

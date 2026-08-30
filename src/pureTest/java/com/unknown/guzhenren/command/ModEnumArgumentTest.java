@@ -30,6 +30,5 @@ class ModEnumArgumentTest {
         var context = dispatcher.parse("alias b", null).getContext().build("alias b");
         assertEquals(Kind.B, ModEnumArgument.get(context, "kind", Kind.values()));
         assertThrows(IllegalArgumentException.class, () -> StringArgumentType.getString(context, "kind"));
-        assertThrows(IllegalArgumentException.class, () -> StringArgumentType.getString(context, "kind"));
     }
 }

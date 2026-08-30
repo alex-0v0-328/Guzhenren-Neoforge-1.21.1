@@ -46,6 +46,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 public final class EpicFightIntegration {
 
     private static final ResourceLocation STAMINA_MODIFIER = Guzhenren.id("epic_fight_stamina");
+    private static final double DASH_COORD_SCALE = 3.0D;
 
     private static AnimationManager.AnimationAccessor<DodgeAnimation> DASH_FORWARD;
     private static AnimationManager.AnimationAccessor<DodgeAnimation> DASH_BACKWARD;
@@ -132,7 +133,7 @@ public final class EpicFightIntegration {
         @Override
         protected Vec3 getCoordVector(LivingEntityPatch<?> entityPatch,
                                       AssetAccessor<? extends DynamicAnimation> animation) {
-            return super.getCoordVector(entityPatch, animation).scale(3.0D);
+            return super.getCoordVector(entityPatch, animation).scale(DASH_COORD_SCALE);
         }
     }
 }

@@ -16,13 +16,10 @@ import net.minecraft.server.level.ServerPlayer;
 
 /**
  * {@code /gzr path}: writes attainment [造诣] and marks [道痕], and carries the qi and strength
- * sub-commands.
+ * sub-commands. Uses {@link com.unknown.guzhenren.command.ModEnumArgument} for the path argument; all
+ * writes delegate to {@link com.unknown.guzhenren.attachment.service.path.PathService}.
  *
- * <p>Uses {@link com.unknown.guzhenren.command.ModEnumArgument} for the path argument, then offers
- * {@code set}/{@code add}/{@code sub} for marks and {@code set}/{@code up}/{@code down} for
- * attainment. All writes delegate to {@link com.unknown.guzhenren.attachment.service.path.PathService}.
- *
- * <p>☠ A command books 自然 [NATURAL] and can name no other tag. A handwritten source tag cannot be
+ * <p>☠ A command books 自然 [NATURAL] and can name no other tag -- a handwritten source tag cannot be
  * told from what a Gu laid down, and that is how a race mark was forged onto a path no race revokes.
  *
  * <p>☠ The verbs sit before the path word: {@code GuPath} also has {@code qi}/{@code strength}
@@ -35,11 +32,8 @@ import net.minecraft.server.level.ServerPlayer;
  */
 
 public final class CmdPath {
-
     private CmdPath() {}
-
     private static final String ARG_PATH = "path";
-
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("path")
                 .then(tally("marks", PathService::setMark, PathService::addMark))
@@ -47,7 +41,6 @@ public final class CmdPath {
                 .then(CmdQi.node())
                 .then(CmdStrength.node());
     }
-
     private static ArgumentBuilder<CommandSourceStack, ?> tally(
             String literal, TallyOperation set, TallyOperation add) {
         return Commands.literal(literal)
@@ -56,7 +49,6 @@ public final class CmdPath {
                         .then(countNode("add", add))
                         .then(countNode("sub", (player, path, tag, value) -> add.apply(player, path, tag, -value))));
     }
-
     private static ArgumentBuilder<CommandSourceStack, ?> attainment() {
         return Commands.literal("attainment")
                 .then(ModEnumArgument.arg(ARG_PATH, GuPath.values())
@@ -73,9 +65,7 @@ public final class CmdPath {
                         .then(attainmentShift("up", 1))
                         .then(attainmentShift("down", -1)));
     }
-
     //region builders
-
     private static ArgumentBuilder<CommandSourceStack, ?> countNode(String literal, TallyOperation operation) {
         return Commands.literal(literal).then(ModCommandSupport.withTargets(
                 Commands.argument(ModCommandSupport.ARG_VALUE, LongArgumentType.longArg()),
@@ -86,18 +76,15 @@ public final class CmdPath {
                             player -> operation.apply(player, path, MarkTag.NATURAL, value));
                 }));
     }
-
     private static ArgumentBuilder<CommandSourceStack, ?> attainmentShift(String literal, int delta) {
         return ModCommandSupport.withTargets(Commands.literal(literal), context -> {
             GuPath path = pathOf(context);
             return ModCommandSupport.apply(context, player -> PathService.shiftAttainment(player, path, delta));
         });
     }
-
     private static GuPath pathOf(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         return ModEnumArgument.get(context, ARG_PATH, GuPath.values());
     }
-
     //endregion
 
     @FunctionalInterface

@@ -13,19 +13,13 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * The only writer of what an Aperture [空窍] holds, including the Vital Gu [本命蛊] bound to each.
+ * {@code setVital} also rewrites the aperture's primary path via {@link ApertureService#setPrimaryPath}
+ * -- binding a Gu IS what sets 主修 [primary path] (the store is not synced; the aperture is).
  *
- * <p>Static service over the {@code aperture_storage} attachment; reads take {@link Player}, writes
- * take {@link ServerPlayer}. {@code setVital} also rewrites the aperture's primary path via
- * {@link ApertureService#setPrimaryPath} -- binding a Gu IS what sets 主修 [primary path], because the
- * store is not synced and the aperture is.
- *
- * <p>⚠ It reaches into the {@code item/} package on purpose ({@link GuItem}), against this project's
- * usual dependency direction: binding a Vital Gu has to read that Gu's declared path. Do not "fix"
- * those imports. ⚠ Writes NEVER go through {@code ApertureService.store} -- {@link
- * com.unknown.guzhenren.attachment.service.body.BodyHealthService#refresh} hangs off that, and moving one
- * item must not recompute max health. ⚠ {@code setVital} runs on every menu click and every day tick,
- * and {@code setPrimaryPath} no-ops when unchanged, so leaving that call in is free and removing it
- * loses the path on rebind.
+ * <p>⚠ Reaches into {@code item/} on purpose ({@link GuItem}) -- binding a Vital Gu reads that Gu's
+ * declared path; do not "fix" those imports. ⚠ Writes NEVER go through {@code ApertureService.store}:
+ * {@link com.unknown.guzhenren.attachment.service.body.BodyHealthService#refresh} hangs off that. ⚠
+ * {@code setPrimaryPath} no-ops when unchanged; keep the call, or a rebind loses the path.
  *
  * @author Alex
  * @version 1.0.0
@@ -35,11 +29,8 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class ApertureStorageService {
-
     private ApertureStorageService() {}
-
     public static final int MAX_LOAD = 256;
-
     public static @NotNull ApertureStorage get(@NotNull Player p) {return p.getData(ModAttachments.APERTURE_STORAGE);}
     public static @NotNull List<ItemStack> items(@NotNull Player p, int aperture) {return get(p).get(aperture);}
     public static @NotNull List<ItemStack> page(@NotNull Player p, int aperture, int from, int size) {
@@ -51,7 +42,6 @@ public final class ApertureStorageService {
     public static int count(@NotNull Player p, int aperture) {return get(p).count(aperture);}
     public static @NotNull ItemStack vital(@NotNull Player p, int aperture) {return get(p).getVital(aperture);}
     public static int load(@NotNull Player p, int aperture) {return load(p, get(p), aperture);}
-
     public static boolean set(@NotNull ServerPlayer p, int aperture, @NotNull List<ItemStack> items) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.with(aperture, items);
@@ -60,7 +50,6 @@ public final class ApertureStorageService {
         p.setData(ModAttachments.APERTURE_STORAGE, next);
         return true;
     }
-
     public static boolean setVital(@NotNull ServerPlayer p, int aperture, @NotNull ItemStack stack) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.withVital(aperture, stack);
@@ -70,7 +59,6 @@ public final class ApertureStorageService {
         if (stack.getItem() instanceof GuItem gu) ApertureService.setPrimaryPath(p, aperture, gu.path());
         return true;
     }
-
     public static boolean setPage(@NotNull ServerPlayer p, int aperture, int from, @NotNull List<ItemStack> page) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.withPage(aperture, from, page);
@@ -79,7 +67,6 @@ public final class ApertureStorageService {
         p.setData(ModAttachments.APERTURE_STORAGE, next);
         return true;
     }
-
     private static int load(Player p, ApertureStorage storage, int aperture) {
         Rank holder = ApertureService.aperture(p, aperture).rank();
         int total = 0;
@@ -91,15 +78,12 @@ public final class ApertureStorageService {
         }
         return total;
     }
-
     private static int load(Rank holder, List<ItemStack> stacks) {
         int total = 0;
         for (ItemStack stack : stacks) total += cost(holder, stack);
         return total;
     }
-
     private static boolean exceedsLoad(int current, int next) {return next > Math.max(MAX_LOAD, current);}
-
     private static int cost(Rank holder, ItemStack stack) {
         if (stack.isEmpty() || !(stack.getItem() instanceof MortalGuItem gu)) return 0;
 

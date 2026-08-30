@@ -6,34 +6,35 @@ import net.minecraft.world.effect.MobEffectInstance;
 /**
  * Draws a graded effect's icon from its amplifier, so one effect can wear a different face per grade.
  *
- * <p>Implements {@link com.unknown.guzhenren.client.icon.EffectIconLayout} as a record carrying a name, a
- * directory ({@code mob_effect} or {@code item}), and the rank range. The texture path is
- * {@code directory/name_rank}, where rank is {@code amplifier + 1} clamped to the range. Two factories
- * ({@code mobEffect} / {@code item}) select which texture set to read from.
+ * <p>An {@link EffectIconLayout} record carrying a name, a directory ({@code mob_effect} or {@code
+ * item}) and the rank range. The texture path is {@code directory/name_rank}, where rank is
+ * {@code amplifier + amplifierOffset} clamped to the range; the offset stays 1 unless the family
+ * counts its amplifier from a later rank (the malicious thought Gu, whose grades start at rank two).
  *
- * <p>⚠ This exists so a family of grades stays a single effect. Splitting it into one effect per
- * grade would let a player hold two grades of the same thing at the same time.
+ * <p>⚠ Keeps a family of grades one effect -- splitting it per grade would let two grades be held at once.
  *
  * @author Alex
  * @version 1.0.0
- * @see com.unknown.guzhenren.client.icon.EffectIconLayout
- * @see com.unknown.guzhenren.client.icon.ItemEffectIcon
+ * @see EffectIconLayout
+ * @see ItemEffectIcon
  * @since 1.0.0
  */
 
 public record GradedEffectIcon(String name, String directory, int lowestRank,
-                               int highestRank) implements EffectIconLayout {
+                               int highestRank, int amplifierOffset) implements EffectIconLayout {
 
     public static GradedEffectIcon mobEffect(String name, int lowestRank, int highestRank) {
-        return new GradedEffectIcon(name, "mob_effect", lowestRank, highestRank);
+        return new GradedEffectIcon(name, "mob_effect", lowestRank, highestRank, 1);
     }
     public static GradedEffectIcon item(String name, int lowestRank, int highestRank) {
-        return new GradedEffectIcon(name, "item", lowestRank, highestRank);
+        return new GradedEffectIcon(name, "item", lowestRank, highestRank, 1);
     }
-
+    public static GradedEffectIcon item(String name, int lowestRank, int highestRank, int amplifierOffset) {
+        return new GradedEffectIcon(name, "item", lowestRank, highestRank, amplifierOffset);
+    }
     @Override
     public String textureFor(MobEffectInstance instance) {
-        int rank = Mth.clamp(instance.getAmplifier() + 1, lowestRank, highestRank);
+        int rank = Mth.clamp(instance.getAmplifier() + amplifierOffset, lowestRank, highestRank);
         return directory + "/" + name + "_" + rank;
     }
 }

@@ -72,7 +72,6 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
             throw new IllegalArgumentException("recipe runtime exceeds supported range", e);
         }
     }
-
     //region the ritual's own clock -- the window list IS the stage count
     public int windowCount() {return windows.size();}
     public int stonesFor(int window) {return windows.get(window);}

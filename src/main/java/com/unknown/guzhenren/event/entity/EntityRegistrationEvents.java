@@ -33,14 +33,11 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class EntityRegistrationEvents {
-
     private EntityRegistrationEvents() {}
-
     @SubscribeEvent
     public static void onCreateAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntityTypes.HOPE_GU_ENTITY.get(), FlyingGuEntity.createAttributes().build());
     }
-
     @SubscribeEvent
     public static void onRegisterSpawnPlacements(RegisterSpawnPlacementsEvent event) {
         event.register(ModEntityTypes.HOPE_GU_ENTITY.get(),
@@ -49,7 +46,6 @@ public final class EntityRegistrationEvents {
                 EntityRegistrationEvents::onTheSurface,
                 RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
-
     private static boolean onTheSurface(EntityType<HopeGuEntity> type, ServerLevelAccessor level,
                                         MobSpawnType reason, BlockPos pos, RandomSource random) {
         return pos.getY() >= level.getLevel().getSeaLevel();

@@ -23,9 +23,8 @@ import org.jetbrains.annotations.Nullable;
  * (5/10/20 ticks via {@code useChargeByGap}). The apply delegates to
  * {@link com.unknown.guzhenren.attachment.service.path.PathQiService#add}.
  *
- * <p>⚠ A material, not a Gu, so it keeps the base item's hooks and it stacks. Only the shared
- * per-stack state of a tended Gu forces a stack size of one, and this carries none. No progress is
- * stored -- the component is shared by the whole stack, and storing it would be the Hope Gu bug.
+ * <p>⚠ A material, not a Gu: it keeps the base item's hooks and it stacks; no progress is stored -- the
+ * component is shared by the whole stack, and storing it would be the Hope Gu bug.
  *
  * @author Alex
  * @version 1.0.0
@@ -41,30 +40,23 @@ public class QiMaterialItem extends GuMaterialItem {
     private static final long[] ESSENCE_COST = {50L, 500L, 5_000L, 50_000L, 500_000L};
 
     private final QiKind kind;
-
     public QiMaterialItem(Properties properties, Rank rank, QiKind kind) {
         super(properties, rank, GuPath.QI);
         this.kind = kind;
     }
-
     public QiKind kind() {return kind;}
-
     protected long qiAmount() {return QiKind.tierAmount(tier());}
     protected long essenceCost() {return ESSENCE_COST[tier()];}
-
     @Override
     protected boolean hasUse() {return true;}
-
     @Override
     protected int useDurationTicks(Player player, ItemStack stack) {return useChargeByGap(player);}
-
     @Override
     protected @Nullable Refusal gate(Player player, ItemStack stack) {
         return essenceCost() > 0 && ApertureEssenceService.spendable(player) < essenceCost()
                 ? new Refusal(FAILED_ESSENCE)
                 : null;
     }
-
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity entity, @NotNull ItemStack stack,
                           int remaining) {
@@ -77,14 +69,11 @@ public class QiMaterialItem extends GuMaterialItem {
         long step = paidBy(tick, duration) - paidBy(tick - 1, duration);
         if (step > 0 && !ApertureEssenceService.consume(player, step)) player.stopUsingItem();
     }
-
     private long paidBy(int ticks, int duration) {return essenceCost() * ticks / duration;}
-
     @Override
     public @Nullable Component chargeCaption(ItemStack stack, int remainingTicks) {
         return Component.translatable(CHARGE_CAPTION);
     }
-
     @Override
     protected int apply(ServerPlayer player, ItemStack stack) {
         PathQiService.add(player, kind, qiAmount());

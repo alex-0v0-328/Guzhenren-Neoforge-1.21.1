@@ -47,7 +47,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     public ZhCnLanguageProvider(PackOutput output) {
         super(output, Guzhenren.MOD_ID, "zh_cn");
     }
-
     @Override
     protected void addTranslations() {
         addEnumKeys();
@@ -58,7 +57,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addEntityKeys();
         addDeathMessages();
     }
-
     private void add(EnumTranslatable key, String value) {add(key.getTranslationKey(), value);}
 
     //region DISPLAY
@@ -274,9 +272,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.label.strength_path_achieve", "力道造诣");
         add("guzhenren.screen.label.time_path_achieve", "宙道造诣");
         add("guzhenren.screen.label.time_rate_up", "自身时间加速");
-        add("guzhenren.screen.lable.body_capacity", "承受");
+        add("guzhenren.screen.label.body_capacity", "承受");
         add("guzhenren.screen.label.attack", "基础攻击力");
-        add("guzhenren.screen.label.apreture_pressure", "空窍压力");
+        add("guzhenren.screen.label.aperture_pressure", "空窍压力");
         add("guzhenren.screen.capacity", "%s / %s斤");
         add("guzhenren.menu.aperture_load", "空窍负担 %s / %s");
         add("guzhenren.screen.label.brilliance", "才情");
@@ -496,33 +494,28 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         addStrengthPathBranch();
         addHumanStrength();
     }
-
     private void addBeastStrength() {
         add(BeastStrength.WHITE_BOAR, "白豕");
         add(BeastStrength.BLACK_BOAR, "黑豕");
         add(BeastStrength.BEAR, "熊");
     }
-
     private void addStrengthPathBranch() {
         add(StrengthPathBranch.BEAST_STRENGTH_PHANTOM, "兽力虚影流");
         add(StrengthPathBranch.HUMAN_JUN_STRENGTH, "人力钧力流");
         add(StrengthPathBranch.ATMOSPHERIC_HEAVEN_AND_EARTH, "气象天地流");
         add(StrengthPathBranch.NORMAL, "基础力道");
     }
-
     private void addHumanStrength() {
         add(HumanStrength.JIN, "斤");
         add(HumanStrength.TEN_JIN, "十斤");
         add(HumanStrength.JUN, "钧");
         add(HumanStrength.TEN_JUN, "十钧");
     }
-
     private void addTitle() {
         add(Title.MORTAL, "凡人");
         add(Title.GU_MASTER, "蛊师");
         add(Title.GU_IMMORTAL, "蛊仙");
     }
-
     private void addRank() {
         add(Rank.NONE, "");
         add(Rank.ONE, "一转");
@@ -535,7 +528,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(Rank.EIGHT, "八转");
         add(Rank.NINE, "九转");
     }
-
     private void addStage() {
         add(Stage.NONE, "");
         add(Stage.INIT, "初阶");
@@ -543,12 +535,10 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(Stage.UPPER, "高阶");
         add(Stage.PEAK, "巅峰");
     }
-
     private void addApertureStatus() {
         add(ApertureStatus.NORMAL, "正常");
         add(ApertureStatus.DEAD, "死窍");
     }
-
     private void addTalent() {
         add(Talent.EXTREME, "十绝天资");
         add(Talent.FIRST, "甲等资质");
@@ -557,13 +547,11 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(Talent.FOURTH, "丁等资质");
         add(Talent.NONE, "未觉醒");
     }
-
     private void addPhysique() {
         add(Physique.ZOMBIE, "僵");
         add(Physique.HALF_ZOMBIE, "半僵");
         add(Physique.EXTREME, "十绝体");
     }
-
     private void addRace() {
         add(Race.HUMAN, "人族");
         add(Race.HAIRY_MEN, "毛民");
@@ -578,7 +566,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(Race.MUSHROOMMEN, "菇人");
         add(Race.SNOWMEN, "雪人");
     }
-
     private void addEssenceColor() {
         add(EssenceColor.NONE, "无");
         add(EssenceColor.GREEN_COPPER, "青铜色");
@@ -591,7 +578,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(EssenceColor.WHITE_LITCHI, "白荔");
         add(EssenceColor.YELLOW_APRICOT, "黄杏");
     }
-
     private void addTenExtreme() {
         add(ExtremePhysique.NONE, "");
         add(ExtremePhysique.VERDANT_GREAT_SUN, "太日阳莽体");
@@ -606,18 +592,15 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(ExtremePhysique.UNIVERSE_GREAT_DERIVATION, "宇宙大衍体");
         add(ExtremePhysique.PURE_DREAM_REALITY_SEEKER, "纯梦求真体");
     }
-
     private void addMarkTag() {
         add(MarkTag.NATURAL, "自然");
         add(MarkTag.RACE, "种族");
         add(MarkTag.EXTREME_PHYSIQUE, "十绝体质");
     }
-
     private void addBeastStrengthFamily() {
         add(BeastStrengthFamily.BOAR, "猪");
         add(BeastStrengthFamily.BEAR, "熊");
     }
-
     private void addQiKind() {
         add(QiKind.SWORD, "剑气");
         add(QiKind.STRENGTH, "力气");
@@ -628,7 +611,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(QiKind.HEAVEN, "天气");
         add(QiKind.EARTH, "地气");
     }
-
     private void addPath() {
         add(GuPath.HEAVEN, "天道");
         add(GuPath.RULE, "律道");
@@ -664,7 +646,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(GuPath.PAINTING, "画道");
         add(GuPath.TRANSFORMATION, "变化道");
     }
-
     private void addAttainment() {
         add(GuAttainment.NONE, "无");
         add(GuAttainment.ORDINARY, "普通");
@@ -677,7 +658,6 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(GuAttainment.QUASI_SUPREME_GRANDMASTER, "准无上大宗师");
         add(GuAttainment.SUPREME_GRANDMASTER, "无上大宗师");
     }
-
     private void addSoulTier() {
         add(SoulTier.ONE, "一人魂");
         add(SoulTier.TEN, "十人魂");
@@ -689,13 +669,11 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add(SoulTier.TEN_MILLION, "千万人魂");
         add(SoulTier.HUNDRED_MILLION, "亿人魂");
     }
-
     private void addWisdomType() {
         add(WisdomType.THOUGHTS, "念");
         add(WisdomType.WILLS, "意");
         add(WisdomType.EMOTIONS, "情");
     }
-
     private void addBrilliance() {
         add(Brilliance.ORDINARY, "才情普通");
         add(Brilliance.DECENT, "才情尚可");

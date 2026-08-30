@@ -102,11 +102,9 @@ public final class PlayerStatsHud implements LayeredDraw.Layer {
             line(graphics, font, y, pressure);
         }
     }
-
     private static void line(GuiGraphics graphics, Font font, int y, Component text) {
         graphics.drawString(font, text, LEFT, y, TEXT_COLOR, true);
     }
-
     private static void bar(GuiGraphics graphics, Font font, int y, long current, long max, int fill) {
         int right = LEFT + BAR_WIDTH;
         graphics.fill(LEFT, y, right, y + BAR_HEIGHT, BAR_BORDER);

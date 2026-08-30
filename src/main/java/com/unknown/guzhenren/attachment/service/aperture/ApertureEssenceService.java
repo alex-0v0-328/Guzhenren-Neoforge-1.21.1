@@ -17,25 +17,14 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Essence [真元]: the pools, the distilled reserves, their regen, and the Liquor Worm's [酒虫] phases.
+ * Essence [真元]: pools, distilled reserves, regen, and the Liquor Worm's [酒虫] phases. Spending
+ * cascades PRIMARY then SECONDARY, gains fill PRIMARY; {@code regenStep} banks the fractional remainder
+ * per aperture in unsynced {@code ESSENCE_CARRY}.
  *
- * <p>Static service; reads take {@link Player}, writes take {@link ServerPlayer} and route through
- * {@link ApertureService#set} (which fires {@link
- * com.unknown.guzhenren.attachment.service.body.BodyHealthService#refresh}). One pool per aperture:
- * spending cascades PRIMARY first then SECONDARY, gains fill PRIMARY first and overflow into
- * SECONDARY. {@code regenStep} is the heartbeat entry point; it carries a float remainder per
- * aperture in {@code ESSENCE_CARRY} (unsynced, unserialized, mutated in place) so a fractional regen
- * banks across ticks instead of being lost.
- *
- * <p>⚠ A gate must ask {@code spendable()}, never a no-index {@code currentEssence()} -- the no-index
- * reads are the PRIMARY aperture alone, and distilling empties that pool by design. ⚠ {@code consume}
- * burns the distilled reserve at the 1:2 rate FIRST, then the ordinary pool, aperture by aperture in
- * index order; the distilled half is rounded UP so the last point cannot pay for itself twice. ⚠ The
- * distilling truth is the per-aperture {@code distilling} flag, never the effect -- each Liquor Worm
- * use enrolls the next aperture in index order, and {@code endDistilling} settles only the enrolled
- * ones. ⚠ Every path that SKIPS a regen step (death-qi choke or a DEAD [死窍] aperture)
- * must zero that aperture's carry; the {@code = 0.0F} writes are the mechanic, not tidying. ⚠
- * {@code isChoked} outranks everything -- it clears every carry and returns.
+ * <p>⚠ Gates ask {@code spendable()}, never a no-index {@code currentEssence()} (PRIMARY alone, and
+ * distilling empties it). ⚠ {@code consume} burns distilled 1:2 first (rounded UP), then the pool. ⚠
+ * The distilling truth is the per-aperture {@code distilling} flag, not the effect. ⚠ Any path that
+ * SKIPS a regen step (choke, DEAD [死窍]) must zero that carry; {@code isChoked} outranks everything.
  *
  * @author Alex
  * @version 1.0.0
@@ -45,40 +34,25 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class ApertureEssenceService {
-
     private ApertureEssenceService() {}
-
     public static final long BASE_REGEN_PER_DAY = 100L;
     public static final int REGEN_INTERVAL_TICKS = Ticks.SECOND;
     public static final double HALF_ZOMBIE_REGEN_RATE = 0.5;
-
     public static long regenPerDay(@NotNull Aperture a) {
         return BASE_REGEN_PER_DAY * a.talent().getRegenRate() * a.rank().getRankBase()
                 * a.stage().getEssenceMultiplier();
     }
-
     public static double regenPerTick(@NotNull Aperture a) {return regenPerDay(a) / (double) Ticks.DAY;}
-
     public static final long DISTILLED_RATE = 2L;
-
     public static long currentEssence(@NotNull Player p) {return ApertureService.aperture(p).currentEssence();}
     public static long maxEssence(@NotNull Player p) {return ApertureService.aperture(p).maxEssence();}
     public static long distilledEssence(@NotNull Player p) {return ApertureService.aperture(p).distilledEssence();}
-
-    public static long totalCurrent(@NotNull Player p) {
-        long total = 0L;
-        ApertureData data = ApertureService.get(p);
-        for (int i = 0; i < data.count(); i++) total += data.get(i).currentEssence();
-        return total;
-    }
-
     public static long totalDistilled(@NotNull Player p) {
         long total = 0L;
         ApertureData data = ApertureService.get(p);
         for (int i = 0; i < data.count(); i++) total += data.get(i).distilledEssence();
         return total;
     }
-
     public static long spendable(@NotNull Player p) {
         ApertureData data = ApertureService.get(p);
         long total = 0L;
@@ -87,16 +61,12 @@ public final class ApertureEssenceService {
         }
         return total;
     }
-
     public static boolean isDistilling(@NotNull Player p) {return p.hasEffect(ModEffects.LIQUOR_WORM);}
-
     public static boolean isChoked(@NotNull Player p) {return p.hasEffect(ModEffects.DEATH_QI);}
-
     public static double essenceQiBonus(@NotNull Player player) {
         MobEffectInstance effect = player.getEffect(ModEffects.ESSENCE_QI);
         return effect == null ? 0.0 : EssenceQiEffect.bonus(effect.getAmplifier());
     }
-
     public static void add(@NotNull ServerPlayer p, long d) {
         long left = d;
         ApertureData data = ApertureService.get(p);
@@ -109,26 +79,21 @@ public final class ApertureEssenceService {
         }
     }
     public static void set(@NotNull ServerPlayer p, long v) {set(p, ApertureService.PRIMARY, v);}
-
     public static void set(@NotNull ServerPlayer player, int index, long value) {
         ApertureService.set(player, index, ApertureService.aperture(player, index).withCurrentEssence(value));
     }
-
     public static void refill(@NotNull ServerPlayer player) {
         ApertureData data = ApertureService.get(player);
         for (int i = 0; i < data.count(); i++) {
             ApertureService.set(player, i, data.get(i).refilled());
         }
     }
-
     public static void addDistilled(@NotNull ServerPlayer p, long d) {setDistilled(p, distilledEssence(p) + d);}
     public static void setDistilled(@NotNull ServerPlayer p, long v) {setDistilled(p, ApertureService.PRIMARY, v);}
-
     public static void setDistilled(@NotNull ServerPlayer player, int index, long value) {
         ApertureService.set(player, index,
                 ApertureService.aperture(player, index).withDistilledEssence(value));
     }
-
     //region the three phases of a Liquor Worm [酒虫]
     public static boolean canDistill(@NotNull Player p) {
         ApertureData data = ApertureService.get(p);
@@ -137,7 +102,6 @@ public final class ApertureEssenceService {
         }
         return false;
     }
-
     public static void beginDistilling(@NotNull ServerPlayer player) {
         ApertureData data = ApertureService.get(player);
         for (int i = 0; i < data.count(); i++) {
@@ -147,7 +111,6 @@ public final class ApertureEssenceService {
             return;
         }
     }
-
     public static void endDistilling(@NotNull ServerPlayer player) {
         ApertureData data = ApertureService.get(player);
         for (int i = 0; i < data.count(); i++) {
@@ -162,7 +125,6 @@ public final class ApertureEssenceService {
         }
     }
     //endregion
-
     public static boolean consume(@NotNull ServerPlayer player, long amount) {
         if (amount <= 0L) return true;
         if (spendable(player) < amount) return false;
@@ -175,7 +137,6 @@ public final class ApertureEssenceService {
         }
         return true;
     }
-
     /**
      * The pure seam the unit tests pin: how one amount is paid across the apertures, PRIMARY first.
      * Each aperture pays with its distilled reserve first at the 1:2 rate (rounded up), then with its
@@ -200,7 +161,6 @@ public final class ApertureEssenceService {
         }
         return takes;
     }
-
     public static void regenStep(@NotNull ServerPlayer player) {
         ApertureData data = ApertureService.get(player);
         float[] carry = player.getData(ModAttachments.ESSENCE_CARRY);

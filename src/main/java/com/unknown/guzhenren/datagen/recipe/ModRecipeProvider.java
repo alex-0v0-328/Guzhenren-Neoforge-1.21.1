@@ -42,11 +42,9 @@ public class ModRecipeProvider extends RecipeProvider {
     private static final String FOLDER = "refinement/";
     private static final char EMPTY = '.';
     private static final char OUTSIDE = ' ';
-
     public ModRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);
     }
-
     @Override
     protected void buildRecipes(@NotNull RecipeOutput output) {
         refinement(output, ModItems.FOUR_FLAVORS_LIQUOR_WORM, 1L, 1L, 50, List.of(16, 16, 16, 16),
@@ -71,7 +69,6 @@ public class ModRecipeProvider extends RecipeProvider {
                 "B...B",
                 " .I. ");
     }
-
     //region 蛊方 [Gu Recipe] patterns -- one row a grid row, ' ' a cut corner, '.' an empty cell
     private static void refinement(RecipeOutput output, ItemLike result, long essencePerSecond,
                                    long soulPerSecond, int baseSuccess, List<Integer> windows,
@@ -86,7 +83,6 @@ public class ModRecipeProvider extends RecipeProvider {
         output.accept(id, new GuRecipe(List.copyOf(ingredients), List.copyOf(slots),
                 List.of(new ItemStack(item)), essencePerSecond, soulPerSecond, windows, baseSuccess), null);
     }
-
     private static void read(ResourceLocation id, Map<Character, SizedIngredient> key, String[] pattern,
                              List<SizedIngredient> ingredients, List<Integer> slots) {
         if (pattern.length != RefinementMenu.GRID_ROWS) {
@@ -103,7 +99,6 @@ public class ModRecipeProvider extends RecipeProvider {
             }
         }
     }
-
     private static void cell(ResourceLocation id, Map<Character, SizedIngredient> key, char drawn, int slot,
                              List<SizedIngredient> ingredients, List<Integer> slots) {
         if (slot < 0) {

@@ -21,14 +21,11 @@ import net.minecraft.world.item.ItemStack;
  */
 
 public abstract class ConsumedGuItem extends TendedGuItem {
-
     protected ConsumedGuItem(Properties properties, GuSpec spec) {
         super(properties, spec);
     }
-
     @Override
     public boolean canBeVital() {return false;}
-
     @Override
     protected int drive(ServerPlayer player, ItemStack stack) {
         super.drive(player, stack);

@@ -9,18 +9,13 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * The Gu kept inside each Aperture [空窍], including the Vital Gu [本命蛊] bound to that aperture.
+ * Immutable record attachment keyed {@code aperture_storage}; serialized but NOT synced -- every reader
+ * is server-side and the menu reads it through slot channels; {@link
+ * com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService} is the only writer.
  *
- * <p>Immutable record attachment keyed {@code aperture_storage}; serialized but NOT synced (the menu
- * reads it through slot channels). {@link
- * com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService} is the only writer. Two
- * parallel lists, one per aperture: the paged store and the single Vital slot.
- *
- * <p>⚠ Serialized but NOT synced -- the client never receives this, so every reader has to be
- * server-side and anything a screen needs must travel by some other route. ⚠ Uses
- * {@code ItemStack.OPTIONAL_CODEC}, not {@code CODEC}: an interior empty is a real slot position, and
- * only TRAILING holes are trimmed, or items would jump the moment a gap is saved. ⚠ {@code with}
- * GROWS the list to reach its index (unlike {@link ApertureData#with}, which refuses) -- deliberate,
- * because a store may be written before its aperture is "opened".
+ * <p>⚠ Uses {@code ItemStack.OPTIONAL_CODEC}: an interior empty is a real slot position, only TRAILING
+ * holes are trimmed, or items would jump the moment a gap is saved. ⚠ {@code with} GROWS to reach its
+ * index (unlike {@link ApertureData#with}, which refuses) -- a store may exist before its aperture opens.
  *
  * @author Alex
  * @version 1.0.0
@@ -39,7 +34,6 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
             ItemStack.OPTIONAL_CODEC.listOf().optionalFieldOf("vital", List.of())
                     .forGetter(ApertureStorage::vital)
     ).apply(instance, ApertureStorage::new));
-
     public ApertureStorage {
         List<List<ItemStack>> kept = new ArrayList<>();
         for (int i = 0; i < Math.min(byAperture.size(), ApertureData.MAX_APERTURES); i++) {
@@ -55,21 +49,16 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
         while (!bound.isEmpty() && bound.getLast().isEmpty()) bound.removeLast();
         vital = Collections.unmodifiableList(bound);
     }
-
     public List<ItemStack> get(int aperture) {
         return aperture >= 0 && aperture < byAperture.size()
                 ? Collections.unmodifiableList(copyStacks(byAperture.get(aperture))) : List.of();
     }
-
     public ItemStack getVital(int aperture) {
         return aperture >= 0 && aperture < vital.size() ? vital.get(aperture).copy() : ItemStack.EMPTY;
     }
-
     public int count(int aperture) {
         return aperture >= 0 && aperture < byAperture.size() ? byAperture.get(aperture).size() : 0;
     }
-    public boolean isEmpty() {return byAperture.isEmpty() && vital.isEmpty();}
-
     public List<ItemStack> page(int aperture, int from, int size) {
         if (aperture < 0 || aperture >= byAperture.size() || from < 0 || size <= 0) {
             return List.of();
@@ -78,7 +67,6 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
         int to = Math.min(stored.size(), from + size);
         return Collections.unmodifiableList(copyStacks(stored.subList(Math.min(from, to), to)));
     }
-
     public boolean matchesPage(int aperture, int from, List<ItemStack> page) {
         if (from < 0) return false;
         if (aperture < 0 || aperture >= byAperture.size()) {
@@ -95,7 +83,6 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
         }
         return true;
     }
-
     public ApertureStorage with(int aperture, List<ItemStack> items) {
         if (aperture < 0 || aperture >= ApertureData.MAX_APERTURES) return this;
 
@@ -104,7 +91,6 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
         next.set(aperture, items);
         return new ApertureStorage(next, vital);
     }
-
     public ApertureStorage withPage(int aperture, int from, List<ItemStack> page) {
         if (aperture < 0 || aperture >= ApertureData.MAX_APERTURES || from < 0) return this;
 
@@ -116,7 +102,6 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
         next.set(aperture, all);
         return new ApertureStorage(next, vital);
     }
-
     public ApertureStorage withVital(int aperture, ItemStack stack) {
         if (aperture < 0 || aperture >= ApertureData.MAX_APERTURES) return this;
 
@@ -125,9 +110,7 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
         next.set(aperture, stack);
         return new ApertureStorage(byAperture, next);
     }
-
     public ApertureStorage copy() {return new ApertureStorage(byAperture, vital);}
-
     private static List<ItemStack> copyStacks(List<ItemStack> stacks) {
         List<ItemStack> copies = new ArrayList<>(stacks.size());
         for (ItemStack stack : stacks) copies.add(stack.copy());

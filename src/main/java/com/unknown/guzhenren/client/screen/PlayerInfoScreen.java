@@ -31,14 +31,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The B panel: every tab of what a player is, read straight off the synced attachments.
  *
- * <p>Extends {@link net.minecraft.client.gui.screens.Screen} (no menu behind it). Seven tabs:
- * 空窍, 肉身, 魂魄, 流派造诣, 脑海, 空窍存储, 炼蛊. The last two open a container via a client-intent
- * payload instead of drawing rows. All row content comes from
- * {@link com.unknown.guzhenren.display.InfoModel}, shared with {@code /gzr info}, so the two surfaces
- * cannot diverge.
+ * <p>Extends {@link net.minecraft.client.gui.screens.Screen} (no menu behind it). Seven tabs: 空窍,
+ * 肉身, 魂魄, 流派造诣, 脑海, 空窍存储, 炼蛊. The last two open a container via a client-intent payload
+ * instead of drawing rows. Row content comes from {@link com.unknown.guzhenren.display.InfoModel},
+ * shared with {@code /gzr info}, so the two surfaces cannot diverge.
  *
- * <p>⚠ A plain screen with no menu behind it, so it has no container channel to send an intent over.
- * That absence is the whole reason a client-intent payload exists at all.
+ * <p>⚠ A plain screen with no menu behind it: no container channel to send an intent over, which is
+ * the whole reason a client-intent payload exists at all.
  *
  * @author Alex
  * @version 1.0.0
@@ -113,7 +112,7 @@ public final class PlayerInfoScreen extends Screen {
     private int topPos;
     private int panelW;
     private int panelH;
-    private int activeTab = 0;
+    private int activeTab;
 
     private @Nullable Click hoverClick;
     private boolean picking;
@@ -121,7 +120,6 @@ public final class PlayerInfoScreen extends Screen {
     private int scrollRow;
 
     public PlayerInfoScreen() {super(Component.translatable("guzhenren.screen.info.title"));}
-
     @Override
     protected void init() {
         panelW = Math.round(width * SCREEN_FRACTION);
@@ -129,7 +127,6 @@ public final class PlayerInfoScreen extends Screen {
         leftPos = (width - panelW) / 2;
         topPos = (height - panelH) / 2;
     }
-
     @Override
     public void render(@NotNull GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         renderBackground(g, mouseX, mouseY, partialTick);
@@ -175,7 +172,6 @@ public final class PlayerInfoScreen extends Screen {
         renderCultivation(g, mouseX, mouseY, accent);
         if (picking) renderPicker(g, mouseX, mouseY, accent);
     }
-
     //region 温养空窍 [nourish] and 冲刷窍壁 [flush] -- one button row per visible aperture, bottom of the panel
     private static int[] visibleCultivation(LocalPlayer player) {
         int count = ApertureService.get(player).count();
@@ -194,7 +190,6 @@ public final class PlayerInfoScreen extends Screen {
     private int buttonTop(int row) {
         return contentBottom() - cultivationCount() * (BTN_H + BTN_GAP) + BTN_GAP + row * (BTN_H + BTN_GAP);
     }
-
     private void renderCultivation(GuiGraphics g, int mouseX, int mouseY, int accent) {
         if (activeTab != TAB_APERTURE) return;
         LocalPlayer player = Minecraft.getInstance().player;
@@ -204,7 +199,8 @@ public final class PlayerInfoScreen extends Screen {
         for (int r = 0; r < visible.length; r++) {
             int aperture = visible[r];
             boolean paired = aperture == ApertureData.PRIMARY && ApertureNourishService.canImpact(player);
-            boolean running = ApertureNourishService.isCultivating(player) && ApertureNourishService.targetIndex(player) == aperture;
+            boolean running = ApertureNourishService.isCultivating(player)
+                    && ApertureNourishService.targetIndex(player) == aperture;
 
             int top = buttonTop(r);
             int x0 = contentLeft();
@@ -230,16 +226,13 @@ public final class PlayerInfoScreen extends Screen {
             label(g, Component.translatable(running ? KEY_NOURISH_STOP : nourish), x0, x3, top);
         }
     }
-
     private void label(GuiGraphics g, Component text, int x0, int x1, int top) {
         g.drawString(font, text, x0 + (x1 - x0 - font.width(text)) / 2,
                 top + (BTN_H - font.lineHeight) / 2, TEXT, false);
     }
-
     private boolean inBox(double mx, double my, int x0, int x1, int row) {
         return mx >= x0 && mx < x1 && my >= buttonTop(row) && my < buttonTop(row) + BTN_H;
     }
-
     private boolean clickCultivation(double mx, double my) {
         if (activeTab != TAB_APERTURE) return false;
         LocalPlayer player = Minecraft.getInstance().player;
@@ -281,7 +274,6 @@ public final class PlayerInfoScreen extends Screen {
     private int edgeRight() {return tabLeft() - PAD;}
     private int rowsBottom() {return contentBottom() - cultivationCount() * (BTN_H + BTN_GAP);}
     private int visibleRows() {return Math.max(0, (rowsBottom() - contentTop()) / LINE_H);}
-
     private void renderScrollBar(GuiGraphics g, int total, int visible, int accent) {
         int x0 = tabLeft() - SCROLL_GAP;
         int top = contentTop();
@@ -292,7 +284,6 @@ public final class PlayerInfoScreen extends Screen {
         int offset = (track - thumb) * scrollRow / Math.max(1, total - visible);
         g.fill(x0, top + offset, x0 + SCROLL_W, top + offset + thumb, accent);
     }
-
     @Override
     public boolean mouseScrolled(double mx, double my, double dx, double dy) {
         if (picking) return true;
@@ -326,7 +317,6 @@ public final class PlayerInfoScreen extends Screen {
                     cy + (PICK_CELL_H - font.lineHeight) / 2, TEXT, false);
         }
     }
-
     private static int pickCount() {return GuPath.values().length + 1;}
     private static @Nullable GuPath pickPath(int i) {return i == 0 ? null : GuPath.values()[i - 1];}
     private static int pickRows() {return (pickCount() + PICK_COLS - 1) / PICK_COLS;}
@@ -334,9 +324,7 @@ public final class PlayerInfoScreen extends Screen {
     private int pickHeight() {return pickRows() * PICK_CELL_H + PICK_PAD * 2 + HEADER_H;}
     private int pickLeft() {return leftPos + (panelW - pickWidth()) / 2;}
     private int pickTop() {return topPos + (panelH - pickHeight()) / 2;}
-
     private static MutableComponent pickHint() {return Component.translatable("guzhenren.screen.pick.hint");}
-
     private void clickPicker(double mx, double my) {
         int x0 = pickLeft() + PICK_PAD;
         int y0 = pickTop() + PICK_PAD + HEADER_H;
@@ -371,21 +359,17 @@ public final class PlayerInfoScreen extends Screen {
                     y0 + (TAB_H - font.lineHeight) / 2 + 1, color, false);
         }
     }
-
     private boolean tabLive(int tab) {
         if (tab != TAB_STORAGE && tab != TAB_REFINEMENT) return true;
 
         LocalPlayer player = Minecraft.getInstance().player;
         return player != null && ApertureService.isAwakened(player);
     }
-
     private int tabLeft() {return leftPos + panelW - TAB_W - PAD;}
     private int tabTop(int i) {return topPos + CONTENT_TOP + i * (TAB_H + TAB_GAP);}
-
     private boolean inTab(double mx, double my, int i) {
         return mx >= tabLeft() && mx < tabLeft() + TAB_W && my >= tabTop(i) && my < tabTop(i) + TAB_H;
     }
-
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
         if (picking) {
@@ -419,7 +403,6 @@ public final class PlayerInfoScreen extends Screen {
         }
         return super.mouseClicked(mx, my, button);
     }
-
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (picking && (keyCode == InputConstants.KEY_ESCAPE
@@ -433,10 +416,8 @@ public final class PlayerInfoScreen extends Screen {
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
-
     @Override
     public boolean isPauseScreen() {return false;}
-
     private List<Row> rows(LocalPlayer player) {
         List<InfoModel.Row> model = switch (activeTab) {
             case TAB_BODY -> InfoModel.body(player);
@@ -468,7 +449,6 @@ public final class PlayerInfoScreen extends Screen {
         }
         return rows;
     }
-
     private static @Nullable Row draw(int indent, InfoModel.Entry entry) {
         return switch (entry) {
             case InfoModel.ApertureIndex e -> new Row(indent, ModDisplayText.apertureName(e.number()), null,
@@ -483,7 +463,7 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.Distilled e -> new Row(indent, label("distilled"), Component.literal(
                     ModDisplayText.pool(e.aperture().distilledEssence(), e.aperture().maxEssence())));
             case InfoModel.Pressure e -> new Row(indent,
-                    Component.translatable("guzhenren.screen.label.apreture_pressure"), Component.literal(
+                    Component.translatable("guzhenren.screen.label.aperture_pressure"), Component.literal(
                     e.aperture().pressure() + "%"));
 
             case InfoModel.PathChoice e -> e.primary()
@@ -513,7 +493,7 @@ public final class PlayerInfoScreen extends Screen {
             case InfoModel.StrengthPathBranchRow e -> new Row(indent,
                     ModDisplayText.strengthLabel(name(e.branch().getTranslationKey()), e.totalJin()), e.reading());
             case InfoModel.CapacityRow e -> new Row(indent,
-                    Component.translatable("guzhenren.screen.lable.body_capacity"),
+                    Component.translatable("guzhenren.screen.label.body_capacity"),
                     Component.translatable("guzhenren.screen.capacity", e.usable(), e.total()));
             case InfoModel.AttackRow e -> new Row(indent, label("attack"),
                     Component.literal(ModDisplayText.attackBonus(e.bonus())));
@@ -529,25 +509,19 @@ public final class PlayerInfoScreen extends Screen {
                     Component.literal(ModDisplayText.pool(e.pool().current(), e.pool().max())));
         };
     }
-
     private static MutableComponent talent(InfoModel.Talent e) {
         MutableComponent talent = ModDisplayText.talent(e.aperture());
         if (e.awakened()) talent.append(detail(ModDisplayText.baseFraction(e.aperture().baseEssence())));
         return talent;
     }
-
     private static MutableComponent name(String key) {return Component.translatable(key);}
-
     private static Component label(String name) {return Component.translatable("guzhenren.screen.label." + name);}
     private static MutableComponent none() {return Component.translatable("guzhenren.display.none");}
-
     private static Component detail(Component v) {
         return Component.translatable("guzhenren.command.info.detail", v).withStyle(ChatFormatting.DARK_GRAY);
     }
-
     private record Row(int indent, Component label, @Nullable Component value, @Nullable Click click) {
         Row(int indent, Component label, @Nullable Component value) {this(indent, label, value, null);}
     }
-
     private record Click(boolean picker, int aperture) {}
 }

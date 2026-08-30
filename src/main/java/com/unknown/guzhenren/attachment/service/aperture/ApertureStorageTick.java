@@ -10,17 +10,13 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * The day-rollover walk over Gu held inside apertures, both the stored ones and each Vital Gu [本命蛊].
+ * Called from the heartbeat once a day with the elapsed day count; forwards to {@link
+ * TendedGuItem#tickInContainer} per refined Gu and reports starvation through {@link TendedGuItem#starved}.
  *
- * <p>Static service called from the heartbeat ({@code PlayerTickEvents}) once a day with the elapsed
- * day count. It forwards to {@link TendedGuItem#tickInContainer} for each refined Gu, and reports a
- * starved Gu back through {@link TendedGuItem#starved} -- it never clears a slot itself, the container
- * does.
- *
- * <p>⚠ Every reader here asks {@code refined()} first, because an unrefined Gu's hunger is zero and
- * zero is also what starvation looks like. Drop that test and the first rollover eats every wild Gu.
- * ⚠ The Vital slot write-back ({@code setVital}) runs EVEN WHEN nothing changed -- a single slot has
- * no list, so the store loop's "write whole list" path does not cover it. ⚠ This is one of the three
- * services that imports {@code item/**} on purpose; do not "fix" that import.
+ * <p>⚠ Every reader asks {@code refined()} first: an unrefined Gu's hunger is zero, and zero is also
+ * what starvation looks like -- drop the test and the first rollover eats every wild Gu. ⚠ The Vital
+ * slot write-back ({@code setVital}) runs EVEN WHEN nothing changed -- a single slot has no list for
+ * the store loop's whole-list path to cover. ⚠ Imports {@code item/**} on purpose; do not "fix" it.
  *
  * @author Alex
  * @version 1.0.0
@@ -30,16 +26,13 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class ApertureStorageTick {
-
     private ApertureStorageTick() {}
-
     public static void tickStored(@NotNull ServerPlayer player, long days) {
         for (int aperture = 0; aperture < ApertureData.MAX_APERTURES; aperture++) {
             tickStore(player, aperture, days);
             tickVital(player, aperture, days);
         }
     }
-
     private static void tickStore(ServerPlayer player, int aperture, long days) {
         List<ItemStack> items = ApertureStorageService.items(player, aperture);
         if (items.isEmpty()) return;
@@ -61,7 +54,6 @@ public final class ApertureStorageTick {
         }
         if (changed) ApertureStorageService.set(player, aperture, next);
     }
-
     private static void tickVital(ServerPlayer player, int aperture, long days) {
         ItemStack stack = ApertureStorageService.vital(player, aperture);
         if (!(stack.getItem() instanceof TendedGuItem)) return;
@@ -74,7 +66,6 @@ public final class ApertureStorageTick {
         }
         if (changed(before, stack)) ApertureStorageService.setVital(player, aperture, stack);
     }
-
     private static boolean changed(ItemStack before, ItemStack after) {
         return before.getCount() != after.getCount()
                 || !ItemStack.isSameItemSameComponents(before, after);

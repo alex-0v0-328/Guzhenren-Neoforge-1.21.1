@@ -19,9 +19,7 @@ import net.minecraft.commands.Commands;
  */
 
 public final class CmdSoul {
-
     private CmdSoul() {}
-
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("soul")
                 .then(ModCommandSupport.counter("max", SoulService::setMax, SoulService::addMax))

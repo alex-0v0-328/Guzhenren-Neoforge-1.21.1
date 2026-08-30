@@ -19,23 +19,21 @@ import com.unknown.guzhenren.menu.ApertureStorageMenu;
 import com.unknown.guzhenren.registry.damage.ModDamageTypes;
 import com.unknown.guzhenren.registry.effect.ModEffects;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
- * The one-second heartbeat: a straight run of ordered steps that most of the player's state depends on.
- *
- * <p>Every step runs inside {@code tickCount % Ticks.SECOND == 0}, and most read what an earlier one
+ * The one-second heartbeat: a straight run of ordered steps that most of the player's state depends
+ * on. Every step runs inside {@code tickCount % Ticks.SECOND == 0}, and most read what an earlier one
  * just wrote — aging feeds the day-clock walks, {@code syncEffects} feeds {@code tickDeathQi} and
  * {@code regenStep}, {@code tickHalfZombie} feeds attack and regen. {@link
  * com.unknown.guzhenren.attachment.PlayerDataService} owns the lifecycle; this file owns the cadence.
  *
- * <p>⚠ The step ORDER is load-bearing and nothing in the code admits it. Reorder nothing blind;
- * a new step must declare which existing one it follows and why. {@code checkLethalState} runs last
- * and returns after the first hit, so the four deaths have a fixed precedence: 空窍压力 → 寿元 → 魂魄 → 脑海.
+ * <p>⚠ The step ORDER is load-bearing and nothing in the code admits it: reorder nothing blind, and a
+ * new step must declare which existing one it follows and why. {@code checkLethalState} runs last and
+ * returns after the first hit, so the four deaths have a fixed precedence: 空窍压力 → 寿元 → 魂魄 → 脑海.
  *
  * @author Alex
  * @version 1.0.0
@@ -45,9 +43,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerTickEvents {
-
     private PlayerTickEvents() {}
-
     private static final int FULL_HUNGER = 20;
 
     @SubscribeEvent
@@ -77,7 +73,6 @@ public final class PlayerTickEvents {
         ApertureService.tickPressure(player);
         checkLethalState(player);
     }
-
     private static void tickDeathQi(ServerPlayer player) {
         if (!player.hasEffect(ModEffects.DEATH_QI) || BodyService.isZombie(player)) return;
 
@@ -89,7 +84,6 @@ public final class PlayerTickEvents {
                     player.getHealth() - DeathQiEffect.HEALTH_PER_HEARTBEAT));
         }
     }
-
     private static void pinUndeadHunger(ServerPlayer player) {
         if (!BodyService.isUndead(player)) return;
 
@@ -98,7 +92,6 @@ public final class PlayerTickEvents {
         food.setSaturation(FULL_HUNGER);
         food.setExhaustion(0.0F);
     }
-
     private static void tickHalfZombie(ServerPlayer player) {
         if (BodyService.isHalfZombie(player)) {
             if (PathQiService.current(player, QiKind.DEATH) > 0L) {
@@ -109,22 +102,19 @@ public final class PlayerTickEvents {
         }
         projectHalfZombie(player);
     }
-
     private static void projectHalfZombie(ServerPlayer player) {
         if (!BodyService.isHalfZombie(player)) {
             if (player.hasEffect(ModEffects.HALF_ZOMBIE)) player.removeEffect(ModEffects.HALF_ZOMBIE);
             return;
         }
-        player.addEffect(new MobEffectInstance(
-                ModEffects.HALF_ZOMBIE, (int) BodyService.halfZombieTicksLeft(player), 0, false, false));
+        player.addEffect(ModEffects.instance(ModEffects.HALF_ZOMBIE,
+                Math.max(1, (int) BodyService.halfZombieTicksLeft(player))));
     }
-
     private static void closeDistilling(ServerPlayer player) {
         if (ApertureEssenceService.totalDistilled(player) > 0L && !ApertureEssenceService.isDistilling(player)) {
             ApertureEssenceService.endDistilling(player);
         }
     }
-
     private static void checkLethalState(ServerPlayer player) {
         if (player.isCreative() || player.isSpectator()) return;
 

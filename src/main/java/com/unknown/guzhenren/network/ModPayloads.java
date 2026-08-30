@@ -24,16 +24,14 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 /**
- * Registers the client-intent payloads and handles each of them on the server.
+ * Registers the client-intent payloads and handles each of them on the server. Every payload in this
+ * mod is a client intent -- a B-panel button or movement input that attachment sync cannot carry
+ * upstream; none carries player data, and downstream player data always travels as synced state. This
+ * class wires the six payloads to their server-side handlers: the two containers, the secondary path,
+ * and the three cultivation actions.
  *
- * <p>Every payload in this mod is a client intent -- a B-panel button or movement input that
- * attachment sync cannot carry upstream. None carries player data; downstream player data always
- * travels as synced state.
- * This class wires the six payloads to their server-side handlers: opening the two containers,
- * setting the secondary path, and the three cultivation actions.
- *
- * <p>⚠ This is where a forged payload lands, so a gate that only grays out a button is not a gate.
- * Every refusal has to exist here as well as on the screen.
+ * <p>⚠ This is where a forged payload lands, so a gate that only grays out a button is not a gate:
+ * every refusal has to exist here as well as on the screen.
  *
  * @author Alex
  * @version 1.0.0
@@ -43,9 +41,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModPayloads {
-
     private ModPayloads() {}
-
     private static final String VERSION = "1";
     private static final String STORAGE_TITLE = "guzhenren.menu.aperture_storage";
     private static final String REFINEMENT_TITLE = "guzhenren.menu.refinement";
@@ -66,7 +62,6 @@ public final class ModPayloads {
         registrar.playToServer(DashPayload.TYPE, DashPayload.STREAM_CODEC,
                 ModPayloads::dash);
     }
-
     private static void nourishAperture(NourishAperturePayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
         if (payload.aperture() < 0 || payload.aperture() >= ApertureService.get(player).count()) return;
@@ -76,12 +71,10 @@ public final class ModPayloads {
             case CANCEL -> ApertureNourishService.cancel(player);
         }
     }
-
     private static void impactApertureWall(ImpactApertureWallPayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
         ApertureNourishService.impactWall(player);
     }
-
     private static void dash(DashPayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
 
@@ -98,7 +91,6 @@ public final class ModPayloads {
 
         EpicFightIntegration.dash(player, vertical, payload.yRot());
     }
-
     private static void openRefinement(OpenRefinementPayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
         if (!ApertureService.isAwakened(player)) return;
@@ -107,7 +99,6 @@ public final class ModPayloads {
                 (id, inventory, p) -> new RefinementMenu(id, inventory),
                 Component.translatable(REFINEMENT_TITLE)));
     }
-
     private static void setSecondaryPath(SetSecondaryPathPayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
 
@@ -116,7 +107,6 @@ public final class ModPayloads {
 
         ApertureService.setSecondaryPath(player, aperture, payload.path());
     }
-
     private static void openStorage(OpenApertureStoragePayload payload, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) return;
 

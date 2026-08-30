@@ -18,7 +18,7 @@ class GuSpecTest {
                 .refine(1_000)
                 .channel(3_600)
                 .hungerBar(18, 3)
-                .hungerEvery(100);
+                .essencePerHunger(100);
     }
 
     @Test
@@ -39,7 +39,7 @@ class GuSpecTest {
     @Test
     @DisplayName("a round that does not divide by the hunger rate is refused")
     void roundMustDivideByHungerRate() {
-        GuSpec bad = channelling().hungerEvery(700);
+        GuSpec bad = channelling().essencePerHunger(700);
         assertThrows(IllegalStateException.class, () -> bad.validate("white_boar_gu"));
     }
 

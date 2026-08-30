@@ -20,22 +20,14 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The only writer of Body [肉身] state, and the home of every physique [体质] transition.
+ * The only writer of Body [肉身] state, and the home of every physique [体质] transition. Static
+ * service; owns two clocks with two anchors: {@code tickAging} keeps {@code lastDayIndex} and returns
+ * DAYS for the Gu-hunger walks; {@code tickLifespan} keeps {@code lastBilledTick} and bills lifespan.
  *
- * <p>Static service over the {@code body_data} attachment; reads take {@link Player}, writes take
- * {@link ServerPlayer}. Owns two clocks with two anchors: {@code tickAging} keeps {@code lastDayIndex}
- * and returns DAYS for the Gu-hunger walks; {@code tickLifespan} keeps {@code lastBilledTick} and
- * bills lifespan. Zombie and half-zombie physiques are mutually exclusive, while Extreme can coexist
- * with either one.
- *
- * <p>⚠ {@code tickAging} returns how many days it just billed, and that count is often far more than
- * one -- an offline stretch or a {@code /time} jump arrives as a single call; the return drives three
- * day-clock walks, so swallowing it would starve every Gu at once. ⚠ 寿元 is SPENT through
- * {@link PathTimeFlowService#perStep} -- hand-rolling the rate here once made it run BACKWARDS, into a
- * pure longevity buff. Only {@code InfoModel} may read {@code rate()} to print it. ⚠ The anchor is
- * {@code dayTime}, not {@code gameTime}, so {@code /time add} still ages him; time running backwards
- * re-anchors and bills nothing -- one {@code <} is the whole guard, on BOTH clocks. ⚠ Every caller
- * speaks YEARS; only this file knows parts exist.
+ * <p>⚠ {@code tickAging}'s returned day count can far exceed one and drives three day-clock walks --
+ * swallowing it starves every Gu at once. ⚠ 寿元 is SPENT through {@link PathTimeFlowService#perStep};
+ * hand-rolling the rate once ran it BACKWARDS. ⚠ The anchor is {@code dayTime}, not {@code gameTime}:
+ * time running backwards re-anchors and bills nothing -- one {@code <} is the whole guard, BOTH clocks.
  *
  * @author Alex
  * @version 1.0.0
@@ -45,13 +37,10 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class BodyService {
-
     private BodyService() {}
-
     public static long dayIndex(@NotNull MinecraftServer server) {
         return server.overworld().getDayTime() / Ticks.DAY;
     }
-
     public static @NotNull BodyData get(@NotNull Player p) {return p.getData(ModAttachments.BODY);}
     public static boolean hasPhysique(@NotNull Player p, @NotNull Physique physique) {
         return get(p).hasPhysique(physique);
@@ -65,15 +54,15 @@ public final class BodyService {
     public static @NotNull Race race(@NotNull Player p) {return get(p).race();}
     @SuppressWarnings("resource")
     public static long now(@NotNull Player p) {return p.level().getGameTime();}
-
     private static void store(ServerPlayer p, BodyData data) {p.setData(ModAttachments.BODY, data);}
 
-    //region 寿元与年龄 [lifespan and age] -- ⚠ every caller speaks YEARS; only this file knows about parts
-    public static void setAge(@NotNull ServerPlayer p, long years) {store(p, get(p).withAgeParts(BodyData.parts(years)));}
+    //region 寿元与年龄 [lifespan and age] -- ⚠ every caller speaks YEARS; only this file knows parts
+    public static void setAge(@NotNull ServerPlayer p, long years) {
+        store(p, get(p).withAgeParts(BodyData.parts(years)));
+    }
     public static void setLifespan(@NotNull ServerPlayer p, long years) {
         store(p, get(p).withLifespanParts(BodyData.parts(years)));
     }
-
     public static void addAge(@NotNull ServerPlayer p, long years) {
         store(p, get(p).withAgeParts(get(p).ageParts() + BodyData.parts(years)));
     }
@@ -83,12 +72,16 @@ public final class BodyService {
     //endregion
 
     //region Physique [体质]
+    private static EnumSet<Physique> copyPhysiques(BodyData body) {
+        EnumSet<Physique> next = EnumSet.noneOf(Physique.class);
+        next.addAll(body.physiques());
+        return next;
+    }
     public static boolean addPhysique(@NotNull ServerPlayer player, @NotNull Physique physique) {
         if (physique == Physique.EXTREME) return false;
 
         BodyData body = get(player);
-        EnumSet<Physique> next = EnumSet.noneOf(Physique.class);
-        next.addAll(body.physiques());
+        EnumSet<Physique> next = copyPhysiques(body);
         if (physique == Physique.ZOMBIE) next.remove(Physique.HALF_ZOMBIE);
         if (physique == Physique.HALF_ZOMBIE) next.remove(Physique.ZOMBIE);
         if (!next.add(physique)) return false;
@@ -99,15 +92,13 @@ public final class BodyService {
         BodyAttackService.refresh(player);
         return true;
     }
-
     public static boolean removePhysique(@NotNull ServerPlayer player, @NotNull Physique physique) {
         if (physique == Physique.EXTREME) return setExtremePhysique(player, ExtremePhysique.NONE);
 
         BodyData body = get(player);
         if (!body.hasPhysique(physique)) return false;
 
-        EnumSet<Physique> next = EnumSet.noneOf(Physique.class);
-        next.addAll(body.physiques());
+        EnumSet<Physique> next = copyPhysiques(body);
         next.remove(physique);
         BodyData updated = body.withPhysiques(next);
         if (!updated.isZombieOrHalfZombie()) {
@@ -117,7 +108,6 @@ public final class BodyService {
         BodyAttackService.refresh(player);
         return true;
     }
-
     public static boolean setExtremePhysique(@NotNull ServerPlayer player, @NotNull ExtremePhysique physique) {
         if (physique != ExtremePhysique.NONE && !ApertureService.isAwakened(player)) return false;
 
@@ -137,16 +127,13 @@ public final class BodyService {
         }
         return true;
     }
-
     public static void revive(@NotNull ServerPlayer player) {
         store(player, get(player).revived());
         BodyAttackService.refresh(player);
     }
-
     public static void enterHalfZombie(@NotNull ServerPlayer player, int tier, int durationTicks) {
         BodyData body = get(player);
-        EnumSet<Physique> next = EnumSet.noneOf(Physique.class);
-        next.addAll(body.physiques());
+        EnumSet<Physique> next = copyPhysiques(body);
         next.remove(Physique.ZOMBIE);
         next.add(Physique.HALF_ZOMBIE);
         store(player, body.withPhysiques(next)
@@ -154,11 +141,9 @@ public final class BodyService {
                 .withZombieTier(tier));
         BodyAttackService.refresh(player);
     }
-
     public static void turnZombie(@NotNull ServerPlayer player, int tier) {
         BodyData body = get(player);
-        EnumSet<Physique> next = EnumSet.noneOf(Physique.class);
-        next.addAll(body.physiques());
+        EnumSet<Physique> next = copyPhysiques(body);
         next.remove(Physique.HALF_ZOMBIE);
         next.add(Physique.ZOMBIE);
         store(player, body.withPhysiques(next)
@@ -166,7 +151,6 @@ public final class BodyService {
                 .withZombieTier(tier));
         BodyAttackService.refresh(player);
     }
-
     public static boolean wouldRelapse(@NotNull Player p) {return get(p).withinRelapseWindow(now(p));}
     public static long halfZombieTicksLeft(@NotNull Player p) {return get(p).halfZombieTicksLeft(now(p));}
     public static boolean halfZombieRanOut(@NotNull Player p) {return get(p).halfZombieRanOut(now(p));}
@@ -181,7 +165,6 @@ public final class BodyService {
         store(player, get(player).withRace(race));
         grantTalent(player, race);
     }
-
     private static void grantTalent(ServerPlayer player, Race race) {
         GuPath path = race.talentPath();
         if (path == null) return;
@@ -189,7 +172,6 @@ public final class BodyService {
         PathService.setMark(player, path, MarkTag.RACE, Race.TALENT_MARKS);
         PathService.shiftAttainment(player, path, Race.TALENT_SHIFT);
     }
-
     private static void revokeTalent(ServerPlayer player, Race race) {
         GuPath path = race.talentPath();
         if (path == null) return;
@@ -205,7 +187,6 @@ public final class BodyService {
         store(player, body.withLifespanParts(body.lifespanParts() - BodyData.parts(years))
                 .withDeathQiLifespanLost(body.deathQiLifespanLost() + years));
     }
-
     public static double refundDeathQiDebt(@NotNull ServerPlayer player, int numerator, int denominator) {
         BodyData body = get(player);
         long refundParts = BodyData.parts(body.deathQiLifespanLost()) * numerator / denominator;
@@ -213,7 +194,6 @@ public final class BodyService {
                 .withDeathQiLifespanLost(0L));
         return (double) refundParts / BodyData.PARTS_PER_YEAR;
     }
-
     public static void clearDeathQiDebt(@NotNull ServerPlayer p) {store(p, get(p).withDeathQiLifespanLost(0L));}
     //endregion
 
@@ -239,7 +219,6 @@ public final class BodyService {
         store(player, body.withLastDayIndex(today));
         return elapsed;
     }
-
     //region 寿元的钟 -- billed on the heartbeat, because 宙道 changes how fast he spends it
     /**
      * ⚠ The anchor is the world's {@code dayTime}, not {@code gameTime}, so {@code /time add} still ages
@@ -265,7 +244,6 @@ public final class BodyService {
 
         store(player, body.lived(lived, now));
     }
-
     /**
      * ☠ 寿元 is SPENT, so it goes through {@code perStep} like every other thing he spends -- hastened
      * means FASTER. Hand-rolling the rate here once made it run backwards, into a pure longevity buff.

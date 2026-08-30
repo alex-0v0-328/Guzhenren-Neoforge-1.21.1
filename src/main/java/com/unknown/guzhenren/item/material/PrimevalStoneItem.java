@@ -16,17 +16,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Primeval stone [元石]: a right click pours its essence [真元] into the holder's aperture [空窍].
  *
- * <p>Extends {@link com.unknown.guzhenren.item.material.GuMaterialItem}. The essence value comes from
- * registration. The gate refuses an unawakened player (the service write is a silent no-op there) and a
- * full pool. It also owns every automatic draw on carried stones, including the top-up line that
- * refills below 50% and stops at 80%, and the {@code drawStones} path used by both the refinement
- * menu and the Elder Gu vault.
+ * <p>Extends {@link com.unknown.guzhenren.item.material.GuMaterialItem}. The essence value comes from registration.
+ * The gate refuses an unawakened player (the service write is a silent no-op there) and a full pool. ☠ It also
+ * owns every automatic draw on carried stones -- the top-up line (refill below 50%, stop at 80%) and the
+ * {@code drawStones} path used by the refinement menu and the Elder Gu vault. A second copy of the top-up
+ * line drifts, and the pool silently clamps whatever a caller pours past the cap.
  *
- * <p>⚠ It refuses an unawakened player instead of quietly doing nothing, because the stone would
- * otherwise be eaten for free.
- *
- * <p>☠ It also owns every automatic draw on carried stones, including the top-up line. A second copy
- * of that line drifts, and the pool silently clamps whatever a caller pours past the cap.
+ * <p>⚠ It refuses the unawakened instead of quietly doing nothing: the stone would otherwise be eaten for free.
  *
  * @author Alex
  * @version 1.0.0
@@ -43,36 +39,29 @@ public class PrimevalStoneItem extends GuMaterialItem {
     public static final int REFILL_UP_TO_PERCENT = 80;
 
     private final long essence;
-
     public PrimevalStoneItem(Properties properties, long essence) {
         super(properties, Rank.ONE, GuPath.HEAVEN);
         this.essence = essence;
     }
-
     public long essence() {return essence;}
-
     @Override
     protected boolean hasUse() {return true;}
-
     @Override
     protected @Nullable Refusal gate(Player player, ItemStack stack) {
         if (!ApertureService.isAwakened(player)) return new Refusal(FAILED_UNAWAKENED);
         return ApertureEssenceService.currentEssence(player) >= ApertureEssenceService.maxEssence(player)
                 ? new Refusal(FAILED_FULL) : null;
     }
-
     @Override
     protected int apply(ServerPlayer player, ItemStack stack) {
         int used = used(player, stack);
         ApertureEssenceService.add(player, essence * used);
         return used;
     }
-
     public int used(Player player, ItemStack stack) {
         long deficit = ApertureEssenceService.maxEssence(player) - ApertureEssenceService.currentEssence(player);
         return (int) Math.min(stack.getCount(), (deficit + essence - 1) / essence);
     }
-
     //region 元石补给 [the stone top-up] -- one line, so two callers cannot drift apart
     public static long essencePerStone() {
         return ModItems.PRIMEVAL_STONE.get() instanceof PrimevalStoneItem stone ? stone.essence() : 0L;
@@ -82,9 +71,9 @@ public class PrimevalStoneItem extends GuMaterialItem {
         return max > 0L && ApertureEssenceService.currentEssence(p) * 100L < max * REFILL_BELOW_PERCENT;
     }
     public static long topUpDeficit(Player p) {
-        return ApertureEssenceService.maxEssence(p) * REFILL_UP_TO_PERCENT / 100L - ApertureEssenceService.currentEssence(p);
+        return ApertureEssenceService.maxEssence(p) * REFILL_UP_TO_PERCENT / 100L
+                - ApertureEssenceService.currentEssence(p);
     }
-
     /**
      * Refills from carried stones, and only once the pool has fallen below the line.
      */
@@ -100,7 +89,6 @@ public class PrimevalStoneItem extends GuMaterialItem {
         int taken = draw(player, (int) Math.min(Integer.MAX_VALUE, (wanted + each - 1) / each));
         if (taken > 0) ApertureEssenceService.add(player, taken * each);
     }
-
     private static int draw(ServerPlayer player, int wanted) {
         int left = wanted;
         int taken = 0;
@@ -137,11 +125,9 @@ public class PrimevalStoneItem extends GuMaterialItem {
         }
         return stones * essencePerStone();
     }
-
     public static boolean canAfford(Player p, long cost) {
         return ApertureEssenceService.spendable(p) + worthOnHand(p) >= cost;
     }
-
     public static boolean spend(ServerPlayer player, long cost) {
         if (cost <= 0L) return true;
         long each = essencePerStone();

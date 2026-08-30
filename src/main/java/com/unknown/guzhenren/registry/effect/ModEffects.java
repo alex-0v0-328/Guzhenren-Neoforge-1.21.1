@@ -32,7 +32,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  *
  * <p>DeferredRegister holder: grades that exclude each other are ONE effect with an amplifier; members
  * meant to be worn TOGETHER get one effect each (the two Watch Gu, so their rates add). Every effect uses
- * white particles, including effects granted by Gu materials.
+ * the white effect color, including effects granted by Gu materials.
  *
  * <p>⚠ Since 2026-08-14 every effect is built through {@code instance}, which sets
  * {@code showParticles=false, showIcon=true}; the color only feeds the {@link MobEffect} ctor.
@@ -127,13 +127,11 @@ public final class ModEffects {
             "casual_gu", () -> new CasualThoughtEffect(MobEffectCategory.BENEFICIAL, EFFECT_COLOR));
 
     public static MobEffectInstance instance(Holder<MobEffect> effect, int duration) {
-        return new MobEffectInstance(effect, duration, 0, false, true);
+        return new MobEffectInstance(effect, duration, 0, false, false, true);
     }
-
     public static MobEffectInstance instance(Holder<MobEffect> effect, int duration, int amplifier) {
-        return new MobEffectInstance(effect, duration, amplifier, false, true);
+        return new MobEffectInstance(effect, duration, amplifier, false, false, true);
     }
-
     public static void register(IEventBus modEventBus) {
         MOB_EFFECTS.register(modEventBus);
     }

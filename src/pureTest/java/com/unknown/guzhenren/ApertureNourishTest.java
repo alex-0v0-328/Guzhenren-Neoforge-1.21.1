@@ -117,7 +117,7 @@ class ApertureNourishTest {
     @Test
     @DisplayName("the starve grace runs out only after the full window")
     void starveWindow() {
-        ApertureNourishData starving = ApertureNourishData.DEFAULT.withStarvedSince(1_000L);
+        ApertureNourishData starving = ApertureNourishData.DEFAULT.withStarvedSinceTick(1_000L);
         assertFalse(starving.starvedOut(1_000L + ApertureNourishData.STARVE_GRACE_TICKS - 1L));
         assertTrue(starving.starvedOut(1_000L + ApertureNourishData.STARVE_GRACE_TICKS));
     }

@@ -81,7 +81,8 @@ class DataAttachmentsCodecTest {
     @DisplayName("SoulData stream codec roundtrips and the compact ctor clamps current into [0, max]")
     void soulRoundTrip() {
         SoulData expected = new SoulData(50L, 999L);
-        assertEquals(50L, expected.currentSoul());
+        assertEquals(50L, expected.maxSoul());
+        assertEquals(50L, expected.currentSoul(), "current 999 clamps down to max");
         ByteBuf buffer = Unpooled.buffer();
         try {
             SoulData.STREAM_CODEC.encode(buffer, expected);

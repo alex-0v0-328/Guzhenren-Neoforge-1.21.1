@@ -32,12 +32,10 @@ import org.jetbrains.annotations.NotNull;
 public abstract class WildGuEntity extends PathfinderMob {
 
     private final Supplier<Item> caughtGu;
-
     protected WildGuEntity(EntityType<? extends WildGuEntity> type, Level level, Supplier<Item> caughtGu) {
         super(type, level);
         this.caughtGu = caughtGu;
     }
-
     public Item caughtGu() {return caughtGu.get();}
 
     //region catching -- a bare right click, ungated

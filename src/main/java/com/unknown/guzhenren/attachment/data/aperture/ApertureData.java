@@ -8,18 +8,14 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 /**
- * The Aperture [空窍] attachment: a mortal has none, and awakening [开窍] is what puts one here.
+ * The Aperture [空窍] attachment: a mortal has none, and awakening [开窍] is what puts one here. Immutable
+ * record attachment keyed {@code aperture_data}, synced {@code OWNER_ONLY}, written only by {@link
+ * com.unknown.guzhenren.attachment.service.aperture.ApertureService}; holds up to {@code MAX_APERTURES}
+ * (2) {@link Aperture} entries -- an empty list IS the "unawakened" state, not a special flag.
  *
- * <p>Immutable record attachment keyed {@code aperture_data}, synced {@code OWNER_ONLY}; written only
- * by {@link com.unknown.guzhenren.attachment.service.aperture.ApertureService}. Holds up to
- * {@code MAX_APERTURES} (2) {@link Aperture} entries; an empty list IS the "unawakened" state, not a
- * special flag.
- *
- * <p>⚠ {@code with(index, aperture)} REFUSES to grow the list -- only {@code opened} appends -- so an
- * aperture that does not exist yet cannot be brought into being merely by writing to it. This is the
- * mirror of {@link ApertureStorage#with}, which GROWS to reach its index; the two are deliberately
- * opposite. ⚠ {@code MAX_APERTURES} caps the {@code STREAM_CODEC} list too, so a longer list is
- * silently truncated on sync, not rejected.
+ * <p>⚠ {@code with(index, aperture)} REFUSES to grow the list -- only {@code opened} appends -- the
+ * mirror of {@link ApertureStorage#with}, which GROWS to reach its index; deliberately opposite. ⚠
+ * {@code MAX_APERTURES} caps the {@code STREAM_CODEC} list too: longer is silently truncated on sync.
  *
  * @author Alex
  * @version 1.0.0
@@ -42,19 +38,16 @@ public record ApertureData(List<Aperture> apertures) {
     public static final StreamCodec<ByteBuf, ApertureData> STREAM_CODEC =
             Aperture.STREAM_CODEC.apply(ByteBufCodecs.list(MAX_APERTURES))
                     .map(ApertureData::new, ApertureData::apertures);
-
     public ApertureData {
         apertures = apertures.size() <= MAX_APERTURES
                 ? List.copyOf(apertures)
                 : List.copyOf(apertures.subList(0, MAX_APERTURES));
     }
-
     public Aperture get(int i) {return i >= 0 && i < apertures.size() ? apertures.get(i) : Aperture.NONE;}
     public Aperture primary() {return get(PRIMARY);}
     public int count() {return apertures.size();}
     public boolean isAwakened() {return !apertures.isEmpty();}
     public boolean isFull() {return apertures.size() >= MAX_APERTURES;}
-
     public ApertureData opened(Aperture aperture) {
         if (isFull()) return this;
 
@@ -62,7 +55,6 @@ public record ApertureData(List<Aperture> apertures) {
         next.add(aperture);
         return new ApertureData(next);
     }
-
     public ApertureData with(int index, Aperture aperture) {
         if (index < 0 || index >= apertures.size()) return this;
 

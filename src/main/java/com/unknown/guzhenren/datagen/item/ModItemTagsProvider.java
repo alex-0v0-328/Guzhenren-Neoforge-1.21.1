@@ -26,13 +26,11 @@ import org.jetbrains.annotations.Nullable;
  */
 
 public class ModItemTagsProvider extends ItemTagsProvider {
-
     public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
                                @Nullable ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, CompletableFuture.completedFuture(TagsProvider.TagLookup.empty()),
                 Guzhenren.MOD_ID, existingFileHelper);
     }
-
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         tag(ModItemTags.BOAR_FEED).add(Items.PORKCHOP);

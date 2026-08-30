@@ -43,11 +43,9 @@ public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
     private static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
             .add(Registries.DAMAGE_TYPE, ModDatapackProvider::damageTypes)
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ModDatapackProvider::biomeModifiers);
-
     public ModDatapackProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(Guzhenren.MOD_ID));
     }
-
     //region Damage types [伤害类型]
     private static void damageTypes(BootstrapContext<DamageType> context) {
         context.register(ModDamageTypes.LIFESPAN_EXHAUSTED, new DamageType("guzhenren.lifespan_exhausted", 0.0F));
@@ -69,7 +67,6 @@ public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
     private static final int SPAWN_WEIGHT = 8;
     private static final int PACK_MINIMUM = 1;
     private static final int PACK_MAXIMUM = 2;
-
     private static void biomeModifiers(BootstrapContext<BiomeModifier> context) {
         HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
 

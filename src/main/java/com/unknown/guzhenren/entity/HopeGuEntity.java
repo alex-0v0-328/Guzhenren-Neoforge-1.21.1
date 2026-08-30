@@ -13,10 +13,9 @@ import net.minecraft.world.level.Level;
  * The wild Hope Gu [希望蛊]: the world's own source of an awakening [开窍].
  *
  * <p>Extends {@link com.unknown.guzhenren.entity.FlyingGuEntity}. Overrides {@code seeks} to target
- * only the unawakened -- a cultivator drifts past. Once any player comes within
- * {@code DETECT_RANGE}, a one-minute fade clock starts; the window never reopens, and walking away
- * neither resets nor pauses it. The fade tick is unserialized on purpose -- a reloaded Gu starts over,
- * and these despawn anyway.
+ * only the unawakened -- a cultivator drifts past. Once any player comes within {@code DETECT_RANGE},
+ * a one-minute fade clock starts; the window never reopens, and walking away neither resets nor pauses
+ * it. The fade tick is unserialized on purpose -- a reloaded Gu starts over, and these despawn anyway.
  *
  * <p>⚠ It fades once any player has come into range, not once a particular one has. That sighting
  * starts a clock, and nothing restarts it afterward.
@@ -34,15 +33,12 @@ public class HopeGuEntity extends FlyingGuEntity {
     private static final long NOT_SIGHTED = -1L;
 
     private long fadeAtTick = NOT_SIGHTED;
-
     public HopeGuEntity(EntityType<? extends HopeGuEntity> type, Level level,
                         Supplier<Item> caughtGu, ParticleOptions motes) {
         super(type, level, caughtGu, motes);
     }
-
     @Override
     public boolean seeks(Player player) {return !ApertureService.isAwakened(player);}
-
     @Override
     public void tick() {
         super.tick();

@@ -1,6 +1,7 @@
 package com.unknown.guzhenren;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.aperture.Title;
@@ -39,7 +40,7 @@ class TitleTest {
     @DisplayName("every rank has a title -- fromRank is total")
     void fromRankIsTotal() {
         for (Rank rank : Rank.values()) {
-            assertSame(true, Title.fromRank(rank) != null, rank + " has no title");
+            assertTrue(Title.fromRank(rank) != null, rank + " has no title");
         }
     }
 

@@ -21,10 +21,9 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A wild Gu that flies: it drifts toward a player it wants, and hovers there.
  *
- * <p>Extends {@link com.unknown.guzhenren.entity.WildGuEntity}. Uses a flying move control and flying
- * path navigation; the {@code HoverNearPlayerGoal} drives the movement vector directly. Spawns
- * full bright {@code END_ROD} particles at one per tick. The {@code seeks} method is the one door for
- * "who does it fly toward"; the base wants anyone, a leaf narrows it.
+ * <p>Extends {@link com.unknown.guzhenren.entity.WildGuEntity}. A flying move control and flying path
+ * navigation; the {@code HoverNearPlayerGoal} drives the movement vector directly. Spawns full bright
+ * {@code END_ROD} particles at one per tick. {@code seeks} is the one door: the base wants anyone, a leaf narrows it.
  *
  * <p>⚠ {@code isNoGravity()} is a flat true on purpose. The flying move control only clears gravity
  * while it is actively moving the mob, and the hover goal stops the navigation.
@@ -54,14 +53,12 @@ public class FlyingGuEntity extends WildGuEntity {
     private static final int TURN_RATE = 20;
 
     private final ParticleOptions motes;
-
     public FlyingGuEntity(EntityType<? extends FlyingGuEntity> type, Level level,
                           Supplier<Item> caughtGu, ParticleOptions motes) {
         super(type, level, caughtGu);
         this.moveControl = new FlyingMoveControl(this, TURN_RATE, true);
         this.motes = motes;
     }
-
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, MAX_HEALTH)
@@ -69,20 +66,16 @@ public class FlyingGuEntity extends WildGuEntity {
                 .add(Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED)
                 .add(Attributes.FOLLOW_RANGE, FOLLOW_RANGE);
     }
-
     @Override
     protected void registerGoals() {
         goalSelector.addGoal(0, new HoverNearPlayerGoal(this));
         goalSelector.addGoal(1, new WaterAvoidingRandomFlyingGoal(this, WANDER_SPEED));
     }
-
     //region who it flies toward -- the base wants anyone, a leaf narrows it
     public boolean seeks(Player player) {return true;}
-
     public @Nullable Player seekTarget() {
         return level().getNearestPlayer(getX(), getY(), getZ(), DETECT_RANGE, this::wanted);
     }
-
     private boolean wanted(Entity entity) {
         return entity instanceof Player player && !player.isSpectator() && seeks(player);
     }
@@ -95,16 +88,13 @@ public class FlyingGuEntity extends WildGuEntity {
         navigation.setCanFloat(true);
         return navigation;
     }
-
     @Override
     public boolean isNoGravity() {return true;}
-
     @Override
     public void tick() {
         super.tick();
         if (level().isClientSide) spawnMotes();
     }
-
     private void spawnMotes() {
         for (int i = 0; i < MOTES_PER_TICK; i++) {
             level().addParticle(motes, getRandomX(MOTE_SPREAD), getRandomY(), getRandomZ(MOTE_SPREAD),

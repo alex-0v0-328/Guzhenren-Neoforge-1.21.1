@@ -61,7 +61,6 @@ public final class ModGameTests {
         helper.setBlock(CENTER, Blocks.DIRT);
         helper.succeedWhen(() -> helper.assertBlockState(CENTER, state -> state.is(Blocks.DIRT), () -> "dirt missing"));
     }
-
     @GameTest(template = "empty9x9x9", timeoutTicks = 100)
     public static void tendedGuHungerClock(GameTestHelper helper) {
         List<Component> inbox = new ArrayList<>();
@@ -86,12 +85,11 @@ public final class ModGameTests {
         helper.assertValueEqual(messages(inbox, HUNGRY_KEY).size(), 1, "hungry broadcast latched to once per day");
 
         TendedGuItem.tickCarried(player, 1L);
-        helper.assertTrue(player.getInventory().getItem(0).isEmpty(), "starved Gu stayed in the inventory");
+        helper.assertTrue(player.getInventory().getItem(0).isEmpty(), "starved Gu was removed from the inventory");
         helper.assertValueEqual(TendedGuItem.state(gu).hunger(), 0, "hunger after starving");
         helper.assertValueEqual(messages(inbox, STARVED_KEY).size(), 1, "starved broadcast count");
         helper.succeed();
     }
-
     @GameTest(template = "empty9x9x9", timeoutTicks = 200)
     public static void pressureExplosionSpreadsOverTicks(GameTestHelper helper) {
         for (int x = 2; x <= 6; x++) {
@@ -116,7 +114,6 @@ public final class ModGameTests {
             helper.assertTrue(helper.getEntities(EntityType.ITEM).isEmpty(), "crater dropped item entities");
         });
     }
-
     @GameTest(template = "empty9x9x9", timeoutTicks = 200)
     public static void hopeGuSeeksUnawakenedPlayer(GameTestHelper helper) {
         ServerPlayer player = survivalMock(helper, null, true);
@@ -139,7 +136,6 @@ public final class ModGameTests {
             helper.assertTrue(gu.distanceTo(player) < startDistance - 1.0D, "hope gu distance did not shrink");
         });
     }
-
     private static List<Component> messages(List<Component> inbox, String key) {
         List<Component> hits = new ArrayList<>();
         for (Component message : inbox) {
@@ -149,7 +145,6 @@ public final class ModGameTests {
         }
         return hits;
     }
-
     private static ServerPlayer survivalMock(GameTestHelper helper, @Nullable List<Component> inbox, boolean connect) {
         CommonListenerCookie cookie = CommonListenerCookie.createInitial(
                 new GameProfile(UUID.randomUUID(), "gzr-gametest-mock"), false);

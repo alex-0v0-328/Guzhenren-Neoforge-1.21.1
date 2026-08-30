@@ -12,8 +12,7 @@ import net.minecraft.world.effect.MobEffectCategory;
  * com.unknown.guzhenren.attachment.service.path.PathStrengthService#usableJin}, so attack still comes
  * out of one formula rather than gaining a second source.
  *
- * <p>A timed buff alters nothing permanently. Re-using it while it runs is a
- * refusal ({@code all_out_active}).
+ * <p>A timed buff alters nothing permanently. Re-using it while it runs is a refusal ({@code all_out_active}).
  *
  * @author Alex
  * @version 1.0.0
@@ -22,7 +21,6 @@ import net.minecraft.world.effect.MobEffectCategory;
  */
 
 public class AllOutEffortEffect extends MobEffect {
-
     public AllOutEffortEffect(MobEffectCategory category, int color) {
         super(category, color);
     }

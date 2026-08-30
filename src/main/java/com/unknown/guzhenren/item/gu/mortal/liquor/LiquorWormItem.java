@@ -15,11 +15,10 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Liquor Worm [酒虫]: a tended Gu that distills ordinary essence [真元] into the distilled reserve, in phases.
  *
- * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. Four rungs register against this one
- * class, each usable only at its own rank. The payout calls
+ * <p>Extends {@link com.unknown.guzhenren.item.gu.TendedGuItem}. Four rungs register against this one class,
+ * each usable only at its own rank. The payout calls
  * {@link com.unknown.guzhenren.attachment.service.aperture.ApertureEssenceService#beginDistilling} and stamps a
- * day-long effect; the three phases (drain, redirect, 1:2 spend) live in the service and the effect,
- * not here.
+ * day-long effect; the three phases (drain, redirect, 1:2 spend) live in the service and the effect, not here.
  *
  * <p>⚠ While it runs the ordinary pool is empty by design. Anything gating on essence must ask for the
  * spendable figure, or it will refuse everything for the whole of that stretch.
@@ -34,11 +33,9 @@ public class LiquorWormItem extends TendedGuItem {
 
     private static final String FAILED_RANK = "guzhenren.item.failed.liquor_rank";
     private static final String FAILED_DISTILLING = "guzhenren.item.failed.liquor_distilling";
-
     public LiquorWormItem(Properties properties, GuSpec spec) {
         super(properties, spec);
     }
-
     @Override
     protected @Nullable Refusal payoutGate(Player player, ItemStack stack) {
         if (ApertureService.rank(player) != rank()) {
@@ -46,7 +43,6 @@ public class LiquorWormItem extends TendedGuItem {
         }
         return ApertureEssenceService.canDistill(player) ? null : new Refusal(FAILED_DISTILLING);
     }
-
     @Override
     protected void payout(ServerPlayer player, ItemStack stack) {
         ApertureEssenceService.beginDistilling(player);
