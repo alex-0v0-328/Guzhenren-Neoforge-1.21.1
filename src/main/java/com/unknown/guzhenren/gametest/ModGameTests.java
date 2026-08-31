@@ -3,6 +3,7 @@ package com.unknown.guzhenren.gametest;
 import com.mojang.authlib.GameProfile;
 import com.unknown.guzhenren.Guzhenren;
 import com.unknown.guzhenren.attachment.data.aperture.ApertureData;
+import com.unknown.guzhenren.attachment.data.aperture.ApertureStorage;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureNourishService;
 import com.unknown.guzhenren.attachment.service.aperture.AperturePressureExplosionTask;
 import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
@@ -16,6 +17,8 @@ import com.unknown.guzhenren.entity.HopeGuEntity;
 import com.unknown.guzhenren.item.GuItem;
 import com.unknown.guzhenren.item.gu.RefinedGuState;
 import com.unknown.guzhenren.item.gu.TendedGuItem;
+import com.unknown.guzhenren.menu.ApertureStorageMenu;
+import com.unknown.guzhenren.registry.attachment.ModAttachments;
 import com.unknown.guzhenren.registry.entity.ModEntityTypes;
 import com.unknown.guzhenren.registry.item.ModDataComponents;
 import com.unknown.guzhenren.registry.item.ModItems;
@@ -36,6 +39,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -183,6 +187,59 @@ public final class ModGameTests {
         helper.succeed();
     }
     @GameTest(template = "empty9x9x9", timeoutTicks = 100)
+    public static void storageMousePlacementKeepsOverflow(GameTestHelper helper) {
+        ServerPlayer player = storagePlayer(helper);
+        ApertureStorageMenu menu = new ApertureStorageMenu(1, player.getInventory(), ApertureData.PRIMARY, 0);
+        menu.setCarried(new ItemStack(ModItems.SECOND_APERTURE_GU_5.get(), 64));
+
+        menu.clicked(0, 0, ClickType.PICKUP, player);
+
+        helper.assertValueEqual(storedCount(player, ApertureData.PRIMARY), 8, "mouse placement accepted count");
+        helper.assertValueEqual(menu.getCarried().getCount(), 56, "mouse placement kept overflow");
+        helper.succeed();
+    }
+    @GameTest(template = "empty9x9x9", timeoutTicks = 100)
+    public static void storageShiftMoveKeepsOverflow(GameTestHelper helper) {
+        ServerPlayer player = storagePlayer(helper);
+        player.getInventory().setItem(0, new ItemStack(ModItems.SECOND_APERTURE_GU_5.get(), 64));
+        ApertureStorageMenu menu = new ApertureStorageMenu(1, player.getInventory(), ApertureData.PRIMARY, 0);
+
+        menu.clicked(ApertureStorageMenu.PAGE_SIZE + 27, 0, ClickType.QUICK_MOVE, player);
+
+        helper.assertValueEqual(storedCount(player, ApertureData.PRIMARY), 8, "shift move accepted count");
+        helper.assertValueEqual(player.getInventory().getItem(0).getCount(), 56, "shift move kept overflow");
+        helper.succeed();
+    }
+    @GameTest(template = "empty9x9x9", timeoutTicks = 100)
+    public static void storageSyncedLoadLimitsSlot(GameTestHelper helper) {
+        ServerPlayer player = storagePlayer(helper);
+        ApertureStorageMenu menu = new ApertureStorageMenu(1, player.getInventory(), ApertureData.PRIMARY, 0);
+        menu.setData(2, 224);
+        ItemStack incoming = new ItemStack(ModItems.SECOND_APERTURE_GU_5.get(), 64);
+
+        helper.assertValueEqual(menu.getSlot(0).getMaxStackSize(incoming), 1, "synced load slot limit");
+        helper.succeed();
+    }
+    @GameTest(template = "empty9x9x9", timeoutTicks = 100)
+    public static void storageLegacyOverloadCanBeReducedBySwap(GameTestHelper helper) {
+        ServerPlayer player = storagePlayer(helper);
+        player.setData(ModAttachments.APERTURE_STORAGE, ApertureStorage.DEFAULT.with(ApertureData.PRIMARY, List.of(
+                new ItemStack(ModItems.SECOND_APERTURE_GU_5.get(), 9),
+                new ItemStack(ModItems.SECOND_APERTURE_GU_5.get()))));
+        ApertureStorageMenu menu = new ApertureStorageMenu(1, player.getInventory(), ApertureData.PRIMARY, 0);
+        menu.setCarried(new ItemStack(ModItems.SECOND_APERTURE_GU_1.get()));
+
+        menu.clicked(1, 0, ClickType.PICKUP, player);
+
+        helper.assertTrue(ApertureStorageService.items(player, ApertureData.PRIMARY).get(1)
+                .is(ModItems.SECOND_APERTURE_GU_1.get()), "legacy overload replacement was blocked");
+        helper.assertValueEqual(ApertureStorageService.load(player, ApertureData.PRIMARY), 290,
+                "legacy overload reduced load");
+        helper.assertTrue(menu.getCarried().is(ModItems.SECOND_APERTURE_GU_5.get()),
+                "legacy overload kept replaced gu on cursor");
+        helper.succeed();
+    }
+    @GameTest(template = "empty9x9x9", timeoutTicks = 100)
     public static void healthFollowsFirstApertureOnly(GameTestHelper helper) {
         ServerPlayer player = survivalMock(helper, null, true);
 
@@ -216,6 +273,14 @@ public final class ModGameTests {
                 .filter(InfoModel.ApertureIndex.class::isInstance)
                 .map(InfoModel.ApertureIndex.class::cast)
                 .toList();
+    }
+    private static int storedCount(ServerPlayer player, int aperture) {
+        return ApertureStorageService.items(player, aperture).stream().mapToInt(ItemStack::getCount).sum();
+    }
+    private static ServerPlayer storagePlayer(GameTestHelper helper) {
+        ServerPlayer player = survivalMock(helper, null, true);
+        ApertureService.awaken(player, 80);
+        return player;
     }
     private static List<Component> messages(List<Component> inbox, String key) {
         List<Component> hits = new ArrayList<>();

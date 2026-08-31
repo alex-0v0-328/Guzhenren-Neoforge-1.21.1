@@ -204,11 +204,17 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(@NotNull Player who) {return who == player && who.isAlive();}
 
-    private static class GuSlot extends Slot {
+    private class GuSlot extends Slot {
         GuSlot(Container container, int index, int x, int y) {super(container, index, x, y);}
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
-            return stack.getItem() instanceof MortalGuItem;
+            return stack.getItem() instanceof MortalGuItem
+                    && (hasItem()
+                    || ApertureStorageService.maxStackSize(player, aperture, load(), getItem(), stack) > 0);
+        }
+        @Override
+        public int getMaxStackSize(@NotNull ItemStack stack) {
+            return ApertureStorageService.maxStackSize(player, aperture, load(), getItem(), stack);
         }
     }
 

@@ -42,6 +42,20 @@ public final class ApertureStorageService {
     public static int count(@NotNull Player p, int aperture) {return get(p).count(aperture);}
     public static @NotNull ItemStack vital(@NotNull Player p, int aperture) {return get(p).getVital(aperture);}
     public static int load(@NotNull Player p, int aperture) {return load(p, get(p), aperture);}
+    public static int maxStackSize(@NotNull Player p, int aperture, int currentLoad,
+            @NotNull ItemStack current, @NotNull ItemStack incoming) {
+        if (!(incoming.getItem() instanceof MortalGuItem gu)) return 0;
+
+        Rank holder = ApertureService.aperture(p, aperture).rank();
+        int limit = Math.max(MAX_LOAD, currentLoad);
+        int existingCount = 0;
+        if (!current.isEmpty()) {
+            if (ItemStack.isSameItemSameComponents(current, incoming)) existingCount = current.getCount();
+            else currentLoad -= cost(holder, current);
+        }
+        int freeLoad = Math.max(0, limit - currentLoad);
+        return Math.min(incoming.getMaxStackSize(), existingCount + freeLoad / costPerItem(holder, gu));
+    }
     public static boolean set(@NotNull ServerPlayer p, int aperture, @NotNull List<ItemStack> items) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.with(aperture, items);
@@ -95,8 +109,10 @@ public final class ApertureStorageService {
     private static int cost(Rank holder, ItemStack stack) {
         if (stack.isEmpty() || !(stack.getItem() instanceof MortalGuItem gu)) return 0;
 
+        return costPerItem(holder, gu) * stack.getCount();
+    }
+    private static int costPerItem(Rank holder, MortalGuItem gu) {
         int gap = gu.rank().ordinal() - holder.ordinal();
-        int perItem = gap < 0 ? 1 : gap == 0 ? 2 : 2 << gap;
-        return perItem * stack.getCount();
+        return gap < 0 ? 1 : gap == 0 ? 2 : 2 << gap;
     }
 }

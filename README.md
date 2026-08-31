@@ -32,25 +32,23 @@
 玩家的持久状态主要是 **NeoForge data attachment**：九个核心 attachment 是**不可变 record**，写入只经过拥有它的 service；另有出生闩与瞬时真元 carry。
 <sub>Persistent player state lives mainly in data attachments: nine core attachments are immutable records, written only through their owning services; two auxiliary attachments hold the birth latch and transient essence carry.</sub>
 
-| Attachment                             | 装什么                                                                                         |
-|----------------------------------------|------------------------------------------------------------------------------------------------|
-| `ApertureData`                         | 空窍：转数、阶段、资质、体质、真元池 <sub>rank, stage, talent, physique, essence</sub>         |
-| `BodyData`                             | 生命形态、种族、年龄与寿元、死气欠账 <sub>life form, race, age & lifespan, death-qi debt</sub> |
-| `SoulData`                             | 魂魄 <sub>soul</sub>                                                                           |
-| `PathData`                             | 33 条流派的道痕，每笔带来源 tag <sub>Dao marks, each tagged with its source</sub>              |
-| `QiData` · `StrengthData` · `MindData` | 八种气、力道三分支、念/意/情 <sub>qi, strength branches, mind pools</sub>                      |
-| `NourishData` · `ApertureStorage`      | 修炼进度、空窍内的蛊虫仓 <sub>cultivation progress, Gu storage</sub>                           |
+| Attachment                                                 | 装什么                                                                                         |
+|------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| `ApertureData` · `ApertureNourishData` · `ApertureStorage` | 空窍、修炼进度、蛊虫仓 <sub>apertures, cultivation, Gu storage</sub>                           |
+| `BodyData`                                                 | 生命形态、种族、年龄与寿元、死气欠账 <sub>life form, race, age & lifespan, death-qi debt</sub> |
+| `SoulData`                                                 | 魂魄 <sub>soul</sub>                                                                           |
+| `PathData` · `PathQiData` · `PathStrengthData`             | 33 条流派道痕、八种气、力道数据 <sub>Dao marks, qi, strength</sub>                             |
+| `MindData`                                                 | 才情与念/意/情三个池 <sub>brilliance and the three mind pools</sub>                            |
 
-⚠ 同步靠 attachment 自带的 `sync(OWNER_ONLY, …)`，**不写玩家数据的 payload**；
-唯一的自定义 payload 是 G 面板的按钮意图。
-<sub>Sync rides the attachment's own `sync(...)`; the only custom payloads are G-panel button intents.</sub>
+⚠ 同步靠 attachment 自带的 `sync(OWNER_ONLY, …)`，**不写玩家数据的 payload**；当前有六个自定义 payload，全部是 B 面板或移动操作的客户端意图。
+<sub>Sync rides the attachment's own `sync(...)`; six custom payloads currently exist, all of them client intents from the B-panel or movement input.</sub>
 
 耐力由 **Epic Fight** 独占保存、回复、HUD 与普通消耗；GZR 只通过兼容桥接调整最大耐力，并让僵尸与半僵的技能耐力消耗为零。
 <sub>Epic Fight exclusively owns stamina storage, regeneration, HUD, and ordinary consumption; GZR only adjusts maximum stamina through its compatibility bridge and makes zombie and half-zombie skill stamina costs zero.</sub>
 
 ## 承重约定 <sub>Load-bearing conventions</sub>
 
-- **一件事一扇门。** 攻击力只经 `AttackService`，时间流速只经 `TimeFlowService`，
+- **一件事一扇门。** 攻击力只经 `BodyAttackService`，时间流速只经 `PathTimeFlowService`，
   道痕只经 `PathService`。在调用点自己算，就是这个项目历史上大多数 bug 的来源。
   <sub>One door per fact. Doing the arithmetic at a call site is where the bugs came from.</sub>
 - **每秒一次心跳**（`PlayerTickEvents`，`tickCount % 20`），一串步骤，**先后顺序承重**。
@@ -67,20 +65,20 @@
 ## 内容系统 <sub>Systems</sub>
 
 物品与蛊虫（两条分支：一次性 / 需照顾；后者包含用完消失的蛊）· 炼蛊（26 秒仪式 + 蛊方）· 修炼（温养与冲击窍壁）·
-气（八种，独立资源）· 生命形态四态 · 野生蛊虫实体 · 七页 G 面板与 HUD · `/guzhenren`（别名 `/gzr`，权限 2）。
+气（八种，独立资源）· 生命形态四态 · 野生蛊虫实体 · 六页 B 面板与 HUD · `/guzhenren`（别名 `/gzr`，权限 2）。
 <sub>Items and Gu (two branches: one-shot and tended, with consumed Gu as a tended subtype), refinement, cultivation, qi, life forms, wild Gu entities,
-a seven-tab info panel, and an operator command tree.</sub>
+a six-tab B-panel, and an operator command tree.</sub>
 
 ⚠ 仍在开发阶段：蛊方只有两张，其余物品走创造模式栏或 `/give`。
 <sub>Still in development: only two Gu recipes exist; everything else is creative-tab / `/give`.</sub>
 
 ## 测试 <sub>Tests</sub>
 
-`src/test/java`，JUnit 5 经 `neoForge.unitTest`，`./gradlew build` 会跑。
-**只测不需要世界的纯逻辑**（派生公式、枚举阶梯、`GuSpec.validate`）；碰 `Player`、注册表或世界的归 GameTest。
+`src/pureTest/java` 是纯 JVM 的 L1，`src/test/java` 是可用注册表但没有 world 的 L2；两者都是 JUnit 5，`./gradlew build` 会跑。
+真实世界与 tick 行为放在 `src/main/java/.../gametest` 的 L3，使用 `./gradlew runGameTestServer`。
 ⚠ **不 mock Minecraft。**
-<sub>Unit tests cover pure logic only — anything touching a Player, a registry or a level belongs in a
-GameTest instead. Minecraft is never mocked.</sub>
+<sub>L1 covers pure JVM logic, L2 runs with the modded registry but no world, and real world/tick behavior belongs
+to L3 GameTest. Minecraft is never mocked.</sub>
 
 ## 许可 <sub>License</sub>
 
