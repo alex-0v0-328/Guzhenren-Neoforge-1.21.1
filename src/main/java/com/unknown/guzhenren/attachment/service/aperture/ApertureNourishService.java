@@ -68,7 +68,7 @@ public final class ApertureNourishService {
         return ApertureService.aperture(p, index).nourishProgress() / (float) ApertureNourishData.FULL;
     }
     public static int targetIndex(@NotNull Player p) {
-        return Math.min(get(p).target(), Math.max(ApertureData.PRIMARY, ApertureService.get(p).count() - 1));
+        return Math.clamp(get(p).target(), ApertureData.PRIMARY, ApertureService.get(p).count() - 1);
     }
     //region what the screen asks
     public static boolean canNourish(@NotNull Player p, int index) {

@@ -85,6 +85,9 @@ public final class ApertureService {
     public static @NotNull ApertureStatus status(@NotNull Player p) {return status(p, PRIMARY);}
     public static @NotNull Talent talent(@NotNull Player p) {return aperture(p).talent();}
     public static @NotNull Rank rank(@NotNull Player p) {return aperture(p).rank();}
+    public static @NotNull Rank healthRank(@NotNull Player p) {
+        return get(p).isAwakened() ? aperture(p).rank() : Rank.NONE;
+    }
     public static @NotNull Stage stage(@NotNull Player p) {return aperture(p).stage();}
     public static void setRank(@NotNull ServerPlayer p, @NotNull Rank v) {setRank(p, PRIMARY, v);}
     public static void setRank(@NotNull ServerPlayer p, int index, @NotNull Rank v) {
@@ -202,7 +205,7 @@ public final class ApertureService {
         player.setData(ModAttachments.APERTURE,
                 get(player).with(index, current.withPressureAndDeadline(value, deadline)));
     }
-    public static boolean setBaseEssence(@NotNull ServerPlayer p, int v) {return setBaseEssence(p, PRIMARY, v);}
+    public static void setBaseEssence(@NotNull ServerPlayer p, int v) {setBaseEssence(p, PRIMARY, v);}
     public static boolean setBaseEssence(@NotNull ServerPlayer p, int index, int v) {
         int next = Math.clamp(v, Aperture.MIN_BASE, Aperture.MAX_BASE);
         if (index == get(p).firstIndex() && next == Aperture.MAX_BASE && !BodyService.isExtreme(p)) return false;

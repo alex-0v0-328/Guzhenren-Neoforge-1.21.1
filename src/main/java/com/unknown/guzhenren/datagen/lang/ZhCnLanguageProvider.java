@@ -249,6 +249,7 @@ public class ZhCnLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.nourish_stop", "停止温养");
         add("guzhenren.screen.nourish_second", "温养第二空窍");
         add("guzhenren.screen.impact", "冲刷窍壁");
+        add("guzhenren.screen.button.storage", "空窍存储");
 
         add("guzhenren.nourish.starved", "真元见底，中止温养");
         add("guzhenren.nourish.stage_up", "小境界提升");

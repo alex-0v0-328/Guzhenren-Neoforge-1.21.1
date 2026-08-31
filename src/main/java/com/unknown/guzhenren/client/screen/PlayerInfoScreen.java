@@ -15,7 +15,6 @@ import com.unknown.guzhenren.network.payload.OpenApertureStoragePayload;
 import com.unknown.guzhenren.network.payload.OpenRefinementPayload;
 import com.unknown.guzhenren.network.payload.SetSecondaryPathPayload;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -33,8 +32,10 @@ import org.jetbrains.annotations.Nullable;
  * The B panel: every tab of what a player is, read straight off the synced attachments.
  *
  * <p>Extends {@link net.minecraft.client.gui.screens.Screen} (no menu behind it). Six tabs: 空窍,
- * 肉身, 魂魄, 流派造诣, 脑海, 炼蛊. Each aperture row opens that aperture's storage container; the
- * refinement tab opens its container via a client-intent payload instead of drawing rows. Row
+ * 肉身, 魂魄, 流派造诣, 脑海, 炼蛊. The aperture tab draws one column per aperture -- a lone aperture
+ * keeps the single-column layout -- and every column carries its own 温养空窍 [nourish] /
+ * 冲刷窍壁 [flush] / 空窍存储 [storage] buttons; the storage button opens that aperture's container.
+ * The refinement tab opens its container via a client-intent payload instead of drawing rows. Row
  * content comes from {@link com.unknown.guzhenren.display.InfoModel}, shared with {@code /gzr
  * info}, so the two surfaces cannot diverge.
  *
@@ -85,6 +86,7 @@ public final class PlayerInfoScreen extends Screen {
     private static final String KEY_NOURISH_STOP = "guzhenren.screen.nourish_stop";
     private static final String KEY_NOURISH_SECOND = "guzhenren.screen.nourish_second";
     private static final String KEY_IMPACT = "guzhenren.screen.impact";
+    private static final String KEY_STORAGE = "guzhenren.screen.button.storage";
 
     private static final int TAB_APERTURE = 0;
     private static final int TAB_BODY = 1;
@@ -100,6 +102,12 @@ public final class PlayerInfoScreen extends Screen {
 
     private static final int SCROLL_W = 2;
     private static final int SCROLL_GAP = 5;
+
+    private static final int COL_GAP = 16;
+
+    private static final int BTN_NOURISH = 0;
+    private static final int BTN_IMPACT = 1;
+    private static final int BTN_STORAGE = 2;
 
     private int leftPos;
     private int topPos;
@@ -138,8 +146,15 @@ public final class PlayerInfoScreen extends Screen {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        List<Row> rows = rows(player);
-
+        if (activeTab == TAB_APERTURE && twoApertures(player)) {
+            renderApertureColumns(g, player, apertureGroups(player), mouseX, mouseY, accent);
+        } else {
+            renderRows(g, rows(player), mouseX, mouseY, accent);
+            renderBottomButtons(g, mouseX, mouseY);
+        }
+        if (picking) renderPicker(g, mouseX, mouseY, accent);
+    }
+    private void renderRows(GuiGraphics g, List<Row> rows, int mouseX, int mouseY, int accent) {
         int visible = visibleRows();
         int hidden = Math.max(0, rows.size() - visible);
         scrollRow = Mth.clamp(scrollRow, 0, hidden);
@@ -162,101 +177,177 @@ public final class PlayerInfoScreen extends Screen {
             y += LINE_H;
         }
         if (hidden > 0) renderScrollBar(g, rows.size(), visible, accent);
-        renderCultivation(g, mouseX, mouseY, accent);
-        if (picking) renderPicker(g, mouseX, mouseY, accent);
     }
-    //region 温养空窍 [nourish] and 冲刷窍壁 [flush] -- one button row per visible aperture, bottom of the panel
-    private static int[] visibleCultivation(LocalPlayer player) {
-        int count = ApertureService.get(player).count();
-        int[] kept = new int[count];
-        int visible = 0;
-        for (int i = 0; i < count; i++) {
-            if (!ApertureNourishService.atCeiling(player, i)) kept[visible++] = i;
+    //region aperture columns -- two apertures render side by side, left first right second
+    private static boolean twoApertures(LocalPlayer player) {
+        return ApertureService.get(player).count() == 2;
+    }
+    private List<List<Row>> apertureGroups(LocalPlayer player) {
+        List<List<Row>> groups = new ArrayList<>();
+        List<Row> current = null;
+        for (InfoModel.Row modelRow : InfoModel.aperture(player)) {
+            if (modelRow.entry() instanceof InfoModel.Blank) continue;
+            Row drawn = draw(modelRow.indent(), modelRow.entry());
+            if (drawn == null) continue;
+            if (modelRow.entry() instanceof InfoModel.ApertureIndex || current == null) {
+                current = new ArrayList<>();
+                groups.add(current);
+            }
+            current.add(drawn);
         }
-        return Arrays.copyOf(kept, visible);
+        return groups;
     }
-    private int cultivationCount() {
-        LocalPlayer player = Minecraft.getInstance().player;
-        return activeTab == TAB_APERTURE && player != null && ApertureService.hasAperture(player)
-                ? visibleCultivation(player).length : 0;
+    private void renderApertureColumns(GuiGraphics g, LocalPlayer player, List<List<Row>> groups,
+                                       int mouseX, int mouseY, int accent) {
+        int colW = (valueRight() - contentLeft() - COL_GAP) / 2;
+        int divider = contentLeft() + colW + COL_GAP / 2;
+        g.fill(divider, contentTop(), divider + 1, contentBottom(), DIVIDER);
+        hoverClick = null;
+        for (int c = 0; c < groups.size(); c++) {
+            int x0 = contentLeft() + c * (colW + COL_GAP);
+            int x1 = x0 + colW;
+            int y = contentTop();
+            for (Row row : groups.get(c)) {
+                if (mouseY >= y - 1 && mouseY < y + LINE_H - 1 && mouseX >= x0 - 2 && mouseX < x1 + 2) {
+                    g.fill(x0 - 2, y - 1, x1 + 2, y + LINE_H - 1, ROW_HOVER);
+                    if (row.click() != null) hoverClick = row.click();
+                }
+                int labelColor = row.value() == null ? accent : ModPalette.TEXT;
+                g.drawString(font, row.label(), x0 + row.indent(), y, labelColor, false);
+                if (row.value() != null) {
+                    g.drawString(font, row.value(), x1 - font.width(row.value()), y, ModPalette.TEXT, false);
+                }
+                y += LINE_H;
+            }
+        }
+        for (ColumnButton b : columnButtons(player, groups)) {
+            drawApButton(g, player, b, mouseX, mouseY);
+        }
     }
-    private int buttonTop(int row) {
-        return contentBottom() - cultivationCount() * (BTN_H + BTN_GAP) + BTN_GAP + row * (BTN_H + BTN_GAP);
-    }
-    private void renderCultivation(GuiGraphics g, int mouseX, int mouseY, int accent) {
-        if (activeTab != TAB_APERTURE) return;
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null || !ApertureService.hasAperture(player)) return;
-        int[] visible = visibleCultivation(player);
+    //endregion
 
-        for (int r = 0; r < visible.length; r++) {
-            int aperture = visible[r];
-            boolean paired = aperture == ApertureData.PRIMARY && ApertureNourishService.canImpact(player);
+    //region per-aperture buttons -- 温养空窍 [nourish] / 冲刷窍壁 [flush] / 空窍存储 [storage], one stack per aperture
+    private record ApButton(int aperture, int kind, String key, int top) {}
+    private record ColumnButton(int aperture, int kind, String key, int x0, int x1, int top) {}
+
+    private List<ApButton> buttonStack(LocalPlayer player, int aperture) {
+        List<ApButton> buttons = new ArrayList<>();
+        if (aperture == ApertureData.PRIMARY && ApertureNourishService.canImpact(player)) {
+            buttons.add(new ApButton(aperture, BTN_IMPACT, KEY_IMPACT, 0));
+            return withStorage(aperture, buttons, BTN_H + BTN_GAP);
+        }
+        if (!ApertureNourishService.atCeiling(player, aperture)) {
             boolean running = ApertureNourishService.isCultivating(player)
                     && ApertureNourishService.targetIndex(player) == aperture;
-
-            int top = buttonTop(r);
-            int x0 = contentLeft();
-            int x3 = valueRight();
-            if (paired) {
-                int strike = !ApertureNourishService.canAffordImpact(player) ? ModPalette.BUTTON_DEAD
-                        : inBox(mouseX, mouseY, x0, x3, r) ? ModPalette.BUTTON_HOVER : ModPalette.BUTTON_IDLE;
-                g.fill(x0, top, x3, top + BTN_H, strike);
-                g.renderOutline(x0, top, x3 - x0, BTN_H, accent);
-                label(g, Component.translatable(KEY_IMPACT), x0, x3, top);
-                continue;
-            }
-
-            int fill = running ? ModPalette.BUTTON_HOVER
-                    : ApertureNourishService.canNourish(player, aperture) ? ModPalette.BUTTON_IDLE
-                    : ModPalette.BUTTON_DEAD;
-
-            g.fill(x0, top, x3, top + BTN_H, fill);
-            if (running) {
-                int done = x0 + Math.round((x3 - x0) * ApertureNourishService.fraction(player, aperture));
-                g.fill(x0, top, done, top + BTN_H, BTN_PROGRESS);
-            }
-            g.renderOutline(x0, top, x3 - x0, BTN_H, running ? accent : ModPalette.BORDER);
-            String nourish = ApertureService.aperture(player, aperture).second()
-                    ? KEY_NOURISH_SECOND : KEY_NOURISH;
-            label(g, Component.translatable(running ? KEY_NOURISH_STOP : nourish), x0, x3, top);
+            String key = running ? KEY_NOURISH_STOP
+                    : ApertureService.aperture(player, aperture).second() ? KEY_NOURISH_SECOND : KEY_NOURISH;
+            buttons.add(new ApButton(aperture, BTN_NOURISH, key, 0));
+            return withStorage(aperture, buttons, BTN_H + BTN_GAP);
         }
+        return withStorage(aperture, buttons, 0);
+    }
+    private static List<ApButton> withStorage(int aperture, List<ApButton> buttons, int top) {
+        buttons.add(new ApButton(aperture, BTN_STORAGE, KEY_STORAGE, top));
+        return buttons;
+    }
+    private List<ColumnButton> bottomButtons(LocalPlayer player) {
+        List<ColumnButton> buttons = new ArrayList<>();
+        if (!ApertureService.hasAperture(player)) return buttons;
+        List<ApButton> stack = buttonStack(player, ApertureData.PRIMARY);
+        int base = contentBottom() - stack.size() * (BTN_H + BTN_GAP) + BTN_GAP;
+        for (ApButton b : stack) {
+            buttons.add(new ColumnButton(b.aperture(), b.kind(), b.key(), contentLeft(), valueRight(),
+                    base + b.top()));
+        }
+        return buttons;
+    }
+    private List<ColumnButton> columnButtons(LocalPlayer player, List<List<Row>> groups) {
+        List<ColumnButton> buttons = new ArrayList<>();
+        if (!ApertureService.hasAperture(player)) return buttons;
+        int colW = (valueRight() - contentLeft() - COL_GAP) / 2;
+        for (int c = 0; c < groups.size(); c++) {
+            int x0 = contentLeft() + c * (colW + COL_GAP);
+            int base = contentTop() + (groups.get(c).size() + 1) * LINE_H;
+            for (ApButton b : buttonStack(player, c)) {
+                buttons.add(new ColumnButton(b.aperture(), b.kind(), b.key(), x0, x0 + colW, base + b.top()));
+            }
+        }
+        return buttons;
+    }
+    private void renderBottomButtons(GuiGraphics g, int mouseX, int mouseY) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null || activeTab != TAB_APERTURE || twoApertures(player)
+                || !ApertureService.hasAperture(player)) return;
+        for (ColumnButton b : bottomButtons(player)) {
+            drawApButton(g, player, b, mouseX, mouseY);
+        }
+    }
+    private void drawApButton(GuiGraphics g, LocalPlayer player, ColumnButton b, int mouseX, int mouseY) {
+        boolean hover = inBox(mouseX, mouseY, b.x0(), b.x1(), b.top());
+        switch (b.kind()) {
+            case BTN_IMPACT -> {
+                int strike = !ApertureNourishService.canAffordImpact(player) ? ModPalette.BUTTON_DEAD
+                        : hover ? ModPalette.BUTTON_HOVER : ModPalette.BUTTON_IDLE;
+                g.fill(b.x0(), b.top(), b.x1(), b.top() + BTN_H, strike);
+                g.renderOutline(b.x0(), b.top(), b.x1() - b.x0(), BTN_H, ACCENT[activeTab]);
+                label(g, Component.translatable(b.key()), b.x0(), b.x1(), b.top());
+            }
+            case BTN_NOURISH -> {
+                boolean running = ApertureNourishService.isCultivating(player)
+                        && ApertureNourishService.targetIndex(player) == b.aperture();
+                int fill = running ? ModPalette.BUTTON_HOVER
+                        : ApertureNourishService.canNourish(player, b.aperture()) ? ModPalette.BUTTON_IDLE
+                        : ModPalette.BUTTON_DEAD;
+                g.fill(b.x0(), b.top(), b.x1(), b.top() + BTN_H, fill);
+                if (running) {
+                    int done = b.x0() + Math.round((b.x1() - b.x0())
+                            * ApertureNourishService.fraction(player, b.aperture()));
+                    g.fill(b.x0(), b.top(), done, b.top() + BTN_H, BTN_PROGRESS);
+                }
+                g.renderOutline(b.x0(), b.top(), b.x1() - b.x0(), BTN_H,
+                        running ? ACCENT[activeTab] : ModPalette.BORDER);
+                label(g, Component.translatable(b.key()), b.x0(), b.x1(), b.top());
+            }
+            default -> {
+                g.fill(b.x0(), b.top(), b.x1(), b.top() + BTN_H,
+                        hover ? ModPalette.BUTTON_HOVER : ModPalette.BUTTON_IDLE);
+                g.renderOutline(b.x0(), b.top(), b.x1() - b.x0(), BTN_H, ModPalette.BORDER);
+                label(g, Component.translatable(b.key()), b.x0(), b.x1(), b.top());
+            }
+        }
+    }
+    private boolean clickApertureButtons(double mx, double my) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null || activeTab != TAB_APERTURE || !ApertureService.hasAperture(player)) return false;
+        List<ColumnButton> buttons = twoApertures(player)
+                ? columnButtons(player, apertureGroups(player)) : bottomButtons(player);
+        for (ColumnButton b : buttons) {
+            if (!inBox(mx, my, b.x0(), b.x1(), b.top())) continue;
+            switch (b.kind()) {
+                case BTN_IMPACT -> PacketDistributor.sendToServer(ImpactApertureWallPayload.INSTANCE);
+                case BTN_NOURISH -> {
+                    if (ApertureNourishService.isCultivating(player)
+                            && ApertureNourishService.targetIndex(player) == b.aperture()) {
+                        PacketDistributor.sendToServer(new NourishAperturePayload(
+                                NourishAperturePayload.Action.CANCEL, ApertureNourishService.targetIndex(player)));
+                    } else if (ApertureNourishService.canNourish(player, b.aperture())) {
+                        PacketDistributor.sendToServer(new NourishAperturePayload(
+                                NourishAperturePayload.Action.START, b.aperture()));
+                        onClose();
+                    }
+                }
+                default -> PacketDistributor.sendToServer(new OpenApertureStoragePayload(b.aperture()));
+            }
+            return true;
+        }
+        return false;
     }
     private void label(GuiGraphics g, Component text, int x0, int x1, int top) {
         g.drawString(font, text, x0 + (x1 - x0 - font.width(text)) / 2,
                 top + (BTN_H - font.lineHeight) / 2, ModPalette.TEXT, false);
     }
-    private boolean inBox(double mx, double my, int x0, int x1, int row) {
-        return mx >= x0 && mx < x1 && my >= buttonTop(row) && my < buttonTop(row) + BTN_H;
-    }
-    private boolean clickCultivation(double mx, double my) {
-        if (activeTab != TAB_APERTURE) return false;
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null || !ApertureService.hasAperture(player)) return false;
-        int[] visible = visibleCultivation(player);
-
-        for (int r = 0; r < visible.length; r++) {
-            int aperture = visible[r];
-            if (aperture == ApertureData.PRIMARY && ApertureNourishService.canImpact(player)) {
-                if (inBox(mx, my, contentLeft(), valueRight(), r)) {
-                    PacketDistributor.sendToServer(ImpactApertureWallPayload.INSTANCE);
-                    return true;
-                }
-                continue;
-            }
-            if (!inBox(mx, my, contentLeft(), valueRight(), r)) continue;
-
-            if (ApertureNourishService.isCultivating(player)) {
-                PacketDistributor.sendToServer(new NourishAperturePayload(NourishAperturePayload.Action.CANCEL,
-                        ApertureNourishService.targetIndex(player)));
-                return true;
-            }
-            if (!ApertureNourishService.canNourish(player, aperture)) return true;
-            PacketDistributor.sendToServer(new NourishAperturePayload(NourishAperturePayload.Action.START, aperture));
-            onClose();
-            return true;
-        }
-        return false;
+    private boolean inBox(double mx, double my, int x0, int x1, int top) {
+        return mx >= x0 && mx < x1 && my >= top && my < top + BTN_H;
     }
     //endregion
 
@@ -268,7 +359,13 @@ public final class PlayerInfoScreen extends Screen {
     private int inset() {return (edgeRight() - edgeLeft()) / CONTENT_INSET_DIVISOR;}
     private int edgeLeft() {return leftPos + PAD;}
     private int edgeRight() {return tabLeft() - PAD;}
-    private int rowsBottom() {return contentBottom() - cultivationCount() * (BTN_H + BTN_GAP);}
+    private int bottomButtonCount() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null || activeTab != TAB_APERTURE || twoApertures(player)
+                || !ApertureService.hasAperture(player)) return 0;
+        return buttonStack(player, ApertureData.PRIMARY).size();
+    }
+    private int rowsBottom() {return contentBottom() - bottomButtonCount() * (BTN_H + BTN_GAP);}
     private int visibleRows() {return Math.max(0, (rowsBottom() - contentTop()) / LINE_H);}
     private void renderScrollBar(GuiGraphics g, int total, int visible, int accent) {
         int x0 = tabLeft() - SCROLL_GAP;
@@ -373,15 +470,10 @@ public final class PlayerInfoScreen extends Screen {
             return true;
         }
         if (button == 0) {
-            if (clickCultivation(mx, my)) return true;
-            Click click = hoverClick;
-            if (click != null) {
-                if (click.picker()) {
-                    pickerAperture = click.aperture();
-                    picking = true;
-                } else {
-                    PacketDistributor.sendToServer(new OpenApertureStoragePayload(click.aperture()));
-                }
+            if (clickApertureButtons(mx, my)) return true;
+            if (hoverClick != null) {
+                pickerAperture = hoverClick.aperture();
+                picking = true;
                 return true;
             }
             for (int i = 0; i < TAB_KEYS.length; i++) {
@@ -445,8 +537,7 @@ public final class PlayerInfoScreen extends Screen {
     }
     private static @Nullable Row draw(int indent, InfoModel.Entry entry) {
         return switch (entry) {
-            case InfoModel.ApertureIndex e -> new Row(indent, ModDisplayText.apertureName(e.number()), null,
-                    new Click(false, e.index()));
+            case InfoModel.ApertureIndex e -> new Row(indent, ModDisplayText.apertureName(e.number()), null);
             case InfoModel.Blank ignored -> new Row(indent, Component.empty(), null);
             case InfoModel.Realm e -> new Row(indent, label("realm"), ModDisplayText.realmTitle(e.aperture()));
             case InfoModel.Status e -> new Row(indent, label("aperture_status"),
@@ -466,10 +557,10 @@ public final class PlayerInfoScreen extends Screen {
                     detail(pickHint()).copy().append(e.path() == null
                             ? none().withStyle(ChatFormatting.DARK_GRAY)
                             : detail(ModDisplayText.path(e.path()))),
-                    new Click(true, e.aperture()));
+                    new Click(e.aperture()));
 
             case InfoModel.PhysiqueRow e -> new Row(indent, label("physique"),
-                    ModDisplayText.physique(e.physique(), e.extremePhysique()));
+                    ModDisplayText.physiqueValue(e.physique(), e.extremePhysique()));
             case InfoModel.RaceRow e -> new Row(indent, label("race"), name(e.race().getTranslationKey()));
             case InfoModel.Soul e -> new Row(indent, label("soul"),
                     Component.literal(ModDisplayText.pool(e.soul().currentSoul(), e.soul().maxSoul()))
@@ -519,5 +610,5 @@ public final class PlayerInfoScreen extends Screen {
     private record Row(int indent, Component label, @Nullable Component value, @Nullable Click click) {
         Row(int indent, Component label, @Nullable Component value) {this(indent, label, value, null);}
     }
-    private record Click(boolean picker, int aperture) {}
+    private record Click(int aperture) {}
 }

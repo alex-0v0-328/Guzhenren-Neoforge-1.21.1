@@ -8,6 +8,7 @@ import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Criterion for the ritual of the first Hope Gu [希望蛊]: an unawakened player holds the ritual to
@@ -22,7 +23,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class HopeGuUsedTrigger extends SimpleCriterionTrigger<HopeGuUsedTrigger.Instance> {
     @Override
-    public Codec<Instance> codec() {return Instance.CODEC;}
+    public @NotNull Codec<Instance> codec() {return Instance.CODEC;}
     public Criterion<Instance> criterion() {return new Criterion<>(this, new Instance(Optional.empty()));}
     public void trigger(ServerPlayer player) {this.trigger(player, instance -> true);}
     public record Instance(Optional<ContextAwarePredicate> player) implements SimpleCriterionTrigger.SimpleInstance {

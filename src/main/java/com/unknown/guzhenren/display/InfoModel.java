@@ -161,7 +161,7 @@ public final class InfoModel {
 
         if (data.count() <= 1) {
             boolean second = data.primary().second();
-            if (second) rows.add(new Row(0, new ApertureIndex(2, 0)));
+            rows.add(new Row(0, new ApertureIndex(second ? 2 : 1, 0)));
             apertureBlock(rows, data.primary(), data.hasAperture(), 0, ApertureData.PRIMARY, !second,
                     BodyService.isExtreme(player), status);
             return rows;

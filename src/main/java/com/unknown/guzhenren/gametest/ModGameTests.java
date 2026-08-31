@@ -10,6 +10,7 @@ import com.unknown.guzhenren.attachment.service.aperture.ApertureStorageService;
 import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
+import com.unknown.guzhenren.display.InfoModel;
 import com.unknown.guzhenren.entity.FlyingGuEntity;
 import com.unknown.guzhenren.entity.HopeGuEntity;
 import com.unknown.guzhenren.item.GuItem;
@@ -180,6 +181,41 @@ public final class ModGameTests {
         helper.assertValueEqual(upgraded.get(1).rank(), Rank.FIVE, "upgrade lands the gu rank");
         helper.assertValueEqual(upgraded.get(1).primaryPath(), GuPath.STRENGTH, "upgrade keeps the bound path");
         helper.succeed();
+    }
+    @GameTest(template = "empty9x9x9", timeoutTicks = 100)
+    public static void healthFollowsFirstApertureOnly(GameTestHelper helper) {
+        ServerPlayer player = survivalMock(helper, null, true);
+
+        helper.assertValueEqual(player.getMaxHealth(), 20.0F, "mortal max health");
+        ApertureService.openSecondary(player, Rank.THREE);
+        helper.assertValueEqual(player.getMaxHealth(), 20.0F, "lone second aperture keeps mortal health");
+        ApertureService.awaken(player, 80);
+        helper.assertValueEqual(player.getMaxHealth(), 20.0F, "rank one first aperture keeps 20");
+        ApertureService.setRank(player, ApertureData.PRIMARY, Rank.THREE);
+        helper.assertValueEqual(player.getMaxHealth(), 60.0F, "first aperture rank three lifts to 60");
+        ApertureService.openSecondary(player, Rank.FIVE);
+        helper.assertValueEqual(player.getMaxHealth(), 60.0F, "second aperture never touches health");
+        helper.succeed();
+    }
+    @GameTest(template = "empty9x9x9", timeoutTicks = 100)
+    public static void infoModelAlwaysEmitsApertureTitleRows(GameTestHelper helper) {
+        ServerPlayer player = survivalMock(helper, null, true);
+
+        helper.assertValueEqual(titles(player), List.of(new InfoModel.ApertureIndex(1, 0)),
+                "mortal keeps the clickable first-aperture title row");
+        ApertureService.awaken(player, 80);
+        helper.assertValueEqual(titles(player), List.of(new InfoModel.ApertureIndex(1, 0)),
+                "first-only holder keeps the clickable title row");
+        ApertureService.openSecondary(player, Rank.THREE);
+        helper.assertValueEqual(titles(player), List.of(new InfoModel.ApertureIndex(1, 0),
+                new InfoModel.ApertureIndex(2, 1)), "two apertures keep both clickable title rows");
+        helper.succeed();
+    }
+    private static List<InfoModel.ApertureIndex> titles(ServerPlayer player) {
+        return InfoModel.aperture(player).stream().map(InfoModel.Row::entry)
+                .filter(InfoModel.ApertureIndex.class::isInstance)
+                .map(InfoModel.ApertureIndex.class::cast)
+                .toList();
     }
     private static List<Component> messages(List<Component> inbox, String key) {
         List<Component> hits = new ArrayList<>();

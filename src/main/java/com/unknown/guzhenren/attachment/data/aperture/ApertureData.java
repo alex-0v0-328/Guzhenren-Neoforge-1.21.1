@@ -75,7 +75,7 @@ public record ApertureData(List<Aperture> apertures) {
         if (isFull() || firstIndex() >= 0) return opened(aperture);
 
         List<Aperture> next = new ArrayList<>(apertures);
-        next.add(0, aperture);
+        next.addFirst(aperture);
         return new ApertureData(next);
     }
     public ApertureData with(int index, Aperture aperture) {

@@ -247,6 +247,7 @@ public class EnUsLanguageProvider extends LanguageProvider {
         add("guzhenren.screen.nourish_stop", "Stop Nourishing");
         add("guzhenren.screen.nourish_second", "Nourish Second Aperture");
         add("guzhenren.screen.impact", "Flush Aperture Wall");
+        add("guzhenren.screen.button.storage", "Aperture Storage");
         add("guzhenren.nourish.starved", "The essence ran out");
         add("guzhenren.nourish.stage_up", "Aperture Stage Up");
         add("guzhenren.impact.poor", "Flushing the wall needs %s essence");

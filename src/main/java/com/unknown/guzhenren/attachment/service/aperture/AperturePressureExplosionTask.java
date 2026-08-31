@@ -3,10 +3,10 @@ package com.unknown.guzhenren.attachment.service.aperture;
 import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
@@ -20,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
  * The block side of the ten-extreme pressure explosion [空窍压力爆炸]: the crater is carved over
  * several server ticks instead of one, so the largest blast (Great Strength True Martial [大力真武体],
  * radius 320) no longer freezes the world. Interior blocks go out silently ({@code UPDATE_CLIENTS}
- * only, no drops); one deferred neighbour pass over the rim [球壳边缘] keeps sand, fluids and torches
- * from floating. The shell [壳] walks centre-outwards and each column's radius carries a per-explosion
+ * only, no drops); one deferred neighbor pass over the rim [球壳边缘] keeps sand, fluids and torches
+ * from floating. The shell [壳] walks center-outwards and each column's radius carries a per-explosion
  * jitter [噪声扰动]. The crater floor is physique-specific: layered ice [分层冰] for Northern Dark
  * Ice Soul, magma and lava for Blazing Glory, scattered gold for Myriad Gold; Northern Dark Ice Soul
  * also converts the surface soil of an outer ring [雪化环带] to snow. Entity damage, self-damage and
@@ -80,12 +80,7 @@ public final class AperturePressureExplosionTask {
                              @NotNull ExtremePhysique physique) {
         ACTIVE.add(new AperturePressureExplosionTask(level, x, y, z, radius, physique));
     }
-    public static void tickAll() {
-        Iterator<AperturePressureExplosionTask> it = ACTIVE.iterator();
-        while (it.hasNext()) {
-            if (it.next().tick()) it.remove();
-        }
-    }
+    public static void tickAll() {ACTIVE.removeIf(AperturePressureExplosionTask::tick);}
     public static void clear() {ACTIVE.clear();}
     static double columnJitter(int bx, int bz, long seed) {
         long h = bx * 0x9E3779B97F4A7C15L ^ bz * 0xC2B2AE3D27D4EB4FL ^ seed;
@@ -169,7 +164,10 @@ public final class AperturePressureExplosionTask {
             int floorY = columnFloorY(y, rr, horizontalSquared);
             if (floorY < level.getMinBuildHeight() || floorY >= level.getMaxBuildHeight()) continue;
             BlockPos floorPos = new BlockPos(bx, floorY, bz);
-            if (!level.hasChunkAt(floorPos) || level.getBlockState(floorPos).isAir()) continue;
+            if (!level.getChunkSource().hasChunk(SectionPos.blockToSectionCoord(floorPos.getX()),
+                    SectionPos.blockToSectionCoord(floorPos.getZ())) || level.getBlockState(floorPos).isAir()) {
+                continue;
+            }
             Block block = floorBlockAt(bx, floorY, bz);
             if (block == null) continue;
             level.setBlock(floorPos, block.defaultBlockState(), Block.UPDATE_CLIENTS);
@@ -192,7 +190,8 @@ public final class AperturePressureExplosionTask {
             if (horizontalSquared <= rr * rr) continue;
             double ringOuter = ringOuterRadius(radius, bx, bz, seed);
             if (horizontalSquared >= ringOuter * ringOuter) continue;
-            if (!level.hasChunkAt(new BlockPos(bx, Mth.floor(y), bz))) continue;
+            if (!level.getChunkSource().hasChunk(SectionPos.blockToSectionCoord(bx),
+                    SectionPos.blockToSectionCoord(bz))) continue;
             int surfaceY = level.getHeight(Heightmap.Types.MOTION_BLOCKING, bx, bz) - 1;
             if (surfaceY < level.getMinBuildHeight()) continue;
             BlockPos surfacePos = new BlockPos(bx, surfaceY, bz);
@@ -270,7 +269,8 @@ public final class AperturePressureExplosionTask {
         if (!outsideSphere(bx, by, bz)) shell.add(BlockPos.asLong(bx, by, bz));
     }
     private void clearOne(BlockPos pos) {
-        if (!level.hasChunkAt(pos)) return;
+        if (!level.getChunkSource().hasChunk(SectionPos.blockToSectionCoord(pos.getX()),
+                SectionPos.blockToSectionCoord(pos.getZ()))) return;
         BlockState state = level.getBlockState(pos);
         if (state.isAir()) return;
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);

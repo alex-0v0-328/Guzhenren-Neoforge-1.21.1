@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The advancement tree [进度]: a root per milestone family, generated under {@code advancement/}.
@@ -38,8 +39,9 @@ public class ModAdvancementProvider extends AdvancementProvider {
 
     private static class GuzhenrenAdvancements implements AdvancementGenerator {
         @Override
-        public void generate(HolderLookup.Provider registries, Consumer<AdvancementHolder> saver,
-                             ExistingFileHelper existingFileHelper) {
+        public void generate(HolderLookup.@NotNull Provider registries,
+                             @NotNull Consumer<AdvancementHolder> saver,
+                             @NotNull ExistingFileHelper existingFileHelper) {
             Advancement.Builder.advancement()
                 .display(new ItemStack(ModItems.HOPE_GU.get()),
                     Component.translatable("advancements.guzhenren.first_awakening.title"),

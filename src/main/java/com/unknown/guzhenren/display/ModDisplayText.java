@@ -12,8 +12,6 @@ import com.unknown.guzhenren.custom.enums.body.Physique;
 import com.unknown.guzhenren.custom.enums.path.GuAttainment;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.custom.enums.strength.BeastStrengthFamily;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -64,25 +62,19 @@ public final class ModDisplayText {
                 : baseFraction(aperture.baseEssence());
         return Component.translatable("guzhenren.display.aptitude_line", talent(aperture), detail);
     }
-    public static List<MutableComponent> physiques(BodyData body) {
-        if (body.physiques().isEmpty()) return List.of(physique(null, ExtremePhysique.NONE));
-
-        List<MutableComponent> lines = new ArrayList<>();
-        body.physiques().forEach(value -> lines.add(physique(value, body.extremePhysique())));
-        return lines;
-    }
     public static MutableComponent physique(@Nullable Physique physique, ExtremePhysique extremePhysique) {
-        if (physique == null) {
-            return Component.translatable("guzhenren.display.physique_line",
-                    Component.translatable("guzhenren.display.none"));
-        }
+        return Component.translatable("guzhenren.display.physique_line",
+                physiqueValue(physique, extremePhysique));
+    }
+    public static MutableComponent physiqueValue(@Nullable Physique physique, ExtremePhysique extremePhysique) {
+        if (physique == null) return Component.translatable("guzhenren.display.none");
 
         MutableComponent value = Component.translatable(physique.getTranslationKey());
         if (physique == Physique.EXTREME) {
             value.append(" ").append(Component.translatable("guzhenren.display.physique",
                     Component.translatable(extremePhysique.getTranslationKey())));
         }
-        return Component.translatable("guzhenren.display.physique_line", value);
+        return value;
     }
     public static MutableComponent guLine(Rank rank, GuPath path, String kindKey) {
         return Component.translatable("guzhenren.display.gu_line",

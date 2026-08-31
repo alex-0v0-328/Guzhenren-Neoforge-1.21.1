@@ -67,7 +67,7 @@ public record BodyData(
             parts(DEFAULT_AGE), parts(DEFAULT_LIFESPAN), UNTRACKED, 0L, UNTRACKED, NO_ZOMBIE_TIER, UNTRACKED);
     public static long parts(long years) {return years * PARTS_PER_YEAR;}
     private static final Codec<Set<Physique>> PHYSIQUES_CODEC = Physique.CODEC.listOf()
-            .xmap(BodyData::normalizePhysiques, values -> new ArrayList<>(values));
+            .xmap(BodyData::normalizePhysiques, ArrayList::new);
 
     private static final Codec<BodyData> CURRENT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             PHYSIQUES_CODEC.optionalFieldOf("physiques", Set.of()).forGetter(BodyData::physiques),

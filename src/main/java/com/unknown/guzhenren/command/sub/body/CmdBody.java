@@ -39,16 +39,15 @@ public final class CmdBody {
     }
     private static ArgumentBuilder<CommandSourceStack, ?> physique() {
         return Commands.literal("physique")
-                .then(enumAction("add", Physique.values(), (player, value) -> BodyService.addPhysique(player, value),
+                .then(enumAction("add", Physique.values(), BodyService::addPhysique,
                         value -> value != Physique.EXTREME, player -> true,
                         ModCommandSupport.FAILED_EXTREME))
-                .then(enumAction("remove", Physique.values(),
-                        (player, value) -> BodyService.removePhysique(player, value), value -> true,
+                .then(enumAction("remove", Physique.values(), BodyService::removePhysique, value -> true,
                         player -> true, null))
                 .then(Commands.literal("extreme")
-                        .then(enumAction("set", ExtremePhysique.settable(),
-                                (player, value) -> BodyService.setExtremePhysique(player, value),
-                                value -> true, ModCommandSupport.AWAKENED, ModCommandSupport.FAILED_UNAWAKENED)));
+                        .then(enumAction("set", ExtremePhysique.settable(), BodyService::setExtremePhysique,
+                                value -> true, ModCommandSupport.AWAKENED,
+                                ModCommandSupport.FAILED_UNAWAKENED)));
     }
     private static <E extends Enum<E> & StringRepresentable> ArgumentBuilder<CommandSourceStack, ?> enumAction(
             String literal, E[] values, ModCommandSupport.EnumOperation<E> operation,
