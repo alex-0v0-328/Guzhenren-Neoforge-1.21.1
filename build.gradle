@@ -151,6 +151,8 @@ dependencies {
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }
 
+def junitGameDir = project.file('build/minecraft-junit')
+
 // Pure JVM tests over logic that loads without any registry or bootstrap: enum ladders, math
 // seams and self-contained records. Anything touching Items.X / ModItems.X / ItemStack belongs
 // to the modded 'test' source set, and anything needing a live world belongs in a GameTest.
@@ -171,6 +173,7 @@ dependencies {
 tasks.register('pureTest', Test) {
     description = 'Runs the pure JVM test source set without booting the modded runtime.'
     group = 'verification'
+    workingDir junitGameDir
     testClassesDirs = sourceSets.pureTest.output.classesDirs
     classpath = sourceSets.pureTest.runtimeClasspath
     useJUnitPlatform()
@@ -182,6 +185,7 @@ tasks.register('pureTest', Test) {
 check.dependsOn pureTest
 
 tasks.named('test', Test) {
+    workingDir junitGameDir
     useJUnitPlatform()
     testLogging {
         events 'failed'
