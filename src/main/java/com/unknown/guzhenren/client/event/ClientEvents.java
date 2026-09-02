@@ -5,9 +5,11 @@ import com.unknown.guzhenren.client.ModKeyMappings;
 import com.unknown.guzhenren.client.hud.ChargeHud;
 import com.unknown.guzhenren.client.hud.NourishHud;
 import com.unknown.guzhenren.client.hud.PlayerStatsHud;
+import com.unknown.guzhenren.client.renderer.BoarGuGeoRenderer;
 import com.unknown.guzhenren.client.screen.ApertureStorageScreen;
 import com.unknown.guzhenren.client.screen.PlayerInfoScreen;
 import com.unknown.guzhenren.client.screen.RefinementScreen;
+import com.unknown.guzhenren.entity.BoarGuEntity;
 import com.unknown.guzhenren.item.gu.MortalGuItem;
 import com.unknown.guzhenren.network.payload.DashPayload;
 import com.unknown.guzhenren.registry.effect.ModEffects;
@@ -29,6 +31,8 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.network.PacketDistributor;
+import software.bernie.geckolib.model.DefaultedEntityGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 import yesman.epicfight.api.client.camera.EpicFightCameraAPI;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 
@@ -39,7 +43,9 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
  * ({@link com.unknown.guzhenren.client.hud.PlayerStatsHud},
  * {@link com.unknown.guzhenren.client.hud.ChargeHud},
  * {@link com.unknown.guzhenren.client.hud.NourishHud}), the key mapping for the B panel, the menu
- * screens for the two containers, and the {@code NoopRenderer} for wild Gu entities.
+ * screens for the two containers, three fixed-texture renderers sharing one GeckoLib
+ * [GeckoLib] Boar Gu [豕蛊] model, and the Hope Gu [希望蛊] entity as a
+ * {@link net.minecraft.client.renderer.entity.NoopRenderer} (pure particles, no model).
  *
  * @author Alex
  * @version 1.0.0
@@ -60,6 +66,8 @@ public final class ClientEvents {
 
     private static final ResourceLocation NOURISH =
             Guzhenren.id("nourish");
+    private static final GeoModel<BoarGuEntity> BOAR_GU_MODEL =
+            new DefaultedEntityGeoModel<>(Guzhenren.id("boar_gu"), false);
     private static final float DASH_YAW_CROSS = 90.0F;
     private static final float DASH_YAW_DIAGONAL = 45.0F;
 
@@ -87,6 +95,12 @@ public final class ClientEvents {
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntityTypes.HOPE_GU_ENTITY.get(), NoopRenderer::new);
+        event.registerEntityRenderer(ModEntityTypes.WHITE_BOAR_GU_ENTITY.get(),
+                context -> new BoarGuGeoRenderer(context, BOAR_GU_MODEL, BoarGuGeoRenderer.WHITE_TEXTURE));
+        event.registerEntityRenderer(ModEntityTypes.BLACK_BOAR_GU_ENTITY.get(),
+                context -> new BoarGuGeoRenderer(context, BOAR_GU_MODEL, BoarGuGeoRenderer.BLACK_TEXTURE));
+        event.registerEntityRenderer(ModEntityTypes.FLOWER_BOAR_GU_ENTITY.get(),
+                context -> new BoarGuGeoRenderer(context, BOAR_GU_MODEL, BoarGuGeoRenderer.FLOWER_TEXTURE));
     }
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Post event) {

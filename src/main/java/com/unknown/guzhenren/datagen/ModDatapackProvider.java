@@ -1,6 +1,7 @@
 package com.unknown.guzhenren.datagen;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.entity.BoarGuEntity;
 import com.unknown.guzhenren.registry.damage.ModDamageTypes;
 import com.unknown.guzhenren.registry.entity.ModEntityTypes;
 import com.unknown.guzhenren.registry.world.ModBiomeTags;
@@ -15,6 +16,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
@@ -63,10 +65,22 @@ public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
     private static final ResourceKey<BiomeModifier> SPAWN_HOPE_GU = ResourceKey.create(
             NeoForgeRegistries.Keys.BIOME_MODIFIERS,
             Guzhenren.id("spawn_hope_gu"));
+    private static final ResourceKey<BiomeModifier> SPAWN_WHITE_BOAR_GU = ResourceKey.create(
+            NeoForgeRegistries.Keys.BIOME_MODIFIERS,
+            Guzhenren.id("spawn_white_boar_gu"));
+    private static final ResourceKey<BiomeModifier> SPAWN_BLACK_BOAR_GU = ResourceKey.create(
+            NeoForgeRegistries.Keys.BIOME_MODIFIERS,
+            Guzhenren.id("spawn_black_boar_gu"));
+    private static final ResourceKey<BiomeModifier> SPAWN_FLOWER_BOAR_GU = ResourceKey.create(
+            NeoForgeRegistries.Keys.BIOME_MODIFIERS,
+            Guzhenren.id("spawn_flower_boar_gu"));
 
     private static final int SPAWN_WEIGHT = 8;
     private static final int PACK_MINIMUM = 1;
     private static final int PACK_MAXIMUM = 2;
+    private static final int BOAR_SPAWN_WEIGHT = 4;
+    private static final int BOAR_PACK_MINIMUM = 1;
+    private static final int BOAR_PACK_MAXIMUM = 1;
     private static void biomeModifiers(BootstrapContext<BiomeModifier> context) {
         HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
 
@@ -74,6 +88,14 @@ public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
                 biomes.getOrThrow(ModBiomeTags.HOPE_GU_SPAWNS),
                 List.of(new MobSpawnSettings.SpawnerData(
                         ModEntityTypes.HOPE_GU_ENTITY.get(), SPAWN_WEIGHT, PACK_MINIMUM, PACK_MAXIMUM))));
+        context.register(SPAWN_WHITE_BOAR_GU, boarSpawns(biomes, ModEntityTypes.WHITE_BOAR_GU_ENTITY.get()));
+        context.register(SPAWN_BLACK_BOAR_GU, boarSpawns(biomes, ModEntityTypes.BLACK_BOAR_GU_ENTITY.get()));
+        context.register(SPAWN_FLOWER_BOAR_GU, boarSpawns(biomes, ModEntityTypes.FLOWER_BOAR_GU_ENTITY.get()));
+    }
+    private static BiomeModifier boarSpawns(HolderGetter<Biome> biomes, EntityType<BoarGuEntity> type) {
+        MobSpawnSettings.SpawnerData data = new MobSpawnSettings.SpawnerData(
+                type, BOAR_SPAWN_WEIGHT, BOAR_PACK_MINIMUM, BOAR_PACK_MAXIMUM);
+        return new BiomeModifiers.AddSpawnsBiomeModifier(biomes.getOrThrow(ModBiomeTags.BOAR_GU_SPAWNS), List.of(data));
     }
     //endregion
 }

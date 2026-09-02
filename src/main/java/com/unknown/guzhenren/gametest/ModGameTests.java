@@ -12,6 +12,7 @@ import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
 import com.unknown.guzhenren.custom.enums.path.GuPath;
 import com.unknown.guzhenren.display.InfoModel;
+import com.unknown.guzhenren.entity.BoarGuEntity;
 import com.unknown.guzhenren.entity.FlyingGuEntity;
 import com.unknown.guzhenren.entity.HopeGuEntity;
 import com.unknown.guzhenren.item.GuItem;
@@ -38,8 +39,10 @@ import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -147,6 +150,54 @@ public final class ModGameTests {
             helper.assertTrue(travel.dot(towardPlayer) > 1.0D, "hope gu did not fly toward the player");
             helper.assertTrue(gu.distanceTo(player) < startDistance - 1.0D, "hope gu distance did not shrink");
         });
+    }
+    @GameTest(template = "empty9x9x9", timeoutTicks = 200)
+    public static void boarGuVariantsWanderWithoutSeekingPlayers(GameTestHelper helper) {
+        ServerPlayer player = survivalMock(helper, null, false);
+        List<BoarGuEntity> variants = List.of(
+                helper.spawn(ModEntityTypes.WHITE_BOAR_GU_ENTITY.get(), new BlockPos(2, 1, 2)),
+                helper.spawn(ModEntityTypes.BLACK_BOAR_GU_ENTITY.get(), new BlockPos(4, 1, 2)),
+                helper.spawn(ModEntityTypes.FLOWER_BOAR_GU_ENTITY.get(), new BlockPos(6, 1, 2)));
+        List<Vec3> starts = variants.stream().map(BoarGuEntity::position).toList();
+        for (BoarGuEntity variant : variants) helper.assertTrue(!variant.seeks(player), "boar gu seeks player");
+        helper.succeedWhen(() -> {
+            for (int i = 0; i < variants.size(); i++) {
+                Vec3 travel = variants.get(i).position().subtract(starts.get(i));
+                helper.assertTrue(Math.sqrt(travel.x * travel.x + travel.z * travel.z) > 0.05D,
+                        "boar gu did not wander horizontally");
+                helper.assertTrue(Math.abs(travel.y) > 0.05D, "boar gu did not wander vertically");
+            }
+        });
+    }
+    @GameTest(template = "empty9x9x9", timeoutTicks = 200)
+    public static void boarGuFleesNearbyPlayer(GameTestHelper helper) {
+        ServerPlayer player = survivalMock(helper, null, true);
+        player.moveTo(helper.absoluteVec(new Vec3(4.5D, 1.5D, 1.5D)));
+        player.setNoGravity(true);
+        player.setDeltaMovement(Vec3.ZERO);
+
+        BoarGuEntity gu = helper.spawn(ModEntityTypes.WHITE_BOAR_GU_ENTITY.get(), CENTER);
+        helper.assertTrue(gu.distanceTo(player) <= BoarGuEntity.FLEE_RANGE, "player started outside flee range");
+
+        helper.succeedWhen(() -> helper.assertTrue(gu.distanceTo(player) > BoarGuEntity.FLEE_RANGE,
+                "boar gu stayed within flee range of the player"));
+    }
+    @GameTest(template = "empty9x9x9", timeoutTicks = 100)
+    public static void boarGuVariantsCatchAsMatchingItems(GameTestHelper helper) {
+        ServerPlayer player = survivalMock(helper, null, true);
+        catchBoar(helper, player, ModEntityTypes.WHITE_BOAR_GU_ENTITY.get(), ModItems.WHITE_BOAR_GU.get());
+        catchBoar(helper, player, ModEntityTypes.BLACK_BOAR_GU_ENTITY.get(), ModItems.BLACK_BOAR_GU.get());
+        catchBoar(helper, player, ModEntityTypes.FLOWER_BOAR_GU_ENTITY.get(), ModItems.FLOWER_BOAR_GU.get());
+        helper.succeed();
+    }
+    private static void catchBoar(GameTestHelper helper, ServerPlayer player, EntityType<BoarGuEntity> type,
+                                  Item item) {
+        BoarGuEntity gu = helper.spawn(type, CENTER);
+        helper.assertTrue(gu.interact(player, InteractionHand.MAIN_HAND).consumesAction(),
+                "boar gu interaction was not consumed");
+        helper.assertValueEqual(player.getInventory().countItem(item), 1, "matching gu item missing");
+        helper.assertTrue(!gu.isAlive(), "caught boar gu was not discarded");
+        helper.assertTrue(helper.getEntities(EntityType.ITEM).isEmpty(), "caught boar gu dropped an item entity");
     }
     @GameTest(template = "empty9x9x9", timeoutTicks = 100)
     public static void secondOnlyThenFirstApertureFlow(GameTestHelper helper) {

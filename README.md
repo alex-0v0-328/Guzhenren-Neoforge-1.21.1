@@ -1,5 +1,5 @@
 # 蛊真人
-<sub>Guzhenren — current technical reference for a NeoForge 1.21.1 xianxia RPG mod. Java 21; Epic Fight required; L1/L2/L3 tests; mod code all rights reserved.</sub>
+<sub>Guzhenren — current technical reference for a NeoForge 1.21.1 xianxia RPG mod. Java 21; Epic Fight & GeckoLib required; L1/L2/L3 tests; mod code all rights reserved.</sub>
 
 围绕**空窍、肉身、脑海**三个域展开的仙侠 RPG 模组。本文只写技术规格。
 
@@ -12,7 +12,7 @@
 | Parchment                    | `2024.11.17`                          |
 | Java                         | `21`                                  |
 | mod id / package             | `guzhenren` · `com.unknown.guzhenren` |
-| 必需依赖                     | `Epic Fight`                          |
+| 必需依赖                     | `Epic Fight` · `GeckoLib`             |
 | 可选依赖                     | `JEI` · `Curios`                      |
 
 ```

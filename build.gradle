@@ -140,6 +140,10 @@ dependencies {
     localRuntime files('run/mods/epic-fight-21.17.3.1-mc1.21.1-neoforge.jar')
     testRuntimeOnly files('run/mods/epic-fight-21.17.3.1-mc1.21.1-neoforge.jar')
 
+    compileOnly files('run/mods/geckolib-neoforge-1.21.1-4.9.2.jar')
+    localRuntime files('run/mods/geckolib-neoforge-1.21.1-4.9.2.jar')
+    testRuntimeOnly files('run/mods/geckolib-neoforge-1.21.1-4.9.2.jar')
+
     // Curios. The ':api' classifier ships only the public packages, so an internal API cannot be
     // reached by accident. The full jar has to stay on the runtime classpath: runData loads
     // CuriosDataProvider from it.

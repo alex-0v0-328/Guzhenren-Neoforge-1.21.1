@@ -452,6 +452,9 @@ public class EnUsLanguageProvider extends LanguageProvider {
     //region ENTITY
     private void addEntityKeys() {
         add("entity.guzhenren.hope_gu_entity", "Hope Gu");
+        add("entity.guzhenren.white_boar_gu_entity", "White Boar Gu");
+        add("entity.guzhenren.black_boar_gu_entity", "Black Boar Gu");
+        add("entity.guzhenren.flower_boar_gu_entity", "Flower Boar Gu");
     }
     //endregion
 

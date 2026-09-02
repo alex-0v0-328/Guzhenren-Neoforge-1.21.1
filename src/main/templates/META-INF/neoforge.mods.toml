@@ -96,6 +96,13 @@ config="${mod_id}.mixins.json"
     ordering="AFTER"
     side="BOTH"
 
+[[dependencies.${mod_id}]]
+    modId="geckolib"
+    type="required"
+    versionRange="[4.9,4.10)"
+    ordering="AFTER"
+    side="BOTH"
+
 # Optional integrations. None has to be installed; all load before us when they are.
 [[dependencies.${mod_id}]]
     modId="jei"

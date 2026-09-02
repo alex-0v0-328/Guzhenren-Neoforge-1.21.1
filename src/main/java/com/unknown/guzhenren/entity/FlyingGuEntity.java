@@ -2,7 +2,6 @@ package com.unknown.guzhenren.entity;
 
 import com.unknown.guzhenren.entity.ai.HoverNearPlayerGoal;
 import java.util.function.Supplier;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -22,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
  * A wild Gu that flies: it drifts toward a player it wants, and hovers there.
  *
  * <p>Extends {@link com.unknown.guzhenren.entity.WildGuEntity}. A flying move control and flying path
- * navigation; the {@code HoverNearPlayerGoal} drives the movement vector directly. Spawns full bright
- * {@code END_ROD} particles at one per tick. {@code seeks} is the one door: the base wants anyone, a leaf narrows it.
+ * navigation support the hover and random-flight goals. {@code seeks} is the one door: the base wants anyone,
+ * a leaf narrows it.
  *
  * <p>⚠ {@code isNoGravity()} is a flat true on purpose. The flying move control only clears gravity
  * while it is actively moving the mob, and the hover goal stops the navigation.
@@ -47,17 +46,12 @@ public class FlyingGuEntity extends WildGuEntity {
     private static final double MOVEMENT_SPEED = 0.1;
     private static final double WANDER_SPEED = 1.0;
 
-    private static final int MOTES_PER_TICK = 1;
-    private static final double MOTE_SPREAD = 0.25;
-
     private static final int TURN_RATE = 20;
 
-    private final ParticleOptions motes;
     public FlyingGuEntity(EntityType<? extends FlyingGuEntity> type, Level level,
-                          Supplier<Item> caughtGu, ParticleOptions motes) {
+                          Supplier<Item> caughtGu) {
         super(type, level, caughtGu);
         this.moveControl = new FlyingMoveControl(this, TURN_RATE, true);
-        this.motes = motes;
     }
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
@@ -90,15 +84,4 @@ public class FlyingGuEntity extends WildGuEntity {
     }
     @Override
     public boolean isNoGravity() {return true;}
-    @Override
-    public void tick() {
-        super.tick();
-        if (level().isClientSide) spawnMotes();
-    }
-    private void spawnMotes() {
-        for (int i = 0; i < MOTES_PER_TICK; i++) {
-            level().addParticle(motes, getRandomX(MOTE_SPREAD), getRandomY(), getRandomZ(MOTE_SPREAD),
-                    0.0, 0.0, 0.0);
-        }
-    }
 }

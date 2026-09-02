@@ -456,6 +456,9 @@ public class ZhCnLanguageProvider extends LanguageProvider {
     //region ENTITY
     private void addEntityKeys() {
         add("entity.guzhenren.hope_gu_entity", "希望蛊");
+        add("entity.guzhenren.white_boar_gu_entity", "白豕蛊");
+        add("entity.guzhenren.black_boar_gu_entity", "黑豕蛊");
+        add("entity.guzhenren.flower_boar_gu_entity", "花豕蛊");
     }
     //endregion
 

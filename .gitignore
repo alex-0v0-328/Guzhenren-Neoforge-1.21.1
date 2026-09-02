@@ -43,3 +43,4 @@ logs/
 repo/
 !**/src/**/repo/
 .codegraph/
+.mimosa/

@@ -1,14 +1,17 @@
 package com.unknown.guzhenren.event.entity;
 
 import com.unknown.guzhenren.Guzhenren;
+import com.unknown.guzhenren.entity.BoarGuEntity;
 import com.unknown.guzhenren.entity.FlyingGuEntity;
-import com.unknown.guzhenren.entity.HopeGuEntity;
 import com.unknown.guzhenren.registry.entity.ModEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -19,10 +22,10 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 /**
  * Where this mod's entities declare their attributes and where they are allowed to spawn.
  *
- * <p>Today only {@link com.unknown.guzhenren.entity.HopeGuEntity} is registered, sharing
- * {@link com.unknown.guzhenren.entity.FlyingGuEntity}'s attributes. The spawn placement uses
- * {@link net.minecraft.world.level.levelgen.Heightmap.Types#MOTION_BLOCKING_NO_LEAVES} and a custom
- * check that requires {@code pos.getY() >= level.getSeaLevel()} — NOT {@code canSeeSky}, because
+ * <p>Hope Gu [希望蛊] and three boar Gu [豕蛊] variants register with
+ * {@link com.unknown.guzhenren.entity.FlyingGuEntity}'s attributes and share one spawn placement.
+ * The spawn placement uses {@link net.minecraft.world.level.levelgen.Heightmap.Types#MOTION_BLOCKING_NO_LEAVES}
+ * and a custom check that requires {@code pos.getY() >= level.getSeaLevel()} — NOT {@code canSeeSky}, because
  * leaves count as cover and would empty every forest floor.
  *
  * @author Alex
@@ -33,10 +36,19 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class EntityRegistrationEvents {
+
+    private static final double BOAR_FLYING_SPEED = 0.3D;
+
     private EntityRegistrationEvents() {}
     @SubscribeEvent
     public static void onCreateAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntityTypes.HOPE_GU_ENTITY.get(), FlyingGuEntity.createAttributes().build());
+        event.put(ModEntityTypes.WHITE_BOAR_GU_ENTITY.get(), boarAttributes().build());
+        event.put(ModEntityTypes.BLACK_BOAR_GU_ENTITY.get(), boarAttributes().build());
+        event.put(ModEntityTypes.FLOWER_BOAR_GU_ENTITY.get(), boarAttributes().build());
+    }
+    private static AttributeSupplier.Builder boarAttributes() {
+        return FlyingGuEntity.createAttributes().add(Attributes.FLYING_SPEED, BOAR_FLYING_SPEED);
     }
     @SubscribeEvent
     public static void onRegisterSpawnPlacements(RegisterSpawnPlacementsEvent event) {
@@ -45,9 +57,24 @@ public final class EntityRegistrationEvents {
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 EntityRegistrationEvents::onTheSurface,
                 RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntityTypes.WHITE_BOAR_GU_ENTITY.get(),
+                SpawnPlacementTypes.NO_RESTRICTIONS,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                EntityRegistrationEvents::onTheSurface,
+                RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntityTypes.BLACK_BOAR_GU_ENTITY.get(),
+                SpawnPlacementTypes.NO_RESTRICTIONS,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                EntityRegistrationEvents::onTheSurface,
+                RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntityTypes.FLOWER_BOAR_GU_ENTITY.get(),
+                SpawnPlacementTypes.NO_RESTRICTIONS,
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                EntityRegistrationEvents::onTheSurface,
+                RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
-    private static boolean onTheSurface(EntityType<HopeGuEntity> type, ServerLevelAccessor level,
-                                        MobSpawnType reason, BlockPos pos, RandomSource random) {
+    private static <T extends Mob> boolean onTheSurface(EntityType<T> type, ServerLevelAccessor level,
+                                                        MobSpawnType reason, BlockPos pos, RandomSource random) {
         return pos.getY() >= level.getLevel().getSeaLevel();
     }
 }

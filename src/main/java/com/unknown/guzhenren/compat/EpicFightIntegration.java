@@ -5,7 +5,7 @@ import com.unknown.guzhenren.attachment.service.aperture.ApertureService;
 import com.unknown.guzhenren.attachment.service.body.BodyAttackService;
 import com.unknown.guzhenren.attachment.service.body.BodyService;
 import com.unknown.guzhenren.custom.enums.body.ExtremePhysique;
-import com.unknown.guzhenren.entity.HopeGuEntity;
+import com.unknown.guzhenren.entity.WildGuEntity;
 import com.unknown.guzhenren.registry.effect.ModEffects;
 import java.util.Objects;
 import net.minecraft.resources.ResourceLocation;
@@ -32,8 +32,8 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 /**
- * The one required Epic Fight bridge: aptitude cap, undead free skill use, attack refresh, and Hope Gu
- * target exclusion.
+ * The one required Epic Fight bridge: aptitude cap, undead free skill use, attack refresh, and target
+ * exclusion for every {@link com.unknown.guzhenren.entity.WildGuEntity}.
  *
  * <p>The old GZR stamina attachment, sprint gate, jump bill, hunger exhaustion surcharge and client mixin are
  * deliberately absent. Epic Fight owns current stamina, regeneration, HUD and all ordinary consumption.
@@ -120,7 +120,7 @@ public final class EpicFightIntegration {
     }
 
     private static void onSetTarget(SetTargetEvent event) {
-        if (event.getTarget() instanceof HopeGuEntity) event.cancel();
+        if (event.getTarget() instanceof WildGuEntity) event.cancel();
     }
 
     private static final class DashAnimation extends DodgeAnimation {
