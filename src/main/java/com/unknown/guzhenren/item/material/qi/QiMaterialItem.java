@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * (5/10/20 ticks via {@code useChargeByGap}). The apply delegates to
  * {@link com.unknown.guzhenren.attachment.service.path.PathQiService#add}.
  *
- * <p>⚠ A material, not a Gu: it keeps the base item's hooks and it stacks; no progress is stored -- the
+ * <p>⚠ A material, not a Gu: it keeps the base item's hooks, and it stacks; no progress is stored -- the
  * component is shared by the whole stack, and storing it would be the Hope Gu bug.
  *
  * @author Alex
@@ -36,9 +36,7 @@ public class QiMaterialItem extends GuMaterialItem {
 
     private static final String CHARGE_CAPTION = "guzhenren.hud.refining_plain";
     private static final String FAILED_ESSENCE = "guzhenren.item.failed.essence";
-
     private static final long[] ESSENCE_COST = {50L, 500L, 5_000L, 50_000L, 500_000L};
-
     private final QiKind kind;
     public QiMaterialItem(Properties properties, Rank rank, QiKind kind) {
         super(properties, rank, GuPath.QI);

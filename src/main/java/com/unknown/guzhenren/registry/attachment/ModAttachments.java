@@ -28,7 +28,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  * Synced ones use {@code OWNER_ONLY}; the storage and scratch fields are sync-less.
  *
  * <p>⚠ The data and service layers are split into five domain packages (aperture/body/soul/path/mind);
- * {@code qi} and {@code strength} are sub-domains living in the path package, and class names carry
+ * {@code qi} and {@code strength} are subdomains living in the path package, and class names carry
  * their package prefix. Never give an attachment the bare domain word --
  * {@code qi}/{@code soul}/{@code strength} are also {@code GuPath} names.
  *
@@ -40,10 +40,8 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 public final class ModAttachments {
 
     private ModAttachments() {}
-
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
             DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, Guzhenren.MOD_ID);
-
     private static final BiPredicate<IAttachmentHolder, ServerPlayer> OWNER_ONLY =
             (holder, viewer) -> holder == viewer;
 
@@ -53,16 +51,13 @@ public final class ModAttachments {
                     .serialize(ApertureData.CODEC)
                     .sync(OWNER_ONLY, ApertureData.STREAM_CODEC)
                     .build());
-
     public static final Supplier<AttachmentType<float[]>> ESSENCE_CARRY = ATTACHMENT_TYPES.register(
             "essence_carry", () -> AttachmentType.builder(
                     () -> new float[ApertureData.MAX_APERTURES]).build());
-
     public static final Supplier<AttachmentType<ApertureStorage>> APERTURE_STORAGE = ATTACHMENT_TYPES.register(
             "aperture_storage", () -> AttachmentType.builder(() -> ApertureStorage.DEFAULT)
                     .serialize(ApertureStorage.CODEC)
                     .build());
-
     public static final Supplier<AttachmentType<ApertureNourishData>> NOURISH = ATTACHMENT_TYPES.register(
             "nourish_data", () -> AttachmentType.builder(() -> ApertureNourishData.DEFAULT)
                     .serialize(ApertureNourishData.CODEC)
@@ -76,25 +71,21 @@ public final class ModAttachments {
                     .serialize(BodyData.CODEC)
                     .sync(OWNER_ONLY, BodyData.STREAM_CODEC)
                     .build());
-
     public static final Supplier<AttachmentType<SoulData>> SOUL = ATTACHMENT_TYPES.register(
             "soul_data", () -> AttachmentType.builder(() -> SoulData.DEFAULT)
                     .serialize(SoulData.CODEC)
                     .sync(OWNER_ONLY, SoulData.STREAM_CODEC)
                     .build());
-
     public static final Supplier<AttachmentType<PathData>> PATH = ATTACHMENT_TYPES.register(
             "path_data", () -> AttachmentType.builder(() -> PathData.DEFAULT)
                     .serialize(PathData.CODEC)
                     .sync(OWNER_ONLY, PathData.STREAM_CODEC)
                     .build());
-
     public static final Supplier<AttachmentType<PathStrengthData>> STRENGTH = ATTACHMENT_TYPES.register(
             "strength_data", () -> AttachmentType.builder(() -> PathStrengthData.DEFAULT)
                     .serialize(PathStrengthData.CODEC)
                     .sync(OWNER_ONLY, PathStrengthData.STREAM_CODEC)
                     .build());
-
     public static final Supplier<AttachmentType<PathQiData>> QI = ATTACHMENT_TYPES.register(
             "qi_data", () -> AttachmentType.builder(() -> PathQiData.DEFAULT)
                     .serialize(PathQiData.CODEC)
@@ -114,7 +105,6 @@ public final class ModAttachments {
             "born_flag", () -> AttachmentType.builder(() -> Boolean.FALSE)
                     .serialize(Codec.BOOL)
                     .build());
-
     public static void register(IEventBus modEventBus) {
         ATTACHMENT_TYPES.register(modEventBus);
     }

@@ -48,6 +48,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -68,9 +69,7 @@ public final class ModGameTests {
     private static final BlockPos CENTER = new BlockPos(4, 1, 4);
     private static final String HUNGRY_KEY = "guzhenren.item.gu.hungry";
     private static final String STARVED_KEY = "guzhenren.item.gu.starved";
-
     private ModGameTests() {}
-
     @GameTest(template = "empty9x9x9", timeoutTicks = 100)
     public static void sceneSupportsBlockPlacement(GameTestHelper helper) {
         helper.setBlock(CENTER, Blocks.DIRT);
@@ -352,7 +351,7 @@ public final class ModGameTests {
             @Override
             public boolean isCreative() {return false;}
             @Override
-            public void sendSystemMessage(Component message) {if (inbox != null) inbox.add(message);}
+            public void sendSystemMessage(@NotNull Component message) {if (inbox != null) inbox.add(message);}
         };
         if (!connect) {
             player.getAbilities().instabuild = false;
@@ -362,9 +361,9 @@ public final class ModGameTests {
         new EmbeddedChannel(connection);
         new ServerGamePacketListenerImpl(helper.getLevel().getServer(), connection, player, cookie) {
             @Override
-            public void send(Packet<?> packet) {}
+            public void send(@NotNull Packet<?> packet) {}
             @Override
-            public void send(Packet<?> packet, @Nullable PacketSendListener listener) {}
+            public void send(@NotNull Packet<?> packet, @Nullable PacketSendListener listener) {}
         };
         helper.getLevel().addNewPlayer(player);
         player.getAbilities().instabuild = false;

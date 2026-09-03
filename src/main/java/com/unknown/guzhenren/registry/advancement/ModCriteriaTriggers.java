@@ -10,7 +10,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
  * Every custom criterion trigger [进度触发器], registered into the vanilla {@code TRIGGER_TYPES}
- * registry. The registration id mirrors the trigger name ({@code used_hope_gu}); advancement json
+ * registry. The registration id mirrors the trigger name ({@code used_hope_gu}); advancement JSON
  * dispatches conditions by it.
  *
  * @author Alex
@@ -22,13 +22,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class ModCriteriaTriggers {
 
     private ModCriteriaTriggers() {}
-
     public static final DeferredRegister<CriterionTrigger<?>> TRIGGERS =
             DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES.key(), Guzhenren.MOD_ID);
-
     public static final Supplier<HopeGuUsedTrigger> USED_HOPE_GU = TRIGGERS.register("used_hope_gu",
             HopeGuUsedTrigger::new);
-
     public static void register(IEventBus modEventBus) {
         TRIGGERS.register(modEventBus);
     }

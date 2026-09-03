@@ -1,7 +1,6 @@
 package com.unknown.guzhenren.item.gu.mortal.wisdom;
 
 import com.unknown.guzhenren.attachment.service.mind.MindService;
-import com.unknown.guzhenren.custom.enums.aperture.Rank;
 import com.unknown.guzhenren.custom.enums.wisdom.ThoughtTag;
 import com.unknown.guzhenren.effect.timed.MaliciousThoughtEffect;
 import com.unknown.guzhenren.item.gu.ConsumedGuItem;

@@ -1,7 +1,6 @@
 package com.unknown.guzhenren.event.entity;
 
 import com.unknown.guzhenren.Guzhenren;
-import com.unknown.guzhenren.entity.BoarGuEntity;
 import com.unknown.guzhenren.entity.FlyingGuEntity;
 import com.unknown.guzhenren.registry.entity.ModEntityTypes;
 import net.minecraft.core.BlockPos;
@@ -38,7 +37,6 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 public final class EntityRegistrationEvents {
 
     private static final double BOAR_FLYING_SPEED = 0.3D;
-
     private EntityRegistrationEvents() {}
     @SubscribeEvent
     public static void onCreateAttributes(EntityAttributeCreationEvent event) {
