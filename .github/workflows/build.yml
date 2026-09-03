@@ -36,6 +36,15 @@ jobs:
           epic_fight_url=$(curl --fail --silent https://api.modrinth.com/v2/version/8HHhJt6i | jq -er --arg file "$epic_fight_file" '.files[] | select(.filename == $file) | .url')
           curl --fail --location --retry 3 "$epic_fight_url" -o "run/mods/$epic_fight_file"
 
+      # The build script references this jar from run/mods, which is gitignored; CI fetches it.
+      - name: Download GeckoLib
+        working-directory: guzhenren-template-1.21.1
+        run: |
+          mkdir -p run/mods
+          geckolib_file=geckolib-neoforge-1.21.1-4.9.2.jar
+          geckolib_url=$(curl --fail --silent https://api.modrinth.com/v2/version/tPkJmim6 | jq -er --arg file "$geckolib_file" '.files[] | select(.filename == $file) | .url')
+          curl --fail --location --retry 3 "$geckolib_url" -o "run/mods/$geckolib_file"
+
       - name: Build with Gradle
         working-directory: guzhenren-template-1.21.1
         run: ./gradlew build
