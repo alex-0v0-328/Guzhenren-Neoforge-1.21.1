@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  * <p>Mirrors {@link net.minecraft.world.entity.ai.goal.AvoidEntityGoal}: a non-creative, non-spectator
  * player is a threat, and the goal only starts when a path to the escape point exists. ⚠ The escape
  * point uses {@link net.minecraft.world.entity.ai.util.AirAndWaterRandomPos} over the same reverse cone
- * that {@code DefaultRandomPos.getPosAway} walks, because the vanilla variant requires a standable
+ * that {@code DefaultRandomPos.getPosAway} walks, because the vanilla variant requires a standard
  * block at the target and never fires for a flying mob in open air. The goal holds until the player is
  * farther than {@link com.unknown.guzhenren.entity.BoarGuEntity#ESCAPE_RANGE} blocks. A resting or
  * landing boar takes off before fleeing, so the flight phase never hangs.
@@ -33,11 +34,9 @@ public class FleePlayerGoal extends Goal {
     private static final int ESCAPE_HORIZONTAL_RANGE = 16;
     private static final int ESCAPE_VERTICAL_RANGE = 7;
     private static final float ESCAPE_CONE_ANGLE = (float) (Math.PI / 2);
-
     private final BoarGuEntity boar;
     private @Nullable Player threat;
     private @Nullable Vec3 escapeCourse;
-
     public FleePlayerGoal(BoarGuEntity boar) {
         this.boar = boar;
         setFlags(EnumSet.of(Goal.Flag.MOVE));
@@ -46,7 +45,7 @@ public class FleePlayerGoal extends Goal {
     public boolean canUse() {
         threat = nearestThreat(boar);
         if (threat == null) return false;
-        escapeCourse = courseAwayFromThreat();
+        escapeCourse = courseAwayFromThreat(threat);
         if (escapeCourse == null) return false;
         boolean courseCloserToThreat = threat.distanceToSqr(escapeCourse.x, escapeCourse.y, escapeCourse.z)
                 < threat.distanceToSqr(boar);
@@ -60,7 +59,9 @@ public class FleePlayerGoal extends Goal {
     @Override
     public void start() {
         if (boar.phase() != BoarGuEntity.FlightPhase.FLYING) boar.takeOff();
-        boar.getNavigation().moveTo(escapeCourse.x, escapeCourse.y, escapeCourse.z, FLEE_SPEED_MODIFIER);
+        if (escapeCourse != null) {
+            boar.getNavigation().moveTo(escapeCourse.x, escapeCourse.y, escapeCourse.z, FLEE_SPEED_MODIFIER);
+        }
     }
     @Override
     public void stop() {
@@ -72,14 +73,15 @@ public class FleePlayerGoal extends Goal {
     @Override
     public void tick() {
         if (threat == null || !boar.getNavigation().isDone()) return;
-        Vec3 course = courseAwayFromThreat();
+        Vec3 course = courseAwayFromThreat(threat);
         if (course != null) boar.getNavigation().moveTo(course.x, course.y, course.z, FLEE_SPEED_MODIFIER);
     }
-    private @Nullable Vec3 courseAwayFromThreat() {
+    private @Nullable Vec3 courseAwayFromThreat(@NotNull Player threat) {
         Vec3 away = boar.position().subtract(threat.position());
         return AirAndWaterRandomPos.getPos(boar, ESCAPE_HORIZONTAL_RANGE, ESCAPE_VERTICAL_RANGE, 0,
                 away.x, away.z, ESCAPE_CONE_ANGLE);
     }
+    @SuppressWarnings("resource")
     static @Nullable Player nearestThreat(BoarGuEntity boar) {
         return boar.level().getNearestPlayer(boar.getX(), boar.getY(), boar.getZ(), BoarGuEntity.FLEE_RANGE,
                 FleePlayerGoal::isThreat);

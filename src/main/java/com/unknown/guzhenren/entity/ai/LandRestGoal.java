@@ -11,10 +11,10 @@ import net.minecraft.world.phys.Vec3;
  * The ground rest of a boar Gu [豕蛊]: land in its own column, rest, then take off again.
  *
  * <p>Starts only when the boar requested a landing and no player stands within
- * {@link com.unknown.guzhenren.entity.BoarGuEntity#FLEE_RANGE} blocks. The landing spot is the standable
+ * {@link com.unknown.guzhenren.entity.BoarGuEntity#FLEE_RANGE} blocks. The landing spot is the standard
  * position at {@code level.getHeight(MOTION_BLOCKING, x, z)} in the boar's own column. Arrival starts a
  * rest of 8 to 10 seconds with a cleared motion vector and occasional head turns; the timer running out
- * takes the boar back into flight. A landing that stalls or cannot be pathed aborts via
+ * takes the boar back into flight. A landing that stalls or cannot be patched aborts via
  * {@code takeOff} so the goal never wedges.
  *
  * @author Alex
@@ -33,12 +33,10 @@ public class LandRestGoal extends Goal {
     private static final int LOOK_YAW_SPREAD = 181;
     private static final int LOOK_YAW_CENTER = 90;
     private static final int LANDING_TIMEOUT_TICKS = 600;
-
     private final BoarGuEntity boar;
     private Vec3 landingSpot = Vec3.ZERO;
     private int restRemaining;
     private int landingTicks;
-
     public LandRestGoal(BoarGuEntity boar) {
         this.boar = boar;
         setFlags(EnumSet.of(Goal.Flag.MOVE));
@@ -91,6 +89,7 @@ public class LandRestGoal extends Goal {
             boar.setYRot(boar.getYRot() + boar.getRandom().nextInt(LOOK_YAW_SPREAD) - LOOK_YAW_CENTER);
         }
     }
+    @SuppressWarnings("resource")
     private boolean retargetGround() {
         int x = Mth.floor(boar.getX());
         int z = Mth.floor(boar.getZ());

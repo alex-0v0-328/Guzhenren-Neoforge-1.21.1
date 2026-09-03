@@ -28,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> vital) {
 
     public static final ApertureStorage DEFAULT = new ApertureStorage(List.of(), List.of());
-
     public static final Codec<ApertureStorage> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemStack.OPTIONAL_CODEC.listOf().listOf().optionalFieldOf("by_aperture", List.of())
                     .forGetter(ApertureStorage::byAperture),
@@ -121,7 +120,7 @@ public record ApertureStorage(List<List<ItemStack>> byAperture, List<ItemStack> 
 
         List<List<ItemStack>> items = new ArrayList<>();
         items.add(List.of());
-        for (List<ItemStack> slot : byAperture) items.add(slot);
+        items.addAll(byAperture);
 
         List<ItemStack> bound = new ArrayList<>();
         bound.add(ItemStack.EMPTY);

@@ -37,6 +37,13 @@ public final class ModStreamCodecs {
         return ByteBufCodecs.VAR_INT.map(i -> i == 0 ? null : values[i - 1],
                 value -> value == null ? 0 : value.ordinal() + 1);
     }
+    public static <E extends Enum<E>> void writeNullableEnum(ByteBuf buf, @Nullable E value) {
+        ByteBufCodecs.VAR_INT.encode(buf, value == null ? 0 : value.ordinal() + 1);
+    }
+    public static <E extends Enum<E>> @Nullable E readNullableEnum(ByteBuf buf, Class<E> type) {
+        int i = ByteBufCodecs.VAR_INT.decode(buf);
+        return i == 0 ? null : type.getEnumConstants()[i - 1];
+    }
     public static <K extends Enum<K>, V> StreamCodec<ByteBuf, Map<K, V>> enumMap(
             Class<K> key, StreamCodec<ByteBuf, V> value) {
         return ByteBufCodecs.map(HashMap::new, ofEnum(key), value);

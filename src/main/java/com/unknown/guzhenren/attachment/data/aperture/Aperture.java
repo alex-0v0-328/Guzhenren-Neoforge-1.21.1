@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>⚠ {@code baseEssence} clamps to {@code [MIN_BASE, MAX_BASE]} (20..100) when positive; {@code 0} is
  * reserved for {@code NONE} and {@code 1..19} is a hole, not a value. ⚠ The two {@link GuPath} fields
- * are the ONLY active nullables in the data model ({@code ofNullableEnum}); the legacy physique carrier
+ * are the ONLY active nullables in the data model ({@code writeNullableEnum}); the legacy physique carrier
  * is decode-only, never synced nor streamed. ⚠ {@code second} marks the aperture opened by a Second
  * Aperture Gu, not by Hope Gu -- the LIST position is the awakening order, the flag is the identity.
  * ⚠ The stream codec is handwritten (composite caps at 6).
@@ -60,10 +60,8 @@ public record Aperture(
     public static final int MAX_PRESSURE = 100;
     public static final int PRESSURE_COUNTDOWN_START = MAX_PRESSURE - 1;
     public static final int SECONDARY_BASE = 80;
-
     public static final Aperture NONE = new Aperture(
             Rank.NONE, Stage.NONE, 0, 0L, null, null, 0L, 0, 0L, 0, false, false, null, false);
-
     public Aperture(Rank rank, Stage stage, int baseEssence, long currentEssence,
                     @Nullable GuPath primaryPath, @Nullable GuPath secondaryPath, long distilledEssence,
                     int pressure, long pressureDeadlineTick, int nourishProgress, boolean petrified,
@@ -89,7 +87,6 @@ public record Aperture(
                        nourishProgress, petrified, distilling, second) ->
             new Aperture(rank, stage, base, essence, primary.orElse(null), secondary.orElse(null), distilled,
                     pressure, deadline, nourishProgress, petrified, distilling, null, second)));
-
     private static final Codec<Aperture> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Rank.CODEC.optionalFieldOf("rank", Rank.NONE).forGetter(Aperture::rank),
             Stage.CODEC.optionalFieldOf("stage", Stage.NONE).forGetter(Aperture::stage),
@@ -113,7 +110,6 @@ public record Aperture(
             new Aperture(rank, stage, base, essence, primary.orElse(null), secondary.orElse(null), distilled,
                     pressure, deadline, nourishProgress, petrified, distilling,
                     legacyPhysique == ExtremePhysique.NONE ? null : legacyPhysique, second)));
-
     private static final Decoder<Aperture> DECODER = new Decoder<>() {
         @Override
         public <T> DataResult<Pair<Aperture, T>> decode(DynamicOps<T> ops, T input) {
@@ -123,13 +119,9 @@ public record Aperture(
             });
         }
     };
-
     public static final Codec<Aperture> CODEC = Codec.of(CURRENT_CODEC, DECODER);
-
     private static final StreamCodec<ByteBuf, Rank> RANK = ModStreamCodecs.ofEnum(Rank.class);
     private static final StreamCodec<ByteBuf, Stage> STAGE = ModStreamCodecs.ofEnum(Stage.class);
-    private static final StreamCodec<ByteBuf, @Nullable GuPath> PATH = ModStreamCodecs.ofNullableEnum(GuPath.class);
-
     public static final StreamCodec<ByteBuf, Aperture> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public @NotNull Aperture decode(@NotNull ByteBuf buf) {
@@ -138,8 +130,8 @@ public record Aperture(
                     STAGE.decode(buf),
                     ByteBufCodecs.VAR_INT.decode(buf),
                     ByteBufCodecs.VAR_LONG.decode(buf),
-                    PATH.decode(buf),
-                    PATH.decode(buf),
+                    ModStreamCodecs.readNullableEnum(buf, GuPath.class),
+                    ModStreamCodecs.readNullableEnum(buf, GuPath.class),
                     ByteBufCodecs.VAR_LONG.decode(buf),
                     ByteBufCodecs.VAR_INT.decode(buf),
                     ByteBufCodecs.VAR_LONG.decode(buf),
@@ -155,8 +147,8 @@ public record Aperture(
             STAGE.encode(buf, value.stage());
             ByteBufCodecs.VAR_INT.encode(buf, value.baseEssence());
             ByteBufCodecs.VAR_LONG.encode(buf, value.currentEssence());
-            PATH.encode(buf, value.primaryPath());
-            PATH.encode(buf, value.secondaryPath());
+            ModStreamCodecs.writeNullableEnum(buf, value.primaryPath());
+            ModStreamCodecs.writeNullableEnum(buf, value.secondaryPath());
             ByteBufCodecs.VAR_LONG.encode(buf, value.distilledEssence());
             ByteBufCodecs.VAR_INT.encode(buf, value.pressure());
             ByteBufCodecs.VAR_LONG.encode(buf, value.pressureDeadlineTick());
