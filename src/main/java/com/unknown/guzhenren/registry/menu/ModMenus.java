@@ -26,20 +26,16 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class ModMenus {
 
     private ModMenus() {}
-
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, Guzhenren.MOD_ID);
-
     public static final DeferredHolder<MenuType<?>, MenuType<ApertureStorageMenu>> APERTURE_STORAGE_MENU =
             MENUS.register("aperture_storage_menu", () -> new MenuType<>(
                     (id, inventory) -> new ApertureStorageMenu(id, inventory, 0, 0),
                     FeatureFlags.DEFAULT_FLAGS));
-
     public static final DeferredHolder<MenuType<?>, MenuType<RefinementMenu>> REFINEMENT_MENU =
             MENUS.register("refinement_menu", () -> new MenuType<>(
                     RefinementMenu::new,
                     FeatureFlags.DEFAULT_FLAGS));
-
     public static void register(IEventBus modEventBus) {
         MENUS.register(modEventBus);
     }

@@ -23,7 +23,6 @@ class TalentTest {
         assertSame(Talent.FIRST, Talent.fromPercent(99));
         assertSame(Talent.EXTREME, Talent.fromPercent(100));
     }
-
     @Test
     @DisplayName("1..19 is a HOLE, not a grade -- and 0 belongs to Aperture.NONE alone")
     void theHoleBelowTwenty() {
@@ -32,7 +31,6 @@ class TalentTest {
             assertSame(Talent.NONE, Talent.fromPercent(percent), "percent " + percent + " must be a hole");
         }
     }
-
     @Test
     @DisplayName("out of range never throws, it reads NONE")
     void outOfRangeReadsNone() {
@@ -40,7 +38,6 @@ class TalentTest {
         assertSame(Talent.NONE, Talent.fromPercent(101));
         assertSame(Talent.NONE, Talent.fromPercent(Integer.MAX_VALUE));
     }
-
     @Test
     @DisplayName("a POSITIVE shift means BETTER, even though the constants run high to low")
     void positiveShiftMeansBetter() {
@@ -49,7 +46,6 @@ class TalentTest {
         assertSame(Talent.EXTREME, Talent.FIRST.shift(1));
         assertSame(Talent.FOURTH, Talent.THIRD.shift(-1));
     }
-
     @Test
     @DisplayName("shift CLAMPS at both ends and never wraps into NONE")
     void shiftClampsAndNeverReachesNone() {
@@ -58,7 +54,6 @@ class TalentTest {
         assertSame(Talent.FOURTH, Talent.FOURTH.shift(-1));
         assertSame(Talent.FOURTH, Talent.FOURTH.shift(-99));
     }
-
     @Test
     @DisplayName("the settable range excludes NONE")
     void settableExcludesNone() {
@@ -68,7 +63,6 @@ class TalentTest {
             assertTrue(grade != Talent.NONE, "NONE must not be settable");
         }
     }
-
     @Test
     @DisplayName("a rolled percent always reads back as the grade it was rolled for")
     void rolledPercentReadsBack() {

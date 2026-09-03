@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class PathQiService {
+
     private PathQiService() {}
     private static final int EFFECT_REFRESH_TICKS = 2 * Ticks.SECOND;
     public static @NotNull PathQiData get(@NotNull Player p) {return p.getData(ModAttachments.QI);}

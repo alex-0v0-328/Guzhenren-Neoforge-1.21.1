@@ -41,15 +41,12 @@ public enum Race implements StringRepresentable, EnumTranslatable {
     SNOWMEN(GuPath.ICE_SNOW);
 
     public static final long TALENT_MARKS = 10L;
-
     /**
      * How far the race moves its path's attainment. ⚠ A SHIFT, so leaving the race can undo it exactly.
      */
     public static final int TALENT_SHIFT = 1;
-
     public static final Codec<Race> CODEC = StringRepresentable.fromEnum(Race::values);
     private static final String KEY_PREFIX = "guzhenren.enum.body.race.";
-
     private final @Nullable GuPath talentPath;
 
     Race(@Nullable GuPath talentPath) {this.talentPath = talentPath;}

@@ -23,13 +23,10 @@ import org.jetbrains.annotations.NotNull;
 public record ImpactApertureWallPayload() implements CustomPacketPayload {
 
     public static final ImpactApertureWallPayload INSTANCE = new ImpactApertureWallPayload();
-
     public static final Type<ImpactApertureWallPayload> TYPE = new Type<>(
             Guzhenren.id("impact_aperture_wall"));
-
     public static final StreamCodec<ByteBuf, ImpactApertureWallPayload> STREAM_CODEC =
             StreamCodec.unit(INSTANCE);
-
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {return TYPE;}
 }

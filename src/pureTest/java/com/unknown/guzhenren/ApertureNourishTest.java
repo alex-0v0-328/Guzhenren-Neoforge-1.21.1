@@ -30,7 +30,6 @@ class ApertureNourishTest {
         assertSame(Outcome.DROP_BASE, ApertureNourishService.resolve(90, false));
         assertSame(Outcome.DROP_BASE, ApertureNourishService.resolve(99, false));
     }
-
     @Test
     @DisplayName("十绝体 table splits at 60 / 85 -- the two tables cut at different points")
     void extremeBoundaries() {
@@ -41,7 +40,6 @@ class ApertureNourishTest {
         assertSame(Outcome.DROP_STAGE, ApertureNourishService.resolve(85, true));
         assertSame(Outcome.DROP_STAGE, ApertureNourishService.resolve(99, true));
     }
-
     @Test
     @DisplayName("十绝体 can never roll the aptitude loss")
     void extremeNeverLosesBase() {
@@ -49,7 +47,6 @@ class ApertureNourishTest {
             assertNotSame(Outcome.DROP_BASE, ApertureNourishService.resolve(roll, true), "roll " + roll);
         }
     }
-
     @Test
     @DisplayName("every roll in 0..99 resolves, and the two tables agree on nothing but their shape")
     void everyRollResolves() {
@@ -62,7 +59,6 @@ class ApertureNourishTest {
         assertEquals(40, ordinarySuccess);
         assertEquals(60, extremeSuccess);
     }
-
     @Test
     @DisplayName("冲刷窍壁 costs one and a half Ten-Extremes peak pools -- the ×10 rank ladder, exactly")
     void impactCostLadder() {
@@ -71,7 +67,6 @@ class ApertureNourishTest {
         assertEquals(120_000L, cost(Rank.THREE));
         assertEquals(1_200_000L, cost(Rank.FOUR));
     }
-
     @Test
     @DisplayName("no pool can hold one strike -- even a 十绝 peak pool is only two thirds of it")
     void noPoolCoversAStrike() {
@@ -80,11 +75,9 @@ class ApertureNourishTest {
             assertEquals(cost(rank) * 2L, peak * 3L, "rank " + rank);
         }
     }
-
     private static long cost(Rank rank) {
         return ApertureNourishService.IMPACT_COST_PER_RANK_BASE * rank.getRankBase();
     }
-
     @Test
     @DisplayName("the starved anchor defaults to the sentinel, never to zero, and the target defaults to PRIMARY")
     void recordInvariants() {
@@ -92,7 +85,6 @@ class ApertureNourishTest {
         assertFalse(ApertureNourishData.DEFAULT.isStarving());
         assertEquals(ApertureData.PRIMARY, ApertureNourishData.DEFAULT.target());
     }
-
     @Test
     @DisplayName("石窍蛊 lock: petrified and the progress live on the aperture, clamped by its ctor")
     void petrifiedInvariants() {
@@ -106,14 +98,12 @@ class ApertureNourishTest {
         assertTrue(new Aperture(Rank.ONE, Stage.INIT, 80, 0L, null, null,
                 0L, 0, 0L, 0, true, false).petrified());
     }
-
     @Test
     @DisplayName("a fresh world is not already starved out -- zero is a real game time")
     void freshWorldIsNotStarved() {
         assertFalse(ApertureNourishData.DEFAULT.starvedOut(0L));
         assertFalse(ApertureNourishData.DEFAULT.starvedOut(Long.MAX_VALUE / 2));
     }
-
     @Test
     @DisplayName("the starve grace runs out only after the full window")
     void starveWindow() {

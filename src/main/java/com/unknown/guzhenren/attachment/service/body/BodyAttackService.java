@@ -34,12 +34,11 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class BodyAttackService {
+
     private BodyAttackService() {}
     public static final double VANILLA_ATTACK_DAMAGE = 1.0D;
-
     private static final ResourceLocation MODIFIER_ID =
             Guzhenren.id("strength_attack_damage");
-
     public static final double ZOMBIE_ATTACK_BASE = 5.0D;
     public static double bonus(@NotNull Player player) {
         PathStrengthData data = PathStrengthService.get(player);

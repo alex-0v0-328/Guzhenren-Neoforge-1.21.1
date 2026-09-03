@@ -19,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
  */
 
 public final class SelfRelianceGuEffect extends MobEffect {
+
     private static final float HEAL_CAP_BASE = 0.5F;
     private static final float HEAL_CAP_TIER_STEP = 0.1F;
     public SelfRelianceGuEffect(MobEffectCategory category, int color) {

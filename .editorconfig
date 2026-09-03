@@ -7,6 +7,14 @@ max_line_length = 120
 ij_java_blank_lines_around_method = 0
 ij_java_blank_lines_around_method_in_interface = 0
 
+# 类型开括号后空一行；匿名类紧贴
+ij_java_blank_lines_after_class_header = 1
+ij_java_blank_lines_after_anonymous_class_header = 0
+
+# 字段/常量之间不空行（方法间的键见上）
+ij_java_blank_lines_around_field = 0
+ij_java_blank_lines_around_field_in_interface = 0
+
 # 已有的空行最多保留 1 行
 ij_java_keep_blank_lines_in_code = 1
 

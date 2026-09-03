@@ -23,7 +23,6 @@ class HudDisplayTest {
         assertEquals(2, header.getSiblings().size());
         assertEquals("guzhenren.display.aptitude_line", key(header.getSiblings().get(1)));
     }
-
     @Test
     void gradeAAptitudeShowsItsBaseFraction() {
         Component line = ModDisplayText.hudAptitude(Aperture.openedAt(80), BodyData.DEFAULT);
@@ -32,7 +31,6 @@ class HudDisplayTest {
         assertEquals(List.of("guzhenren.enum.aperture.talent.first", "guzhenren.display.base_round"),
                 argumentKeys(line));
     }
-
     @Test
     void extremeAptitudeShowsTheConcreteBodyPhysique() {
         BodyData body = BodyData.DEFAULT.withPhysiques(java.util.Set.of(Physique.EXTREME))
@@ -44,7 +42,6 @@ class HudDisplayTest {
                         "guzhenren.enum.body.extreme_physique.great_strength_true_martial"),
                 argumentKeys(line));
     }
-
     @Test
     void zombieDoesNotChangeTheExtremeAptitudeLine() {
         BodyData body = BodyData.DEFAULT.withPhysiques(java.util.Set.of(Physique.EXTREME, Physique.ZOMBIE))
@@ -56,7 +53,6 @@ class HudDisplayTest {
                         "guzhenren.enum.body.extreme_physique.great_strength_true_martial"),
                 argumentKeys(line));
     }
-
     private static List<String> argumentKeys(Component component) {
         return Arrays.stream(((TranslatableContents) component.getContents()).getArgs())
                 .filter(Component.class::isInstance)
@@ -64,7 +60,6 @@ class HudDisplayTest {
                 .map(HudDisplayTest::key)
                 .toList();
     }
-
     private static String key(Component component) {
         assertTrue(component.getContents() instanceof TranslatableContents);
         return ((TranslatableContents) component.getContents()).getKey();

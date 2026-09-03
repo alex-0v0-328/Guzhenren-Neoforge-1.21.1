@@ -22,13 +22,11 @@ import org.jetbrains.annotations.NotNull;
 public record DashPayload(int vertical, int horizontal, float yRot) implements CustomPacketPayload {
 
     public static final Type<DashPayload> TYPE = new Type<>(Guzhenren.id("dash"));
-
     public static final StreamCodec<ByteBuf, DashPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, DashPayload::vertical,
             ByteBufCodecs.INT, DashPayload::horizontal,
             ByteBufCodecs.FLOAT, DashPayload::yRot,
             DashPayload::new);
-
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {return TYPE;}
 }

@@ -34,22 +34,20 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class ApertureNourishService {
+
     private ApertureNourishService() {}
     public static final int PERCENT_PER_SECOND = 1;
     public static final int COST_DIVISOR = 100;
     public static final int BASE_LOSS_MIN = 1;
     public static final int BASE_LOSS_MAX = 5;
-
     /**
      * One strike costs one and a half of a Ten-Extremes peak pool, so no pool can ever hold it.
      */
     public static final long IMPACT_COST_PER_RANK_BASE = 1_200L;
-
     /**
      * Where the pressure gauge lands after a petrified aperture converts a full one into a rank-up.
      */
     public static final int CONVERTED_PRESSURE = 90;
-
     private static final String STARVED = "guzhenren.nourish.starved";
     private static final String STAGE_UP = "guzhenren.nourish.stage_up";
     private static final String IMPACT_POOR = "guzhenren.impact.poor";
@@ -57,7 +55,6 @@ public final class ApertureNourishService {
     private static final String IMPACT_HOLD = "guzhenren.impact.hold";
     private static final String IMPACT_DROP_STAGE = "guzhenren.impact.drop_stage";
     private static final String IMPACT_DROP_BASE = "guzhenren.impact.drop_base";
-
     /**
      * What one strike against the aperture wall did.
      */

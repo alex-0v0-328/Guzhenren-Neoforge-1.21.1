@@ -64,13 +64,10 @@ public class RefinementMenu extends AbstractContainerMenu {
     public static final int CORE_ROWS = 3;
     public static final int CORE_SIZE = CORE_COLS * CORE_ROWS;
     public static final int INPUT_SIZE = RING_SIZE + CORE_SIZE;
-
     private static final int[] RING_COLS = {1, 2, 3, 0, 4, 0, 4, 0, 4, 1, 2, 3};
     private static final int[] RING_ROWS = {0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4};
-
     public static final int INPUT_X = 18;
     public static final int INPUT_Y = 28;
-
     public static int ringX(int index) {return INPUT_X + RING_COLS[index] * GRID_SLOT;}
     public static int ringY(int index) {return INPUT_Y + RING_ROWS[index] * GRID_SLOT;}
     public static int coreX(int col) {return INPUT_X + (col + 1) * GRID_SLOT;}
@@ -87,16 +84,13 @@ public class RefinementMenu extends AbstractContainerMenu {
     public static final int OUTPUT_COLS = 2;
     public static final int OUTPUT_ROWS = 2;
     public static final int OUTPUT_SIZE = OUTPUT_COLS * OUTPUT_ROWS;
-
     public static final int STONE_SLOT = INPUT_SIZE;
     public static final int OUTPUT_START = STONE_SLOT + 1;
     public static final int INVENTORY_START = OUTPUT_START + OUTPUT_SIZE;
-
     public static final int BUTTON_CRAFT = 0;
     public static final int BUTTON_STOP = 1;
     public static final int BUTTON_CLEAR_RECIPE = 2;
     public static final int BUTTON_RECIPE_BASE = 3;
-
     public static final int OUTPUT_X = 210;
     public static final int OUTPUT_Y = 60;
     public static final int STONE_X = 158;
@@ -104,14 +98,11 @@ public class RefinementMenu extends AbstractContainerMenu {
     public static final int INVENTORY_X = 52;
     public static final int INVENTORY_Y = 229;
     public static final int HOTBAR_Y = 287;
-
     private static final int INVENTORY_COLS = 9;
     private static final int FAILURE_HEALTH_DIVISOR = 4;
     private static final int FULL_SUCCESS = 100;
-
     private static final int OPENING_PERCENT = 40;
     private static final int CURRENT_PER_MAX_SOUL = 10;
-
     private static final int DATA_READY = 0;
     private static final int DATA_AFFORD = 1;
     private static final int DATA_RUNNING = 2;
@@ -123,7 +114,6 @@ public class RefinementMenu extends AbstractContainerMenu {
     private static final int DATA_STONES_NEEDED = 8;
     private static final int DATA_SELECTED = 9;
     private static final int DATA_SIZE = 10;
-
     private static final String FAILED_ESSENCE = "guzhenren.menu.refinement.essence";
     private static final String FAILED_NO_ROOM = "guzhenren.menu.refinement.no_room";
     private static final String FAILED_NOT_AWAKENED = "guzhenren.menu.refinement.not_awakened";
@@ -132,16 +122,13 @@ public class RefinementMenu extends AbstractContainerMenu {
     private static final String LOST_ROLL = "guzhenren.menu.refinement.lost_roll";
     private static final String ELDER_SPENT = "guzhenren.menu.refinement.elder_spent";
     private static final String STOPPED = "guzhenren.menu.refinement.stopped";
-
     private final Player player;
     private final SimpleContainer input = new SimpleContainer(INPUT_SIZE);
     private final SimpleContainer supply = new SimpleContainer(1);
     private final SimpleContainer output = new SimpleContainer(OUTPUT_SIZE);
     private final ContainerData craftData = new SimpleContainerData(DATA_SIZE);
-
     private @Nullable GuRecipe pending;
     private int selectedIndex = -1;
-
     private @Nullable GuRecipe running;
     private int @Nullable [] claimed;
     private int stage;
@@ -568,6 +555,7 @@ public class RefinementMenu extends AbstractContainerMenu {
 
     //region where a thing may sit -- 蛊材 outside, 蛊虫 inside, and NOTHING moves while it runs
     private class RingSlot extends Slot {
+
         RingSlot(Container container, int index, int x, int y) {super(container, index, x, y);}
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
@@ -576,8 +564,8 @@ public class RefinementMenu extends AbstractContainerMenu {
         @Override
         public boolean mayPickup(@NotNull Player who) {return running == null;}
     }
-
     private class CoreSlot extends Slot {
+
         CoreSlot(Container container, int index, int x, int y) {super(container, index, x, y);}
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
@@ -587,8 +575,8 @@ public class RefinementMenu extends AbstractContainerMenu {
         @Override
         public boolean mayPickup(@NotNull Player who) {return running == null;}
     }
-
     private class SupplySlot extends Slot {
+
         SupplySlot(Container container, int index, int x, int y) {super(container, index, x, y);}
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
@@ -597,8 +585,8 @@ public class RefinementMenu extends AbstractContainerMenu {
             return fuel && (!GuItem.isVital(stack) || GuItem.isVitalOf(stack, player));
         }
     }
-
     private class OutputSlot extends Slot {
+
         OutputSlot(int index, int x, int y) {super(output, index, x, y);}
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {return false;}

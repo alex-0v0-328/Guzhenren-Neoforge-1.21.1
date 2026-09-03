@@ -27,15 +27,12 @@ import org.jetbrains.annotations.NotNull;
 public record NourishAperturePayload(Action action, int aperture) implements CustomPacketPayload {
 
     public enum Action {START, CANCEL}
-
     public static final Type<NourishAperturePayload> TYPE = new Type<>(
             Guzhenren.id("nourish_aperture"));
-
     public static final StreamCodec<ByteBuf, NourishAperturePayload> STREAM_CODEC = StreamCodec.composite(
             ModStreamCodecs.ofEnum(Action.class), NourishAperturePayload::action,
             ByteBufCodecs.VAR_INT, NourishAperturePayload::aperture,
             NourishAperturePayload::new);
-
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {return TYPE;}
 }

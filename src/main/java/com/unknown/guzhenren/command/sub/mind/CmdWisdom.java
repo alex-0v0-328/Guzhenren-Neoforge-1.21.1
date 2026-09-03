@@ -25,6 +25,7 @@ import net.minecraft.commands.Commands;
  */
 
 public final class CmdWisdom {
+
     private CmdWisdom() {}
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         LiteralArgumentBuilder<CommandSourceStack> wisdom = Commands.literal("wisdom");

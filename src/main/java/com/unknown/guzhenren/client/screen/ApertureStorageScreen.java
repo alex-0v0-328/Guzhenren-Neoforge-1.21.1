@@ -29,17 +29,14 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     private static final int PAGE_BUTTON_W = 16;
     private static final int PAGE_BUTTON_H = 14;
     private static final int PAGE_LABEL_W = 40;
-
     private static final int VITAL_LEFT = 178;
     private static final int VITAL_RIGHT = 210;
     private static final int VITAL_BOTTOM = 44;
     private static final String VITAL_KEY = "guzhenren.menu.vital";
-
     private static final int BACK_W = 16;
     private static final String BACK_GLYPH = "<-";
     private static final int TITLE_X_WITH_BACK = 26;
     private static final String LOAD_KEY = "guzhenren.menu.aperture_load";
-
     public ApertureStorageScreen(ApertureStorageMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         this.imageWidth = 176;
@@ -136,7 +133,6 @@ public class ApertureStorageScreen extends AbstractContainerScreen<ApertureStora
     private int prevX() {return leftPos + 7;}
     private int labelX() {return prevX() + PAGE_BUTTON_W;}
     private int nextX() {return labelX() + PAGE_LABEL_W;}
-
     private boolean inButton(double mx, double my, int x) {
         return inButton(mx, my, x, pagerY());
     }

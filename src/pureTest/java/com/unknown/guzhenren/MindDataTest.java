@@ -20,11 +20,9 @@ class MindDataTest {
                 Map.of(WisdomType.THOUGHTS, new MindPool(current, 50_000L, false)),
                 evil > 0L ? Map.of(ThoughtTag.EVIL, evil) : Map.of());
     }
-
     private static long sumTagged(MindData d) {
         return d.taggedThoughts().values().stream().mapToLong(Long::longValue).sum();
     }
-
     @Test
     @DisplayName("tagged thoughts clamp to the pool's current -- the sum never exceeds it")
     void taggedClampedToCurrent() {
@@ -32,20 +30,17 @@ class MindDataTest {
         assertEquals(30L, d.taggedThoughts().get(ThoughtTag.EVIL));
         assertEquals(30L, sumTagged(d));
     }
-
     @Test
     @DisplayName("natural thoughts are derived: current minus the tagged sum")
     void naturalIsDerived() {
         MindData d = mind(100, 30);
         assertEquals(70L, d.pool(WisdomType.THOUGHTS).current() - sumTagged(d));
     }
-
     @Test
     @DisplayName("an empty mind holds no tagged thoughts -- they clamp to zero and drop out")
     void emptyMindDropsTagged() {
         assertTrue(mind(0, 50).taggedThoughts().isEmpty());
     }
-
     @Test
     @DisplayName("NATURAL is derived, never stored -- the ctor drops it")
     void naturalNeverStored() {
@@ -55,14 +50,12 @@ class MindDataTest {
         assertFalse(d.taggedThoughts().containsKey(ThoughtTag.NATURAL));
         assertTrue(d.taggedThoughts().isEmpty());
     }
-
     @Test
     @DisplayName("withTagged removes a tag when the amount falls to zero")
     void withTaggedRemovesZero() {
         MindData d = mind(100, 30).withTagged(ThoughtTag.EVIL, 0);
         assertFalse(d.taggedThoughts().containsKey(ThoughtTag.EVIL));
     }
-
     @Test
     @DisplayName("emptied clears the tagged thoughts alongside the pools")
     void emptiedClearsTagged() {

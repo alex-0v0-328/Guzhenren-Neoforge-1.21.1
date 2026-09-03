@@ -15,7 +15,6 @@ class ApertureTalentMarksTest {
         assertEquals(1_000L, ApertureService.talentMarksPerPath(ExtremePhysique.VERDANT_GREAT_SUN));
         assertEquals(500L, ApertureService.talentMarksPerPath(ExtremePhysique.NORTHERN_DARK_ICE_SOUL));
     }
-
     @Test
     void beastStrengthsAggregateByFamily() {
         PathStrengthData data = PathStrengthData.DEFAULT.with(BeastStrength.WHITE_BOAR)

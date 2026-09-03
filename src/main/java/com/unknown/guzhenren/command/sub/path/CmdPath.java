@@ -32,6 +32,7 @@ import net.minecraft.server.level.ServerPlayer;
  */
 
 public final class CmdPath {
+
     private CmdPath() {}
     private static final String ARG_PATH = "path";
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
@@ -89,6 +90,7 @@ public final class CmdPath {
 
     @FunctionalInterface
     private interface TallyOperation {
+
         void apply(ServerPlayer player, GuPath path, MarkTag tag, long value);
     }
 }

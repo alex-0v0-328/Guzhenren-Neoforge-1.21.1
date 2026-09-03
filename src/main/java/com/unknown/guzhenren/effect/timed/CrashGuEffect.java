@@ -22,7 +22,6 @@ public final class CrashGuEffect extends MobEffect {
 
     public static final int HORIZONTAL = 1;
     public static final int VERTICAL = 2;
-
     private final int axes;
     public CrashGuEffect(MobEffectCategory category, int color, int axes) {
         super(category, color);

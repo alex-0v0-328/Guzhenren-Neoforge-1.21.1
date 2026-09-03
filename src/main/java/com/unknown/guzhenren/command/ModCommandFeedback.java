@@ -22,6 +22,7 @@ import net.minecraft.network.chat.Component;
  */
 
 public final class ModCommandFeedback {
+
     private ModCommandFeedback() {}
     public static void header(CommandSourceStack source) {
         source.sendSuccess(() -> Component.translatable("guzhenren.command.header"), false);

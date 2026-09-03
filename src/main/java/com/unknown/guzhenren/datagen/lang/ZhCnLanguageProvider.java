@@ -44,6 +44,7 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
  */
 
 public class ZhCnLanguageProvider extends LanguageProvider {
+
     public ZhCnLanguageProvider(PackOutput output) {
         super(output, Guzhenren.MOD_ID, "zh_cn");
     }

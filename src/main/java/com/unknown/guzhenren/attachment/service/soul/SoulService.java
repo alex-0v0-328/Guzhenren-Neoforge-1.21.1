@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class SoulService {
+
     private SoulService() {}
     public static @NotNull SoulData get(@NotNull Player player) {return player.getData(ModAttachments.SOUL);}
     public static void setMax(@NotNull ServerPlayer p, long v) {store(p, get(p).withMaxSoul(v));}

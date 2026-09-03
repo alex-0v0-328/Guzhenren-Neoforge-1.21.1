@@ -12,14 +12,12 @@ class PathTimeFlowServiceTest {
 
     /** Every rate a player can reach from the two Watch Gu effects. */
     private static final int[] RATES = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13};
-
     @Test
     @DisplayName("an ordinary clock changes nothing at all")
     void ordinaryClockIsIdentity() {
         assertEquals(20, PathTimeFlowService.waited(PathTimeFlowService.NORMAL_RATE, 20));
         assertEquals(7L, PathTimeFlowService.perStep(PathTimeFlowService.NORMAL_RATE, 7L));
     }
-
     @Test
     @DisplayName("the use ladder shortens but never reaches zero")
     void theUseLadderShortens() {
@@ -31,7 +29,6 @@ class PathTimeFlowServiceTest {
         assertEquals(3, PathTimeFlowService.waited(3, GuItem.USE_SAME_TICKS));
         assertEquals(6, PathTimeFlowService.waited(3, GuItem.USE_SLOW_TICKS));
     }
-
     @Test
     @DisplayName("a wait shorter than the rate floors at one tick, never at none")
     void aShortWaitNeverBecomesNoWait() {
@@ -41,7 +38,6 @@ class PathTimeFlowServiceTest {
         }
         assertEquals(0, PathTimeFlowService.waited(3, 0));
     }
-
     @Test
     @DisplayName("what a step pays out scales with the rate and nothing else")
     void aStepScalesWithTheRate() {

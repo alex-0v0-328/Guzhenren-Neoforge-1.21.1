@@ -28,6 +28,7 @@ import net.minecraft.util.StringRepresentable;
  */
 
 public final class CmdBody {
+
     private CmdBody() {}
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("body")

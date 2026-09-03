@@ -36,12 +36,9 @@ public record ApertureData(List<Aperture> apertures) {
     public static final int MAX_APERTURES = 2;
     public static final int PRIMARY = 0;
     public static final int SECONDARY = 1;
-
     public static final ApertureData DEFAULT = new ApertureData(List.of());
-
     public static final Codec<ApertureData> CODEC = Aperture.CODEC.listOf()
             .xmap(ApertureData::healed, ApertureData::apertures);
-
     public static final StreamCodec<ByteBuf, ApertureData> STREAM_CODEC =
             Aperture.STREAM_CODEC.apply(ByteBufCodecs.list(MAX_APERTURES))
                     .map(ApertureData::new, ApertureData::apertures);

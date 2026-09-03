@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class MindService {
+
     private MindService() {}
     public static final int ZOMBIE_THOUGHT_INTERVAL_TICKS = 5 * Ticks.SECOND;
     private static boolean thinksThisStep(ServerPlayer p) {

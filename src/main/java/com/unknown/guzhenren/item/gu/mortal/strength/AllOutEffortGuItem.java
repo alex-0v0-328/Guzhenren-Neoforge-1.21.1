@@ -30,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
 public class AllOutEffortGuItem extends TendedGuItem {
 
     private static final String FAILED_ALREADY_UNLEASHED = "guzhenren.item.failed.all_out_active";
-
     private final int effectSeconds;
     public AllOutEffortGuItem(Properties properties, int effectSeconds, GuSpec spec) {
         super(properties, spec);

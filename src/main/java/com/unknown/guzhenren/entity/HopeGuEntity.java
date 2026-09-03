@@ -33,7 +33,6 @@ public class HopeGuEntity extends FlyingGuEntity {
     private static final long NOT_SIGHTED = -1L;
     private static final int MOTES_PER_TICK = 1;
     private static final double MOTE_SPREAD = 0.25;
-
     private long fadeAtTick = NOT_SIGHTED;
     public HopeGuEntity(EntityType<? extends HopeGuEntity> type, Level level,
                         Supplier<Item> caughtGu) {

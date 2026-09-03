@@ -34,10 +34,8 @@ public class PrimevalStoneItem extends GuMaterialItem {
 
     private static final String FAILED_UNAWAKENED = "guzhenren.item.failed.unawakened";
     private static final String FAILED_FULL = "guzhenren.item.failed.essence_full";
-
     public static final int REFILL_BELOW_PERCENT = 50;
     public static final int REFILL_UP_TO_PERCENT = 80;
-
     private final long essence;
     public PrimevalStoneItem(Properties properties, long essence) {
         super(properties, Rank.ONE, GuPath.HEAVEN);

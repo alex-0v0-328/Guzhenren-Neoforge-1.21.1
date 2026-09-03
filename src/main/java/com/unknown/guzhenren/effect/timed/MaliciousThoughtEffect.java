@@ -28,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 public class MaliciousThoughtEffect extends MobEffect {
 
     public static final int DURATION_TICKS = 12 * Ticks.SECOND;
-
     private final long[] evilPerSecond;
     public MaliciousThoughtEffect(MobEffectCategory category, int color, long[] evilPerSecond) {
         super(category, color);

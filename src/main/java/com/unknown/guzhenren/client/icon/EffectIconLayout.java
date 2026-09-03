@@ -34,7 +34,6 @@ interface EffectIconLayout extends IClientMobEffectExtensions {
     int INVENTORY_SLOT_Y = 7;
 
     String textureFor(MobEffectInstance instance);
-
     private void draw(GuiGraphics g, MobEffectInstance instance, int x, int y) {
         ResourceLocation texture = Guzhenren.id(
                 "textures/" + textureFor(instance) + ".png");

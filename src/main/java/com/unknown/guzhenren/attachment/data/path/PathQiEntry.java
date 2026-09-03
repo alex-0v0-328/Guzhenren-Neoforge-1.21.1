@@ -29,7 +29,6 @@ public record PathQiEntry(long amount, long holdEndTick) {
             Codec.LONG.optionalFieldOf("amount", 0L).forGetter(PathQiEntry::amount),
             Codec.LONG.optionalFieldOf("hold_end_tick", 0L).forGetter(PathQiEntry::holdEndTick)
     ).apply(instance, PathQiEntry::new));
-
     public static final StreamCodec<ByteBuf, PathQiEntry> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_LONG, PathQiEntry::amount,
             ByteBufCodecs.VAR_LONG, PathQiEntry::holdEndTick,

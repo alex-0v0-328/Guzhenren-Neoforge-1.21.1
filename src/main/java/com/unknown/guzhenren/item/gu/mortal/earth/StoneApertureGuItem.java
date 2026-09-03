@@ -34,7 +34,6 @@ import org.jetbrains.annotations.Nullable;
 public class StoneApertureGuItem extends ConsumedGuItem {
 
     public static final int NO_TARGET = -1;
-
     private static final String FAILED_RANK_MISMATCH = "guzhenren.item.failed.rank_mismatch";
     private static final String FAILED_UNAVAILABLE = "guzhenren.item.failed.aperture_unavailable";
     private static final String FAILED_STAGE_PEAK = "guzhenren.item.failed.stage_peak";

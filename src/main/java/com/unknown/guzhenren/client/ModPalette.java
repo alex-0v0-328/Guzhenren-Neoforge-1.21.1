@@ -20,7 +20,6 @@ public final class ModPalette {
     public static final int PATH = 0xFFFFD54F;
     public static final int MIND = 0xFF4DD0E1;
     public static final int REFINEMENT = 0xFF81C784;
-
     public static final int PANEL_FILL = 0xBF000000;
     public static final int BORDER = 0x66FFFFFF;
     public static final int SLOT_FILL = 0x33FFFFFF;
@@ -31,6 +30,5 @@ public final class ModPalette {
     public static final int BAR_TRACK = 0xB0202020;
     public static final int BAR_BORDER = 0xC0000000;
     public static final int DISTILLED_FILL = 0xFF1565C0;
-
     private ModPalette() {}
 }

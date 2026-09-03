@@ -30,22 +30,17 @@ public final class GuSpec {
     private final Rank rank;
     private final GuPath path;
     private StrengthPathBranch strengthPathBranch = StrengthPathBranch.NORMAL;
-
     private int refineCost;
-
     private int essencePerRound;
     private boolean channels;
     private int maxHunger;
     private int unitsPerHunger = 1;
     private int essencePerHunger;
     private int hungerPerUse = 1;
-
     private @Nullable TagKey<Item> feedTag;
     private int feedUnits;
-
     private int effectCooldownTicks;
     private int itemCooldownTicks;
-
     private int maxHealth;
     private GuSpec(Rank rank, GuPath path) {
         this.rank = rank;

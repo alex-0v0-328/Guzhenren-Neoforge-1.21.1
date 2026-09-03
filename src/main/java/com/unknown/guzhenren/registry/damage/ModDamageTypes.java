@@ -26,19 +26,12 @@ import net.minecraft.world.entity.Entity;
 public final class ModDamageTypes {
 
     private ModDamageTypes() {}
-
     public static final ResourceKey<DamageType> LIFESPAN_EXHAUSTED = key("lifespan_exhausted");
-
     public static final ResourceKey<DamageType> SOUL_COLLAPSE = key("soul_collapse");
-
     public static final ResourceKey<DamageType> MIND_OCEAN_SHATTERED = key("mind_ocean_shattered");
-
     public static final ResourceKey<DamageType> APERTURE_PRESSURE_EXPLOSION = key("aperture_pressure_explosion");
-
     public static final ResourceKey<DamageType> TEN_EXTREME_DISASTER = key("ten_extreme_disaster");
-
     public static final ResourceKey<DamageType> VITAL_GU_LOST = key("vital_gu_lost");
-
     public static DamageSource source(Entity entity, ResourceKey<DamageType> type) {
         return new DamageSource(entity.registryAccess()
                 .registryOrThrow(Registries.DAMAGE_TYPE)

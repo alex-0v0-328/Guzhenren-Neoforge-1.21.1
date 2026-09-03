@@ -49,7 +49,6 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
 
     public static final int WINDOW_TICKS = 5 * Ticks.SECOND;
     public static final int GAP_TICKS = 2 * Ticks.SECOND;
-
     public GuRecipe {
         if (essencePerSecond < 0L) throw new IllegalArgumentException("essencePerSecond must be non-negative");
         if (soulPerSecond < 0L) throw new IllegalArgumentException("soulPerSecond must be non-negative");
@@ -77,11 +76,9 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
     public int stonesFor(int window) {return windows.get(window);}
     public int totalSeconds() {return totalTicks() / Ticks.SECOND;}
     public long essenceToFinish() {return Math.multiplyExact(essencePerSecond, totalSeconds());}
-
     public int totalTicks() {
         return exactTotalTicks(windowCount());
     }
-
     private static int exactTotalTicks(int windows) {
         return Math.addExact(Math.multiplyExact(windows, WINDOW_TICKS),
                 Math.multiplyExact(Math.max(0, windows - 1), GAP_TICKS));
@@ -114,7 +111,6 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
         }
         return taken;
     }
-
     public int[] shortfall(GuRecipeInput input) {
         int[] missing = new int[ingredients.size()];
 
@@ -126,7 +122,6 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
         }
         return missing;
     }
-
     private static ItemStack held(GuRecipeInput input, int slot) {
         return slot < 0 || slot >= input.size() ? ItemStack.EMPTY : input.getItem(slot);
     }
@@ -152,17 +147,13 @@ public record GuRecipe(List<SizedIngredient> ingredients, List<Integer> slots, L
     public @NotNull RecipeSerializer<?> getSerializer() {return ModRecipes.REFINEMENT_SERIALIZER.get();}
     @Override
     public @NotNull RecipeType<?> getType() {return ModRecipes.REFINEMENT.get();}
-
     @Override
     public @NotNull ItemStack assemble(@NotNull GuRecipeInput in, HolderLookup.@NotNull Provider r) {
         return first().copy();
     }
-
     @Override
     public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {return first();}
-
     private ItemStack first() {return results.isEmpty() ? ItemStack.EMPTY : results.getFirst();}
-
     @Override
     public @NotNull NonNullList<Ingredient> getIngredients() {
         NonNullList<Ingredient> list = NonNullList.create();

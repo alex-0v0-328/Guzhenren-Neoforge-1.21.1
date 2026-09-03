@@ -14,12 +14,12 @@ import org.junit.jupiter.api.Test;
 class ModEnumArgumentTest {
 
     private enum Kind implements StringRepresentable {
+
         A, B;
 
         @Override
         public String getSerializedName() {return name().toLowerCase(Locale.ROOT);}
     }
-
     @Test
     void getReadsThroughRedirectChildContext() throws Exception {
         CommandDispatcher<CommandSourceStack> dispatcher = new CommandDispatcher<>();

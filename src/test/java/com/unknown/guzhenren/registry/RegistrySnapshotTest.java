@@ -32,7 +32,6 @@ class RegistrySnapshotTest {
     void itemCountIsPinned() {
         assertEquals(102, ModItems.ITEMS.getEntries().size());
     }
-
     @Test
     @DisplayName("every registered item is a mortal Gu or a Gu material")
     void itemClassesArePinned() {
@@ -42,7 +41,6 @@ class RegistrySnapshotTest {
                     () -> "unexpected item class: " + item);
         }
     }
-
     @Test
     @DisplayName("ModEffects registers exactly 20 effects")
     void effectCountIsPinned() {

@@ -11,7 +11,6 @@ class GradedEffectIconTest {
     private static String texture(GradedEffectIcon icon, int amplifier) {
         return icon.textureFor(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 100, amplifier));
     }
-
     @Test
     void defaultOffsetMapsAmplifierPlusOne() {
         GradedEffectIcon icon = GradedEffectIcon.mobEffect("essence_qi", 1, 5);
@@ -20,7 +19,6 @@ class GradedEffectIconTest {
         assertEquals("mob_effect/essence_qi_5", texture(icon, 4));
         assertEquals("mob_effect/essence_qi_5", texture(icon, 9));
     }
-
     @Test
     void maliciousThoughtCountsAmplifierFromRankTwo() {
         GradedEffectIcon icon = GradedEffectIcon.item("malicious_thought_gu", 2, 5, 2);
@@ -29,7 +27,6 @@ class GradedEffectIconTest {
         assertEquals("item/malicious_thought_gu_4", texture(icon, 2));
         assertEquals("item/malicious_thought_gu_5", texture(icon, 3));
     }
-
     @Test
     void rangeClampsBothEnds() {
         GradedEffectIcon icon = GradedEffectIcon.item("self_reliance_gu", 2, 4);

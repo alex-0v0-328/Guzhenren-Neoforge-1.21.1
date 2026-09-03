@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class PathService {
+
     private PathService() {}
     public static @NotNull PathData get(@NotNull Player player) {return player.getData(ModAttachments.PATH);}
     public static @NotNull PathEntry entry(@NotNull Player p, @NotNull GuPath path) {return get(p).get(path);}

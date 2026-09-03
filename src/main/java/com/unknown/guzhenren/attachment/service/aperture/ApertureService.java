@@ -47,10 +47,10 @@ import org.jetbrains.annotations.Nullable;
  */
 
 public final class ApertureService {
+
     private ApertureService() {}
     public static final int PRIMARY = ApertureData.PRIMARY;
     private static final int PRESSURE_PER_MINUTE = 2;
-
     public static final long TALENT_MARK_TOTAL = 1000L;
     public static final long TALENT_HUMAN_QI = 100L;
     static long talentMarksPerPath(ExtremePhysique physique) {
@@ -267,7 +267,6 @@ public final class ApertureService {
         return aperture.baseEssence() == Aperture.MAX_BASE
                 ? aperture.withBaseEssence(Aperture.MAX_BASE - 1).withPressure(0) : aperture;
     }
-
     //    TODO(refactor): extract a coordinator once cross-domain grant rules reach 3; TWO exist today.
     public static void reconcileTalentPaths(@NotNull ServerPlayer player, @NotNull ExtremePhysique before,
                                             @NotNull ExtremePhysique after) {

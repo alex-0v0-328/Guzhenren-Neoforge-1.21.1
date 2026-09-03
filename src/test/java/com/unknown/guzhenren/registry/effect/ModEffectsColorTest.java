@@ -26,7 +26,6 @@ class ModEffectsColorTest {
                 () -> assertEquals(0xFFFFFF, ModEffects.MALICIOUS_THOUGHT_GU.get().getColor()),
                 () -> assertEquals(0xFFFFFF, ModEffects.CASUAL_GU.get().getColor()));
     }
-
     @Test
     void poolAndHalfZombieUseWhiteParticles() {
         assertAll(

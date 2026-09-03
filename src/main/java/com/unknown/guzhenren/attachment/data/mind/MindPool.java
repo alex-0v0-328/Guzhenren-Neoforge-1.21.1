@@ -31,7 +31,6 @@ public record MindPool(long current, long max, boolean bufferUsed) {
             Codec.LONG.optionalFieldOf("max", 0L).forGetter(MindPool::max),
             Codec.BOOL.optionalFieldOf("buffer_used", false).forGetter(MindPool::bufferUsed)
     ).apply(instance, MindPool::new));
-
     public static final StreamCodec<ByteBuf, MindPool> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_LONG, MindPool::current,
             ByteBufCodecs.VAR_LONG, MindPool::max,

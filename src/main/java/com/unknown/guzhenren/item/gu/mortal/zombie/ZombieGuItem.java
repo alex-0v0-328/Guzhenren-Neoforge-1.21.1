@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 public class ZombieGuItem extends TendedGuItem {
 
     private static final String FAILED_ALREADY_ZOMBIE = "guzhenren.item.failed.zombie_already";
-
     private final int halfZombieTicks;
     public ZombieGuItem(Properties properties, int halfZombieTicks, GuSpec spec) {
         super(properties, spec);

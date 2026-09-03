@@ -36,7 +36,6 @@ public enum GuAttainment implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<GuAttainment> CODEC = StringRepresentable.fromEnum(GuAttainment::values);
     private static final String KEY_PREFIX = "guzhenren.enum.path.attainment.";
-
     private final int level;
     private final int refinementBonus;
     GuAttainment(int level, int refinementBonus) {

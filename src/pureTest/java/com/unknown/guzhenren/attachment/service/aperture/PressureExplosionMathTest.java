@@ -21,7 +21,6 @@ class PressureExplosionMathTest {
             }
         }
     }
-
     @Test
     @DisplayName("the same column and seed always jitter identically")
     void jitterDeterministic() {
@@ -32,7 +31,6 @@ class PressureExplosionMathTest {
                     AperturePressureExplosionTask.columnJitter(-40, 55, seed));
         }
     }
-
     @Test
     @DisplayName("different seeds actually reshape the crater wall")
     void jitterVariesBySeed() {
@@ -44,7 +42,6 @@ class PressureExplosionMathTest {
         }
         assertTrue(different > 900, "seeds collapse to the same wall, only " + different + " differ");
     }
-
     @Test
     @DisplayName("the noisy radius keeps the sphere between 0.9r and r")
     void noisyRadiusBand() {
@@ -59,7 +56,6 @@ class PressureExplosionMathTest {
             }
         }
     }
-
     @Test
     @DisplayName("the floor sits exactly one block under the noisy sphere bottom of its column")
     void floorSitsUnderSphere() {
@@ -80,7 +76,6 @@ class PressureExplosionMathTest {
             assertTrue(depthSquared > 0.0D);
         }
     }
-
     @Test
     @DisplayName("the (dx,dz) and (-dx,-dz) columns do not collapse into one jitter value")
     void jitterIsNotMirrored() {
@@ -92,7 +87,6 @@ class PressureExplosionMathTest {
         }
         assertTrue(mirrored < 32, "mirrored columns jitter identically in " + mirrored + " of 256 seeds");
     }
-
     @Test
     @DisplayName("ice tiers go deeper = harder to melt: blue under -32, packed under 0, plain ice above")
     void iceTiers() {
@@ -102,7 +96,6 @@ class PressureExplosionMathTest {
         assertEquals(0, AperturePressureExplosionTask.iceTier(0));
         assertEquals(0, AperturePressureExplosionTask.iceTier(200));
     }
-
     @Test
     @DisplayName("gold tiers go low to high: deepslate ore, gold ore, gold block")
     void goldTiers() {
@@ -112,7 +105,6 @@ class PressureExplosionMathTest {
         assertEquals(2, AperturePressureExplosionTask.goldTier(32));
         assertEquals(2, AperturePressureExplosionTask.goldTier(200));
     }
-
     @Test
     @DisplayName("roughly a quarter of the crater floor columns are lava")
     void lavaShare() {
@@ -124,7 +116,6 @@ class PressureExplosionMathTest {
         assertTrue(lava > columns / 5 && lava < columns * 3 / 10,
                 "lava share out of band: " + lava + " of " + columns);
     }
-
     @Test
     @DisplayName("roughly one column in eight carries scattered gold")
     void goldShare() {
@@ -136,7 +127,6 @@ class PressureExplosionMathTest {
         assertTrue(gold > columns / 10 && gold < columns * 3 / 20,
                 "gold share out of band: " + gold + " of " + columns);
     }
-
     @Test
     @DisplayName("the ring mixes snow blocks and powder snow roughly half and half")
     void powderSnowShare() {
@@ -148,7 +138,6 @@ class PressureExplosionMathTest {
         assertTrue(powder > columns * 9 / 20 && powder < columns * 11 / 20,
                 "powder snow share out of band: " + powder + " of " + columns);
     }
-
     @Test
     @DisplayName("the ring's outer edge stays between radius + 8 and radius + 16")
     void ringOuterBand() {

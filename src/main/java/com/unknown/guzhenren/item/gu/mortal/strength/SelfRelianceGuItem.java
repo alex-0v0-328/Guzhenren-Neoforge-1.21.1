@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
  */
 
 public final class SelfRelianceGuItem extends BuffGuItem {
+
     private static final float AUTO_USE_HEALTH_FRACTION = 0.2F;
     public SelfRelianceGuItem(Properties properties, int durationTicks, int amplifier, GuSpec spec) {
         super(properties, ModEffects.SELF_RELIANCE_GU, durationTicks, amplifier, spec);

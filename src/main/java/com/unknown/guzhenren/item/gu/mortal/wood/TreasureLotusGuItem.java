@@ -38,7 +38,6 @@ public class TreasureLotusGuItem extends TendedGuItem {
 
     private static final int ESSENCE_REGEN_PERCENT = 5;
     private static final String FAILED_PASSIVE = "guzhenren.item.failed.no_use";
-
     private final int stonesPerSecond;
     private final int stonesPerHealth;
     public TreasureLotusGuItem(Properties properties, int stonesPerSecond, int stonesPerHealth, GuSpec spec) {

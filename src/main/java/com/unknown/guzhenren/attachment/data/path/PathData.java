@@ -28,10 +28,8 @@ import net.minecraft.network.codec.StreamCodec;
 public record PathData(Map<GuPath, PathEntry> entries) {
 
     public static final PathData DEFAULT = new PathData(Map.of());
-
     public static final Codec<PathData> CODEC = Codec.unboundedMap(GuPath.CODEC, PathEntry.CODEC)
             .xmap(PathData::new, PathData::entries);
-
     public static final StreamCodec<ByteBuf, PathData> STREAM_CODEC =
             ModStreamCodecs.enumMap(GuPath.class, PathEntry.STREAM_CODEC).map(PathData::new, PathData::entries);
     public PathData {

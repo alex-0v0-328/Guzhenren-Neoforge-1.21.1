@@ -42,7 +42,6 @@ public enum ExtremePhysique implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<ExtremePhysique> CODEC = StringRepresentable.fromEnum(ExtremePhysique::values);
     private static final String KEY_PREFIX = "guzhenren.enum.body.extreme_physique.";
-
     private final int strengthCapacity;
     private final int staminaMaxPercent;
     private final List<GuPath> talentPaths;

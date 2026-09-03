@@ -21,7 +21,6 @@ class TimeRateUpEffectTest {
         assertEquals(4, effect.timeRate(1));
         assertEquals(4, effect.timeRate(99));
     }
-
     @Test
     @DisplayName("Third Watch Gu grows to three layers and ninefold time")
     void thirdWatchCapsAtNinefoldTime() {
@@ -36,13 +35,11 @@ class TimeRateUpEffectTest {
         assertEquals(9, effect.timeRate(2));
         assertEquals(9, effect.timeRate(99));
     }
-
     @Test
     @DisplayName("the two capped Watch Gu effects add to thirteenfold time")
     void cappedWatchGuEffectsAddToThirteenfoldTime() {
         assertEquals(13, effect(2, 2).timeRate(1) + effect(3, 3).timeRate(2));
     }
-
     private static TimeRateUpEffect effect(int ratePerLayer, int maxLayers) {
         return new TimeRateUpEffect(MobEffectCategory.BENEFICIAL, 0xFFFFFF, ratePerLayer, maxLayers);
     }

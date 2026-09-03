@@ -57,26 +57,21 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 public final class ClientEvents {
 
     private ClientEvents() {}
-
     private static final ResourceLocation PLAYER_STATS =
             Guzhenren.id("player_stats");
-
     private static final ResourceLocation CHARGE =
             Guzhenren.id("charge");
-
     private static final ResourceLocation NOURISH =
             Guzhenren.id("nourish");
     private static final GeoModel<BoarGuEntity> BOAR_GU_MODEL =
             new DefaultedEntityGeoModel<>(Guzhenren.id("boar_gu"), false);
     private static final float DASH_YAW_CROSS = 90.0F;
     private static final float DASH_YAW_DIAGONAL = 45.0F;
-
     private static boolean previousUp;
     private static boolean previousDown;
     private static boolean previousLeft;
     private static boolean previousRight;
     private static boolean previousAlt;
-
     @SubscribeEvent
     public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, PLAYER_STATS, PlayerStatsHud.INSTANCE);

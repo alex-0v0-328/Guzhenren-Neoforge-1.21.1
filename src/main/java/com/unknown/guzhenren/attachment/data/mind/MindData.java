@@ -33,7 +33,6 @@ import net.minecraft.network.codec.StreamCodec;
 public record MindData(Brilliance brilliance, Map<WisdomType, MindPool> pools, Map<ThoughtTag, Long> taggedThoughts) {
 
     public static final MindData DEFAULT = new MindData(Brilliance.ORDINARY, Map.of(), Map.of());
-
     public static final Codec<MindData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Brilliance.CODEC.optionalFieldOf("brilliance", Brilliance.ORDINARY).forGetter(MindData::brilliance),
             Codec.unboundedMap(WisdomType.CODEC, MindPool.CODEC)
@@ -41,7 +40,6 @@ public record MindData(Brilliance brilliance, Map<WisdomType, MindPool> pools, M
             Codec.unboundedMap(ThoughtTag.CODEC, Codec.LONG)
                     .optionalFieldOf("tagged_thoughts", Map.of()).forGetter(MindData::taggedThoughts)
     ).apply(instance, MindData::new));
-
     public static final StreamCodec<ByteBuf, MindData> STREAM_CODEC = StreamCodec.composite(
             ModStreamCodecs.ofEnum(Brilliance.class), MindData::brilliance,
             ModStreamCodecs.enumMap(WisdomType.class, MindPool.STREAM_CODEC), MindData::pools,

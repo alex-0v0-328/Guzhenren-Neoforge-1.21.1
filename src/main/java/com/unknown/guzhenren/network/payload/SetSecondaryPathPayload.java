@@ -30,12 +30,10 @@ public record SetSecondaryPathPayload(int aperture, @Nullable GuPath path) imple
 
     public static final Type<SetSecondaryPathPayload> TYPE = new Type<>(
             Guzhenren.id("set_secondary_path"));
-
     public static final StreamCodec<ByteBuf, SetSecondaryPathPayload> STREAM_CODEC = StreamCodec.composite(
             net.minecraft.network.codec.ByteBufCodecs.VAR_INT, SetSecondaryPathPayload::aperture,
             ModStreamCodecs.ofNullableEnum(GuPath.class), SetSecondaryPathPayload::path,
             SetSecondaryPathPayload::new);
-
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {return TYPE;}
 }

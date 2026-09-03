@@ -55,20 +55,16 @@ public final class PlayerInfoScreen extends Screen {
     private static final int CONTENT_TOP = HEADER_H + 8;
     private static final int LINE_H = 12;
     private static final int CONTENT_INSET_DIVISOR = 12;
-
     private static final int TAB_W = 76;
     private static final int TAB_H = 20;
     private static final int TAB_GAP = 4;
-
     private static final int DIVIDER = 0x33FFFFFF;
     private static final int ROW_HOVER = 0x14FFFFFF;
     private static final int TAB_IDLE = 0x26FFFFFF;
     private static final int TAB_TEXT_IDLE = 0xFFBBBBBB;
     private static final int TAB_TEXT_DEAD = 0xFF6A6A6A;
-
     private static final int[] ACCENT = {ModPalette.APERTURE, ModPalette.BODY, ModPalette.SOUL,
             ModPalette.PATH, ModPalette.MIND, ModPalette.REFINEMENT};
-
     private static final String[] TAB_KEYS = {
             "guzhenren.screen.tab.aperture",
             "guzhenren.screen.tab.body",
@@ -77,49 +73,39 @@ public final class PlayerInfoScreen extends Screen {
             "guzhenren.screen.tab.mind",
             "guzhenren.screen.tab.refinement",
     };
-
     private static final int BTN_H = 20;
     private static final int BTN_GAP = 4;
     private static final int BTN_PROGRESS = 0x804FC3F7;
-
     private static final String KEY_NOURISH = "guzhenren.screen.nourish";
     private static final String KEY_NOURISH_STOP = "guzhenren.screen.nourish_stop";
     private static final String KEY_NOURISH_SECOND = "guzhenren.screen.nourish_second";
     private static final String KEY_IMPACT = "guzhenren.screen.impact";
     private static final String KEY_STORAGE = "guzhenren.screen.button.storage";
-
     private static final int TAB_APERTURE = 0;
     private static final int TAB_BODY = 1;
     private static final int TAB_SOUL = 2;
     private static final int TAB_PATH = 3;
     private static final int TAB_MIND = 4;
     private static final int TAB_REFINEMENT = 5;
-
     private static final int PICK_COLS = 4;
     private static final int PICK_CELL_W = 84;
     private static final int PICK_CELL_H = 14;
     private static final int PICK_PAD = 8;
-
     private static final int SCROLL_W = 2;
     private static final int SCROLL_GAP = 5;
-
     private static final int COL_GAP = 16;
-
     private static final int BTN_NOURISH = 0;
     private static final int BTN_IMPACT = 1;
     private static final int BTN_STORAGE = 2;
-
     private int leftPos;
     private int topPos;
     private int panelW;
     private int panelH;
     private int activeTab;
-
     private @Nullable Click hoverClick;
     private boolean picking;
     private int pickerAperture = ApertureData.PRIMARY;
     private int scrollRow;
-
     public PlayerInfoScreen() {super(Component.translatable("guzhenren.screen.info.title"));}
     @Override
     protected void init() {
@@ -229,7 +215,6 @@ public final class PlayerInfoScreen extends Screen {
     //region per-aperture buttons -- 温养空窍 [nourish] / 冲刷窍壁 [flush] / 空窍存储 [storage], one stack per aperture
     private record ApButton(int aperture, int kind, String key, int top) {}
     private record ColumnButton(int aperture, int kind, String key, int x0, int x1, int top) {}
-
     private List<ApButton> buttonStack(LocalPlayer player, int aperture) {
         List<ApButton> buttons = new ArrayList<>();
         if (aperture == ApertureData.PRIMARY && ApertureNourishService.canImpact(player)) {
@@ -608,6 +593,7 @@ public final class PlayerInfoScreen extends Screen {
         return Component.translatable("guzhenren.command.info.detail", v).withStyle(ChatFormatting.DARK_GRAY);
     }
     private record Row(int indent, Component label, @Nullable Component value, @Nullable Click click) {
+
         Row(int indent, Component label, @Nullable Component value) {this(indent, label, value, null);}
     }
     private record Click(int aperture) {}

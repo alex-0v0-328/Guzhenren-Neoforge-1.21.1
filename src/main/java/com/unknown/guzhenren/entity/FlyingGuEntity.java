@@ -39,15 +39,12 @@ public class FlyingGuEntity extends WildGuEntity {
 
     public static final double DETECT_RANGE = 12.0;
     public static final double HOVER_RANGE = 2.0;
-
     private static final double FOLLOW_RANGE = 16.0;
     private static final double MAX_HEALTH = 1.0;
     private static final double FLYING_SPEED = 0.1;
     private static final double MOVEMENT_SPEED = 0.1;
     private static final double WANDER_SPEED = 1.0;
-
     private static final int TURN_RATE = 20;
-
     public FlyingGuEntity(EntityType<? extends FlyingGuEntity> type, Level level,
                           Supplier<Item> caughtGu) {
         super(type, level, caughtGu);

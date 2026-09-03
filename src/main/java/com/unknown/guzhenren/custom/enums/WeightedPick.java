@@ -18,6 +18,7 @@ import java.util.random.RandomGenerator;
  */
 
 public final class WeightedPick {
+
     private WeightedPick() {}
     public static <T> T pick(T[] values, ToIntFunction<T> weight) {
         return pick(values, ThreadLocalRandom.current(), v -> true, weight);

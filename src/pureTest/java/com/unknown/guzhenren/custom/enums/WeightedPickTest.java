@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 class WeightedPickTest {
 
     private enum Grade {
+
         A(3), B(1), C(0);
         final int weight;
         Grade(int weight) {this.weight = weight;}
     }
-
     @Test
     void zeroWeightNeverPicked() {
         for (int i = 0; i < 1000; i++) {
@@ -23,7 +23,6 @@ class WeightedPickTest {
             assertTrue(g == Grade.A || g == Grade.B);
         }
     }
-
     @Test
     void filterExcludesValues() {
         for (int i = 0; i < 1000; i++) {
@@ -31,7 +30,6 @@ class WeightedPickTest {
             assertEquals(Grade.B, g);
         }
     }
-
     @Test
     void sameSeedSameSequence() {
         Grade[] a = new Grade[8];
@@ -42,7 +40,6 @@ class WeightedPickTest {
         }
         assertArrayEquals(a, b);
     }
-
     @Test
     void zeroTotalThrows() {
         assertThrows(IllegalArgumentException.class,

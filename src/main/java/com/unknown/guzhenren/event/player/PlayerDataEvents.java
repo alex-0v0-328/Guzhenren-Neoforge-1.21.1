@@ -29,6 +29,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerWakeUpEvent;
 
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class PlayerDataEvents {
+
     private PlayerDataEvents() {}
     @SubscribeEvent
     public static void onLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {

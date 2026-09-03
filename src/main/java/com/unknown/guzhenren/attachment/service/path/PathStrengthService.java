@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class PathStrengthService {
+
     private PathStrengthService() {}
     public static final int OVERFLOW_JIN = 20;
     public static final int LOCK_MULTIPLE = 10;

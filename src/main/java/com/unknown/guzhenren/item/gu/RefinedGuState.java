@@ -25,7 +25,6 @@ public record RefinedGuState(boolean refined, int refineProgress, int investedEs
                              int damageTaken) {
 
     public static final RefinedGuState WILD = new RefinedGuState(false, 0, 0, 0, 0);
-
     public static final Codec<RefinedGuState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.BOOL.optionalFieldOf("refined", false).forGetter(RefinedGuState::refined),
             Codec.INT.optionalFieldOf("refine_progress", 0).forGetter(RefinedGuState::refineProgress),
@@ -33,7 +32,6 @@ public record RefinedGuState(boolean refined, int refineProgress, int investedEs
             Codec.INT.optionalFieldOf("hunger", 0).forGetter(RefinedGuState::hunger),
             Codec.INT.optionalFieldOf("damage_taken", 0).forGetter(RefinedGuState::damageTaken)
     ).apply(instance, RefinedGuState::new));
-
     public static final StreamCodec<ByteBuf, RefinedGuState> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, RefinedGuState::refined,
             ByteBufCodecs.VAR_INT, RefinedGuState::refineProgress,
@@ -41,7 +39,6 @@ public record RefinedGuState(boolean refined, int refineProgress, int investedEs
             ByteBufCodecs.VAR_INT, RefinedGuState::hunger,
             ByteBufCodecs.VAR_INT, RefinedGuState::damageTaken,
             RefinedGuState::new);
-
     public RefinedGuState {
         refineProgress = Math.max(0, refineProgress);
         investedEssence = Math.max(0, investedEssence);
@@ -52,15 +49,12 @@ public record RefinedGuState(boolean refined, int refineProgress, int investedEs
     public RefinedGuState withRefine(int v) {
         return new RefinedGuState(refined, v, investedEssence, hunger, damageTaken);
     }
-
     public RefinedGuState withInvested(int v) {
         return new RefinedGuState(refined, refineProgress, v, hunger, damageTaken);
     }
-
     public RefinedGuState withHunger(int v) {
         return new RefinedGuState(refined, refineProgress, investedEssence, v, damageTaken);
     }
-
     public RefinedGuState withDamageTaken(int v) {
         return new RefinedGuState(refined, refineProgress, investedEssence, hunger, v);
     }

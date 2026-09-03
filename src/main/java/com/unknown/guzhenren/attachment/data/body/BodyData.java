@@ -53,22 +53,17 @@ public record BodyData(
 
     public static final long UNTRACKED = -1L;
     public static final int NO_ZOMBIE_TIER = -1;
-
     public static final long PARTS_PER_TICK = 6L;
     public static final long PARTS_PER_YEAR = Ticks.DAY * PARTS_PER_TICK;
-
     public static final long DEFAULT_AGE = 14L;
     public static final long DEFAULT_LIFESPAN = 86L;
     public static final long ZOMBIE_LIFESPAN = 1L;
-
     public static final long RELAPSE_WINDOW_TICKS = 5L * Ticks.MINUTE;
-
     public static final BodyData DEFAULT = new BodyData(Set.of(), ExtremePhysique.NONE, Race.HUMAN,
             parts(DEFAULT_AGE), parts(DEFAULT_LIFESPAN), UNTRACKED, 0L, UNTRACKED, NO_ZOMBIE_TIER, UNTRACKED);
     public static long parts(long years) {return years * PARTS_PER_YEAR;}
     private static final Codec<Set<Physique>> PHYSIQUES_CODEC = Physique.CODEC.listOf()
             .xmap(BodyData::normalizePhysiques, ArrayList::new);
-
     private static final Codec<BodyData> CURRENT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             PHYSIQUES_CODEC.optionalFieldOf("physiques", Set.of()).forGetter(BodyData::physiques),
             ExtremePhysique.CODEC.optionalFieldOf("extreme_physique", ExtremePhysique.NONE)
@@ -82,7 +77,6 @@ public record BodyData(
             Codec.INT.optionalFieldOf("zombie_tier", NO_ZOMBIE_TIER).forGetter(BodyData::zombieTier),
             Codec.LONG.optionalFieldOf("last_billed_tick", UNTRACKED).forGetter(BodyData::lastBilledTick)
     ).apply(instance, BodyData::new));
-
     private static final Codec<BodyData> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             LegacyLifeForm.CODEC.optionalFieldOf("life_form", LegacyLifeForm.ALIVE).forGetter(data ->
                     data.hasPhysique(Physique.ZOMBIE) ? LegacyLifeForm.ZOMBIE
@@ -97,7 +91,6 @@ public record BodyData(
             Codec.INT.optionalFieldOf("zombie_tier", NO_ZOMBIE_TIER).forGetter(BodyData::zombieTier),
             Codec.LONG.optionalFieldOf("last_billed_tick", UNTRACKED).forGetter(BodyData::lastBilledTick)
     ).apply(instance, BodyData::fromLegacy));
-
     private static final Decoder<BodyData> DECODER = new Decoder<>() {
         @Override
         public <T> DataResult<Pair<BodyData, T>> decode(DynamicOps<T> ops, T input) {
@@ -105,14 +98,11 @@ public record BodyData(
                     (map.get("life_form") != null ? LEGACY_CODEC : CURRENT_CODEC).decode(ops, input));
         }
     };
-
     public static final Codec<BodyData> CODEC = Codec.of(CURRENT_CODEC, DECODER);
-
     private static final StreamCodec<ByteBuf, Set<Physique>> PHYSIQUES = ModStreamCodecs.enumSet(Physique.class);
     private static final StreamCodec<ByteBuf, ExtremePhysique> EXTREME =
             ModStreamCodecs.ofEnum(ExtremePhysique.class);
     private static final StreamCodec<ByteBuf, Race> RACE = ModStreamCodecs.ofEnum(Race.class);
-
     public static final StreamCodec<ByteBuf, BodyData> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public @NotNull BodyData decode(@NotNull ByteBuf buf) {
@@ -235,6 +225,7 @@ public record BodyData(
                 lastDayIndex, deathQiLifespanLost, halfZombieEndTick, zombieTier, billedTick);
     }
     private enum LegacyLifeForm implements StringRepresentable {
+
         ALIVE,
         DEAD,
         ZOMBIE,

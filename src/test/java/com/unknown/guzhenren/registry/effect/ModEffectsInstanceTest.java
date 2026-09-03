@@ -18,7 +18,6 @@ class ModEffectsInstanceTest {
         assertEquals(0, i.getAmplifier());
         assertEquals(100, i.getDuration());
     }
-
     @Test
     void amplifiedBuildKeepsParticlesOffIconOn() {
         MobEffectInstance i = ModEffects.instance(ModEffects.LIFE_QI, 40, 2);

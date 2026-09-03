@@ -36,13 +36,10 @@ import static com.unknown.guzhenren.custom.enums.path.GuPath.STRENGTH;
 public final class ModCreativeTabs {
 
     private ModCreativeTabs() {}
-
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Guzhenren.MOD_ID);
-
     private static final ResourceLocation EPIC_FIGHT_ITEMS =
             ResourceLocation.fromNamespaceAndPath("epicfight", "items");
-
     public static final Supplier<CreativeModeTab> MORTAL_GU = CREATIVE_MODE_TABS.register("mortal_gu",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.guzhenren.mortal_gu"))
@@ -50,7 +47,6 @@ public final class ModCreativeTabs {
                     .withTabsBefore(Guzhenren.id("gu_material"))
                     .displayItems((parameters, output) -> accept(output, ModCreativeTabs::belongsInMortalGu))
                     .build());
-
     public static final Supplier<CreativeModeTab> GU_MATERIAL = CREATIVE_MODE_TABS.register("gu_material",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.guzhenren.gu_material"))
@@ -58,7 +54,6 @@ public final class ModCreativeTabs {
                     .withTabsBefore(EPIC_FIGHT_ITEMS)
                     .displayItems((parameters, output) -> accept(output, GuMaterialItem.class::isInstance))
                     .build());
-
     public static final Supplier<CreativeModeTab> STRENGTH_MORTAL_GU = CREATIVE_MODE_TABS.register(
             "strength_mortal_gu", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.guzhenren.strength_mortal_gu"))
@@ -67,7 +62,6 @@ public final class ModCreativeTabs {
                     .displayItems((parameters, output) -> accept(output,
                             item -> item instanceof MortalGuItem gu && gu.path() == STRENGTH))
                     .build());
-
     private static void accept(CreativeModeTab.Output output, Predicate<Item> accepted) {
         for (var entry : ModItems.ITEMS.getEntries()) {
             Item item = entry.get();
@@ -75,7 +69,6 @@ public final class ModCreativeTabs {
         }
     }
     static boolean belongsInMortalGu(Item item) {return item instanceof MortalGuItem gu && gu.path() != STRENGTH;}
-
     public static void register(IEventBus modEventBus) {
         CREATIVE_MODE_TABS.register(modEventBus);
     }

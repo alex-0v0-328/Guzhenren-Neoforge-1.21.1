@@ -36,10 +36,8 @@ public enum Talent implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<Talent> CODEC = StringRepresentable.fromEnum(Talent::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.talent.";
-
     public static final Talent HIGHEST = EXTREME;
     public static final Talent LOWEST = FOURTH;
-
     private final int minPercent;
     private final int maxPercent;
     private final int weight;

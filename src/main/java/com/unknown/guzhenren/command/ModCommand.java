@@ -34,9 +34,9 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModCommand {
+
     private ModCommand() {}
     private static final int PERMISSION_LEVEL = 2;
-
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         register(event.getDispatcher());

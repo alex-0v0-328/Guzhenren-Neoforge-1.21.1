@@ -29,6 +29,7 @@ import net.minecraft.util.StringRepresentable;
  */
 
 public final class ModEnumArgument {
+
     private ModEnumArgument() {}
     private static final DynamicCommandExceptionType UNKNOWN_VALUE = new DynamicCommandExceptionType(
             value -> Component.translatable("guzhenren.command.unknown_value", value));

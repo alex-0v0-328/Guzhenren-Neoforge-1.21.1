@@ -56,7 +56,6 @@ public final class AperturePressureExplosionTask {
     private static final double POWDER_SNOW_SHARE = 0.05D;
     private static final int BLUE_ICE_THRESHOLD = -32;
     private static final int GOLD_ORE_THRESHOLD = 32;
-
     private final ServerLevel level;
     private final double x;
     private final double y;
@@ -64,7 +63,6 @@ public final class AperturePressureExplosionTask {
     private final int radius;
     private final long seed;
     private final ExtremePhysique physique;
-
     private final LongArrayList shell = new LongArrayList();
     private final LongArrayList rim = new LongArrayList();
     private int shellDistance;
@@ -73,9 +71,7 @@ public final class AperturePressureExplosionTask {
     private int ringCursor;
     private int rimIndex;
     private Phase phase = Phase.CLEAR;
-
     private enum Phase {CLEAR, FLOOR, RING, RIM}
-
     public static void start(@NotNull ServerLevel level, double x, double y, double z, int radius,
                              @NotNull ExtremePhysique physique) {
         ACTIVE.add(new AperturePressureExplosionTask(level, x, y, z, radius, physique));

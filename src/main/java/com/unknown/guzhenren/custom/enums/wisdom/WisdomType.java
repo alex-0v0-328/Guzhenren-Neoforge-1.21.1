@@ -28,10 +28,8 @@ public enum WisdomType implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<WisdomType> CODEC = StringRepresentable.fromEnum(WisdomType::values);
     private static final String KEY_PREFIX = "guzhenren.enum.wisdom.type.";
-
     public static final long BURST_NUMERATOR = 6L;
     public static final long BURST_DENOMINATOR = 5L;
-
     private final long defaultCapacity;
     private final boolean burstable;
     WisdomType(long defaultCapacity, boolean burstable) {

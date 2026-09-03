@@ -27,7 +27,6 @@ class RaceTalentTest {
 
         assertSame(GuAttainment.QUASI_GREAT_GRANDMASTER, cultivated.shift(-Race.TALENT_SHIFT));
     }
-
     @Test
     @DisplayName("a shift is reversible everywhere the ladder has room -- earned grades are never stolen")
     void reversibleOffTheCeiling() {
@@ -37,7 +36,6 @@ class RaceTalentTest {
             assertSame(start, there.shift(-Race.TALENT_SHIFT), "from " + start);
         }
     }
-
     @Test
     @DisplayName("☠ AT the ceiling the round trip LOSES one grade -- shift clamps, so the grant is a no-op")
     void ceilingLosesOneGrade() {
@@ -46,14 +44,12 @@ class RaceTalentTest {
         assertSame(GuAttainment.QUASI_SUPREME_GRANDMASTER, top.shift(Race.TALENT_SHIFT).shift(-Race.TALENT_SHIFT));
         assertNotSame(top, top.shift(Race.TALENT_SHIFT).shift(-Race.TALENT_SHIFT));
     }
-
     @Test
     @DisplayName("the floor cannot be drained -- a revoke at 无 [NONE] stays there")
     void floorIsStable() {
         assertSame(GuAttainment.NONE, GuAttainment.NONE.shift(-Race.TALENT_SHIFT));
         assertSame(GuAttainment.ORDINARY, GuAttainment.NONE.shift(Race.TALENT_SHIFT));
     }
-
     @Test
     @DisplayName("no two races share a talent path, so a race change can never grant and revoke the same one")
     void everyVariantOwnsItsOwnPath() {

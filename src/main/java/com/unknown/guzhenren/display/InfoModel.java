@@ -53,11 +53,11 @@ public final class InfoModel {
 
     private InfoModel() {}
     public static final int INDENT = 10;
-
     public record Row(int indent, Entry entry) {
-    }
 
+    }
     public sealed interface Entry {
+
     }
     //region Aperture
     /**
@@ -65,92 +65,94 @@ public final class InfoModel {
      * the real list position -- a lone second aperture shows number 2 but lives at index 0.
      */
     public record ApertureIndex(int number, int index) implements Entry {
-    }
 
+    }
     public record Blank() implements Entry {
-    }
 
+    }
     public record Realm(Aperture aperture) implements Entry {
-    }
 
+    }
     public record Status(ApertureStatus status) implements Entry {
-    }
 
+    }
     public record Talent(Aperture aperture, boolean awakened) implements Entry {
-    }
 
+    }
     public record Essence(Aperture aperture) implements Entry {
-    }
 
+    }
     public record Distilled(Aperture aperture) implements Entry {
-    }
 
+    }
     public record Pressure(Aperture aperture) implements Entry {
-    }
 
+    }
     public record PathChoice(boolean primary, int aperture, @Nullable GuPath path) implements Entry {
+
     }
     //endregion
 
     //region Body
     public record PhysiqueRow(@Nullable Physique physique, ExtremePhysique extremePhysique) implements Entry {
-    }
 
+    }
     public record RaceRow(Race race) implements Entry {
-    }
 
+    }
     public record Soul(SoulData soul) implements Entry {
-    }
 
+    }
     public record Lifespan(double lifespan, double age) implements Entry {
-    }
 
+    }
     public record PathsHeader(boolean empty) implements Entry {
-    }
 
+    }
     public record PathRow(GuPath path, PathEntry entry) implements Entry {
-    }
 
+    }
     public record QiPathAchieveHeader() implements Entry {
-    }
 
+    }
     public record QiKindRow(QiKind kind, long amount) implements Entry {
-    }
 
+    }
     public record StrengthPathAchieveHeader() implements Entry {
-    }
 
+    }
     public record StrengthPathBranchRow(StrengthPathBranch branch, int totalJin,
                                         Component reading) implements Entry {
     }
-
     public record TimePathAchieveHeader() implements Entry {
-    }
 
+    }
     public record TimeRateUpRow(int rate) implements Entry {
-    }
 
+    }
     public record CapacityRow(int usable, int total) implements Entry {
-    }
 
+    }
     public record AttackRow(double bonus) implements Entry {
-    }
 
+    }
     public record WisdomPathAchieveHeader() implements Entry {
-    }
 
+    }
     public record ThoughtTagRow(ThoughtTag tag, long amount) implements Entry {
+
     }
     //endregion
 
     //region Mind
     public record BrillianceRow(Brilliance brilliance) implements Entry {
-    }
 
+    }
     public record MindHeader() implements Entry {
-    }
 
+    }
     public record MindRow(WisdomType type, MindPool pool) implements Entry {
+
     }
     //endregion
 

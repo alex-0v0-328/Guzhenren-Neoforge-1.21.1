@@ -42,32 +42,24 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
     public static final int COLS = 9;
     public static final int ROWS = 6;
     public static final int PAGE_SIZE = COLS * ROWS;
-
     public static final int VITAL_SLOT = PAGE_SIZE + 36;
-
     public static final int BUTTON_PREV = 0;
     public static final int BUTTON_NEXT = 1;
-
     public static final int SLOT = 18;
     public static final int STORAGE_X = 8;
     public static final int STORAGE_Y = 18;
     public static final int INVENTORY_Y = 140;
     public static final int HOTBAR_Y = 198;
-
     public static final int VITAL_X = 186;
     public static final int VITAL_Y = 22;
-
     private static final int DATA_PAGE = 0;
     private static final int DATA_PAGES = 1;
     private static final int DATA_LOAD = 2;
-
     private final Player player;
     private final int aperture;
     private final SimpleContainer page = new SimpleContainer(PAGE_SIZE);
     private final SimpleContainer vital = new SimpleContainer(1);
-
     private final ContainerData pageData = new SimpleContainerData(3);
-
     private boolean loading;
     public ApertureStorageMenu(int id, Inventory inventory, int aperture, int pageIndex) {
         super(ModMenus.APERTURE_STORAGE_MENU.get(), id);
@@ -203,8 +195,8 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
     }
     @Override
     public boolean stillValid(@NotNull Player who) {return who == player && who.isAlive();}
-
     private class GuSlot extends Slot {
+
         GuSlot(Container container, int index, int x, int y) {super(container, index, x, y);}
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {
@@ -217,8 +209,8 @@ public class ApertureStorageMenu extends AbstractContainerMenu {
             return ApertureStorageService.maxStackSize(player, aperture, load(), getItem(), stack);
         }
     }
-
     private class VitalSlot extends Slot {
+
         VitalSlot(int x, int y) {super(vital, 0, x, y);}
         @Override
         public boolean mayPlace(@NotNull ItemStack stack) {

@@ -31,7 +31,6 @@ abstract class HotbarHud implements LayeredDraw.Layer {
     static final int NAME_GAP = 4;
     static final int MIN_SHIFT = 59;
     static final int CREATIVE_LIFT = 14;
-
     static int barTop(Minecraft minecraft) {
         Gui gui = minecraft.gui;
         int shift = Math.max(Math.max(gui.leftHeight, gui.rightHeight), MIN_SHIFT);

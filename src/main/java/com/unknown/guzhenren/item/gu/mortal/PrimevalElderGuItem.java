@@ -36,10 +36,8 @@ public class PrimevalElderGuItem extends TendedGuItem {
     private static final String FAILED_FULL = "guzhenren.item.failed.elder_gu_full";
     private static final String FAILED_NO_STONES = "guzhenren.item.failed.elder_gu_no_stones";
     private static final String TOOLTIP_STORED = "guzhenren.item.gu.stored_stones";
-
     private static final int WITHDRAW_STONES = 64;
     private static final long DEPOSIT_IS_FREE = 0L;
-
     private final long capacity;
     public PrimevalElderGuItem(Properties properties, long capacity, GuSpec spec) {
         super(properties, spec);

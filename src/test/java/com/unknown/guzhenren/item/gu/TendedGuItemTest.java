@@ -15,7 +15,6 @@ class TendedGuItemTest {
     void postRefineCooldownIsOneSecond() {
         assertEquals(Ticks.SECOND, TendedGuItem.POST_REFINE_COOLDOWN_TICKS);
     }
-
     @Test
     void freshlyRefinedGuIsBlockedForTheWholeSettleWindow() {
         ItemCooldowns cooldowns = new ItemCooldowns();
@@ -30,7 +29,6 @@ class TendedGuItemTest {
         cooldowns.tick();
         assertFalse(cooldowns.isOnCooldown(Items.AIR));
     }
-
     @Test
     void refineStampBlocksFirstUseUntilTheWindowElapses() {
         long refinedAt = 1_000L;
@@ -41,7 +39,6 @@ class TendedGuItemTest {
         assertEquals(0, TendedGuItem.stampCooldownLeft(refinedAt + window, refinedAt, window));
         assertEquals(0, TendedGuItem.stampCooldownLeft(refinedAt, null, window));
     }
-
     @Test
     void settlingNeverShortensAnExistingLongerCooldown() {
         ItemCooldowns cooldowns = new ItemCooldowns();

@@ -29,6 +29,7 @@ import net.minecraft.server.level.ServerPlayer;
  */
 
 public final class CmdQi {
+
     private CmdQi() {}
     private static final String ARG_KIND = "kind";
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
@@ -51,6 +52,7 @@ public final class CmdQi {
     }
     @FunctionalInterface
     private interface QiOperation {
+
         void apply(ServerPlayer player, QiKind kind, long value);
     }
 }

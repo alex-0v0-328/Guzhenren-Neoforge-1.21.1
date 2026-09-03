@@ -23,7 +23,6 @@ class ApertureStorageTest {
         assertEquals(3, storage.get(0).getFirst().getCount());
         assertEquals(3, storage.getVital(0).getCount());
     }
-
     @Test
     @DisplayName("storage readers return stack copies")
     void storageReadersDoNotExposeState() {
@@ -37,7 +36,6 @@ class ApertureStorageTest {
         assertEquals(3, storage.get(0).getFirst().getCount());
         assertEquals(4, storage.getVital(0).getCount());
     }
-
     @Test
     @DisplayName("with also copies a replacement stack")
     void withDoesNotAliasReplacement() {
@@ -48,7 +46,6 @@ class ApertureStorageTest {
 
         assertEquals(3, storage.get(0).getFirst().getCount());
     }
-
     @Test
     @DisplayName("page reads and comparisons stay bounded to the requested window")
     void pageOperationsUseOnlyTheirWindow() {

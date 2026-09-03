@@ -36,7 +36,6 @@ import org.junit.jupiter.api.Test;
 class CuriosDataContractTest {
 
     private static final String ROOT = "/data/guzhenren/curios/";
-
     @Test
     @DisplayName("the slots folder holds exactly the hands slot at size 2")
     void slotsFolderMatchesProvider() {
@@ -45,7 +44,6 @@ class CuriosDataContractTest {
         assertEquals(Set.of("size"), hands.keySet());
         assertEquals(2, hands.get("size").getAsInt());
     }
-
     @Test
     @DisplayName("the player entity carries the provider's slot list in order")
     void playerEntityMatchesProvider() {
@@ -59,7 +57,6 @@ class CuriosDataContractTest {
         assertEquals(List.of("hands", "back", "body", "head"),
                 slots.asList().stream().map(JsonElement::getAsString).toList());
     }
-
     @Test
     @DisplayName("the hands slot the provider creates is referenced by the player entity")
     void providerSlotIsReferenced() {
@@ -67,7 +64,6 @@ class CuriosDataContractTest {
         List<String> referenced = slots.asList().stream().map(JsonElement::getAsString).toList();
         assertTrue(referenced.contains("hands"), () -> "hands missing from player slots: " + referenced);
     }
-
     private static List<String> listJson(String folder) {
         URL url = CuriosDataContractTest.class.getResource(ROOT + folder);
         assertNotNull(url, () -> "curios folder missing from the classpath: " + ROOT + folder);
@@ -80,7 +76,6 @@ class CuriosDataContractTest {
             throw new AssertionError("cannot list " + ROOT + folder + " at " + url, e);
         }
     }
-
     private static JsonObject parse(String path) {
         InputStream stream = CuriosDataContractTest.class.getResourceAsStream(ROOT + path);
         assertNotNull(stream, () -> "curios file missing from the classpath: " + ROOT + path);

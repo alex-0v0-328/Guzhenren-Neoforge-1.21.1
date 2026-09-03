@@ -49,7 +49,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int GRID_SLOT = RefinementMenu.GRID_SLOT;
     private static final int CELL = 16;
     private static final int INVENTORY_COLS = 9;
-
     private static final int CRAFT_X = 140;
     private static final int CRAFT_Y = 76;
     private static final int CRAFT_W = 52;
@@ -63,7 +62,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int RECIPE_W = 52;
     private static final int RECIPE_H = 20;
     private static final int LEGEND_Y = 142;
-
     private static final int CORE_FILL = 0x4DFFFFFF;
     private static final int LEGEND_TEXT = 0xFFA0A0A0;
     private static final int SHORT_RED = 0x99FF5555;
@@ -74,13 +72,11 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int PICK_FILL = 0xF0000000;
     private static final int GHOST_OVERLAY = 0x1AFFFFFF;
     private static final float GHOST_ALPHA = 0.35F;
-
     private static final int POOL_X = 18;
     private static final int POOL_W = 230;
     private static final int POOL_H = 5;
     private static final int POOL_Y = 156;
     private static final int POOL_STRIDE = 19;
-
     private static final String CRAFT_KEY = "guzhenren.menu.refinement.craft";
     private static final String STOP_KEY = "guzhenren.menu.refinement.stop";
     private static final String POOL_KEY = "guzhenren.menu.refinement.pool";
@@ -101,7 +97,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final String PICK_SOUL_KEY = "guzhenren.menu.refinement.pick.soul";
     private static final String PICK_CHANCE_KEY = "guzhenren.menu.refinement.pick.chance";
     private static final String PICK_SUCCESS_KEY = "guzhenren.menu.refinement.pick.success";
-
     private static final int PICK_W = 200;
     private static final int PICK_PAD = 6;
     private static final int PICK_HEADER_H = 14;
@@ -109,17 +104,14 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private static final int PICK_MAX_ROWS = 5;
     private static final float PICK_Z = 500.0F;
     private static final String STONE_SEPARATOR = " · ";
-
     private static final int BACK_W = 16;
     private static final int BACK_H = 14;
     private static final String BACK_GLYPH = "<-";
     private static final int TITLE_X_WITH_BACK = 32;
     private static final int MARGIN = 18;
     private static final int HEADER_H = 20;
-
     private boolean picking;
     private int pickScroll;
-
     public RefinementScreen(RefinementMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         this.imageWidth = 266;
@@ -328,10 +320,8 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
                 y + (CRAFT_H - font.lineHeight) / 2 + 1, live ? ModPalette.TEXT : ModPalette.BUTTON_IDLE, false);
     }
     private boolean clickable() {return menu.ready() && !menu.running();}
-
     private int craftX() {return leftPos + CRAFT_X;}
     private int craftY() {return topPos + CRAFT_Y;}
-
     private boolean inCraft(double mx, double my) {
         return mx >= craftX() && mx < craftX() + CRAFT_W
                 && my >= craftY() && my < craftY() + CRAFT_H;
@@ -355,7 +345,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     }
     private int recipeX() {return leftPos + RECIPE_X;}
     private int recipeY() {return topPos + RECIPE_Y;}
-
     private boolean inRecipe(double mx, double my) {
         return mx >= recipeX() && mx < recipeX() + RECIPE_W
                 && my >= recipeY() && my < recipeY() + RECIPE_H;
@@ -441,7 +430,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     private int pickLeft() {return leftPos + (imageWidth - PICK_W) / 2;}
     private int pickTop(int visible) {return topPos + (imageHeight - pickHeight(visible)) / 2;}
     private int pickRowY(int y0, int i) {return y0 + PICK_HEADER_H + PICK_PAD + i * PICK_ROW_H;}
-
     private boolean clickPicker(double mx, double my) {
         List<RecipeHolder<GuRecipe>> known = known();
         int visible = Math.min(PICK_MAX_ROWS, known.size() + 1);
@@ -465,7 +453,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
 
     //region the 蛊方 a player may attempt -- the client holds the whole synced table, so it needs no packet
     private @Nullable List<RecipeHolder<GuRecipe>> knownCache;
-
     private List<RecipeHolder<GuRecipe>> known() {
         if (knownCache == null) {
             ClientLevel level = Minecraft.getInstance().level;
@@ -494,7 +481,6 @@ public class RefinementScreen extends AbstractContainerScreen<RefinementMenu> {
     }
     private int backX() {return leftPos + 11;}
     private int backY() {return topPos + 4;}
-
     private boolean inBack(double mx, double my) {
         return mx >= backX() && mx < backX() + BACK_W && my >= backY() && my < backY() + BACK_H;
     }

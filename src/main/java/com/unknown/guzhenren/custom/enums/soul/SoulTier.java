@@ -31,7 +31,6 @@ public enum SoulTier implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<SoulTier> CODEC = StringRepresentable.fromEnum(SoulTier::values);
     private static final String KEY_PREFIX = "guzhenren.enum.soul.tier.";
-
     private final long minSoul;
     SoulTier(long minSoul) {
         this.minSoul = minSoul;

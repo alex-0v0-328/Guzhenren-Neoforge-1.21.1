@@ -31,10 +31,8 @@ public enum Stage implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<Stage> CODEC = StringRepresentable.fromEnum(Stage::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.stage.";
-
     public static final Stage LOWEST = INIT;
     public static final Stage HIGHEST = PEAK;
-
     private final int essenceMultiplier;
     Stage(int essenceMultiplier) {
         this.essenceMultiplier = essenceMultiplier;

@@ -32,12 +32,13 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public class ModAdvancementProvider extends AdvancementProvider {
+
     public ModAdvancementProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries,
                                   ExistingFileHelper existingFileHelper) {
         super(output, registries, existingFileHelper, List.of(new GuzhenrenAdvancements()));
     }
-
     private static class GuzhenrenAdvancements implements AdvancementGenerator {
+
         @Override
         public void generate(HolderLookup.@NotNull Provider registries,
                              @NotNull Consumer<AdvancementHolder> saver,

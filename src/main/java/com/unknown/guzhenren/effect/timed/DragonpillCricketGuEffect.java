@@ -32,11 +32,8 @@ public class DragonpillCricketGuEffect extends MobEffect {
 
     public static final int DURATION_TICKS = 30 * Ticks.SECOND;
     public static final int AFTERMATH_TICKS = 20 * Ticks.SECOND;
-
     public static final double JUMP_BONUS = 0.20D;
-
     private static final int LAST_TICK = 1;
-
     private static final ResourceLocation MODIFIER_ID =
             Guzhenren.id("dragonpill_cricket_jump_strength");
     public DragonpillCricketGuEffect(MobEffectCategory category, int color) {

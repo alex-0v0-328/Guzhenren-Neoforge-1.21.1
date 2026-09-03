@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 public class BeastStrengthGuItem extends TendedGuItem {
 
     private static final String FAILED_STRENGTH_HELD = "guzhenren.item.failed.beast_strength_held";
-
     private final BeastStrength beast;
     public BeastStrengthGuItem(Properties properties, BeastStrength beast, GuSpec spec) {
         super(properties, spec);

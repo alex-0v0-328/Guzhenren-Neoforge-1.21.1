@@ -13,21 +13,17 @@ class AgingDisplayTest {
 
     /** Every rate a player can reach: no Watch Gu, one, the other, or both worn together. */
     private static final int[] RATES = {1, 2, 3, 5};
-
     private static final long BEAT = Ticks.SECOND;
-
     /** What one stretch of world time costs him, through the same door every other spend goes through. */
     private static long lived(long elapsedTicks, int rate) {
         return PathTimeFlowService.perStep(rate, BodyService.elapsedParts(elapsedTicks));
     }
-
     @Test
     @DisplayName("a game day is exactly one year, and a heartbeat is a whole number of parts")
     void aDayIsOneYear() {
         assertEquals(BodyData.PARTS_PER_YEAR, Ticks.DAY * BodyData.PARTS_PER_TICK);
         assertEquals(120L, BodyService.elapsedParts(BEAT));
     }
-
     @Test
     @DisplayName("☠ a hastened clock spends life FASTER -- the rate multiplies, it never divides")
     void hasteSpendsLifeFaster() {
@@ -39,7 +35,6 @@ class AgingDisplayTest {
             if (rate > 1) assertTrue(lived(BEAT, rate) > ordinary, "rate " + rate);
         }
     }
-
     @Test
     @DisplayName("a whole game day costs exactly one year at ordinary speed, and N years at rate N")
     void aDayCostsAYearPerRate() {
@@ -48,7 +43,6 @@ class AgingDisplayTest {
             assertEquals(BodyData.PARTS_PER_YEAR * rate, lived(BEAT, rate) * beatsPerDay, "rate " + rate);
         }
     }
-
     @Test
     @DisplayName("one five-minute form costs a quarter of a year per point of rate")
     void oneFormCostsAQuarterYearPerRate() {
@@ -57,7 +51,6 @@ class AgingDisplayTest {
         assertEquals(BodyData.PARTS_PER_YEAR * 3L / 4L, lived(form, 3));
         assertEquals(BodyData.PARTS_PER_YEAR * 5L / 4L, lived(form, 5));
     }
-
     @Test
     @DisplayName("one long offline stretch bills the same as the beats it stood in for")
     void offlineMatchesBeatByBeat() {
@@ -66,7 +59,6 @@ class AgingDisplayTest {
             assertEquals(lived(BEAT, rate) * beats, lived(beats * BEAT, rate), "rate " + rate);
         }
     }
-
     @Test
     @DisplayName("time running backwards bills nothing rather than handing life back")
     void backwardsTimeBillsNothing() {
@@ -75,7 +67,6 @@ class AgingDisplayTest {
             assertEquals(0L, lived(0L, rate), "rate " + rate);
         }
     }
-
     @Test
     @DisplayName("a default body starts on the stated years, not on a bare part count")
     void defaultsAreStatedInYears() {

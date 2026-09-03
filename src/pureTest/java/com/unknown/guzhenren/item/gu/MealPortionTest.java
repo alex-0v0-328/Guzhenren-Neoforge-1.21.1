@@ -12,14 +12,12 @@ class MealPortionTest {
         assertEquals(3, meal.items());
         assertEquals(1, meal.gained());
     }
-
     @Test
     void capsItemsAtNeed() {
         TendedGuItem.Meal meal = TendedGuItem.portion(99, 4, 10, 5);
         assertEquals(8, meal.items());
         assertEquals(4, meal.gained());
     }
-
     @Test
     void roundsEatenUpToCoverGained() {
         TendedGuItem.Meal meal = TendedGuItem.portion(99, 100, 3, 5);
@@ -27,7 +25,6 @@ class MealPortionTest {
         assertEquals(100, meal.gained());
         assertEquals(60, meal.eaten());
     }
-
     @Test
     void zeroGainYieldsZeroEaten() {
         TendedGuItem.Meal meal = TendedGuItem.portion(99, 0, 10, 5);

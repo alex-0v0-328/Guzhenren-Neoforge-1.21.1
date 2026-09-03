@@ -36,6 +36,7 @@ import net.minecraft.util.StringRepresentable;
  */
 
 public final class CmdAperture {
+
     private CmdAperture() {}
     private static final String ARG_APERTURE = "index";
     private static final String FAILED_INDEX = "guzhenren.command.failed.aperture_index";
@@ -102,21 +103,22 @@ public final class CmdAperture {
     }
     @FunctionalInterface
     private interface Indexed {
+
         void apply(ServerPlayer player, int aperture);
     }
-
     @FunctionalInterface
     private interface EnumOp<E extends Enum<E>> {
+
         void apply(ServerPlayer player, int aperture, E value);
     }
-
     @FunctionalInterface
     private interface IntOp {
+
         void apply(ServerPlayer player, int aperture, int value);
     }
-
     @FunctionalInterface
     private interface LongOp {
+
         void apply(ServerPlayer player, int aperture, long value);
     }
     private static <E extends Enum<E> & StringRepresentable> ArgumentBuilder<CommandSourceStack, ?> graded(

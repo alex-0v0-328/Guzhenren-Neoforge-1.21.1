@@ -23,13 +23,10 @@ import org.jetbrains.annotations.NotNull;
 public record OpenRefinementPayload() implements CustomPacketPayload {
 
     public static final OpenRefinementPayload INSTANCE = new OpenRefinementPayload();
-
     public static final Type<OpenRefinementPayload> TYPE = new Type<>(
             Guzhenren.id("open_refinement"));
-
     public static final StreamCodec<ByteBuf, OpenRefinementPayload> STREAM_CODEC =
             StreamCodec.unit(INSTANCE);
-
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {return TYPE;}
 }

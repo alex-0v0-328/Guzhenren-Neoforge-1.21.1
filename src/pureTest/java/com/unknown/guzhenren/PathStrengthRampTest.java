@@ -11,7 +11,6 @@ class PathStrengthRampTest {
 
     private static final int MORTAL_CAPACITY = 100;
     private static final int GREAT_STRENGTH_CAPACITY = 300;
-
     @Test
     @DisplayName("at or under the capacity every 斤 is usable")
     void oneToOneUnderCapacity() {
@@ -20,7 +19,6 @@ class PathStrengthRampTest {
         assertEquals(99, PathStrengthService.usableJin(MORTAL_CAPACITY, 99));
         assertEquals(100, PathStrengthService.usableJin(MORTAL_CAPACITY, 100));
     }
-
     @Test
     @DisplayName("the tail is EARNED -- 101 斤 must not jump to the locked 120")
     void theTailIsEarned() {
@@ -28,7 +26,6 @@ class PathStrengthRampTest {
         assertEquals(101, PathStrengthService.usableJin(MORTAL_CAPACITY, 145));
         assertEquals(110, PathStrengthService.usableJin(MORTAL_CAPACITY, 550));
     }
-
     @Test
     @DisplayName("the tail locks at capacity + 20, and stays there forever")
     void theTailLocks() {
@@ -36,7 +33,6 @@ class PathStrengthRampTest {
         assertEquals(120, PathStrengthService.usableJin(MORTAL_CAPACITY, 9999));
         assertEquals(120, PathStrengthService.usableJin(MORTAL_CAPACITY, Integer.MAX_VALUE / 2));
     }
-
     @Test
     @DisplayName("the lock scales with the physique, it is not an absolute 1000")
     void theLockScalesWithCapacity() {
@@ -46,7 +42,6 @@ class PathStrengthRampTest {
         assertEquals(320, PathStrengthService.usableJin(GREAT_STRENGTH_CAPACITY, 3000));
         assertEquals(320, PathStrengthService.usableJin(GREAT_STRENGTH_CAPACITY, 9999));
     }
-
     @Test
     @DisplayName("Hardship Strength Gu adds 20 capacity at every crossed health band")
     void hardshipStrengthBands() {
@@ -60,7 +55,6 @@ class PathStrengthRampTest {
         assertEquals(120, PathStrengthService.hardshipCapacityBonus(0.05D));
         assertEquals(120, PathStrengthService.hardshipCapacityBonus(0.0D));
     }
-
     @Test
     @DisplayName("Hardship Strength Gu moves the existing ramp instead of bypassing it")
     void hardshipStrengthMovesTheRamp() {
@@ -75,7 +69,6 @@ class PathStrengthRampTest {
         assertEquals(440, PathStrengthService.usableJin(greatStrengthCapacityAtFivePercent, 4200));
         assertEquals(440, PathStrengthService.usableJin(greatStrengthCapacityAtFivePercent, 9999));
     }
-
     @Test
     @DisplayName("the ramp never goes backwards as 斤 accumulate")
     void theRampIsMonotonic() {

@@ -28,7 +28,6 @@ public enum BeastStrength implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<BeastStrength> CODEC = StringRepresentable.fromEnum(BeastStrength::values);
     private static final String KEY_PREFIX = "guzhenren.enum.strength.beast_strength.";
-
     private final BeastStrengthFamily family;
     private final int reading;
     private final double attackBonus;

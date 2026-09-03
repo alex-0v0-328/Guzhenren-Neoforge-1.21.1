@@ -25,11 +25,9 @@ public class HoverNearPlayerGoal extends Goal {
 
     private static final double APPROACH_SPEED = 0.25;
     private static final double EASING = 0.25;
-
     private static final double BOB_AMPLITUDE = 0.15;
     private static final double BOB_FREQUENCY = 0.15;
     private static final double HOVER_DRAG = 0.8;
-
     private final FlyingGuEntity gu;
     private @Nullable Player target;
     public HoverNearPlayerGoal(FlyingGuEntity gu) {

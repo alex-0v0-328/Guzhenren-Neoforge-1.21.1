@@ -20,27 +20,23 @@ class GuRecipeTest {
         assertThrows(IllegalArgumentException.class, () -> recipe(0L, -1L, List.of(), 0));
         assertThrows(IllegalArgumentException.class, () -> recipe(0L, 0L, List.of(-1), 0));
     }
-
     @Test
     @DisplayName("recipe success must be a percentage")
     void successIsBounded() {
         assertThrows(IllegalArgumentException.class, () -> recipe(0L, 0L, List.of(), -1));
         assertThrows(IllegalArgumentException.class, () -> recipe(0L, 0L, List.of(), 101));
     }
-
     @Test
     @DisplayName("zero costs, windows and success remain valid")
     void zeroRemainsValid() {
         assertDoesNotThrow(() -> recipe(0L, 0L, List.of(0), 0));
     }
-
     @Test
     @DisplayName("recipe rejects runtime cost multiplication overflow")
     void runtimeCostOverflowIsRejected() {
         assertThrows(IllegalArgumentException.class, () -> recipe(Long.MAX_VALUE, 0L, List.of(1), 0));
         assertThrows(IllegalArgumentException.class, () -> recipe(0L, Long.MAX_VALUE, List.of(1), 0));
     }
-
     @Test
     @DisplayName("recipe rejects a window count whose duration overflows")
     void windowDurationOverflowIsRejected() {
@@ -57,7 +53,6 @@ class GuRecipeTest {
 
         assertThrows(IllegalArgumentException.class, () -> recipe(0L, 0L, tooManyWindows, 0));
     }
-
     private static GuRecipe recipe(long essence, long soul, List<Integer> windows, int success) {
         return new GuRecipe(List.of(), List.of(), List.of(), essence, soul, windows, success);
     }

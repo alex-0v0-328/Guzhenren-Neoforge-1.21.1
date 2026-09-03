@@ -20,13 +20,11 @@ class GuSpecTest {
                 .hungerBar(18, 3)
                 .essencePerHunger(100);
     }
-
     @Test
     @DisplayName("a real 灌注 registration passes its own check")
     void aRealChannelPasses() {
         assertDoesNotThrow(() -> channelling().validate("white_boar_gu"));
     }
-
     @Test
     @DisplayName("an 即时 Gu is not asked for hunger rates")
     void instantGuIsNotChecked() {
@@ -35,21 +33,18 @@ class GuSpecTest {
                 .hungerBar(4, 2).hungerPerUse(2)
                 .validate("roaming_zombie_gu"));
     }
-
     @Test
     @DisplayName("a round that does not divide by the hunger rate is refused")
     void roundMustDivideByHungerRate() {
         GuSpec bad = channelling().essencePerHunger(700);
         assertThrows(IllegalStateException.class, () -> bad.validate("white_boar_gu"));
     }
-
     @Test
     @DisplayName("a channel that costs no hunger is refused")
     void aChannelMustPaySomething() {
         assertThrows(IllegalStateException.class, () -> GuSpec.of(Rank.ONE, GuPath.STRENGTH)
                 .channel(3_600).validate("no_hunger"));
     }
-
     @Test
     @DisplayName("negative prices are refused on either shape")
     void negativePricesAreRefused() {
@@ -58,7 +53,6 @@ class GuSpecTest {
         assertThrows(IllegalStateException.class,
                 () -> GuSpec.of(Rank.ONE, GuPath.STRENGTH).costPerUse(-1).validate("negative_use"));
     }
-
     @Test
     @DisplayName("effect and item cooldowns can be configured independently")
     void cooldownsAreIndependent() {

@@ -29,22 +29,18 @@ public record ApertureNourishData(boolean cultivating, int target, long starvedS
     public static final int FULL = 100;
     public static final long NOT_STARVED = -1L;
     public static final long STARVE_GRACE_TICKS = 10L * Ticks.SECOND;
-
     public static final ApertureNourishData DEFAULT = new ApertureNourishData(false, ApertureData.PRIMARY, NOT_STARVED);
-
     public static final Codec<ApertureNourishData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.BOOL.optionalFieldOf("cultivating", false).forGetter(ApertureNourishData::cultivating),
             Codec.INT.optionalFieldOf("target", ApertureData.PRIMARY).forGetter(ApertureNourishData::target),
             Codec.LONG.optionalFieldOf("starved_since_tick", NOT_STARVED)
                     .forGetter(ApertureNourishData::starvedSinceTick)
     ).apply(instance, ApertureNourishData::new));
-
     public static final StreamCodec<ByteBuf, ApertureNourishData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, ApertureNourishData::cultivating,
             ByteBufCodecs.VAR_INT, ApertureNourishData::target,
             ByteBufCodecs.VAR_LONG, ApertureNourishData::starvedSinceTick,
             ApertureNourishData::new);
-
     public boolean isStarving() {return starvedSinceTick != NOT_STARVED;}
     public boolean starvedOut(long now) {return isStarving() && now - starvedSinceTick >= STARVE_GRACE_TICKS;}
     public ApertureNourishData withCultivating(boolean v) {return new ApertureNourishData(v, target, starvedSinceTick);}

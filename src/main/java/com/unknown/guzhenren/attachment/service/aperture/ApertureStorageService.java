@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class ApertureStorageService {
+
     private ApertureStorageService() {}
     public static final int MAX_LOAD = 256;
     public static @NotNull ApertureStorage get(@NotNull Player p) {return p.getData(ModAttachments.APERTURE_STORAGE);}

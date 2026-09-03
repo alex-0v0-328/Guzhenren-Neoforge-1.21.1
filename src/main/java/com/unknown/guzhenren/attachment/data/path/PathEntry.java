@@ -32,14 +32,11 @@ import net.minecraft.network.codec.StreamCodec;
 public record PathEntry(GuAttainment attainment, Map<MarkTag, Long> marks) {
 
     public static final PathEntry DEFAULT = new PathEntry(GuAttainment.NONE, Map.of());
-
     private static final Codec<Map<MarkTag, Long>> TAGS = Codec.unboundedMap(MarkTag.CODEC, Codec.LONG);
-
     public static final Codec<PathEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             GuAttainment.CODEC.optionalFieldOf("attainment", GuAttainment.NONE).forGetter(PathEntry::attainment),
             TAGS.optionalFieldOf("marks", Map.of()).forGetter(PathEntry::marks)
     ).apply(instance, PathEntry::new));
-
     public static final StreamCodec<ByteBuf, PathEntry> STREAM_CODEC = StreamCodec.composite(
             ModStreamCodecs.ofEnum(GuAttainment.class), PathEntry::attainment,
             ModStreamCodecs.enumMap(MarkTag.class, ByteBufCodecs.VAR_LONG), PathEntry::marks,

@@ -38,12 +38,10 @@ import org.junit.jupiter.api.Test;
 class LangContractTest {
 
     private static final Pattern BRACKETS = Pattern.compile("\\[[^\\[\\]]*\\]");
-
     private static final Set<String> BLANK_BY_DESIGN = Set.of(
             "guzhenren.enum.aperture.rank.none",
             "guzhenren.enum.aperture.stage.none",
             "guzhenren.enum.body.extreme_physique.none");
-
     @Test
     @DisplayName("en_us and zh_cn carry exactly the same key set")
     void languagesShareKeySets() {
@@ -55,7 +53,6 @@ class LangContractTest {
                 () -> "key sets differ -- only in en_us: " + onlyInEn + ", only in zh_cn: " + onlyInZh);
         assertEquals(en.keySet(), zh.keySet());
     }
-
     @Test
     @DisplayName("zh_cn bracket annotations never contain whitespace")
     void zhBracketsHaveNoWhitespace() {
@@ -74,7 +71,6 @@ class LangContractTest {
             }
         }
     }
-
     @Test
     @DisplayName("only the none enum keys may be blank, and identically in both languages")
     void onlyNoneKeysAreBlank() {
@@ -90,7 +86,6 @@ class LangContractTest {
                     () -> "blank values in " + language + " deviate from the none enum keys");
         }
     }
-
     private static List<String> keysMissingFrom(JsonObject source, JsonObject target) {
         List<String> missing = new ArrayList<>();
         for (String key : source.keySet()) {
@@ -98,7 +93,6 @@ class LangContractTest {
         }
         return missing;
     }
-
     private static JsonObject load(String language) {
         InputStream stream = LangContractTest.class.getResourceAsStream(
                 "/assets/guzhenren/lang/" + language + ".json");

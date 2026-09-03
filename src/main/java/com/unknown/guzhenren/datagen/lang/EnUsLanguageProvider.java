@@ -42,6 +42,7 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
  */
 
 public class EnUsLanguageProvider extends LanguageProvider {
+
     public EnUsLanguageProvider(PackOutput output) {
         super(output, Guzhenren.MOD_ID, "en_us");
     }

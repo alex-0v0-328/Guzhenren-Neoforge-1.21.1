@@ -21,10 +21,8 @@ import net.minecraft.world.level.biome.Biome;
 public final class ModBiomeTags {
 
     private ModBiomeTags() {}
-
     public static final TagKey<Biome> HOPE_GU_SPAWNS = key("hope_gu_spawns");
     public static final TagKey<Biome> BOAR_GU_SPAWNS = key("boar_gu_spawns");
-
     private static TagKey<Biome> key(String name) {
         return TagKey.create(Registries.BIOME, Guzhenren.id(name));
     }

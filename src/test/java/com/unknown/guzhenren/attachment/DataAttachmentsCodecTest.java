@@ -76,7 +76,6 @@ class DataAttachmentsCodecTest {
             buffer.release();
         }
     }
-
     @Test
     @DisplayName("SoulData stream codec roundtrips and the compact ctor clamps current into [0, max]")
     void soulRoundTrip() {
@@ -100,7 +99,6 @@ class DataAttachmentsCodecTest {
             buffer.release();
         }
     }
-
     @Test
     @DisplayName("PathData stream codec roundtrips entries and keeps non-default ones only")
     void pathDataRoundTrip() {
@@ -123,7 +121,6 @@ class DataAttachmentsCodecTest {
             buffer.release();
         }
     }
-
     @Test
     @DisplayName("PathStrengthData stream codec roundtrips the beast set and capped human layers")
     void pathStrengthRoundTrip() {
@@ -148,7 +145,6 @@ class DataAttachmentsCodecTest {
             buffer.release();
         }
     }
-
     @Test
     @DisplayName("PathQiEntry and PathQiData stream codecs roundtrip, zero hold end included")
     void pathQiRoundTrip() {
@@ -176,7 +172,6 @@ class DataAttachmentsCodecTest {
             buffer.release();
         }
     }
-
     @Test
     @DisplayName("MindPool stream codec roundtrips and latches the overflow flag")
     void mindPoolRoundTrip() {
@@ -202,7 +197,6 @@ class DataAttachmentsCodecTest {
             buffer.release();
         }
     }
-
     @Test
     @DisplayName("MindData stream codec roundtrips brilliance, dense pools and tagged thoughts")
     void mindRoundTrip() {
@@ -227,7 +221,6 @@ class DataAttachmentsCodecTest {
             buffer.release();
         }
     }
-
     @Test
     @DisplayName("ApertureStorage NBT codec keeps interior holes and the vital slot")
     void apertureStorageKeepsInteriorHoles() {
@@ -244,7 +237,6 @@ class DataAttachmentsCodecTest {
         assertEquals(2, decoded.get(1).getFirst().getCount());
         assertEquals(1, decoded.getVital(0).getCount());
     }
-
     @Test
     @DisplayName("ApertureStorage NBT codec trims trailing holes only")
     void apertureStorageTrimsTrailingHoles() {
@@ -255,7 +247,6 @@ class DataAttachmentsCodecTest {
         assertSameContents(trimmed, decoded);
         assertEquals(1, decoded.byAperture().size());
     }
-
     @Test
     @DisplayName("every attachment default roundtrips through its own codec")
     void defaultsRoundTrip() {
@@ -279,12 +270,10 @@ class DataAttachmentsCodecTest {
         }
         assertEquals(ApertureStorage.DEFAULT, nbtRoundTrip(ApertureStorage.DEFAULT));
     }
-
     private static ApertureStorage nbtRoundTrip(ApertureStorage storage) {
         Tag tag = ApertureStorage.CODEC.encodeStart(NbtOps.INSTANCE, storage).getOrThrow();
         return ApertureStorage.CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
     }
-
     private static void assertSameContents(ApertureStorage expected, ApertureStorage actual) {
         assertEquals(expected.byAperture().size(), actual.byAperture().size());
         for (int i = 0; i < expected.byAperture().size(); i++) {

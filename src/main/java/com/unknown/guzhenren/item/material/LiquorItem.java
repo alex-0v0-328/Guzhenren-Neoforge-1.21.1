@@ -30,7 +30,6 @@ public class LiquorItem extends GuMaterialItem {
 
     private static final int NUTRITION = 1;
     private static final float SATURATION = 0.1F;
-
     private static final float NAUSEA_CHANCE = 0.6F;
     private static final int NAUSEA_TICKS = 300;
     public LiquorItem(Properties properties) {

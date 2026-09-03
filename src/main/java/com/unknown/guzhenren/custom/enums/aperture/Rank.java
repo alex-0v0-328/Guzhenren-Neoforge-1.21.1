@@ -39,10 +39,8 @@ public enum Rank implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<Rank> CODEC = StringRepresentable.fromEnum(Rank::values);
     private static final String KEY_PREFIX = "guzhenren.enum.aperture.rank.";
-
     public static final Rank LOWEST = ONE;
     public static final Rank HIGHEST = FIVE;
-
     private final long rankBase;
     private final int maxHealth;
     private final EssenceColor essenceColor;

@@ -29,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 public class CasualThoughtEffect extends MobEffect {
 
     public static final int DURATION_TICKS = 10 * Ticks.SECOND;
-
     private static final int[][] RANGES = {{1, 100}, {100, 200}};
     public CasualThoughtEffect(MobEffectCategory category, int color) {
         super(category, color);

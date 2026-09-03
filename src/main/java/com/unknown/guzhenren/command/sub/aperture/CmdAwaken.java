@@ -25,6 +25,7 @@ import net.minecraft.server.level.ServerPlayer;
  */
 
 public final class CmdAwaken {
+
     private CmdAwaken() {}
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return ModCommandSupport.withTargets(Commands.literal("awaken"),

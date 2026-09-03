@@ -45,9 +45,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class GuItem extends Item {
 
     public static final int COOLDOWN_TICKS = 2;
-
     public static final int CHARGE_COLOR_DEFAULT = 0xFF4FC3F7;
-
     private final Rank rank;
     private final GuPath path;
     protected GuItem(Properties properties, Rank rank, GuPath path) {
@@ -59,14 +57,13 @@ public abstract class GuItem extends Item {
     public Rank rank() {return rank;}
     public GuPath path() {return path;}
     protected int tier() {return rank.ordinal() - Rank.ONE.ordinal();}
-
     public record Refusal(String key, Object... args) {
+
     }
     //region 蓄力 [charge] -- paced by the holder's rank against this item's own, never by the stage
     public static final int USE_FAST_TICKS = 5;
     public static final int USE_SAME_TICKS = Ticks.HALF_SECOND;
     public static final int USE_SLOW_TICKS = 20;
-
     protected int rankGap(Player p) {return ApertureService.rank(p).ordinal() - rank.ordinal();}
     protected int useChargeByGap(Player player) {
         int gap = rankGap(player);

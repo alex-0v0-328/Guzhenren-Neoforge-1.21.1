@@ -29,11 +29,9 @@ class SecondApertureTest {
         assertEquals(2, ApertureStatus.values().length);
         assertFalse(java.util.Arrays.stream(ApertureStatus.values()).anyMatch(value -> value.name().equals("STONE")));
     }
-
     private static Aperture pool(long current, long distilled) {
         return new Aperture(Rank.THREE, Stage.INIT, 80, current, null, null, distilled, 0, 0L, 0, false, false);
     }
-
     @Test
     @DisplayName("the second aperture lands Grade-A at 8/10, first stage, full pool, no physique")
     void secondaryOpenedShape() {
@@ -46,7 +44,6 @@ class SecondApertureTest {
         assertEquals(0L, opened.distilledEssence());
         assertTrue(opened.second());
     }
-
     @Test
     @DisplayName("a lone second aperture is not awakened; Hope Gu inserts the first one ahead of it")
     void awakeningOrderAndInsertFirst() {
@@ -64,7 +61,6 @@ class SecondApertureTest {
         assertSame(second, both.get(1));
         assertFalse(both.primary().second());
     }
-
     @Test
     @DisplayName("insertFirst falls back to append once the first aperture exists")
     void insertFirstAppendsWhenFirstExists() {
@@ -73,7 +69,6 @@ class SecondApertureTest {
         assertFalse(two.get(0).second());
         assertEquals(1, two.secondIndex());
     }
-
     @Test
     @DisplayName("decoding heals a pre-flag save: the entry at position 1 becomes the second aperture")
     void codecHealsLegacyPositions() {
@@ -89,7 +84,6 @@ class SecondApertureTest {
         assertFalse(healed.get(0).second());
         assertTrue(healed.get(1).second());
     }
-
     @Test
     @DisplayName("spending walks PRIMARY distilled, then PRIMARY current, then the second aperture")
     void cascadeWalksPrimaryFirst() {
@@ -97,14 +91,12 @@ class SecondApertureTest {
         assertArrayEquals(new long[] {10L, 30L}, plan[0]);
         assertArrayEquals(new long[] {0L, 0L}, plan[1]);
     }
-
     @Test
     @DisplayName("the distilled half rounds UP -- the last distilled point cannot pay for itself twice")
     void distilledRoundsUp() {
         long[][] plan = ApertureEssenceService.cascadeTake(5L, List.of(pool(100L, 10L)));
         assertArrayEquals(new long[] {3L, 0L}, plan[0]);
     }
-
     @Test
     @DisplayName("an exhausted PRIMARY spills the remainder into the second aperture")
     void cascadeSpillsIntoSecond() {
@@ -112,7 +104,6 @@ class SecondApertureTest {
         assertArrayEquals(new long[] {0L, 0L}, plan[0]);
         assertArrayEquals(new long[] {20L, 90L}, plan[1]);
     }
-
     @Test
     @DisplayName("a single pool that covers everything never wakes the second aperture")
     void cascadeStopsWhenCovered() {
@@ -120,7 +111,6 @@ class SecondApertureTest {
         assertArrayEquals(new long[] {0L, 30L}, plan[0]);
         assertArrayEquals(new long[] {0L, 0L}, plan[1]);
     }
-
     @Test
     @DisplayName("石窍蛊 target: PRIMARY wins while NORMAL; only DEAD passes it on")
     void stoneTargetTable() {

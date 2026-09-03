@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
  */
 
 public abstract class ConsumedGuItem extends TendedGuItem {
+
     protected ConsumedGuItem(Properties properties, GuSpec spec) {
         super(properties, spec);
     }

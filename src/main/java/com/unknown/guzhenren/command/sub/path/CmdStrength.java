@@ -28,6 +28,7 @@ import net.minecraft.server.level.ServerPlayer;
  */
 
 public final class CmdStrength {
+
     private CmdStrength() {}
     private static final String ARG_KIND = "kind";
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
@@ -69,6 +70,7 @@ public final class CmdStrength {
     }
     @FunctionalInterface
     private interface HumanStrengthOperation {
+
         void apply(ServerPlayer player, HumanStrength kind, int value);
     }
 }

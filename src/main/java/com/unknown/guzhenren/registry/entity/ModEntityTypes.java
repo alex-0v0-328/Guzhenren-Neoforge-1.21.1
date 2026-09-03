@@ -27,15 +27,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class ModEntityTypes {
 
     private ModEntityTypes() {}
-
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
             DeferredRegister.create(Registries.ENTITY_TYPE, Guzhenren.MOD_ID);
-
     private static final float MOTE_WIDTH = 0.4F;
     private static final float MOTE_HEIGHT = 0.4F;
-
     private static final int TRACKING_CHUNKS = 8;
-
     public static final DeferredHolder<EntityType<?>, EntityType<HopeGuEntity>> HOPE_GU_ENTITY =
             ENTITY_TYPES.register("hope_gu_entity", () -> EntityType.Builder
                     .<HopeGuEntity>of((type, level) ->
@@ -44,7 +40,6 @@ public final class ModEntityTypes {
                     .sized(MOTE_WIDTH, MOTE_HEIGHT)
                     .clientTrackingRange(TRACKING_CHUNKS)
                     .build("hope_gu_entity"));
-
     public static final DeferredHolder<EntityType<?>, EntityType<BoarGuEntity>> WHITE_BOAR_GU_ENTITY =
             ENTITY_TYPES.register("white_boar_gu_entity", () -> EntityType.Builder
                     .<BoarGuEntity>of((type, level) -> new BoarGuEntity(type, level, ModItems.WHITE_BOAR_GU),
@@ -52,7 +47,6 @@ public final class ModEntityTypes {
                     .sized(MOTE_WIDTH, MOTE_HEIGHT)
                     .clientTrackingRange(TRACKING_CHUNKS)
                     .build("white_boar_gu_entity"));
-
     public static final DeferredHolder<EntityType<?>, EntityType<BoarGuEntity>> BLACK_BOAR_GU_ENTITY =
             ENTITY_TYPES.register("black_boar_gu_entity", () -> EntityType.Builder
                     .<BoarGuEntity>of((type, level) -> new BoarGuEntity(type, level, ModItems.BLACK_BOAR_GU),
@@ -60,7 +54,6 @@ public final class ModEntityTypes {
                     .sized(MOTE_WIDTH, MOTE_HEIGHT)
                     .clientTrackingRange(TRACKING_CHUNKS)
                     .build("black_boar_gu_entity"));
-
     public static final DeferredHolder<EntityType<?>, EntityType<BoarGuEntity>> FLOWER_BOAR_GU_ENTITY =
             ENTITY_TYPES.register("flower_boar_gu_entity", () -> EntityType.Builder
                     .<BoarGuEntity>of((type, level) -> new BoarGuEntity(type, level, ModItems.FLOWER_BOAR_GU),
@@ -68,7 +61,6 @@ public final class ModEntityTypes {
                     .sized(MOTE_WIDTH, MOTE_HEIGHT)
                     .clientTrackingRange(TRACKING_CHUNKS)
                     .build("flower_boar_gu_entity"));
-
     public static void register(IEventBus modEventBus) {
         ENTITY_TYPES.register(modEventBus);
     }

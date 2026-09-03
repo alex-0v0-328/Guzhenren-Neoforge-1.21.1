@@ -22,7 +22,6 @@ class HopeGuUsedTriggerTest {
         HopeGuUsedTrigger.Instance back = HopeGuUsedTrigger.Instance.CODEC.parse(JsonOps.INSTANCE, encoded).getOrThrow();
         assertEquals(instance, back);
     }
-
     @Test
     @DisplayName("codec() serves the Instance codec, criterion() carries this trigger")
     void codecAndCriterionWiring() {

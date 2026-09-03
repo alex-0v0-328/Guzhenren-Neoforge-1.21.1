@@ -30,9 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class HumanStrengthGuItem extends TendedGuItem {
 
     private static final String FAILED_LAYERS_FULL = "guzhenren.item.failed.human_strength_full";
-
     private static final int LAYERS_PER_GRANT = 1;
-
     private final HumanStrength kind;
     public HumanStrengthGuItem(Properties properties, HumanStrength kind, GuSpec spec) {
         super(properties, spec);

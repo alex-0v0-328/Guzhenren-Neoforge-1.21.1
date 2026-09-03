@@ -43,7 +43,6 @@ class HopeGuSpawnTagTest {
             throw new AssertionError(e);
         }
     }
-
     private InputStream getResource() {
         InputStream stream = getClass().getResourceAsStream(
                 "/data/guzhenren/tags/worldgen/biome/hope_gu_spawns.json");

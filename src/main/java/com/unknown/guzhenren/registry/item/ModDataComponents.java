@@ -32,50 +32,40 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public final class ModDataComponents {
 
     private ModDataComponents() {}
-
     public static final DeferredRegister.DataComponents DATA_COMPONENTS =
             DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, Guzhenren.MOD_ID);
-
     public static final Supplier<DataComponentType<RefinedGuState>> REFINED_GU_STATE =
             DATA_COMPONENTS.registerComponentType("refined_gu_state", builder -> builder
                     .persistent(RefinedGuState.CODEC)
                     .networkSynchronized(RefinedGuState.STREAM_CODEC));
-
     public static final Supplier<DataComponentType<UUID>> VITAL_OWNER =
             DATA_COMPONENTS.registerComponentType("vital_owner", builder -> builder
                     .persistent(UUIDUtil.CODEC)
                     .networkSynchronized(UUIDUtil.STREAM_CODEC));
-
     public static final Supplier<DataComponentType<Integer>> VITAL_APERTURE =
             DATA_COMPONENTS.registerComponentType("vital_aperture", builder -> builder
                     .persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.VAR_INT));
-
     public static final Supplier<DataComponentType<Long>> STORED_STONES =
             DATA_COMPONENTS.registerComponentType("stored_stones", builder -> builder
                     .persistent(Codec.LONG)
                     .networkSynchronized(ByteBufCodecs.VAR_LONG));
-
     public static final Supplier<DataComponentType<Long>> REFINED_AT =
             DATA_COMPONENTS.registerComponentType("refined_at", builder -> builder
                     .persistent(Codec.LONG)
                     .networkSynchronized(ByteBufCodecs.VAR_LONG));
-
     public static final Supplier<DataComponentType<Integer>> AWAKEN_BASE =
             DATA_COMPONENTS.registerComponentType("awaken_base", builder -> builder
                     .persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.VAR_INT));
-
     public static final Supplier<DataComponentType<Long>> USED_AT =
             DATA_COMPONENTS.registerComponentType("used_at", builder -> builder
                     .persistent(Codec.LONG)
                     .networkSynchronized(ByteBufCodecs.VAR_LONG));
-
     public static final Supplier<DataComponentType<Integer>> HEAL_BANK =
             DATA_COMPONENTS.registerComponentType("heal_bank", builder -> builder
                     .persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.VAR_INT));
-
     public static void register(IEventBus modEventBus) {
         DATA_COMPONENTS.register(modEventBus);
     }

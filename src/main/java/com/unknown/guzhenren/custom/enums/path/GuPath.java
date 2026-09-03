@@ -31,10 +31,8 @@ public enum GuPath implements StringRepresentable, EnumTranslatable {
     STRENGTH, DREAM, REFINEMENT, WISDOM, INFORMATION, THEFT,
     LUCK, KILLING, BLOOD, SOUL, ENSLAVEMENT,
     FOOD, FORMATION, PAINTING, TRANSFORMATION;
-
     public static final Codec<GuPath> CODEC = StringRepresentable.fromEnum(GuPath::values);
     private static final String KEY_PREFIX = "guzhenren.enum.path.path.";
-
     @Override
     public @NotNull String getSerializedName() {return name().toLowerCase();}
     public String getTranslationKey() {return KEY_PREFIX + name().toLowerCase();}

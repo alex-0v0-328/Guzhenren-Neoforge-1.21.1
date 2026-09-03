@@ -21,6 +21,7 @@ import net.minecraft.commands.Commands;
  */
 
 public final class CmdMind {
+
     private CmdMind() {}
     public static ArgumentBuilder<CommandSourceStack, ?> node() {
         return Commands.literal("mind")

@@ -55,9 +55,7 @@ public abstract class TendedGuItem extends MortalGuItem {
     private static final String MSG_STARVED = "guzhenren.item.gu.starved";
     private static final String MSG_EXHAUSTED = "guzhenren.item.gu.exhausted";
     private static final String MSG_RUINED = "guzhenren.item.gu.ruined";
-
     private static final int ESSENCE_FLOOR = 20;
-
     protected final GuClock clock;
     protected TendedGuItem(Properties properties, GuSpec spec) {
         super(properties, spec);
@@ -261,7 +259,6 @@ public abstract class TendedGuItem extends MortalGuItem {
 
     //region the long cooldown -- vanilla draws the sweep, the stack's stamp is the truth
     private static final String FAILED_COOLDOWN = "guzhenren.item.failed.gu_cooldown";
-
     private static long gameTime(ServerPlayer player) {return player.server.overworld().getGameTime();}
     /**
      * ⚠ Stamped BACK by the share a hastened clock has already served, because the stamp is read again

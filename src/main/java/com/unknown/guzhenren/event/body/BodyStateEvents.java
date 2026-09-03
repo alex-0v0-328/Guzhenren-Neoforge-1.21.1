@@ -31,6 +31,7 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class BodyStateEvents {
+
     private BodyStateEvents() {}
     @SubscribeEvent
     public static void onBreathe(LivingBreatheEvent event) {

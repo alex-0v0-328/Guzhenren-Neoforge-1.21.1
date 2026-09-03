@@ -21,6 +21,7 @@ import net.minecraft.world.effect.MobEffectCategory;
  */
 
 public class HalfZombieEffect extends MobEffect {
+
     public HalfZombieEffect(MobEffectCategory category, int color) {
         super(category, color);
     }

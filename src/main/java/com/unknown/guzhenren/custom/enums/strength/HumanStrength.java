@@ -30,11 +30,8 @@ public enum HumanStrength implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<HumanStrength> CODEC = StringRepresentable.fromEnum(HumanStrength::values);
     private static final String KEY_PREFIX = "guzhenren.enum.strength.human_strength.";
-
     public static final int TEN_FACTOR = 10;
-
     public static final double ATTACK_PER_JIN = 0.125D;
-
     private final int jin;
     private final int maxLayers;
     HumanStrength(int jin, int maxLayers) {

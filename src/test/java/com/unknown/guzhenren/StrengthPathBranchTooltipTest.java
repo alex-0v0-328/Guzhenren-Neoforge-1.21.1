@@ -25,7 +25,6 @@ class StrengthPathBranchTooltipTest {
             assertBranch(item, "guzhenren.enum.strength.strength_path_branch.beast_strength_phantom");
         }
     }
-
     @Test
     @DisplayName("all Human Jun Strength Gu show their branch below the Gu identity")
     void humanJunStrengthBranchIsShown() {
@@ -34,30 +33,25 @@ class StrengthPathBranchTooltipTest {
             assertBranch(item, "guzhenren.enum.strength.strength_path_branch.human_jun_strength");
         }
     }
-
     @Test
     @DisplayName("Normal Strength Path Gu do not repeat their branch")
     void normalStrengthPathBranchIsHidden() {
         assertFalse(hasStrengthPathBranch(ModItems.ALL_OUT_EFFORT_GU_3.get()));
     }
-
     @Test
     @DisplayName("non-Strength Path Gu never show a Strength Path branch")
     void nonStrengthPathGuNeverShowStrengthPathBranch() {
         assertFalse(hasStrengthPathBranch(ModItems.SECOND_WATCH_GU.get()));
     }
-
     private static boolean hasStrengthPathBranch(Item item) {
         return keys(item).stream().anyMatch(key -> key.startsWith(
                 "guzhenren.enum.strength.strength_path_branch."));
     }
-
     private static void assertBranch(Item item, String key) {
         List<String> tooltipKeys = keys(item);
         assertTrue(tooltipKeys.size() > 1, item.toString());
         assertEquals(key, tooltipKeys.get(1), item.toString());
     }
-
     private static List<String> keys(Item item) {
         List<Component> tooltip = new ArrayList<>();
         item.appendHoverText(new ItemStack(item), null, tooltip, null);

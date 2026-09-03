@@ -74,7 +74,6 @@ public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
     private static final ResourceKey<BiomeModifier> SPAWN_FLOWER_BOAR_GU = ResourceKey.create(
             NeoForgeRegistries.Keys.BIOME_MODIFIERS,
             Guzhenren.id("spawn_flower_boar_gu"));
-
     private static final int SPAWN_WEIGHT = 8;
     private static final int PACK_MINIMUM = 1;
     private static final int PACK_MAXIMUM = 2;

@@ -35,6 +35,7 @@ import net.minecraft.server.level.ServerPlayer;
  */
 
 public final class CmdInfo {
+
     private CmdInfo() {}
     private static final String PREFIX = "guzhenren.command.info.";
     public static ArgumentBuilder<CommandSourceStack, ?> node() {

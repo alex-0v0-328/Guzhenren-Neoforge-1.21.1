@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class ApertureEssenceService {
+
     private ApertureEssenceService() {}
     public static final long BASE_REGEN_PER_DAY = 100L;
     public static final int REGEN_INTERVAL_TICKS = Ticks.SECOND;

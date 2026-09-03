@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 public class LifespanGuItem extends OneShotGuItem {
 
     private static final String MSG_GAINED = "guzhenren.item.gu.lifespan_gained";
-
     private final int minYears;
     private final int maxYears;
     public LifespanGuItem(Properties properties, int minYears, int maxYears, GuSpec spec) {

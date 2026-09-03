@@ -31,10 +31,8 @@ public enum Brilliance implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<Brilliance> CODEC = StringRepresentable.fromEnum(Brilliance::values);
     private static final String KEY_PREFIX = "guzhenren.enum.wisdom.brilliance.";
-
     public static final Brilliance LOWEST = ORDINARY;
     public static final Brilliance HIGHEST = UNRIVALED;
-
     private final long thoughtsPerSecond;
     private final int weight;
     Brilliance(long thoughtsPerSecond, int weight) {

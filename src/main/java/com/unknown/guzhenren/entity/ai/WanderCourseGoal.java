@@ -25,10 +25,8 @@ public class WanderCourseGoal extends WaterAvoidingRandomFlyingGoal {
     private static final double SPEED_MODIFIER = 1.0D;
     private static final int RECOURSE_TICKS = 100;
     private static final int LANDING_ROLL_SIDES = 10;
-
     private final BoarGuEntity boar;
     private int courseTicks;
-
     public WanderCourseGoal(BoarGuEntity boar) {
         super(boar, SPEED_MODIFIER);
         this.boar = boar;

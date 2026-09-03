@@ -16,7 +16,6 @@ class TitleTest {
         assertSame(Title.MORTAL, Title.fromRank(Rank.NONE));
         assertSame(Title.GU_MASTER, Title.fromRank(Rank.ONE));
     }
-
     @Test
     @DisplayName("一转 through 五转 are all 蛊师")
     void mortalRanksAreGuMaster() {
@@ -26,7 +25,6 @@ class TitleTest {
         assertSame(Title.GU_MASTER, Title.fromRank(Rank.FOUR));
         assertSame(Title.GU_MASTER, Title.fromRank(Rank.FIVE));
     }
-
     @Test
     @DisplayName("六转 and above are 蛊仙 -- the phase 3 half of the ladder")
     void immortalRanks() {
@@ -35,7 +33,6 @@ class TitleTest {
         assertSame(Title.GU_IMMORTAL, Title.fromRank(Rank.EIGHT));
         assertSame(Title.GU_IMMORTAL, Title.fromRank(Rank.NINE));
     }
-
     @Test
     @DisplayName("every rank has a title -- fromRank is total")
     void fromRankIsTotal() {
@@ -43,7 +40,6 @@ class TitleTest {
             assertTrue(Title.fromRank(rank) != null, rank + " has no title");
         }
     }
-
     @Test
     @DisplayName("Rank.shift clamps inside the mortal ladder and never reaches NONE or SIX")
     void rankShiftStaysMortal() {

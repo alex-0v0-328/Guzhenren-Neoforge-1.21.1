@@ -31,10 +31,8 @@ import org.jetbrains.annotations.Nullable;
 public record PathQiData(Map<QiKind, PathQiEntry> entries) {
 
     public static final PathQiData DEFAULT = new PathQiData(Map.of());
-
     public static final Codec<PathQiData> CODEC = Codec.unboundedMap(QiKind.CODEC, PathQiEntry.CODEC)
             .xmap(PathQiData::new, PathQiData::entries);
-
     public static final StreamCodec<ByteBuf, PathQiData> STREAM_CODEC =
             ModStreamCodecs.enumMap(QiKind.class, PathQiEntry.STREAM_CODEC).map(PathQiData::new, PathQiData::entries);
     public PathQiData {

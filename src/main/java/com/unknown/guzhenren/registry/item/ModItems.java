@@ -65,21 +65,16 @@ import org.jetbrains.annotations.Nullable;
 public final class ModItems {
 
     private ModItems() {}
-
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Guzhenren.MOD_ID);
-
     private static final long PRIMEVAL_STONE_ESSENCE = 20L;
-
     private static Item.Properties tended() {return new Item.Properties().stacksTo(1);}
     private static Item.Properties oneShot() {return new Item.Properties();}
 
     //region 一次性蛊虫 -- refining IS the use; one charged press pays, lands and spends
     public static final DeferredItem<Item> HOPE_GU = ITEMS.register("hope_gu",
             () -> new HopeGuItem(oneShot().stacksTo(1), GuSpec.of(Rank.ONE, GuPath.HUMAN)));
-
     public static final DeferredItem<Item> VITALITY_LEAF_GU = ITEMS.register("vitality_leaf_gu",
             () -> new VitalityLeafGuItem(oneShot(), GuSpec.of(Rank.ONE, GuPath.WOOD)));
-
     public static final DeferredItem<Item> LIFESPAN_GU = ITEMS.register("lifespan_gu",
             () -> new LifespanGuItem(oneShot(), 1, 9, GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
     public static final DeferredItem<Item> TENS_LIFESPAN_GU = ITEMS.register("tens_lifespan_gu",
@@ -88,7 +83,6 @@ public final class ModItems {
             () -> new LifespanGuItem(oneShot(), 100, 199, GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
     public static final DeferredItem<Item> THOUSANDS_LIFESPAN_GU = ITEMS.register("thousands_lifespan_gu",
             () -> new LifespanGuItem(oneShot(), 1000, 1999, GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
-
     public static final DeferredItem<Item> COPPER_RELICS_GU = ITEMS.register("copper_relics_gu",
             () -> new RelicsGuItem(oneShot(), GuSpec.of(Rank.ONE, GuPath.HEAVEN)));
     public static final DeferredItem<Item> STEEL_RELICS_GU = ITEMS.register("steel_relics_gu",
@@ -180,7 +174,6 @@ public final class ModItems {
                     .refine(8_000_000).costPerUse(160_000)
                     .hungerBar(12, 3).hungerPerUse(4).feed(ModItemTags.ANVIL_FEED, 1)
                     .cooldown(30 * Ticks.SECOND, Ticks.SECOND)));
-
     public static final DeferredItem<Item> SELF_RELIANCE_GU_2 = ITEMS.register("self_reliance_gu_2",
             () -> new SelfRelianceGuItem(tended(), 30 * Ticks.SECOND, 1,
                     GuSpec.of(Rank.TWO, GuPath.STRENGTH)
@@ -332,7 +325,6 @@ public final class ModItems {
                     .refine(800_000).costPerUse(16_000)
                     .hungerBar(12, 8).hungerPerUse(4).feed(ModItemTags.ZOMBIE_FEED, 1)
                     .cooldown(Ticks.SECOND)));
-
     public static final DeferredItem<Item> HEAVENLY_DEMON_ZOMBIE_GU = ITEMS.register("heavenly_demon_zombie_gu",
             ModItems::fifthRankZombieGu);
     public static final DeferredItem<Item> NIGHTMARE_ZOMBIE_GU = ITEMS.register("nightmare_zombie_gu",
@@ -345,7 +337,6 @@ public final class ModItems {
             ModItems::fifthRankZombieGu);
     public static final DeferredItem<Item> BLOOD_WIGHT_GU = ITEMS.register("blood_wight_gu",
             ModItems::fifthRankZombieGu);
-
     private static ZombieGuItem fifthRankZombieGu() {
         return new ZombieGuItem(tended(), 8 * Ticks.MINUTE, GuSpec.of(Rank.FIVE, GuPath.TRANSFORMATION)
                 .refine(8_000_000).costPerUse(160_000)
@@ -448,7 +439,6 @@ public final class ModItems {
             () -> secondApertureGu(Rank.FOUR));
     public static final DeferredItem<Item> SECOND_APERTURE_GU_5 = ITEMS.register("second_aperture_gu_5",
             () -> secondApertureGu(Rank.FIVE));
-
     private static SecondApertureGuItem secondApertureGu(Rank rank) {
         return new SecondApertureGuItem(oneShot(), GuSpec.of(rank, GuPath.HUMAN));
     }
@@ -457,19 +447,14 @@ public final class ModItems {
     //region 蛊材 [Gu materials]
     public static final DeferredItem<Item> PRIMEVAL_STONE = ITEMS.register("primeval_stone",
             () -> new PrimevalStoneItem(new Item.Properties(), PRIMEVAL_STONE_ESSENCE));
-
     public static final DeferredItem<Item> LIQUOR = ITEMS.register("liquor",
             () -> new LiquorItem(new Item.Properties()));
-
     public static final DeferredItem<Item> SOUR_LIQUOR = ITEMS.register("sour_liquor",
             () -> new LiquorItem(new Item.Properties()));
-
     public static final DeferredItem<Item> SWEET_LIQUOR = ITEMS.register("sweet_liquor",
             () -> new LiquorItem(new Item.Properties()));
-
     public static final DeferredItem<Item> BITTER_LIQUOR = ITEMS.register("bitter_liquor",
             () -> new LiquorItem(new Item.Properties()));
-
     public static final DeferredItem<Item> SPICY_LIQUOR = ITEMS.register("spicy_liquor",
             () -> new LiquorItem(new Item.Properties()));
     //endregion
@@ -480,7 +465,6 @@ public final class ModItems {
     public static final DeferredItem<Item> HUMAN_APERTURE_3 = humanAperture("human_aperture_3", Rank.THREE);
     public static final DeferredItem<Item> HUMAN_APERTURE_4 = humanAperture("human_aperture_4", Rank.FOUR);
     public static final DeferredItem<Item> HUMAN_APERTURE_5 = humanAperture("human_aperture_5", Rank.FIVE);
-
     private static DeferredItem<Item> humanAperture(String id, Rank rank) {
         return ITEMS.register(id, () -> new GuMaterialItem(new Item.Properties().stacksTo(64), rank, GuPath.HUMAN));
     }
@@ -502,13 +486,11 @@ public final class ModItems {
     public static final DeferredItem<Item> SWORD_QI_3 = qiMaterial("sword_qi_3", Rank.THREE, QiKind.SWORD);
     public static final DeferredItem<Item> SWORD_QI_4 = qiMaterial("sword_qi_4", Rank.FOUR, QiKind.SWORD);
     public static final DeferredItem<Item> SWORD_QI_5 = qiMaterial("sword_qi_5", Rank.FIVE, QiKind.SWORD);
-
     public static final DeferredItem<Item> STRENGTH_QI_1 = qiMaterial("strength_qi_1", Rank.ONE, QiKind.STRENGTH);
     public static final DeferredItem<Item> STRENGTH_QI_2 = qiMaterial("strength_qi_2", Rank.TWO, QiKind.STRENGTH);
     public static final DeferredItem<Item> STRENGTH_QI_3 = qiMaterial("strength_qi_3", Rank.THREE, QiKind.STRENGTH);
     public static final DeferredItem<Item> STRENGTH_QI_4 = qiMaterial("strength_qi_4", Rank.FOUR, QiKind.STRENGTH);
     public static final DeferredItem<Item> STRENGTH_QI_5 = qiMaterial("strength_qi_5", Rank.FIVE, QiKind.STRENGTH);
-
     public static final DeferredItem<Item> LIFE_QI_1 = ITEMS.register("life_qi_1",
             () -> new LifeQiItem(qiProperties(), Rank.ONE));
     public static final DeferredItem<Item> LIFE_QI_2 = ITEMS.register("life_qi_2",
@@ -519,16 +501,13 @@ public final class ModItems {
             () -> new LifeQiItem(qiProperties(), Rank.FOUR));
     public static final DeferredItem<Item> LIFE_QI_5 = ITEMS.register("life_qi_5",
             () -> new LifeQiItem(qiProperties(), Rank.FIVE));
-
     public static final DeferredItem<Item> ESSENCE_QI_1 = qiMaterial("essence_qi_1", Rank.ONE, QiKind.ESSENCE);
     public static final DeferredItem<Item> ESSENCE_QI_2 = qiMaterial("essence_qi_2", Rank.TWO, QiKind.ESSENCE);
     public static final DeferredItem<Item> ESSENCE_QI_3 = qiMaterial("essence_qi_3", Rank.THREE, QiKind.ESSENCE);
     public static final DeferredItem<Item> ESSENCE_QI_4 = qiMaterial("essence_qi_4", Rank.FOUR, QiKind.ESSENCE);
     public static final DeferredItem<Item> ESSENCE_QI_5 = qiMaterial("essence_qi_5", Rank.FIVE, QiKind.ESSENCE);
-
     public static final DeferredItem<Item> DEATH_QI_5 = ITEMS.register("death_qi_5",
             () -> new DeathQiItem(qiProperties(), Rank.FIVE));
-
     private static DeferredItem<Item> qiMaterial(String id, Rank rank, QiKind kind) {
         return ITEMS.register(id, () -> new QiMaterialItem(qiProperties(), rank, kind));
     }

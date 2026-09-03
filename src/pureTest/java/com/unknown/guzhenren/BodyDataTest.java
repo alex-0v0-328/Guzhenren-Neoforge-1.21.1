@@ -27,7 +27,6 @@ class BodyDataTest {
         assertEquals(6, body.zombieTier());
         assertEquals(5L, body.halfZombieEndTick());
     }
-
     @Test
     @DisplayName("revival clears zombie physiques and anchors but keeps Extreme")
     void revivalClearsZombieState() {

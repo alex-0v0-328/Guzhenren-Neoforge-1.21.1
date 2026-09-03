@@ -37,14 +37,12 @@ import net.minecraft.network.codec.StreamCodec;
 public record PathStrengthData(Set<BeastStrength> beasts, Map<HumanStrength, Integer> humanStrength) {
 
     public static final PathStrengthData DEFAULT = new PathStrengthData(Set.of(), Map.of());
-
     public static final Codec<PathStrengthData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BeastStrength.CODEC.listOf().optionalFieldOf("beasts", List.of())
                     .forGetter(data -> List.copyOf(data.beasts())),
             Codec.unboundedMap(HumanStrength.CODEC, Codec.INT).optionalFieldOf("human_strength", Map.of())
                     .forGetter(PathStrengthData::humanStrength)
     ).apply(instance, (beasts, humanStrength) -> new PathStrengthData(Set.copyOf(beasts), humanStrength)));
-
     public static final StreamCodec<ByteBuf, PathStrengthData> STREAM_CODEC = StreamCodec.composite(
             ModStreamCodecs.enumSet(BeastStrength.class), PathStrengthData::beasts,
             ModStreamCodecs.enumMap(HumanStrength.class, ByteBufCodecs.VAR_INT), PathStrengthData::humanStrength,

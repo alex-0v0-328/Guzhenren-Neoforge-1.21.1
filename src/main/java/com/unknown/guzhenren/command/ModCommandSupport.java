@@ -36,14 +36,13 @@ import net.minecraft.util.StringRepresentable;
  */
 
 public final class ModCommandSupport {
+
     private ModCommandSupport() {}
     public static final String ARG_TARGETS = "targets";
     public static final String ARG_VALUE = "value";
-
     public static final String FAILED_AWAKENED = "guzhenren.command.failed.awakened";
     public static final String FAILED_UNAWAKENED = "guzhenren.command.failed.unawakened";
     public static final String FAILED_EXTREME = "guzhenren.command.failed.extreme_physique_required";
-
     public static final Predicate<ServerPlayer> ANYONE = player -> true;
     public static final Predicate<ServerPlayer> AWAKENED = ApertureService::isAwakened;
     public static boolean sourceAwakened(CommandSourceStack source) {
@@ -155,22 +154,22 @@ public final class ModCommandSupport {
 
     @FunctionalInterface
     public interface PlayerOperation {
+
         void apply(ServerPlayer player) throws CommandSyntaxException;
     }
-
     @FunctionalInterface
     public interface ResultOperation {
+
         boolean apply(ServerPlayer player);
     }
-
     @FunctionalInterface
     public interface EnumOperation<E extends Enum<E>> {
+
         void apply(ServerPlayer player, E value);
     }
-
     @FunctionalInterface
     public interface LongOperation {
+
         void apply(ServerPlayer player, long value);
     }
-
 }

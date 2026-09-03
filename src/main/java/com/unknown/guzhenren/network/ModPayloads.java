@@ -41,11 +41,11 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 @EventBusSubscriber(modid = Guzhenren.MOD_ID)
 public final class ModPayloads {
+
     private ModPayloads() {}
     private static final String VERSION = "1";
     private static final String STORAGE_TITLE = "guzhenren.menu.aperture_storage";
     private static final String REFINEMENT_TITLE = "guzhenren.menu.refinement";
-
     @SubscribeEvent
     public static void onRegister(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(VERSION);

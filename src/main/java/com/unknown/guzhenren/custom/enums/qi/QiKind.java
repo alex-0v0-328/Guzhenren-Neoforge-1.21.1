@@ -33,9 +33,7 @@ public enum QiKind implements StringRepresentable, EnumTranslatable {
 
     public static final Codec<QiKind> CODEC = StringRepresentable.fromEnum(QiKind::values);
     private static final String KEY_PREFIX = "guzhenren.enum.qi.";
-
     private static final int TIERS = 5;
-
     private final long holdFlatTicks;
     private final long holdPerTierTicks;
     QiKind(long holdFlatTicks, long holdPerTierTicks) {

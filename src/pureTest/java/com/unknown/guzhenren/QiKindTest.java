@@ -19,7 +19,6 @@ class QiKindTest {
         assertEquals(640L, QiKind.tierAmount(3));
         assertEquals(2560L, QiKind.tierAmount(4));
     }
-
     @Test
     @DisplayName("decay is 1 / 2 / 4 / 8 / 16 a second")
     void theDecayLadder() {
@@ -29,7 +28,6 @@ class QiKindTest {
         assertEquals(8L, QiKind.decayPerSecond(3));
         assertEquals(16L, QiKind.decayPerSecond(4));
     }
-
     @Test
     @DisplayName("a full tier drains in 10 / 20 / 40 / 80 / 160 seconds, and the amount divides exactly")
     void everyTierDrainsInWholeSeconds() {
@@ -41,7 +39,6 @@ class QiKindTest {
             assertEquals(expected[tier], amount / perSecond, "tier " + tier + " drains in the wrong time");
         }
     }
-
     @Test
     @DisplayName("tierOf reads the tier off the SUM, and every boundary lands on the right side")
     void tierBoundaries() {
@@ -55,14 +52,12 @@ class QiKindTest {
         assertEquals(3, QiKind.tierOf(640L));
         assertEquals(4, QiKind.tierOf(2560L));
     }
-
     @Test
     @DisplayName("past the top tier it stays at the top rather than running off the table")
     void tierOfSaturates() {
         assertEquals(4, QiKind.tierOf(1_000_000L));
         assertEquals(4, QiKind.tierOf(Long.MAX_VALUE));
     }
-
     @Test
     @DisplayName("死/人/天/地 never expire; 剑/力 are flat; 生/元 scale with the tier")
     void whichKindsAreTimed() {
@@ -76,7 +71,6 @@ class QiKindTest {
         assertTrue(QiKind.LIFE.isTimed());
         assertTrue(QiKind.ESSENCE.isTimed());
     }
-
     @Test
     @DisplayName("a flat hold ignores the tier; a per-tier hold is (tier + 1) x 2 minutes")
     void holdShapes() {

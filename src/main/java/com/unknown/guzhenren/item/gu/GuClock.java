@@ -40,7 +40,6 @@ public sealed interface GuClock {
     void billHungerForEssence(ItemStack stack, int from, int to);
 
     boolean spendWasForced(ItemStack stack);
-
     default boolean spendWasForced(ItemStack stack, int multiplier) {return spendWasForced(stack);}
     boolean barVisible(ItemStack stack);
     float barFraction(ItemStack stack);
@@ -121,6 +120,7 @@ public sealed interface GuClock {
 
     //region 无时钟 -- the "reusable, needs no feeding" cell, representable and unbuilt
     record NoClock() implements GuClock {
+
         @Override
         public void bind(ServerPlayer player, ItemStack stack) {}
         @Override

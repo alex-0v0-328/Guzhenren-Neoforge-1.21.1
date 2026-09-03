@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class PathTimeFlowService {
+
     private PathTimeFlowService() {}
     public static final int NORMAL_RATE = 1;
     public static int rate(@NotNull Player player) {
@@ -35,7 +36,6 @@ public final class PathTimeFlowService {
         //   TODO(宙道造诣): a grade term joins HERE, so that no caller has to learn about it.
         return Math.max(NORMAL_RATE, rate);
     }
-
     //region 自身时间 [his own clock] -- three verbs, because it only ever takes three shapes
     /**
      * A stretch he has to sit through: a press held down, a cooldown, a ritual waited out.

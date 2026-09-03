@@ -38,11 +38,9 @@ public class HopeGuItem extends MortalGuItem {
 
     private static final String FAILED_AWAKENED = "guzhenren.item.failed.awakened";
     private static final String CAPTION_TENTH = "guzhenren.display.tenth.";
-
     private static final int FILLING_TICKS = 3 * Ticks.SECOND;
     private static final int HELD_AT_FULL_TICKS = Ticks.SECOND;
     private static final int RITUAL_TICKS = FILLING_TICKS + HELD_AT_FULL_TICKS;
-
     private static final int LOWEST_BASE = Talent.LOWEST.getMinPercent();
     private static final int FILLING_COLOR = 0xFFCCCCCC;
     private static final int LOCKED_COLOR = CHARGE_COLOR_DEFAULT;

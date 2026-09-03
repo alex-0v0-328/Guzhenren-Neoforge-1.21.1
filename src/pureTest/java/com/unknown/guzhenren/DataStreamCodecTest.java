@@ -62,7 +62,6 @@ class DataStreamCodecTest {
             buffer.release();
         }
     }
-
     @Test
     @DisplayName("BodyData stream codec preserves anchors and zombie tier")
     void bodyRoundTrip() {

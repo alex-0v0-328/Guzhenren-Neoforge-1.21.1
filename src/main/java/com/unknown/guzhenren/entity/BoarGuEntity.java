@@ -43,7 +43,6 @@ public class BoarGuEntity extends FlyingGuEntity implements GeoEntity {
             RawAnimation.begin().thenPlayAndHold("animation.boar_gu.land");
     private static final RawAnimation TAKEOFF_ANIM = RawAnimation.begin()
             .thenPlay("animation.boar_gu.takeoff").thenLoop("animation.boar_gu.fly");
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     //endregion
 
@@ -61,10 +60,8 @@ public class BoarGuEntity extends FlyingGuEntity implements GeoEntity {
 
     //region flight phase -- server authoritative; airborne animation follows onGround, one-shots carry the rest
     public enum FlightPhase {FLYING, LANDING, RESTING}
-
     private FlightPhase phase = FlightPhase.FLYING;
     private boolean wantsToLand;
-
     public FlightPhase phase() {return phase;}
     public boolean wantsToLand() {return wantsToLand;}
     public void requestLanding() {wantsToLand = true;}

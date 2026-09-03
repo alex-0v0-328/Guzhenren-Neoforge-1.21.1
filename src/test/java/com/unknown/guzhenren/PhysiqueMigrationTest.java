@@ -23,7 +23,6 @@ class PhysiqueMigrationTest {
         assertTrue(decodeBody("alive").physiques().isEmpty());
         assertTrue(decodeBody("dead").physiques().isEmpty());
     }
-
     @Test
     void bodyCodecWritesOnlyTheNewFields() {
         JsonObject encoded = BodyData.CODEC.encodeStart(JsonOps.INSTANCE, new BodyData(
@@ -35,7 +34,6 @@ class PhysiqueMigrationTest {
         assertTrue(encoded.has("extreme_physique"));
         assertFalse(encoded.has("life_form"));
     }
-
     @Test
     void legacyApertureCarriesExtremeOnlyUntilJoinMigration() {
         JsonObject legacy = JsonParser.parseString("""
@@ -51,14 +49,13 @@ class PhysiqueMigrationTest {
         assertFalse(encoded.has("zombie_opened"));
         assertNull(decoded.clearLegacyExtremePhysique().legacyExtremePhysique());
     }
-
     private static BodyData decodeBody(String lifeForm) {
         JsonObject legacy = new JsonObject();
         legacy.addProperty("life_form", lifeForm);
         return BodyData.CODEC.parse(JsonOps.INSTANCE, legacy).getOrThrow();
     }
-
     private static final class SetHolder {
+
         private static final java.util.Set<Physique> ZOMBIE = java.util.Set.of(Physique.ZOMBIE);
         private static final java.util.Set<Physique> HALF_ZOMBIE = java.util.Set.of(Physique.HALF_ZOMBIE);
         private static final java.util.Set<Physique> EXTREME = java.util.Set.of(Physique.EXTREME);

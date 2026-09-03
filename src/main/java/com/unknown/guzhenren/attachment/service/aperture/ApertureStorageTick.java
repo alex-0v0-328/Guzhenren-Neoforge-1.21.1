@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class ApertureStorageTick {
+
     private ApertureStorageTick() {}
     public static void tickStored(@NotNull ServerPlayer player, long days) {
         for (int aperture = 0; aperture < ApertureData.MAX_APERTURES; aperture++) {

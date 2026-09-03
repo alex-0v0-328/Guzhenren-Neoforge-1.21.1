@@ -29,9 +29,7 @@ public class BruteForceLonghornBeetleGuEffect extends MobEffect implements Attac
 
     public static final int DURATION_TICKS = 30 * Ticks.SECOND;
     public static final int AFTERMATH_TICKS = 20 * Ticks.SECOND;
-
     public static final double ATTACK_BONUS = 8.0D;
-
     private static final int LAST_TICK = 1;
     public BruteForceLonghornBeetleGuEffect(MobEffectCategory category, int color) {
         super(category, color);

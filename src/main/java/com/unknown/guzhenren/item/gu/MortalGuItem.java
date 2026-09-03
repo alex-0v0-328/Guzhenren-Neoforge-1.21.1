@@ -36,16 +36,12 @@ import org.jetbrains.annotations.Nullable;
 public abstract class MortalGuItem extends GuItem {
 
     public static final int REFINE_DONE_COOLDOWN_TICKS = 2 * Ticks.SECOND;
-
     private static final String KIND_KEY = "guzhenren.display.gu";
-
     protected static final String FAILED_REFINE_ESSENCE = "guzhenren.item.failed.refine_essence";
     protected static final String FAILED_ESSENCE = "guzhenren.item.failed.essence";
-
     protected static final String CAPTION_USING_PLAIN = "guzhenren.hud.using_plain";
     private static final String CAPTION_REFINING_PLAIN = "guzhenren.hud.refining_plain";
     private static final String CAPTION_REFINING = "guzhenren.hud.refining";
-
     protected final GuSpec spec;
     protected MortalGuItem(Properties properties, GuSpec spec) {
         super(properties, spec.rank(), spec.path());
