@@ -57,13 +57,12 @@ public final class ApertureStorageService {
         int freeLoad = Math.max(0, limit - currentLoad);
         return Math.min(incoming.getMaxStackSize(), existingCount + freeLoad / costPerItem(holder, gu));
     }
-    public static boolean set(@NotNull ServerPlayer p, int aperture, @NotNull List<ItemStack> items) {
+    public static void set(@NotNull ServerPlayer p, int aperture, @NotNull List<ItemStack> items) {
         ApertureStorage current = get(p);
         ApertureStorage next = current.with(aperture, items);
-        if (exceedsLoad(load(p, current, aperture), load(p, next, aperture))) return false;
+        if (exceedsLoad(load(p, current, aperture), load(p, next, aperture))) return;
 
         p.setData(ModAttachments.APERTURE_STORAGE, next);
-        return true;
     }
     public static boolean setVital(@NotNull ServerPlayer p, int aperture, @NotNull ItemStack stack) {
         ApertureStorage current = get(p);

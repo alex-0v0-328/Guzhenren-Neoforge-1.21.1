@@ -43,9 +43,6 @@ public final class BodyService {
         return server.overworld().getDayTime() / Ticks.DAY;
     }
     public static @NotNull BodyData get(@NotNull Player p) {return p.getData(ModAttachments.BODY);}
-    public static boolean hasPhysique(@NotNull Player p, @NotNull Physique physique) {
-        return get(p).hasPhysique(physique);
-    }
     public static boolean isZombie(@NotNull Player p) {return get(p).isZombie();}
     public static boolean isHalfZombie(@NotNull Player p) {return get(p).isHalfZombie();}
     public static boolean isZombieOrHalfZombie(@NotNull Player p) {return get(p).isZombieOrHalfZombie();}
@@ -78,26 +75,28 @@ public final class BodyService {
         next.addAll(body.physiques());
         return next;
     }
-    public static boolean addPhysique(@NotNull ServerPlayer player, @NotNull Physique physique) {
-        if (physique == Physique.EXTREME) return false;
+    public static void addPhysique(@NotNull ServerPlayer player, @NotNull Physique physique) {
+        if (physique == Physique.EXTREME) return;
 
         BodyData body = get(player);
         EnumSet<Physique> next = copyPhysiques(body);
         if (physique == Physique.ZOMBIE) next.remove(Physique.HALF_ZOMBIE);
         if (physique == Physique.HALF_ZOMBIE) next.remove(Physique.ZOMBIE);
-        if (!next.add(physique)) return false;
+        if (!next.add(physique)) return;
 
         BodyData updated = body.withPhysiques(next);
         if (physique == Physique.ZOMBIE) updated = updated.withLifespanParts(BodyData.parts(BodyData.ZOMBIE_LIFESPAN));
         store(player, updated);
         BodyAttackService.refresh(player);
-        return true;
     }
-    public static boolean removePhysique(@NotNull ServerPlayer player, @NotNull Physique physique) {
-        if (physique == Physique.EXTREME) return setExtremePhysique(player, ExtremePhysique.NONE);
+    public static void removePhysique(@NotNull ServerPlayer player, @NotNull Physique physique) {
+        if (physique == Physique.EXTREME) {
+            setExtremePhysique(player, ExtremePhysique.NONE);
+            return;
+        }
 
         BodyData body = get(player);
-        if (!body.hasPhysique(physique)) return false;
+        if (!body.hasPhysique(physique)) return;
 
         EnumSet<Physique> next = copyPhysiques(body);
         next.remove(physique);
@@ -107,14 +106,13 @@ public final class BodyService {
         }
         store(player, updated);
         BodyAttackService.refresh(player);
-        return true;
     }
-    public static boolean setExtremePhysique(@NotNull ServerPlayer player, @NotNull ExtremePhysique physique) {
-        if (physique != ExtremePhysique.NONE && !ApertureService.isAwakened(player)) return false;
+    public static void setExtremePhysique(@NotNull ServerPlayer player, @NotNull ExtremePhysique physique) {
+        if (physique != ExtremePhysique.NONE && !ApertureService.isAwakened(player)) return;
 
         BodyData body = get(player);
         ExtremePhysique before = body.extremePhysique();
-        if (before == physique) return false;
+        if (before == physique) return;
 
         store(player, body.withExtremePhysique(physique));
         ApertureService.reconcileTalentPaths(player, before, physique);
@@ -126,7 +124,6 @@ public final class BodyService {
             if (physique == ExtremePhysique.NONE) updated = updated.withPressure(0);
             ApertureService.set(player, ApertureData.PRIMARY, updated);
         }
-        return true;
     }
     public static void revive(@NotNull ServerPlayer player) {
         store(player, get(player).revived());
